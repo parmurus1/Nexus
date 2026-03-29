@@ -1,0 +1,13 @@
+{
+  "name": "nexus-rifa",
+  "version": "1.0.0",
+  "description": "Site de rifa da banda Nexus",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "mercadopago": "^2.0.15"
+  }
+}
