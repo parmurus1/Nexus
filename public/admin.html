@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Rifa Nexus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vermelho: #c0170f;
+      --vermelho-vivo: #e82016;
+      --preto: #0a0a0a;
+      --preto-card: #111;
+      --cinza-escuro: #1a1a1a;
+      --cinza: #888;
+      --branco: #f0ece6;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--preto); color:var(--branco); font-family:'Rajdhani',sans-serif; min-height:100vh; }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .login-box {
+      background:var(--preto-card); border:1px solid var(--vermelho); border-radius:4px;
+      padding:40px; width:100%; max-width:360px; text-align:center;
+    }
+    .login-titulo { font-family:'Cinzel',serif; font-size:1.3rem; color:var(--vermelho-vivo); margin-bottom:6px; }
+    .login-sub { font-size:0.85rem; color:var(--cinza); margin-bottom:28px; }
+    .login-box input {
+      width:100%; background:var(--cinza-escuro); border:1px solid #2a2a2a; border-radius:2px;
+      padding:12px; color:var(--branco); font-family:'Rajdhani',sans-serif; font-size:1rem; margin-bottom:16px;
+    }
+    .login-box input:focus { outline:none; border-color:var(--vermelho); }
+    .btn { padding:12px 28px; border:none; border-radius:2px; cursor:pointer; font-family:'Cinzel',serif; font-size:0.85rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; transition:all 0.2s; }
+    .btn-vermelho { background:var(--vermelho); color:var(--branco); width:100%; }
+    .btn-vermelho:hover { background:var(--vermelho-vivo); }
+    .btn-cinza { background:var(--cinza-escuro); color:var(--cinza); border:1px solid #333; }
+    .btn-cinza:hover { color:var(--branco); }
+
+    /* ADMIN PANEL */
+    #adminPanel { display:none; max-width:1000px; margin:0 auto; padding:40px 20px; }
+
+    .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:40px; }
+    .admin-titulo { font-family:'Cinzel',serif; font-size:1.4rem; color:var(--vermelho-vivo); }
+    .admin-sub { font-size:0.8rem; color:var(--cinza); letter-spacing:0.1em; }
+
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+    @media(max-width:600px){ .stats-grid { grid-template-columns:repeat(2,1fr); } }
+
+    .stat-card { background:var(--preto-card); border:1px solid #222; border-radius:4px; padding:20px; text-align:center; }
+    .stat-num { font-size:2.2rem; font-weight:700; }
+    .stat-label { font-size:0.75rem; letter-spacing:0.15em; color:var(--cinza); text-transform:uppercase; margin-top:4px; }
+    .stat-verde .stat-num { color:#4dde9a; }
+    .stat-amarelo .stat-num { color:#f5c542; }
+    .stat-vermelho .stat-num { color:var(--vermelho-vivo); }
+    .stat-branco .stat-num { color:var(--branco); }
+
+    .admin-section { margin-bottom:40px; }
+    .admin-section h2 { font-family:'Cinzel',serif; font-size:0.95rem; letter-spacing:0.2em; color:var(--cinza); text-transform:uppercase; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid #1e1e1e; }
+
+    .acoes { display:flex; gap:12px; flex-wrap:wrap; }
+
+    .sorteio-box { background:var(--preto-card); border:1px solid #222; border-radius:4px; padding:24px; }
+    .sorteio-resultado { margin-top:20px; padding:20px; background:#0d1f12; border:1px solid #1a6040; border-radius:4px; display:none; }
+    .sorteio-numero { font-family:'Cinzel',serif; font-size:3rem; color:#4dde9a; text-align:center; }
+    .sorteio-nome { text-align:center; font-size:1.2rem; color:var(--branco); margin-top:8px; }
+
+    /* TABELA */
+    .tabela-wrapper { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+    th { text-align:left; padding:10px 12px; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--cinza); border-bottom:1px solid #1e1e1e; }
+    td { padding:10px 12px; border-bottom:1px solid #161616; }
+    tr:hover td { background:#111; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:2px; font-size:0.75rem; font-weight:700; letter-spacing:0.05em; }
+    .badge-disponivel { background:#1a1a1a; color:var(--cinza); }
+    .badge-reservado { background:#2a1f00; color:#f5c542; }
+    .badge-pago { background:#1a0a0a; color:var(--vermelho-vivo); }
+
+    /* TOAST */
+    .toast { position:fixed; top:20px; right:20px; padding:14px 20px; border-radius:4px; font-size:0.9rem; font-weight:600; z-index:999; transform:translateX(120%); transition:transform 0.3s; }
+    .toast.visivel { transform:translateX(0); }
+    .toast.sucesso { background:#0f3020; border:1px solid #1a6040; color:#4dde9a; }
+    .toast.erro { background:#2a0808; border:1px solid #5a1010; color:#ff6b6b; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-titulo">ADMIN NEXUS</div>
+    <p class="login-sub">Painel de gerenciamento da rifa</p>
+    <input type="password" id="inputSenha" placeholder="Senha" onkeydown="if(event.key==='Enter')login()" />
+    <button class="btn btn-vermelho" onclick="login()">Entrar</button>
+  </div>
+</div>
+
+<!-- PAINEL ADMIN -->
+<div id="adminPanel">
+  <div class="admin-header">
+    <div>
+      <div class="admin-titulo">Painel Admin — Rifa Nexus</div>
+      <div class="admin-sub" id="ultimaAtualizacao">Carregando...</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-cinza" onclick="carregarDados()">↻ Atualizar</button>
+      <button class="btn btn-cinza" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card stat-branco"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total</div></div>
+    <div class="stat-card stat-verde"><div class="stat-num" id="statDisponiveis">—</div><div class="stat-label">Disponíveis</div></div>
+    <div class="stat-card stat-amarelo"><div class="stat-num" id="statReservados">—</div><div class="stat-label">Reservados</div></div>
+    <div class="stat-card stat-vermelho"><div class="stat-num" id="statPagos">—</div><div class="stat-label">Pagos</div></div>
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="admin-section">
+    <h2>Ações</h2>
+    <div class="acoes">
+      <button class="btn btn-cinza" onclick="liberarExpirados()">🧹 Liberar reservados expirados</button>
+      <a href="/" class="btn btn-cinza" target="_blank">👁️ Ver site</a>
+    </div>
+  </div>
+
+  <!-- SORTEIO -->
+  <div class="admin-section">
+    <h2>Sorteio</h2>
+    <div class="sorteio-box">
+      <p style="color:var(--cinza);font-size:0.9rem;margin-bottom:16px;">
+        O sorteio é aleatório entre todos os bilhetes com pagamento confirmado.
+        Essa ação não pode ser desfeita.
+      </p>
+      <button class="btn btn-vermelho" style="width:auto;padding:12px 28px;" onclick="realizarSorteio()">🎲 Realizar Sorteio</button>
+      <div class="sorteio-resultado" id="sorteioResultado">
+        <div class="sorteio-numero" id="sorteioNumero"></div>
+        <div class="sorteio-nome" id="sorteioNome"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABELA DE BILHETES -->
+  <div class="admin-section">
+    <h2>Bilhetes</h2>
+    <div class="tabela-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Status</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Pago em</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBilhetes">
+          <tr><td colspan="5" style="color:var(--cinza);text-align:center;padding:30px;">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let token = localStorage.getItem('nexus_admin_token');
+
+  if (token) verificarToken();
+
+  async function login() {
+    const senha = document.getElementById('inputSenha').value;
+    try {
+      const res = await fetch('/api/admin?acao=login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senha })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        token = data.token;
+        localStorage.setItem('nexus_admin_token', token);
+        mostrarPainel();
+      } else {
+        mostrarToast('Senha incorreta', 'erro');
+      }
+    } catch { mostrarToast('Erro de conexão', 'erro'); }
+  }
+
+  async function verificarToken() {
+    const res = await fetch('/api/admin?acao=resumo', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) mostrarPainel();
+    else { localStorage.removeItem('nexus_admin_token'); token = null; }
+  }
+
+  function mostrarPainel() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    carregarDados();
+  }
+
+  function sair() {
+    localStorage.removeItem('nexus_admin_token');
+    location.reload();
+  }
+
+  async function carregarDados() {
+    try {
+      const res = await fetch('/api/admin?acao=resumo', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      document.getElementById('statTotal').textContent = data.stats.total;
+      document.getElementById('statDisponiveis').textContent = data.stats.disponiveis;
+      document.getElementById('statReservados').textContent = data.stats.reservados;
+      document.getElementById('statPagos').textContent = data.stats.pagos;
+      document.getElementById('ultimaAtualizacao').textContent = `Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
+
+      // Tabela — só mostrar pagos + reservados primeiro
+      const tbody = document.getElementById('tabelaBilhetes');
+      const relevantes = data.bilhetes
+        .filter(b => b.status !== 'disponivel')
+        .sort((a,b) => a.numero - b.numero);
+
+      if (relevantes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:var(--cinza);text-align:center;padding:24px;">Nenhum bilhete vendido ainda</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = relevantes.map(b => `
+        <tr>
+          <td><strong>${String(b.numero).padStart(3,'0')}</strong></td>
+          <td><span class="badge badge-${b.status}">${b.status}</span></td>
+          <td>${b.nome_comprador || '—'}</td>
+          <td>${b.email_comprador || '—'}</td>
+          <td>${b.pago_em ? new Date(b.pago_em).toLocaleString('pt-BR') : '—'}</td>
+        </tr>
+      `).join('');
+
+    } catch { mostrarToast('Erro ao carregar dados', 'erro'); }
+  }
+
+  async function liberarExpirados() {
+    const res = await fetch('/api/admin?acao=liberar-expirados', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const qtd = data.liberados?.length || 0;
+    mostrarToast(`${qtd} bilhete(s) liberado(s)`, 'sucesso');
+    carregarDados();
+  }
+
+  async function realizarSorteio() {
+    if (!confirm('Tem certeza que deseja realizar o sorteio? Essa ação não pode ser desfeita.')) return;
+
+    const res = await fetch('/api/admin?acao=sortear', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    if (!res.ok) { mostrarToast(data.erro || 'Erro no sorteio', 'erro'); return; }
+
+    document.getElementById('sorteioNumero').textContent = `#${String(data.numero_sorteado).padStart(3,'0')}`;
+    document.getElementById('sorteioNome').textContent = data.nome_vencedor || '—';
+    document.getElementById('sorteioResultado').style.display = 'block';
+    mostrarToast('Sorteio realizado com sucesso!', 'sucesso');
+  }
+
+  function mostrarToast(msg, tipo) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${tipo} visivel`;
+    setTimeout(() => t.classList.remove('visivel'), 4000);
+  }
+</script>
+</body>
+</html>

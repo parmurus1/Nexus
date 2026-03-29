@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rifa Nexus Band</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red: #e8220a;
+      --red-dim: #a01a07;
+      --red-glow: rgba(232,34,10,0.18);
+      --radius: 16px;
+      --radius-sm: 8px;
+      --tr: 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    [data-theme="dark"] {
+      --bg: #0c0c0c; --bg2: #141414; --bg3: #1c1c1c; --bg4: #242424;
+      --border: rgba(255,255,255,0.08); --border-s: rgba(255,255,255,0.15);
+      --text: #f0ede8; --text2: #888; --text3: #444;
+      --glass: rgba(12,12,12,0.88);
+    }
+    [data-theme="light"] {
+      --bg: #f4f1ec; --bg2: #fffef9; --bg3: #ede9e2; --bg4: #e0dbd2;
+      --border: rgba(0,0,0,0.08); --border-s: rgba(0,0,0,0.15);
+      --text: #1a1816; --text2: #666; --text3: #bbb;
+      --glass: rgba(244,241,236,0.92);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);color:var(--text);
+      font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;
+      min-height:100vh;overflow-x:hidden;
+      transition:background var(--tr),color var(--tr);
+    }
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.03;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* NAV */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 40px;
+      background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);transition:background var(--tr);
+    }
+    .nav-logo{
+      font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.12em;
+      color:var(--text);display:flex;align-items:center;gap:10px;
+    }
+    .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 2.5s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+    .nav-right{display:flex;align-items:center;gap:16px;}
+    .theme-btn{
+      width:38px;height:38px;border-radius:50%;border:1px solid var(--border-s);
+      background:var(--bg3);cursor:pointer;display:flex;align-items:center;
+      justify-content:center;font-size:15px;transition:all var(--tr);color:var(--text);
+    }
+    .theme-btn:hover{background:var(--bg4);border-color:var(--red);}
+    .nav-link{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-link:hover{color:var(--red);}
+
+    /* HERO */
+    .hero{
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      text-align:center;padding:120px 24px 80px;
+      position:relative;overflow:hidden;
+    }
+    .hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+    [data-theme="dark"] .hero-orb{opacity:0.12;}
+    [data-theme="light"] .hero-orb{opacity:0.07;}
+    .orb1{width:700px;height:700px;background:var(--red);top:-250px;left:-150px;animation:d1 14s ease-in-out infinite alternate;}
+    .orb2{width:500px;height:500px;background:#ff5010;bottom:-150px;right:-100px;animation:d2 18s ease-in-out infinite alternate;}
+    @keyframes d1{to{transform:translate(80px,60px);}}
+    @keyframes d2{to{transform:translate(-50px,-80px);}}
+
+    .hero-eyebrow{
+      font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.3em;
+      text-transform:uppercase;color:var(--red);margin-bottom:20px;
+      opacity:0;animation:fu 0.8s 0.1s forwards;
+    }
+    .hero-title{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(5rem,16vw,14rem);line-height:0.88;letter-spacing:0.02em;
+      color:var(--text);margin-bottom:8px;
+      opacity:0;animation:fu 0.8s 0.2s forwards;
+    }
+    .hero-title span{color:var(--red);}
+    .hero-sub{
+      font-size:clamp(0.8rem,2vw,0.95rem);color:var(--text2);
+      letter-spacing:0.15em;text-transform:uppercase;margin-bottom:52px;
+      opacity:0;animation:fu 0.8s 0.35s forwards;
+    }
+    @keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+    .stats-row{
+      display:flex;gap:1px;background:var(--border);
+      border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+      margin-bottom:52px;opacity:0;animation:fu 0.8s 0.5s forwards;
+    }
+    .stat{flex:1;background:var(--bg2);padding:20px 28px;text-align:center;transition:background var(--tr);}
+    .stat:hover{background:var(--bg3);}
+    .stat-lbl{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-family:'DM Mono',monospace;}
+    .stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--text);}
+    .stat-val.r{color:var(--red);}
+
+    .scroll-hint{display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:fu 0.8s 0.85s forwards;}
+    .scroll-hint span{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;}
+    .scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--red),transparent);animation:sp 2s ease-in-out infinite;}
+    @keyframes sp{0%,100%{opacity:0.3}50%{opacity:1}}
+
+    /* SECTIONS */
+    section{max-width:1100px;margin:0 auto;padding:80px 24px;}
+    .sec-lbl{
+      font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.3em;
+      text-transform:uppercase;color:var(--red);margin-bottom:16px;
+      display:flex;align-items:center;gap:12px;
+    }
+    .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+    .sec-title{
+      font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);
+      letter-spacing:0.04em;line-height:1;margin-bottom:40px;color:var(--text);
+    }
+
+    /* CARROSSEL */
+    .carr-wrap{
+      position:relative;background:var(--bg2);
+      border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+    }
+    .carr-track{display:flex;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);}
+    .carr-slide{
+      min-width:100%;display:grid;grid-template-columns:1fr 1fr;
+    }
+    @media(max-width:680px){.carr-slide{grid-template-columns:1fr;}}
+    .carr-visual{
+      background:var(--bg3);display:flex;align-items:center;justify-content:center;
+      min-height:340px;position:relative;overflow:hidden;
+    }
+    .carr-visual::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle at center,var(--red-glow) 0%,transparent 70%);
+    }
+    .carr-emoji{
+      font-size:7rem;position:relative;z-index:1;
+      filter:drop-shadow(0 0 40px var(--red-glow));user-select:none;
+      animation:flt 4s ease-in-out infinite;
+    }
+    @keyframes flt{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+    .carr-gif{width:220px;height:220px;object-fit:contain;border-radius:12px;position:relative;z-index:1;}
+    .carr-info{padding:48px 40px;display:flex;flex-direction:column;justify-content:center;}
+    @media(max-width:680px){.carr-info{padding:28px 20px;}}
+    .carr-idx{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+    .carr-nome{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:0.04em;line-height:1;color:var(--text);margin-bottom:12px;}
+    .carr-qtd{
+      display:inline-flex;align-items:center;
+      font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;
+      background:var(--red);color:#fff;padding:4px 12px;border-radius:999px;
+      width:fit-content;margin-bottom:18px;
+    }
+    .carr-desc{font-size:0.88rem;color:var(--text2);line-height:1.75;}
+    .carr-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 24px;border-top:1px solid var(--border);background:var(--bg2);
+    }
+    .carr-dots{display:flex;gap:6px;}
+    .cdot{width:6px;height:6px;border-radius:50%;background:var(--border-s);cursor:pointer;transition:all var(--tr);}
+    .cdot.on{width:20px;border-radius:3px;background:var(--red);}
+    .carr-arrows{display:flex;gap:8px;}
+    .arr-btn{
+      width:40px;height:40px;border-radius:50%;border:1px solid var(--border-s);
+      background:var(--bg3);color:var(--text);cursor:pointer;display:flex;
+      align-items:center;justify-content:center;font-size:1rem;transition:all var(--tr);
+    }
+    .arr-btn:hover{background:var(--red);border-color:var(--red);color:#fff;}
+
+    /* BILHETES */
+    .bil-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px;}
+    .legenda{display:flex;gap:16px;flex-wrap:wrap;}
+    .leg-item{display:flex;align-items:center;gap:7px;font-size:0.72rem;color:var(--text2);font-family:'DM Mono',monospace;}
+    .leg-dot{width:12px;height:12px;border-radius:3px;}
+    .ld-l{background:var(--bg3);border:1px solid var(--border-s);}
+    .ld-s{background:var(--red);}
+    .ld-r{background:#2a1f00;border:1px solid #5a4000;}
+    .ld-p{background:var(--red-dim);border:1px solid var(--red);}
+    [data-theme="light"] .ld-l{background:var(--bg4);}
+    [data-theme="light"] .ld-r{background:#fdf0cc;border-color:#d4a800;}
+
+    .bil-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;}
+    @media(max-width:600px){.bil-grid{grid-template-columns:repeat(5,1fr);}}
+    .bilhete{
+      aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;
+      border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;
+      border:1px solid var(--border);background:var(--bg3);color:var(--text3);
+      user-select:none;letter-spacing:0.02em;
+    }
+    .bilhete:hover:not(.pg):not(.rv){
+      background:var(--bg4);border-color:var(--red);color:var(--text);
+      transform:scale(1.1);position:relative;z-index:2;
+    }
+    .bilhete.sl{
+      background:var(--red);border-color:var(--red);color:#fff;
+      transform:scale(1.08);position:relative;z-index:2;
+      box-shadow:0 0 14px var(--red-glow);
+    }
+    .bilhete.rv{background:#2a1f00;border-color:#5a4000;color:#5a4000;cursor:not-allowed;}
+    .bilhete.pg{background:var(--red-dim);border-color:var(--red);color:rgba(255,255,255,0.2);cursor:not-allowed;}
+    [data-theme="light"] .bilhete{background:var(--bg2);color:var(--text3);}
+    [data-theme="light"] .bilhete.rv{background:#fdf0cc;border-color:#d4a800;color:#b38a00;}
+
+    .loading-wrap{display:flex;align-items:center;justify-content:center;gap:12px;padding:60px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;}
+    .spin{width:18px;height:18px;border:1.5px solid var(--border-s);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* CHECKOUT */
+    .co-bar{
+      position:fixed;bottom:0;left:0;right:0;z-index:200;
+      background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-top:1px solid var(--border);padding:16px 40px;
+      display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+      transform:translateY(110%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .co-bar.show{transform:translateY(0);}
+    .co-info{flex:1;}
+    .co-nums{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.06em;color:var(--text2);margin-bottom:2px;}
+    .co-total{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.05em;color:var(--text);}
+    .co-total em{color:var(--red);font-style:normal;}
+    .btn-cl{
+      background:none;border:1px solid var(--border-s);color:var(--text2);
+      padding:12px 20px;border-radius:var(--radius-sm);
+      font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all var(--tr);
+    }
+    .btn-cl:hover{border-color:var(--text);color:var(--text);}
+    .btn-buy{
+      background:var(--red);border:none;color:#fff;
+      padding:14px 32px;border-radius:var(--radius-sm);
+      font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;
+      cursor:pointer;transition:all var(--tr);white-space:nowrap;
+    }
+    .btn-buy:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 8px 24px var(--red-glow);}
+
+    /* MODAL */
+    .modal-ov{
+      position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.75);
+      backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;
+      padding:24px;opacity:0;pointer-events:none;transition:opacity 0.3s;
+    }
+    .modal-ov.open{opacity:1;pointer-events:all;}
+    .modal{
+      background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);
+      padding:40px;width:100%;max-width:460px;position:relative;
+      transform:translateY(20px);transition:transform 0.3s;
+    }
+    .modal-ov.open .modal{transform:translateY(0);}
+    .modal-x{
+      position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;
+      border:1px solid var(--border);background:var(--bg3);color:var(--text2);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      font-size:0.9rem;transition:all var(--tr);
+    }
+    .modal-x:hover{border-color:var(--red);color:var(--red);}
+    .modal-ey{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+    .modal-ti{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.05em;color:var(--text);margin-bottom:6px;}
+    .modal-sb{font-size:0.85rem;color:var(--text2);margin-bottom:24px;}
+    .modal-res{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:22px;font-size:0.85rem;color:var(--text2);line-height:1.8;}
+    .modal-res strong{color:var(--red);font-weight:500;}
+    .fg{margin-bottom:16px;}
+    .fg label{display:block;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;}
+    .fg input{
+      width:100%;background:var(--bg3);border:1px solid var(--border);
+      border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);
+      font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color var(--tr);
+    }
+    .fg input:focus{border-color:var(--red);}
+    .fg input::placeholder{color:var(--text3);}
+    .btn-cfm{
+      width:100%;background:var(--red);border:none;color:#fff;padding:16px;
+      border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;
+      font-size:1.1rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);margin-top:8px;
+    }
+    .btn-cfm:hover:not(:disabled){background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
+    .btn-cfm:disabled{opacity:0.4;cursor:not-allowed;}
+
+    /* TOAST */
+    .toast{
+      position:fixed;top:80px;right:24px;z-index:999;
+      padding:14px 20px;border-radius:var(--radius-sm);
+      font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.05em;
+      transform:translateX(120%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      max-width:300px;border:1px solid;
+    }
+    .toast.show{transform:translateX(0);}
+    .toast.ok{background:var(--bg2);border-color:#1a6040;color:#3dbb80;}
+    .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
+
+    footer{border-top:1px solid var(--border);text-align:center;padding:40px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;}
+    @media(max-width:700px){nav{padding:16px 20px;}.co-bar{padding:14px 20px;}.stats-row{flex-wrap:wrap;}.stat{flex:1 1 40%;}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><div class="nav-dot"></div>NEXUS</div>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn" title="Alternar tema">☀️</button>
+    <a href="/admin.html" class="nav-link">Admin</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <p class="hero-eyebrow">Banda Nexus · Campanha 2025</p>
+  <h1 class="hero-title">RIFA<br/><span>NEXUS</span></h1>
+  <p class="hero-sub">Apoie nossa música — concorra a prêmios exclusivos</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-lbl">Valor do bilhete</div><div class="stat-val r" id="sValor">R$ —</div></div>
+    <div class="stat"><div class="stat-lbl">Disponíveis</div><div class="stat-val" id="sDisp">—</div></div>
+    <div class="stat"><div class="stat-lbl">Sorteio em</div><div class="stat-val" id="sData">—</div></div>
+    <div class="stat"><div class="stat-lbl">Vendidos</div><div class="stat-val r" id="sVend">—</div></div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</div>
+
+<!-- PRÊMIOS -->
+<section>
+  <p class="sec-lbl">O que você pode ganhar</p>
+  <h2 class="sec-title">PRÊMIOS</h2>
+  <div class="carr-wrap">
+    <div class="carr-track" id="track">
+
+      <div class="carr-slide">
+        <div class="carr-visual">
+          <!--
+            Quando tiver o GIF do modelo 3D, substitua por:
+            <img src="img/palheta.gif" class="carr-gif" alt="Palhetas"/>
+          -->
+          <div class="carr-emoji">🎸</div>
+        </div>
+        <div class="carr-info">
+          <div class="carr-idx">01 / 06</div>
+          <div class="carr-nome">PALHETAS EXCLUSIVAS</div>
+          <div class="carr-qtd">× 2 unidades</div>
+          <p class="carr-desc">Palhetas oficiais da Nexus Band, personalizadas com o logo da banda. Perfeitas para colecionadores e músicos.</p>
+        </div>
+      </div>
+
+      <div class="carr-slide">
+        <div class="carr-visual">
+          <div class="carr-emoji" style="animation-delay:0.5s">🥁</div>
+        </div>
+        <div class="carr-info">
+          <div class="carr-idx">02 / 06</div>
+          <div class="carr-nome">BAQUETAS ASSINADAS</div>
+          <div class="carr-qtd">× 2 unidades</div>
+          <p class="carr-desc">Baquetas autografadas pelo baterista da Nexus. Um item raro para quem curte a banda de perto.</p>
+        </div>
+      </div>
+
+      <div class="carr-slide">
+        <div class="carr-visual">
+          <div class="carr-emoji" style="animation-delay:1s">👕</div>
+        </div>
+        <div class="carr-info">
+          <div class="carr-idx">03 / 06</div>
+          <div class="carr-nome">CAMISETA OFICIAL</div>
+          <div class="carr-qtd">× 1 unidade</div>
+          <p class="carr-desc">Camiseta estampada com o logo da banda. Edição limitada, disponível apenas para apoiadores da campanha.</p>
+        </div>
+      </div>
+
+      <div class="carr-slide">
+        <div class="carr-visual">
+          <div class="carr-emoji" style="animation-delay:1.5s">🔑</div>
+        </div>
+        <div class="carr-info">
+          <div class="carr-idx">04 / 06</div>
+          <div class="carr-nome">CHAVEIRO NEXUS</div>
+          <div class="carr-qtd">× 1 unidade</div>
+          <p class="carr-desc">Chaveiro metálico com o símbolo da Nexus. Acabamento premium, carregue a banda com você.</p>
+        </div>
+      </div>
+
+      <div class="carr-slide">
+        <div class="carr-visual">
+          <div class="carr-emoji" style="animation-delay:0.3s">📌</div>
+        </div>
+        <div class="carr-info">
+          <div class="carr-idx">05 / 06</div>
+          <div class="carr-nome">PIN COLECIONÁVEL</div>
+          <div class="carr-qtd">× 1 unidade</div>
+          <p class="carr-desc">Pin esmaltado com o logo da Nexus. Ideal para jaquetas, mochilas e coleções.</p>
+        </div>
+      </div>
+
+      <div class="carr-slide">
+        <div class="carr-visual">
+          <div class="carr-emoji" style="animation-delay:0.8s">🎨</div>
+        </div>
+        <div class="carr-info">
+          <div class="carr-idx">06 / 06</div>
+          <div class="carr-nome">PACK DE ADESIVOS</div>
+          <div class="carr-qtd">× 2 unidades</div>
+          <p class="carr-desc">Set de adesivos vinil com artes exclusivas da banda. Impermeáveis e de alta durabilidade.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="carr-footer">
+      <div class="carr-dots" id="dots"></div>
+      <div class="carr-arrows">
+        <button class="arr-btn" id="prev">←</button>
+        <button class="arr-btn" id="next">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BILHETES -->
+<section>
+  <p class="sec-lbl">Escolha os seus números</p>
+  <h2 class="sec-title">BILHETES</h2>
+  <div class="bil-header">
+    <div class="legenda">
+      <div class="leg-item"><div class="leg-dot ld-l"></div>Disponível</div>
+      <div class="leg-item"><div class="leg-dot ld-s"></div>Selecionado</div>
+      <div class="leg-item"><div class="leg-dot ld-r"></div>Reservado</div>
+      <div class="leg-item"><div class="leg-dot ld-p"></div>Vendido</div>
+    </div>
+  </div>
+  <div id="bilWrap" class="loading-wrap"><div class="spin"></div><span>Carregando bilhetes...</span></div>
+</section>
+
+<!-- CHECKOUT BAR -->
+<div class="co-bar" id="coBar">
+  <div class="co-info">
+    <div class="co-nums" id="coNums">Nenhum selecionado</div>
+    <div class="co-total">Total: <em id="coTotal">R$ 0,00</em></div>
+  </div>
+  <button class="btn-cl" onclick="limpar()">Limpar</button>
+  <button class="btn-buy" onclick="abrirModal()">Comprar Agora</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modalOv" onclick="fecharFora(event)">
+  <div class="modal">
+    <button class="modal-x" onclick="fecharModal()">✕</button>
+    <div class="modal-ey">Finalizar compra</div>
+    <div class="modal-ti">Pagamento Pix</div>
+    <p class="modal-sb">Preencha seus dados — você será redirecionado para o Mercado Pago.</p>
+    <div class="modal-res" id="modalRes"></div>
+    <div class="fg"><label>Nome completo *</label><input type="text" id="iNome" placeholder="Seu nome completo"/></div>
+    <div class="fg"><label>E-mail *</label><input type="email" id="iEmail" placeholder="seu@email.com"/></div>
+    <div class="fg"><label>Telefone (opcional)</label><input type="tel" id="iTel" placeholder="(00) 00000-0000"/></div>
+    <button class="btn-cfm" id="btnCfm" onclick="finalizar()">Ir para o Pagamento →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>© 2025 Nexus Band — Todos os direitos reservados</footer>
+
+<script>
+// TEMA
+const root = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const saved = localStorage.getItem('nexus-theme') || 'dark';
+root.setAttribute('data-theme', saved);
+themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+themeBtn.onclick = () => {
+  const n = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', n);
+  localStorage.setItem('nexus-theme', n);
+  themeBtn.textContent = n === 'dark' ? '☀️' : '🌙';
+};
+
+// CARROSSEL
+const track = document.getElementById('track');
+const dotsEl = document.getElementById('dots');
+const slides = track.querySelectorAll('.carr-slide');
+let ci = 0;
+slides.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'cdot' + (i===0?' on':'');
+  d.onclick = () => go(i);
+  dotsEl.appendChild(d);
+});
+function go(n) {
+  ci = (n + slides.length) % slides.length;
+  track.style.transform = `translateX(-${ci*100}%)`;
+  dotsEl.querySelectorAll('.cdot').forEach((d,i) => d.classList.toggle('on', i===ci));
+}
+document.getElementById('prev').onclick = () => go(ci-1);
+document.getElementById('next').onclick = () => go(ci+1);
+let ap = setInterval(() => go(ci+1), 5000);
+track.parentElement.addEventListener('mouseenter', () => clearInterval(ap));
+track.parentElement.addEventListener('mouseleave', () => { ap = setInterval(() => go(ci+1), 5000); });
+let tx=0;
+track.addEventListener('touchstart', e => tx=e.touches[0].clientX, {passive:true});
+track.addEventListener('touchend', e => { const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) go(ci+(dx<0?1:-1)); });
+
+// BILHETES
+let bData=[], sel=new Set(), vUnit=10;
+async function load() {
+  try {
+    const r = await fetch('/api/bilhetes');
+    const j = await r.json();
+    bData = j.bilhetes;
+    vUnit = parseFloat(j.config?.valor_bilhete||10);
+    document.getElementById('sValor').textContent = `R$ ${vUnit.toFixed(2).replace('.',',')}`;
+    const disp = bData.filter(b=>b.status==='disponivel').length;
+    const vend = bData.filter(b=>b.status==='pago').length;
+    document.getElementById('sDisp').textContent = disp;
+    document.getElementById('sVend').textContent = vend;
+    if(j.config?.data_sorteio) {
+      const d = new Date(j.config.data_sorteio+'T12:00:00');
+      document.getElementById('sData').textContent = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).toUpperCase();
+    }
+    render();
+  } catch {
+    document.getElementById('bilWrap').innerHTML = '<span style="color:var(--red);font-family:\'DM Mono\',monospace;font-size:0.8rem">Erro ao carregar. Recarregue a página.</span>';
+  }
+}
+function render() {
+  const w = document.getElementById('bilWrap');
+  w.className = 'bil-grid'; w.innerHTML = '';
+  bData.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'bilhete';
+    el.textContent = String(b.numero).padStart(3,'0');
+    if(b.status==='pago') el.classList.add('pg');
+    else if(b.status==='reservado') el.classList.add('rv');
+    else if(sel.has(b.numero)) el.classList.add('sl');
+    if(b.status==='disponivel') el.onclick = () => toggle(b.numero);
+    w.appendChild(el);
+  });
+}
+function toggle(n) { sel.has(n)?sel.delete(n):sel.add(n); updateBar(); render(); }
+function updateBar() {
+  const bar=document.getElementById('coBar'), arr=[...sel].sort((a,b)=>a-b);
+  if(!arr.length){bar.classList.remove('show');return;}
+  bar.classList.add('show');
+  document.getElementById('coNums').textContent = 'Bilhetes: '+arr.map(n=>String(n).padStart(3,'0')).join(', ');
+  document.getElementById('coTotal').textContent = `R$ ${(arr.length*vUnit).toFixed(2).replace('.',',')}`;
+}
+function limpar(){sel.clear();updateBar();render();}
+function abrirModal(){
+  if(!sel.size)return;
+  const arr=[...sel].sort((a,b)=>a-b);
+  document.getElementById('modalRes').innerHTML=`Bilhetes: <strong>${arr.map(n=>String(n).padStart(3,'0')).join(', ')}</strong><br/>Total: <strong>R$ ${(arr.length*vUnit).toFixed(2).replace('.',',')}</strong>`;
+  document.getElementById('modalOv').classList.add('open');
+}
+function fecharModal(){document.getElementById('modalOv').classList.remove('open');}
+function fecharFora(e){if(e.target===document.getElementById('modalOv'))fecharModal();}
+async function finalizar(){
+  const nome=document.getElementById('iNome').value.trim();
+  const email=document.getElementById('iEmail').value.trim();
+  const tel=document.getElementById('iTel').value.trim();
+  if(!nome||!email){toast('Preencha nome e e-mail.','err');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('E-mail inválido.','err');return;}
+  const btn=document.getElementById('btnCfm');
+  btn.disabled=true;btn.textContent='Processando...';
+  try{
+    const r=await fetch('/api/criar-pagamento',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({numeros:[...sel],nome,email,telefone:tel})});
+    const d=await r.json();
+    if(!r.ok){toast(d.erro||'Erro ao criar pagamento.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';return;}
+    window.location.href=d.init_point;
+  }catch{toast('Erro de conexão.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';}
+}
+function toast(msg,tipo){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${tipo} show`;
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+load();
+setInterval(load,30000);
+</script>
+</body>
+</html>
