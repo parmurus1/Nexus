@@ -21,12 +21,6 @@
       --text: #f0ede8; --text2: #888; --text3: #444;
       --glass: rgba(12,12,12,0.88);
     }
-    [data-theme="light"] {
-      --bg: #f4f1ec; --bg2: #fffef9; --bg3: #ede9e2; --bg4: #e0dbd2;
-      --border: rgba(0,0,0,0.08); --border-s: rgba(0,0,0,0.15);
-      --text: #1a1816; --text2: #666; --text3: #bbb;
-      --glass: rgba(244,241,236,0.92);
-    }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{
@@ -73,7 +67,6 @@
     }
     .hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
     [data-theme="dark"] .hero-orb{opacity:0.12;}
-    [data-theme="light"] .hero-orb{opacity:0.07;}
     .orb1{width:700px;height:700px;background:var(--red);top:-250px;left:-150px;animation:d1 14s ease-in-out infinite alternate;}
     .orb2{width:500px;height:500px;background:#ff5010;bottom:-150px;right:-100px;animation:d2 18s ease-in-out infinite alternate;}
     @keyframes d1{to{transform:translate(80px,60px);}}
@@ -187,8 +180,6 @@
     .ld-s{background:var(--red);}
     .ld-r{background:#2a1f00;border:1px solid #5a4000;}
     .ld-p{background:var(--red-dim);border:1px solid var(--red);}
-    [data-theme="light"] .ld-l{background:var(--bg4);}
-    [data-theme="light"] .ld-r{background:#fdf0cc;border-color:#d4a800;}
 
     .bil-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;}
     @media(max-width:600px){.bil-grid{grid-template-columns:repeat(5,1fr);}}
@@ -305,9 +296,8 @@
 <body>
 
 <nav>
-  <div class="nav-logo"><div class="nav-dot"></div>NEXUS</div>
+  <div class="nav-logo"><div class="nav-dot"></div><img href = ""></div>
   <div class="nav-right">
-    <button class="theme-btn" id="themeBtn" title="Alternar tema">☀️</button>
     <a href="/admin.html" class="nav-link">Admin</a>
   </div>
 </nav>
@@ -467,18 +457,6 @@
 <footer>© 2025 Nexus Band — Todos os direitos reservados</footer>
 
 <script>
-// TEMA
-const root = document.documentElement;
-const themeBtn = document.getElementById('themeBtn');
-const saved = localStorage.getItem('nexus-theme') || 'dark';
-root.setAttribute('data-theme', saved);
-themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
-themeBtn.onclick = () => {
-  const n = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  root.setAttribute('data-theme', n);
-  localStorage.setItem('nexus-theme', n);
-  themeBtn.textContent = n === 'dark' ? '☀️' : '🌙';
-};
 
 // CARROSSEL
 const track = document.getElementById('track');
