@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contratantes — Nexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
+    .nav-logo img{height:32px;width:auto;object-fit:contain;}
+    .nav-links{display:flex;align-items:center;gap:24px;}
+    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-link:hover{color:var(--red);}
+    .nav-link.active{color:var(--text);}
+    @media(max-width:700px){.nav-links{gap:14px;}.nav-link{font-size:0.58rem;}}
+    @media(max-width:520px){nav{padding:10px 16px;}.nav-links{gap:10px;}}
+
+    .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
+    .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
+    .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
+    .orb1{width:500px;height:500px;background:var(--red);opacity:0.08;top:-150px;right:-80px;}
+    .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
+    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,8rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
+    .page-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,2vw,1rem);color:var(--text2);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.3s forwards;}
+    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    .container{max-width:1080px;margin:0 auto;padding:0 24px 100px;}
+    .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+    .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:32px;color:var(--text);}
+
+    /* CONTATO RÁPIDO */
+    .contato-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:64px;}
+    @media(max-width:600px){.contato-grid{grid-template-columns:1fr;}}
+    .contato-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color var(--tr);}
+    .contato-card:hover{border-color:var(--border-s);}
+    .contato-icon{font-size:1.6rem;margin-bottom:12px;}
+    .contato-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+    .contato-valor{font-size:0.95rem;color:var(--text);font-weight:400;}
+    .contato-valor a{color:var(--red);text-decoration:none;}
+    .contato-valor a:hover{text-decoration:underline;}
+
+    /* LAYOUT PRINCIPAL */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:64px;}
+    @media(max-width:700px){.grid-2{grid-template-columns:1fr;}}
+
+    /* FOTO DA BANDA */
+    .banda-foto{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .foto-wrap{aspect-ratio:16/9;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    .foto-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
+    .foto-wrap img{width:100%;height:100%;object-fit:cover;}
+    .foto-ph{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--text3);}
+    .foto-ph svg{opacity:0.2;}
+    .foto-ph span{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;}
+    .foto-caption{padding:16px 18px;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text3);letter-spacing:0.08em;}
+
+    /* BIO */
+    .bio-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
+    .bio-titulo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.04em;color:var(--text);margin-bottom:16px;}
+    .bio-texto{font-size:0.92rem;color:var(--text2);line-height:1.85;}
+    .bio-texto p{margin-bottom:12px;}
+    .bio-texto p:last-child{margin-bottom:0;}
+
+    /* MAPA DE PALCO */
+    .mapa-palco{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:64px;}
+    .mapa-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .mapa-titulo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);}
+    .mapa-download{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:8px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+    .mapa-download:hover{border-color:var(--red);color:var(--red);}
+    .mapa-body{padding:24px;}
+    .mapa-visual{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:32px;position:relative;}
+    /* Representação visual do palco */
+    .palco-stage{background:var(--bg4);border:1px solid var(--border-s);border-radius:8px;padding:16px;text-align:center;margin-bottom:20px;}
+    .palco-stage-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:20px;}
+    .palco-items{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+    .palco-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+    .palco-icon{width:48px;height:48px;background:var(--bg2);border:1px solid var(--border-s);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+    .palco-label{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);text-align:center;max-width:60px;}
+    .palco-audience{text-align:center;margin-top:8px;}
+    .palco-audience-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);}
+    .mapa-obs{margin-top:16px;padding:14px 16px;background:var(--bg4);border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);line-height:1.8;}
+    .mapa-obs strong{color:var(--text);}
+
+    /* RIDER */
+    .rider-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:64px;}
+    @media(max-width:600px){.rider-grid{grid-template-columns:1fr;}}
+    .rider-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;}
+    .rider-titulo{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+    .rider-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+    .rider-list li{display:flex;align-items:baseline;gap:10px;font-size:0.88rem;color:var(--text2);}
+    .rider-list li::before{content:'—';color:var(--text3);flex-shrink:0;}
+
+    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .footer-logo{display:flex;align-items:center;gap:8px;}
+    .footer-logo img{height:22px;opacity:0.3;}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <div class="nav-links">
+    <a href="/sobre.html" class="nav-link">Sobre</a>
+    <a href="/agenda.html" class="nav-link">Agenda</a>
+    <a href="/merch.html" class="nav-link">Merch</a>
+    <a href="/contratantes.html" class="nav-link active">Contratantes</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-orb orb1"></div>
+  <p class="page-eyebrow">Informações técnicas</p>
+  <h1 class="page-title">CONTRATANTES</h1>
+  <p class="page-sub">Tudo que você precisa para contratar a Nexus</p>
+</div>
+
+<div class="container">
+
+  <!-- CONTATO -->
+  <p class="sec-eyebrow">Contato</p>
+  <h2 class="sec-title">FALE CONOSCO</h2>
+  <div class="contato-grid">
+    <div class="contato-card">
+      <div class="contato-icon">📱</div>
+      <div class="contato-label">Instagram</div>
+      <div class="contato-valor"><a href="https://instagram.com/nexus.bandbr" target="_blank">@nexus.bandbr</a></div>
+    </div>
+    <div class="contato-card">
+      <div class="contato-icon">✉️</div>
+      <div class="contato-label">E-mail</div>
+      <div class="contato-valor"><a href="mailto:contato@nexusband.com">contato@nexusband.com</a></div>
+    </div>
+    <div class="contato-card">
+      <div class="contato-icon">💬</div>
+      <div class="contato-label">WhatsApp</div>
+      <div class="contato-valor"><a href="https://wa.me/5500000000000" target="_blank">Enviar mensagem</a></div>
+    </div>
+  </div>
+
+  <!-- FOTO + BIO -->
+  <p class="sec-eyebrow">Apresentação</p>
+  <h2 class="sec-title">A BANDA</h2>
+  <div class="grid-2" style="margin-bottom:64px;">
+    <div class="banda-foto">
+      <div class="foto-wrap">
+        <!-- Substitua por: <img src="/imgs/banda-foto.jpg" alt="Nexus Band"/> -->
+        <div class="foto-ph">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Foto da banda</span>
+        </div>
+      </div>
+      <div class="foto-caption">Nexus Band — Adicione uma foto oficial</div>
+    </div>
+    <div class="bio-box">
+      <div class="bio-titulo">BIOGRAFIA</div>
+      <div class="bio-texto">
+        <p>A Nexus é uma banda formada em [cidade], com uma sonoridade que mistura [gênero] com elementos de [outros gêneros]. O grupo é composto por Davi (guitarra e voz), João (guitarra), Katila (teclados) e Victor (bateria).</p>
+        <p>Desde [ano de formação], a banda vem construindo uma identidade visual e sonora marcante, com shows energéticos e músicas autorais que conectam o público de forma intensa.</p>
+        <p>Com [número] de shows realizados e [álbuns/EPs] lançados, a Nexus está pronta para levar sua música para novos palcos.</p>
+        <p style="color:var(--text3);font-size:0.8rem;">✏️ Edite este texto no arquivo contratantes.html</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAPA DE PALCO -->
+  <p class="sec-eyebrow">Setup técnico</p>
+  <h2 class="sec-title">MAPA DE PALCO</h2>
+  <div class="mapa-palco">
+    <div class="mapa-header">
+      <span class="mapa-titulo">Disposição do palco</span>
+      <!-- <a href="/docs/mapa-palco.pdf" class="mapa-download" download>⬇ Baixar PDF</a> -->
+    </div>
+    <div class="mapa-body">
+      <div class="mapa-visual">
+        <div class="palco-stage">
+          <div class="palco-stage-label">▲ Fundo do palco</div>
+          <div class="palco-items">
+            <div class="palco-item">
+              <div class="palco-icon">🥁</div>
+              <div class="palco-label">Bateria centro</div>
+            </div>
+            <div class="palco-item">
+              <div class="palco-icon">🎹</div>
+              <div class="palco-label">Teclado esq.</div>
+            </div>
+          </div>
+        </div>
+        <div class="palco-items" style="justify-content:space-around;padding:0 20px 20px;">
+          <div class="palco-item">
+            <div class="palco-icon">🎸</div>
+            <div class="palco-label">Guitarra dir.</div>
+          </div>
+          <div class="palco-item">
+            <div class="palco-icon">🎤</div>
+            <div class="palco-label">Vocal / Guit. centro</div>
+          </div>
+          <div class="palco-item">
+            <div class="palco-icon">🎸</div>
+            <div class="palco-label">Guitarra esq.</div>
+          </div>
+        </div>
+        <div class="palco-audience">
+          <div class="palco-audience-label">▼ Plateia</div>
+        </div>
+        <div class="mapa-obs">
+          <strong>Observações técnicas</strong><br/>
+          Edite os detalhes no arquivo <code>contratantes.html</code>. Inclua aqui informações como: necessidade de PA, monitores, retroiluminação, camarim, etc.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIDER TÉCNICO -->
+  <p class="sec-eyebrow">Necessidades</p>
+  <h2 class="sec-title">RIDER TÉCNICO</h2>
+  <div class="rider-grid">
+    <div class="rider-card">
+      <div class="rider-titulo">Som e PA</div>
+      <ul class="rider-list">
+        <li>Sistema PA adequado ao espaço</li>
+        <li>Mesa de som com mínimo 16 canais</li>
+        <li>4 monitores de retorno (wedge)</li>
+        <li>Técnico de som no PA durante o show</li>
+        <li>DI box para teclado</li>
+      </ul>
+    </div>
+    <div class="rider-card">
+      <div class="rider-titulo">Bateria</div>
+      <ul class="rider-list">
+        <li>Bumbo 22"</li>
+        <li>Caixa 14"</li>
+        <li>Tom 12" e 16"</li>
+        <li>Chimbal, ride e crash</li>
+        <li>Estante para caixa e chimbal</li>
+      </ul>
+    </div>
+    <div class="rider-card">
+      <div class="rider-titulo">Guitarras e Voz</div>
+      <ul class="rider-list">
+        <li>2 amplificadores de guitarra (ou DI)</li>
+        <li>2 pedestais para microfone</li>
+        <li>Microfone para vocal principal</li>
+        <li>Microfone para backing vocal</li>
+        <li>Cabos XLR disponíveis</li>
+      </ul>
+    </div>
+    <div class="rider-card">
+      <div class="rider-titulo">Estrutura e Hospitality</div>
+      <ul class="rider-list">
+        <li>Camarim com acesso exclusivo</li>
+        <li>Água e alimentação leve</li>
+        <li>Soundcheck de pelo menos 1h</li>
+        <li>Estacionamento para equipamentos</li>
+        <li>Contrato e cachê combinados previamente</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
+  <span>Todos os direitos reservados</span>
+</footer>
+</body>
+</html>

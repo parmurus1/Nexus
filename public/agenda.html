@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agenda — Nexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
+    .nav-logo img{height:32px;width:auto;object-fit:contain;}
+    .nav-links{display:flex;align-items:center;gap:24px;}
+    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-link:hover{color:var(--red);}
+    .nav-link.active{color:var(--text);}
+    @media(max-width:700px){.nav-links{gap:14px;}.nav-link{font-size:0.58rem;}}
+    @media(max-width:520px){nav{padding:10px 16px;}.nav-links{gap:10px;}}
+
+    .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
+    .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
+    .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
+    .orb1{width:500px;height:500px;background:var(--red);opacity:0.08;top:-180px;right:-100px;}
+    .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
+    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
+    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    .container{max-width:900px;margin:0 auto;padding:0 24px 100px;}
+
+    /* SHOWS */
+    .shows-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:60px;}
+    .show-item{background:var(--bg2);padding:24px 28px;display:grid;grid-template-columns:100px 1fr auto;align-items:center;gap:24px;transition:background var(--tr);}
+    .show-item:hover{background:var(--bg3);}
+    @media(max-width:600px){.show-item{grid-template-columns:80px 1fr;gap:16px;}.show-tag{display:none;}}
+    .show-data{text-align:center;}
+    .show-dia{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1;color:var(--text);letter-spacing:0.02em;}
+    .show-mes{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);}
+    .show-ano{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+    .show-divider{width:1px;height:48px;background:var(--border-s);margin:0 4px;}
+    .show-info{}
+    .show-nome{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
+    .show-local{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);letter-spacing:0.06em;}
+    .show-horario{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--text3);margin-top:3px;}
+    .show-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid;}
+    .tag-confirmado{color:#3dbb80;border-color:rgba(61,187,128,0.3);background:rgba(61,187,128,0.06);}
+    .tag-breve{color:var(--text3);border-color:var(--border-s);}
+
+    /* EMPTY STATE */
+    .empty{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:60px 24px;text-align:center;margin-bottom:60px;}
+    .empty p{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+
+    /* PASSADOS */
+    .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+    .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:28px;color:var(--text);}
+
+    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .footer-logo{display:flex;align-items:center;gap:8px;}
+    .footer-logo img{height:22px;opacity:0.3;}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <div class="nav-links">
+    <a href="/sobre.html" class="nav-link">Sobre</a>
+    <a href="/agenda.html" class="nav-link active">Agenda</a>
+    <a href="/merch.html" class="nav-link">Merch</a>
+    <a href="/contratantes.html" class="nav-link">Contratantes</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-orb orb1"></div>
+  <p class="page-eyebrow">Próximos shows</p>
+  <h1 class="page-title">AGENDA</h1>
+</div>
+
+<div class="container">
+
+  <p class="sec-eyebrow">Próximos shows</p>
+  <h2 class="sec-title">EM BREVE</h2>
+
+  <!-- Adicione os shows aqui. Exemplo de estrutura: -->
+  <div class="shows-list">
+    <div class="show-item">
+      <div class="show-data">
+        <div class="show-dia">15</div>
+        <div class="show-mes">MAI</div>
+        <div class="show-ano">2026</div>
+      </div>
+      <div>
+        <div class="show-nome">NOME DO EVENTO</div>
+        <div class="show-local">📍 Local do show — Cidade</div>
+        <div class="show-horario">🕐 Horário a confirmar</div>
+      </div>
+      <span class="show-tag tag-breve">Em breve</span>
+    </div>
+    <!-- Copie o bloco acima para adicionar mais shows -->
+  </div>
+
+  <p class="sec-eyebrow" style="margin-top:60px;">Histórico</p>
+  <h2 class="sec-title">SHOWS PASSADOS</h2>
+
+  <div class="shows-list">
+    <div class="show-item" style="opacity:0.5;">
+      <div class="show-data">
+        <div class="show-dia">--</div>
+        <div class="show-mes">---</div>
+        <div class="show-ano">----</div>
+      </div>
+      <div>
+        <div class="show-nome">ADICIONE OS SHOWS PASSADOS</div>
+        <div class="show-local">Local do show</div>
+      </div>
+      <span class="show-tag tag-confirmado">Realizado</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
+  <span>Todos os direitos reservados</span>
+</footer>
+</body>
+</html>

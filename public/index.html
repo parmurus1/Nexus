@@ -3,44 +3,40 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rifa Nexus Band</title>
+  <title>Rifa — Nexus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --red:#e8220a; --red-dim:#a01a07; --red-glow:rgba(232,34,10,0.2); --red-mid:rgba(232,34,10,0.08);
-      --bg:#080808; --bg2:#111; --bg3:#191919; --bg4:#222;
-      --border:rgba(255,255,255,0.07); --border-s:rgba(255,255,255,0.13);
-      --text:#ede9e3; --text2:#7a7672; --text3:#3a3836;
-      --glass:rgba(8,8,8,0.9);
-      --radius:14px; --radius-sm:8px; --radius-xs:5px;
-      --tr:0.28s cubic-bezier(0.4,0,0.2,1);
-    }
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
 
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
     @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
     .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-right{display:flex;align-items:center;gap:20px;}
+    .nav-links{display:flex;align-items:center;gap:24px;}
     .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
-    .nav-link:hover{color:var(--red);}
-/* aaaa */
+    .nav-link:hover,.nav-link.active{color:var(--red);}
+    .nav-link.active{color:var(--text);}
+    @media(max-width:700px){.nav-links{gap:14px;}.nav-link{font-size:0.58rem;}}
+    @media(max-width:520px){nav{padding:10px 16px;}.nav-links{gap:10px;}}
+
     .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden;}
     .hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
     .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
     .orb1{width:640px;height:640px;background:var(--red);opacity:0.09;top:-280px;left:-160px;animation:drift1 16s ease-in-out infinite alternate;}
     .orb2{width:480px;height:480px;background:#c01800;opacity:0.07;bottom:-160px;right:-80px;animation:drift2 20s ease-in-out infinite alternate;}
-    @keyframes drift1{to{transform:translate(60px,40px);}} @keyframes drift2{to{transform:translate(-40px,-60px);}}
+    @keyframes drift1{to{transform:translate(60px,40px);}}@keyframes drift2{to{transform:translate(-40px,-60px);}}
 
     .hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:20px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
-    .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(5.5rem,18vw,15rem);line-height:0.86;letter-spacing:0.01em;color:var(--text);position:relative;z-index:1;margin-bottom:6px;opacity:0;animation:rise 0.7s 0.2s forwards;}
-    .hero-title .accent{color:var(--red);}
+    .hero-title{position:relative;z-index:1;margin-bottom:6px;opacity:0;animation:rise 0.7s 0.2s forwards;display:flex;flex-direction:column;align-items:center;gap:0;}
+    .hero-title-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(5.5rem,18vw,15rem);line-height:0.86;letter-spacing:0.01em;color:var(--text);}
+    .hero-title-img{height:clamp(4rem,12vw,10rem);width:auto;object-fit:contain;filter:brightness(0) invert(1);}
     .hero-sub{font-family:'Barlow Condensed',sans-serif;font-weight:400;font-size:clamp(0.85rem,2.2vw,1rem);color:var(--text2);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:52px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.35s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 
@@ -70,6 +66,7 @@
     .carr-visual::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,0.025) 28px,rgba(255,255,255,0.025) 29px);}
     .carr-emoji{font-size:6.5rem;position:relative;z-index:1;filter:drop-shadow(0 0 32px var(--red-glow));animation:float 3.5s ease-in-out infinite;}
     @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+    .carr-gif{width:220px;height:220px;object-fit:contain;position:relative;z-index:1;}
     .carr-info{padding:44px 36px;display:flex;flex-direction:column;justify-content:center;}
     @media(max-width:660px){.carr-info{padding:28px 20px;}}
     .carr-idx{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
@@ -92,7 +89,6 @@
     .ld-s{background:var(--red);}
     .ld-r{background:#2a1f00;border:1px solid #4a3800;}
     .ld-p{background:var(--red-dim);border:1px solid #601208;}
-
     .bil-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;}
     @media(max-width:580px){.bil-grid{grid-template-columns:repeat(5,1fr);}}
     .bilhete{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:500;border-radius:var(--radius-xs);cursor:pointer;transition:all 0.12s ease;border:1px solid var(--border);background:var(--bg3);color:var(--text3);user-select:none;letter-spacing:0.01em;}
@@ -138,13 +134,11 @@
     .ig-prefix.invalid{border-color:var(--red)!important;}
     .ig-at{padding:11px 0 11px 14px;font-family:'DM Mono',monospace;font-size:0.92rem;color:var(--text2);}
     .ig-prefix input{background:transparent;border:none!important;padding:11px 14px 11px 6px;outline:none;}
-    .ig-prefix input:focus{border-color:transparent;}
     .field-hint{font-size:0.58rem;color:var(--text3);margin-top:5px;font-family:'DM Mono',monospace;letter-spacing:0.05em;}
     .btn-cfm{width:100%;background:var(--red);border:none;color:#fff;padding:15px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);margin-top:6px;}
     .btn-cfm:hover:not(:disabled){background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
     .btn-cfm:disabled{opacity:0.4;cursor:not-allowed;}
 
-    /* TOAST — sem border/padding quando invisível */
     .toast{position:fixed;top:76px;right:24px;z-index:9999;padding:0;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.05em;transform:translateX(calc(100% + 48px));transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),padding 0.15s,opacity 0.25s;max-width:280px;border:0px solid transparent;opacity:0;overflow:hidden;pointer-events:none;}
     .toast.show{transform:translateX(0);opacity:1;padding:12px 18px;border-width:1px;pointer-events:auto;}
     .toast.ok{background:var(--bg2);border-color:#1a5038;color:#3dbb80;}
@@ -153,18 +147,20 @@
     footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
-
     @media(max-width:680px){nav{padding:12px 18px;}.co-bar{padding:12px 18px;}.stats-row{flex-wrap:wrap;}.stat{flex:1 1 40%;}.modal{padding:28px 20px;}}
   </style>
 </head>
 <body>
-
 <nav>
   <a href="/" class="nav-logo">
     <div class="nav-pulse"></div>
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
-  <div class="nav-right">
+  <div class="nav-links">
+    <a href="/sobre.html" class="nav-link">Sobre</a>
+    <a href="/agenda.html" class="nav-link">Agenda</a>
+    <a href="/merch.html" class="nav-link">Merch</a>
+    <a href="/contratantes.html" class="nav-link">Contratantes</a>
     <a href="/admin.html" class="nav-link">Admin</a>
   </div>
 </nav>
@@ -173,7 +169,10 @@
   <div class="hero-orb orb1"></div>
   <div class="hero-orb orb2"></div>
   <p class="hero-eyebrow">Nexus · Campanha 2026</p>
-  <h1 class="hero-title">RIFA<br/><span class="accent">NEXUS</span></h1>
+  <h1 class="hero-title">
+    <span class="hero-title-text">RIFA</span>
+    <img src="/imgs/nexustitle.png" class="hero-title-img" alt="NEXUS"/>
+  </h1>
   <p class="hero-sub">Apoie nossa música e concorra a prêmios exclusivos</p>
   <div class="stats-row">
     <div class="stat"><div class="stat-lbl">Valor do bilhete</div><div class="stat-val r" id="sValor">R$ —</div></div>
@@ -189,12 +188,12 @@
   <h2 class="sec-title">PRÊMIOS</h2>
   <div class="carr-wrap">
     <div class="carr-track" id="track">
-      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji">🎸</div></div><div class="carr-info"><div class="carr-idx">01 / 06</div><div class="carr-nome">PALHETAS EXCLUSIVAS</div><div class="carr-qtd">× 2 unidades</div><p class="carr-desc">Palhetas oficiais da Nexus Band, personalizadas com o logo da banda. Perfeitas para colecionadores e músicos.</p></div></div>
-      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:.5s">🥁</div></div><div class="carr-info"><div class="carr-idx">02 / 06</div><div class="carr-nome">BAQUETAS ASSINADAS</div><div class="carr-qtd">× 2 unidades</div><p class="carr-desc">Baquetas autografadas pelo baterista da Nexus. Um item raro para quem curte a banda de perto.</p></div></div>
-      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:1s">👕</div></div><div class="carr-info"><div class="carr-idx">03 / 06</div><div class="carrß-nome">CAMISETA OFICIAL</div><div class="carr-qtd">× 1 unidade</div><p class="carr-desc">Camiseta estampada com o logo da banda. Edição limitada, disponível apenas para apoiadores da campanha.</p></div></div>
-      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:1.5s">🔑</div></div><div class="carr-info"><div class="carr-idx">04 / 06</div><div class="carr-nome">CHAVEIRO NEXUS</div><div class="carr-qtd">× 1 unidade</div><p class="carr-desc">Chaveiro metálico com o símbolo da Nexus. Acabamento premium, carregue a banda com você.</p></div></div>
-      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:.3s">📌</div></div><div class="carr-info"><div class="carr-idx">05 / 06</div><div class="carr-nome">PIN COLECIONÁVEL</div><div class="carr-qtd">× 1 unidade</div><p class="carr-desc">Pin esmaltado com o logo da Nexus. Ideal para jaquetas, mochilas e coleções.</p></div></div>
-      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:.8s">🎨</div></div><div class="carr-info"><div class="carr-idx">06 / 06</div><div class="carr-nome">PACK DE ADESIVOS</div><div class="carr-qtd">× 1 unidades</div><p class="carr-desc">Set de adesivos vinil com artes exclusivas da banda. Impermeáveis e de alta durabilidade.</p></div></div>
+      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji">🎸</div></div><div class="carr-info"><div class="carr-idx">01 / 06</div><div class="carr-nome">PALHETAS EXCLUSIVAS</div><div class="carr-qtd">× 2 unidades</div><p class="carr-desc">Palhetas oficiais da Nexus Band, personalizadas com o logo da banda.</p></div></div>
+      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:.5s">🥁</div></div><div class="carr-info"><div class="carr-idx">02 / 06</div><div class="carr-nome">BAQUETAS ASSINADAS</div><div class="carr-qtd">× 2 unidades</div><p class="carr-desc">Baquetas autografadas pelo baterista da Nexus. Um item raro para fãs.</p></div></div>
+      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:1s">👕</div></div><div class="carr-info"><div class="carr-idx">03 / 06</div><div class="carr-nome">CAMISETA OFICIAL</div><div class="carr-qtd">× 1 unidade</div><p class="carr-desc">Camiseta estampada com o logo da banda. Edição limitada.</p></div></div>
+      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:1.5s">🔑</div></div><div class="carr-info"><div class="carr-idx">04 / 06</div><div class="carr-nome">CHAVEIRO NEXUS</div><div class="carr-qtd">× 1 unidade</div><p class="carr-desc">Chaveiro metálico com o símbolo da Nexus. Acabamento premium.</p></div></div>
+      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:.3s">📌</div></div><div class="carr-info"><div class="carr-idx">05 / 06</div><div class="carr-nome">PIN COLECIONÁVEL</div><div class="carr-qtd">× 1 unidade</div><p class="carr-desc">Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.</p></div></div>
+      <div class="carr-slide"><div class="carr-visual"><div class="carr-emoji" style="animation-delay:.8s">🎨</div></div><div class="carr-info"><div class="carr-idx">06 / 06</div><div class="carr-nome">PACK DE ADESIVOS</div><div class="carr-qtd">× 2 unidades</div><p class="carr-desc">Set de adesivos vinil com artes exclusivas da banda. Impermeáveis.</p></div></div>
     </div>
     <div class="carr-footer">
       <div class="carr-dots" id="dots"></div>
@@ -229,7 +228,6 @@
   <button class="btn-buy" onclick="abrirModal()">Comprar Agora</button>
 </div>
 
-<!-- MODAL COMPRA -->
 <div class="modal-ov" id="modalOv" onclick="fecharFora(event)">
   <div class="modal">
     <button class="modal-x" onclick="fecharModal()">✕</button>
@@ -237,31 +235,14 @@
     <div class="modal-ti">Pagamento Pix</div>
     <p class="modal-sb">Preencha seus dados — você será redirecionado para o Mercado Pago.</p>
     <div class="modal-res" id="modalRes"></div>
-    <div class="fg">
-      <label>Nome completo <span class="req-badge">OBRIGATÓRIO</span></label>
-      <input type="text" id="iNome" placeholder="Seu nome completo"/>
-    </div>
-    <div class="fg">
-      <label>E-mail <span class="req-badge">OBRIGATÓRIO</span></label>
-      <input type="email" id="iEmail" placeholder="seu@email.com"/>
-    </div>
-    <div class="fg">
-      <label>Instagram <span class="req-badge">OBRIGATÓRIO</span></label>
-      <div class="ig-prefix" id="igWrap">
-        <span class="ig-at">@</span>
-        <input type="text" id="iInstagram" placeholder="seuusuario"/>
-      </div>
-      <p class="field-hint">Usado para te notificar caso você ganhe o prêmio</p>
-    </div>
-    <div class="fg">
-      <label>Telefone <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
-      <input type="tel" id="iTel" placeholder="(00) 00000-0000"/>
-    </div>
+    <div class="fg"><label>Nome completo <span class="req-badge">OBRIGATÓRIO</span></label><input type="text" id="iNome" placeholder="Seu nome completo"/></div>
+    <div class="fg"><label>E-mail <span class="req-badge">OBRIGATÓRIO</span></label><input type="email" id="iEmail" placeholder="seu@email.com"/></div>
+    <div class="fg"><label>Instagram <span class="req-badge">OBRIGATÓRIO</span></label><div class="ig-prefix" id="igWrap"><span class="ig-at">@</span><input type="text" id="iInstagram" placeholder="seuusuario"/></div><p class="field-hint">Usado para te notificar caso você ganhe o prêmio</p></div>
+    <div class="fg"><label>Telefone <span style="font-size:0.52rem;color:var(--text3)">(opcional)</span></label><input type="tel" id="iTel" placeholder="(00) 00000-0000"/></div>
     <button class="btn-cfm" id="btnCfm" onclick="finalizar()">Ir para o Pagamento →</button>
   </div>
 </div>
 
-<!-- MODAL DEMO -->
 <div class="modal-ov" id="demoOv" onclick="if(event.target===this)fecharDemo()">
   <div class="modal" style="text-align:center;">
     <button class="modal-x" onclick="fecharDemo()">✕</button>
@@ -269,9 +250,7 @@
     <div class="modal-ey">Modo demonstração</div>
     <div class="modal-ti">Bilhetes Reservados!</div>
     <p class="modal-sb" id="demoMsg" style="margin-top:8px;line-height:1.75;"></p>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin:18px 0;font-size:0.82rem;color:var(--text2);line-height:1.75;">
-      ⚡ O pagamento via Pix será ativado em breve.<br/>Os bilhetes ficam reservados por 30 minutos.
-    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin:18px 0;font-size:0.82rem;color:var(--text2);line-height:1.75;">⚡ O pagamento via Pix será ativado em breve.<br/>Os bilhetes ficam reservados por 30 minutos.</div>
     <button class="btn-cfm" onclick="fecharDemo()">Entendido</button>
   </div>
 </div>
@@ -279,15 +258,11 @@
 <div class="toast" id="toast"></div>
 
 <footer>
-  <div class="footer-logo">
-    <img src="/imgs/nexusicon.png" alt="Nexus"/>
-    <span>© 2026 Nexus Band</span>
-  </div>
+  <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
   <span>Todos os direitos reservados</span>
 </footer>
 
 <script>
-// CARROSSEL
 const track=document.getElementById('track');
 const dotsEl=document.getElementById('dots');
 const originalSlides=Array.from(track.querySelectorAll('.carr-slide'));
@@ -310,7 +285,6 @@ let tx=0;
 track.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
 track.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)go(ci+(dx<0?1:-1));});
 
-// BILHETES
 let bData=[],sel=new Set(),vUnit=10;
 async function load(){
   try{
@@ -325,53 +299,29 @@ async function load(){
 }
 function render(){
   const w=document.getElementById('bilWrap');w.className='bil-grid';w.innerHTML='';
-  bData.forEach(b=>{
-    const el=document.createElement('div');el.className='bilhete';
-    el.textContent=String(b.numero).padStart(3,'0');
-    if(b.status==='pago')el.classList.add('pg');
-    else if(b.status==='reservado')el.classList.add('rv');
-    else if(sel.has(b.numero))el.classList.add('sl');
-    if(b.status==='disponivel')el.onclick=()=>toggle(b.numero);
-    w.appendChild(el);
-  });
+  bData.forEach(b=>{const el=document.createElement('div');el.className='bilhete';el.textContent=String(b.numero).padStart(3,'0');if(b.status==='pago')el.classList.add('pg');else if(b.status==='reservado')el.classList.add('rv');else if(sel.has(b.numero))el.classList.add('sl');if(b.status==='disponivel')el.onclick=()=>toggle(b.numero);w.appendChild(el);});
 }
 function toggle(n){sel.has(n)?sel.delete(n):sel.add(n);updateBar();render();}
-function updateBar(){
-  const bar=document.getElementById('coBar');const arr=[...sel].sort((a,b)=>a-b);
-  if(!arr.length){bar.classList.remove('show');return;}
-  bar.classList.add('show');
-  document.getElementById('coNums').textContent='Bilhetes: '+arr.map(n=>String(n).padStart(3,'0')).join(', ');
-  document.getElementById('coTotal').textContent=`R$ ${(arr.length*vUnit).toFixed(2).replace('.',',')}`;
-}
+function updateBar(){const bar=document.getElementById('coBar');const arr=[...sel].sort((a,b)=>a-b);if(!arr.length){bar.classList.remove('show');return;}bar.classList.add('show');document.getElementById('coNums').textContent='Bilhetes: '+arr.map(n=>String(n).padStart(3,'0')).join(', ');document.getElementById('coTotal').textContent=`R$ ${(arr.length*vUnit).toFixed(2).replace('.',',')}` ;}
 function limpar(){sel.clear();updateBar();render();}
-function abrirModal(){
-  if(!sel.size)return;
-  const arr=[...sel].sort((a,b)=>a-b);
-  document.getElementById('modalRes').innerHTML=`Bilhetes: <strong>${arr.map(n=>String(n).padStart(3,'0')).join(', ')}</strong><br/>Total: <strong>R$ ${(arr.length*vUnit).toFixed(2).replace('.',',')}</strong>`;
-  document.getElementById('modalOv').classList.add('open');
-}
+function abrirModal(){if(!sel.size)return;const arr=[...sel].sort((a,b)=>a-b);document.getElementById('modalRes').innerHTML=`Bilhetes: <strong>${arr.map(n=>String(n).padStart(3,'0')).join(', ')}</strong><br/>Total: <strong>R$ ${(arr.length*vUnit).toFixed(2).replace('.',',')}</strong>`;document.getElementById('modalOv').classList.add('open');}
 function fecharModal(){document.getElementById('modalOv').classList.remove('open');}
 function fecharFora(e){if(e.target===document.getElementById('modalOv'))fecharModal();}
 function fecharDemo(){document.getElementById('demoOv').classList.remove('open');}
-
 async function finalizar(){
   const nome=document.getElementById('iNome').value.trim();
   const email=document.getElementById('iEmail').value.trim();
   const ig=document.getElementById('iInstagram').value.trim().replace(/^@/,'');
   const tel=document.getElementById('iTel').value.trim();
-
   document.getElementById('iNome').classList.remove('invalid');
   document.getElementById('iEmail').classList.remove('invalid');
   document.getElementById('igWrap').classList.remove('invalid');
-
   let erro=false;
   if(!nome){document.getElementById('iNome').classList.add('invalid');erro=true;}
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('iEmail').classList.add('invalid');erro=true;}
   if(!ig){document.getElementById('igWrap').classList.add('invalid');erro=true;}
   if(erro){toast('Preencha todos os campos obrigatórios.','err');return;}
-
-  const btn=document.getElementById('btnCfm');
-  btn.disabled=true;btn.textContent='Processando...';
+  const btn=document.getElementById('btnCfm');btn.disabled=true;btn.textContent='Processando...';
   try{
     const r=await fetch('/api/criar-pagamento',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({numeros:[...sel],nome,email,instagram:'@'+ig,telefone:tel})});
     const d=await r.json();
@@ -380,14 +330,7 @@ async function finalizar(){
     window.location.href=d.init_point;
   }catch{toast('Erro de conexão.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';}
 }
-
-function toast(msg,tipo){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className=`toast ${tipo} show`;
-  clearTimeout(t._timer);
-  t._timer=setTimeout(()=>t.classList.remove('show'),4000);
-}
-
+function toast(msg,tipo){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${tipo} show`;clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),4000);}
 load();setInterval(load,30000);
 </script>
 </body>
