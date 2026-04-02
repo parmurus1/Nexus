@@ -3,23 +3,57 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pagamento não concluído — Nexus</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    body { background:#0a0a0a; color:#f0ece6; font-family:'Rajdhani',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
-    .box { background:#111; border:1px solid #5a1010; border-radius:4px; padding:48px; text-align:center; max-width:440px; }
-    .icon { font-size:4rem; margin-bottom:16px; }
-    h1 { font-family:'Cinzel',serif; font-size:1.4rem; color:#ff6b6b; margin-bottom:10px; }
-    p { color:#888; font-size:1rem; line-height:1.6; }
-    a { display:inline-block; margin-top:28px; background:#c0170f; color:#f0ece6; padding:12px 28px; border-radius:2px; font-family:'Cinzel',serif; font-size:0.85rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; }
-    a:hover { background:#e82016; }
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.18);--bg:#0c0c0c;--bg2:#141414;--bg3:#1c1c1c;--border:rgba(255,255,255,0.08);--border-s:rgba(255,255,255,0.15);--text:#f0ede8;--text2:#888;--text3:#444;--glass:rgba(12,12,12,0.88);--radius:16px;--radius-sm:8px;--tr:0.35s cubic-bezier(0.4,0,0.2,1);}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 40px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 2.5s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+    .nav-logo img{height:34px;width:auto;object-fit:contain;}
+    .nav-link{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-link:hover{color:var(--red);}
+
+    .page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 60px;position:relative;overflow:hidden;}
+    .orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.08;pointer-events:none;}
+    .orb1{width:600px;height:600px;background:var(--red);top:-200px;left:-100px;}
+    .grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 100%);pointer-events:none;}
+
+    .box{background:var(--bg2);border:1px solid rgba(160,26,7,0.4);border-radius:var(--radius);padding:56px 48px;text-align:center;max-width:480px;width:100%;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
+    @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .box::before{content:'';position:absolute;inset:0;border-radius:var(--radius);background:radial-gradient(ellipse at top,rgba(160,26,7,0.08) 0%,transparent 70%);pointer-events:none;}
+
+    .icon-wrap{width:72px;height:72px;border-radius:50%;background:rgba(160,26,7,0.12);border:1px solid rgba(160,26,7,0.3);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 24px;}
+    .label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+    h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.04em;color:var(--text);margin-bottom:12px;line-height:1;}
+    p{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:32px;}
+    .btn{display:inline-block;background:var(--red);color:#fff;padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;text-decoration:none;transition:all var(--tr);}
+    .btn:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 8px 24px var(--red-glow);}
+
+    footer{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--border);padding:16px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;display:flex;align-items:center;gap:8px;background:var(--glass);backdrop-filter:blur(20px);}
+    footer img{height:18px;opacity:0.3;}
   </style>
 </head>
 <body>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-dot"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <a href="/admin.html" class="nav-link">Admin</a>
+</nav>
+<div class="page">
+  <div class="grid"></div>
+  <div class="orb orb1"></div>
   <div class="box">
-    <div class="icon">😔</div>
-    <h1>Pagamento não concluído</h1>
+    <div class="icon-wrap">😔</div>
+    <div class="label">Pagamento não concluído</div>
+    <h1>ALGO DEU ERRADO</h1>
     <p>Não se preocupe — seus bilhetes foram liberados automaticamente.<br/>Você pode tentar novamente a qualquer momento.</p>
-    <a href="/">Tentar novamente</a>
+    <a href="/" class="btn">Tentar novamente</a>
   </div>
+</div>
+<footer><img src="/imgs/nexusicon.png" alt="Nexus"/>© 2025 Nexus Band</footer>
 </body>
 </html>

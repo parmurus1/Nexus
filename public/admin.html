@@ -1,141 +1,143 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — Rifa Nexus</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --vermelho: #c0170f;
-      --vermelho-vivo: #e82016;
-      --preto: #0a0a0a;
-      --preto-card: #111;
-      --cinza-escuro: #1a1a1a;
-      --cinza: #888;
-      --branco: #f0ece6;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:var(--preto); color:var(--branco); font-family:'Rajdhani',sans-serif; min-height:100vh; }
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.18);--bg:#0c0c0c;--bg2:#141414;--bg3:#1c1c1c;--bg4:#242424;--border:rgba(255,255,255,0.08);--border-s:rgba(255,255,255,0.15);--text:#f0ede8;--text2:#888;--text3:#444;--glass:rgba(12,12,12,0.88);--radius:16px;--radius-sm:8px;--tr:0.35s cubic-bezier(0.4,0,0.2,1);}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 40px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 2.5s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+    .nav-logo img{height:34px;width:auto;object-fit:contain;}
+    .nav-link{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-link:hover{color:var(--red);}
 
     /* LOGIN */
-    #loginScreen {
-      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
-    }
-    .login-box {
-      background:var(--preto-card); border:1px solid var(--vermelho); border-radius:4px;
-      padding:40px; width:100%; max-width:360px; text-align:center;
-    }
-    .login-titulo { font-family:'Cinzel',serif; font-size:1.3rem; color:var(--vermelho-vivo); margin-bottom:6px; }
-    .login-sub { font-size:0.85rem; color:var(--cinza); margin-bottom:28px; }
-    .login-box input {
-      width:100%; background:var(--cinza-escuro); border:1px solid #2a2a2a; border-radius:2px;
-      padding:12px; color:var(--branco); font-family:'Rajdhani',sans-serif; font-size:1rem; margin-bottom:16px;
-    }
-    .login-box input:focus { outline:none; border-color:var(--vermelho); }
-    .btn { padding:12px 28px; border:none; border-radius:2px; cursor:pointer; font-family:'Cinzel',serif; font-size:0.85rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; transition:all 0.2s; }
-    .btn-vermelho { background:var(--vermelho); color:var(--branco); width:100%; }
-    .btn-vermelho:hover { background:var(--vermelho-vivo); }
-    .btn-cinza { background:var(--cinza-escuro); color:var(--cinza); border:1px solid #333; }
-    .btn-cinza:hover { color:var(--branco); }
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px 20px;position:relative;overflow:hidden;}
+    .login-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.08;pointer-events:none;}
+    .lo1{width:500px;height:500px;background:var(--red);top:-150px;left:-100px;}
+    .login-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 100%);pointer-events:none;}
+    .login-box{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);padding:48px;width:100%;max-width:380px;text-align:center;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
+    @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .login-ey{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+    .login-ti{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:0.05em;color:var(--text);margin-bottom:6px;}
+    .login-sub{font-size:0.85rem;color:var(--text2);margin-bottom:32px;}
+    .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color var(--tr);margin-bottom:16px;}
+    .login-box input:focus{border-color:var(--red);}
+    .login-box input::placeholder{color:var(--text3);}
+    .btn-red{width:100%;background:var(--red);border:none;color:#fff;padding:14px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;cursor:pointer;transition:all var(--tr);}
+    .btn-red:hover{background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
 
-    /* ADMIN PANEL */
-    #adminPanel { display:none; max-width:1000px; margin:0 auto; padding:40px 20px; }
+    /* PAINEL */
+    #adminPanel{display:none;max-width:1000px;margin:0 auto;padding:100px 24px 60px;}
+    .adm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px;}
+    .adm-titulo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--text);}
+    .adm-sub{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:var(--text3);margin-top:4px;}
+    .adm-actions{display:flex;gap:8px;}
+    .btn-ghost{background:none;border:1px solid var(--border-s);color:var(--text2);padding:10px 18px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all var(--tr);}
+    .btn-ghost:hover{border-color:var(--text);color:var(--text);}
 
-    .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:40px; }
-    .admin-titulo { font-family:'Cinzel',serif; font-size:1.4rem; color:var(--vermelho-vivo); }
-    .admin-sub { font-size:0.8rem; color:var(--cinza); letter-spacing:0.1em; }
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:40px;}
+    @media(max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+    .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;}
+    .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.05em;}
+    .stat-lbl{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase;margin-top:4px;}
+    .sn-green .stat-num{color:#4dde9a;}
+    .sn-yellow .stat-num{color:#f5c542;}
+    .sn-red .stat-num{color:var(--red);}
+    .sn-white .stat-num{color:var(--text);}
 
-    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
-    @media(max-width:600px){ .stats-grid { grid-template-columns:repeat(2,1fr); } }
+    .adm-section{margin-bottom:40px;}
+    .sec-lbl{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+    .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
 
-    .stat-card { background:var(--preto-card); border:1px solid #222; border-radius:4px; padding:20px; text-align:center; }
-    .stat-num { font-size:2.2rem; font-weight:700; }
-    .stat-label { font-size:0.75rem; letter-spacing:0.15em; color:var(--cinza); text-transform:uppercase; margin-top:4px; }
-    .stat-verde .stat-num { color:#4dde9a; }
-    .stat-amarelo .stat-num { color:#f5c542; }
-    .stat-vermelho .stat-num { color:var(--vermelho-vivo); }
-    .stat-branco .stat-num { color:var(--branco); }
+    .acoes{display:flex;gap:10px;flex-wrap:wrap;}
 
-    .admin-section { margin-bottom:40px; }
-    .admin-section h2 { font-family:'Cinzel',serif; font-size:0.95rem; letter-spacing:0.2em; color:var(--cinza); text-transform:uppercase; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid #1e1e1e; }
+    .sorteio-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:24px;}
+    .sorteio-box p{font-size:0.85rem;color:var(--text2);margin-bottom:20px;line-height:1.7;}
+    .sorteio-resultado{margin-top:20px;padding:24px;background:rgba(29,160,80,0.06);border:1px solid rgba(29,160,80,0.3);border-radius:var(--radius-sm);display:none;text-align:center;}
+    .sorteio-numero{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:#4dde9a;letter-spacing:0.05em;}
+    .sorteio-nome{font-size:1rem;color:var(--text2);margin-top:4px;}
 
-    .acoes { display:flex; gap:12px; flex-wrap:wrap; }
+    .tabela-wrapper{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+    th{text-align:left;padding:10px 12px;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
+    td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2);}
+    tr:hover td{background:var(--bg3);}
+    .badge{display:inline-block;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.05em;}
+    .badge-disponivel{background:var(--bg3);color:var(--text3);}
+    .badge-reservado{background:#2a1f00;color:#f5c542;}
+    .badge-pago{background:rgba(160,26,7,0.2);color:var(--red);}
 
-    .sorteio-box { background:var(--preto-card); border:1px solid #222; border-radius:4px; padding:24px; }
-    .sorteio-resultado { margin-top:20px; padding:20px; background:#0d1f12; border:1px solid #1a6040; border-radius:4px; display:none; }
-    .sorteio-numero { font-family:'Cinzel',serif; font-size:3rem; color:#4dde9a; text-align:center; }
-    .sorteio-nome { text-align:center; font-size:1.2rem; color:var(--branco); margin-top:8px; }
+    .toast{position:fixed;top:80px;right:24px;z-index:999;padding:14px 20px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.05em;transform:translateX(120%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);max-width:300px;border:1px solid;}
+    .toast.show{transform:translateX(0);}
+    .toast.ok{background:var(--bg2);border-color:#1a6040;color:#3dbb80;}
+    .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
 
-    /* TABELA */
-    .tabela-wrapper { overflow-x:auto; }
-    table { width:100%; border-collapse:collapse; font-size:0.9rem; }
-    th { text-align:left; padding:10px 12px; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--cinza); border-bottom:1px solid #1e1e1e; }
-    td { padding:10px 12px; border-bottom:1px solid #161616; }
-    tr:hover td { background:#111; }
-    .badge { display:inline-block; padding:3px 8px; border-radius:2px; font-size:0.75rem; font-weight:700; letter-spacing:0.05em; }
-    .badge-disponivel { background:#1a1a1a; color:var(--cinza); }
-    .badge-reservado { background:#2a1f00; color:#f5c542; }
-    .badge-pago { background:#1a0a0a; color:var(--vermelho-vivo); }
-
-    /* TOAST */
-    .toast { position:fixed; top:20px; right:20px; padding:14px 20px; border-radius:4px; font-size:0.9rem; font-weight:600; z-index:999; transform:translateX(120%); transition:transform 0.3s; }
-    .toast.visivel { transform:translateX(0); }
-    .toast.sucesso { background:#0f3020; border:1px solid #1a6040; color:#4dde9a; }
-    .toast.erro { background:#2a0808; border:1px solid #5a1010; color:#ff6b6b; }
+    footer{border-top:1px solid var(--border);padding:24px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;display:flex;align-items:center;gap:8px;}
+    footer img{height:18px;opacity:0.3;}
   </style>
 </head>
 <body>
 
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-dot"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <a href="/" class="nav-link">← Voltar ao site</a>
+</nav>
+
 <!-- LOGIN -->
 <div id="loginScreen">
+  <div class="login-grid"></div>
+  <div class="login-orb lo1"></div>
   <div class="login-box">
-    <div class="login-titulo">ADMIN NEXUS</div>
+    <div class="login-ey">Acesso restrito</div>
+    <div class="login-ti">ADMIN</div>
     <p class="login-sub">Painel de gerenciamento da rifa</p>
-    <input type="password" id="inputSenha" placeholder="Senha" onkeydown="if(event.key==='Enter')login()" />
-    <button class="btn btn-vermelho" onclick="login()">Entrar</button>
+    <input type="password" id="inputSenha" placeholder="Senha" onkeydown="if(event.key==='Enter')login()"/>
+    <button class="btn-red" onclick="login()">Entrar</button>
   </div>
 </div>
 
-<!-- PAINEL ADMIN -->
+<!-- PAINEL -->
 <div id="adminPanel">
-  <div class="admin-header">
+  <div class="adm-header">
     <div>
-      <div class="admin-titulo">Painel Admin — Rifa Nexus</div>
-      <div class="admin-sub" id="ultimaAtualizacao">Carregando...</div>
+      <div class="adm-titulo">PAINEL ADMIN</div>
+      <div class="adm-sub" id="ultimaAtualizacao">Carregando...</div>
     </div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-cinza" onclick="carregarDados()">↻ Atualizar</button>
-      <button class="btn btn-cinza" onclick="sair()">Sair</button>
+    <div class="adm-actions">
+      <button class="btn-ghost" onclick="carregarDados()">↻ Atualizar</button>
+      <button class="btn-ghost" onclick="sair()">Sair</button>
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="stats-grid">
-    <div class="stat-card stat-branco"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total</div></div>
-    <div class="stat-card stat-verde"><div class="stat-num" id="statDisponiveis">—</div><div class="stat-label">Disponíveis</div></div>
-    <div class="stat-card stat-amarelo"><div class="stat-num" id="statReservados">—</div><div class="stat-label">Reservados</div></div>
-    <div class="stat-card stat-vermelho"><div class="stat-num" id="statPagos">—</div><div class="stat-label">Pagos</div></div>
+    <div class="stat-card sn-white"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-card sn-green"><div class="stat-num" id="statDisponiveis">—</div><div class="stat-lbl">Disponíveis</div></div>
+    <div class="stat-card sn-yellow"><div class="stat-num" id="statReservados">—</div><div class="stat-lbl">Reservados</div></div>
+    <div class="stat-card sn-red"><div class="stat-num" id="statPagos">—</div><div class="stat-lbl">Pagos</div></div>
   </div>
 
-  <!-- AÇÕES -->
-  <div class="admin-section">
-    <h2>Ações</h2>
+  <div class="adm-section">
+    <p class="sec-lbl">Ações</p>
     <div class="acoes">
-      <button class="btn btn-cinza" onclick="liberarExpirados()">🧹 Liberar reservados expirados</button>
-      <a href="/" class="btn btn-cinza" target="_blank">👁️ Ver site</a>
+      <button class="btn-ghost" onclick="liberarExpirados()">🧹 Liberar expirados</button>
+      <a href="/" class="btn-ghost" target="_blank">👁 Ver site</a>
     </div>
   </div>
 
-  <!-- SORTEIO -->
-  <div class="admin-section">
-    <h2>Sorteio</h2>
+  <div class="adm-section">
+    <p class="sec-lbl">Sorteio</p>
     <div class="sorteio-box">
-      <p style="color:var(--cinza);font-size:0.9rem;margin-bottom:16px;">
-        O sorteio é aleatório entre todos os bilhetes com pagamento confirmado.
-        Essa ação não pode ser desfeita.
-      </p>
-      <button class="btn btn-vermelho" style="width:auto;padding:12px 28px;" onclick="realizarSorteio()">🎲 Realizar Sorteio</button>
+      <p>O sorteio é aleatório entre todos os bilhetes com pagamento confirmado. Essa ação não pode ser desfeita.</p>
+      <button class="btn-red" style="width:auto;padding:12px 28px;" onclick="realizarSorteio()">🎲 Realizar Sorteio</button>
       <div class="sorteio-resultado" id="sorteioResultado">
         <div class="sorteio-numero" id="sorteioNumero"></div>
         <div class="sorteio-nome" id="sorteioNome"></div>
@@ -143,59 +145,37 @@
     </div>
   </div>
 
-  <!-- TABELA DE BILHETES -->
-  <div class="admin-section">
-    <h2>Bilhetes</h2>
+  <div class="adm-section">
+    <p class="sec-lbl">Bilhetes vendidos e reservados</p>
     <div class="tabela-wrapper">
       <table>
-        <thead>
-          <tr>
-            <th>Número</th>
-            <th>Status</th>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Pago em</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaBilhetes">
-          <tr><td colspan="5" style="color:var(--cinza);text-align:center;padding:30px;">Carregando...</td></tr>
-        </tbody>
+        <thead><tr><th>Número</th><th>Status</th><th>Nome</th><th>E-mail</th><th>Pago em</th></tr></thead>
+        <tbody id="tabelaBilhetes"><tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text3);">Carregando...</td></tr></tbody>
       </table>
     </div>
   </div>
 </div>
 
+<footer><img src="/imgs/nexusicon.png" alt="Nexus"/>© 2025 Nexus Band — Painel Admin</footer>
 <div class="toast" id="toast"></div>
 
 <script>
   let token = localStorage.getItem('nexus_admin_token');
-
-  if (token) verificarToken();
+  if(token) verificarToken();
 
   async function login() {
     const senha = document.getElementById('inputSenha').value;
     try {
-      const res = await fetch('/api/admin?acao=login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ senha })
-      });
+      const res = await fetch('/api/admin?acao=login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha})});
       const data = await res.json();
-      if (res.ok) {
-        token = data.token;
-        localStorage.setItem('nexus_admin_token', token);
-        mostrarPainel();
-      } else {
-        mostrarToast('Senha incorreta', 'erro');
-      }
-    } catch { mostrarToast('Erro de conexão', 'erro'); }
+      if(res.ok) { token = data.token; localStorage.setItem('nexus_admin_token', token); mostrarPainel(); }
+      else toast('Senha incorreta', 'err');
+    } catch { toast('Erro de conexão', 'err'); }
   }
 
   async function verificarToken() {
-    const res = await fetch('/api/admin?acao=resumo', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (res.ok) mostrarPainel();
+    const res = await fetch('/api/admin?acao=resumo', {headers:{'Authorization':`Bearer ${token}`}});
+    if(res.ok) mostrarPainel();
     else { localStorage.removeItem('nexus_admin_token'); token = null; }
   }
 
@@ -205,80 +185,46 @@
     carregarDados();
   }
 
-  function sair() {
-    localStorage.removeItem('nexus_admin_token');
-    location.reload();
-  }
+  function sair() { localStorage.removeItem('nexus_admin_token'); location.reload(); }
 
   async function carregarDados() {
     try {
-      const res = await fetch('/api/admin?acao=resumo', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await fetch('/api/admin?acao=resumo', {headers:{'Authorization':`Bearer ${token}`}});
       const data = await res.json();
-
       document.getElementById('statTotal').textContent = data.stats.total;
       document.getElementById('statDisponiveis').textContent = data.stats.disponiveis;
       document.getElementById('statReservados').textContent = data.stats.reservados;
       document.getElementById('statPagos').textContent = data.stats.pagos;
       document.getElementById('ultimaAtualizacao').textContent = `Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
-
-      // Tabela — só mostrar pagos + reservados primeiro
       const tbody = document.getElementById('tabelaBilhetes');
-      const relevantes = data.bilhetes
-        .filter(b => b.status !== 'disponivel')
-        .sort((a,b) => a.numero - b.numero);
-
-      if (relevantes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="color:var(--cinza);text-align:center;padding:24px;">Nenhum bilhete vendido ainda</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = relevantes.map(b => `
-        <tr>
-          <td><strong>${String(b.numero).padStart(3,'0')}</strong></td>
-          <td><span class="badge badge-${b.status}">${b.status}</span></td>
-          <td>${b.nome_comprador || '—'}</td>
-          <td>${b.email_comprador || '—'}</td>
-          <td>${b.pago_em ? new Date(b.pago_em).toLocaleString('pt-BR') : '—'}</td>
-        </tr>
-      `).join('');
-
-    } catch { mostrarToast('Erro ao carregar dados', 'erro'); }
+      const relevantes = data.bilhetes.filter(b => b.status !== 'disponivel').sort((a,b) => a.numero - b.numero);
+      if(!relevantes.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Nenhum bilhete vendido ainda</td></tr>'; return; }
+      tbody.innerHTML = relevantes.map(b => `<tr><td><strong style="font-family:'DM Mono',monospace">${String(b.numero).padStart(3,'0')}</strong></td><td><span class="badge badge-${b.status}">${b.status}</span></td><td>${b.nome_comprador||'—'}</td><td>${b.email_comprador||'—'}</td><td>${b.pago_em?new Date(b.pago_em).toLocaleString('pt-BR'):'—'}</td></tr>`).join('');
+    } catch { toast('Erro ao carregar dados', 'err'); }
   }
 
   async function liberarExpirados() {
-    const res = await fetch('/api/admin?acao=liberar-expirados', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res = await fetch('/api/admin?acao=liberar-expirados', {headers:{'Authorization':`Bearer ${token}`}});
     const data = await res.json();
-    const qtd = data.liberados?.length || 0;
-    mostrarToast(`${qtd} bilhete(s) liberado(s)`, 'sucesso');
+    toast(`${data.liberados?.length||0} bilhete(s) liberado(s)`, 'ok');
     carregarDados();
   }
 
   async function realizarSorteio() {
-    if (!confirm('Tem certeza que deseja realizar o sorteio? Essa ação não pode ser desfeita.')) return;
-
-    const res = await fetch('/api/admin?acao=sortear', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    if(!confirm('Realizar o sorteio? Essa ação não pode ser desfeita.')) return;
+    const res = await fetch('/api/admin?acao=sortear', {method:'POST',headers:{'Authorization':`Bearer ${token}`}});
     const data = await res.json();
-
-    if (!res.ok) { mostrarToast(data.erro || 'Erro no sorteio', 'erro'); return; }
-
+    if(!res.ok) { toast(data.erro||'Erro no sorteio', 'err'); return; }
     document.getElementById('sorteioNumero').textContent = `#${String(data.numero_sorteado).padStart(3,'0')}`;
-    document.getElementById('sorteioNome').textContent = data.nome_vencedor || '—';
+    document.getElementById('sorteioNome').textContent = data.nome_vencedor||'—';
     document.getElementById('sorteioResultado').style.display = 'block';
-    mostrarToast('Sorteio realizado com sucesso!', 'sucesso');
+    toast('Sorteio realizado!', 'ok');
   }
 
-  function mostrarToast(msg, tipo) {
+  function toast(msg, tipo) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `toast ${tipo} visivel`;
-    setTimeout(() => t.classList.remove('visivel'), 4000);
+    t.textContent = msg; t.className = `toast ${tipo} show`;
+    setTimeout(() => t.classList.remove('show'), 4000);
   }
 </script>
 </body>
