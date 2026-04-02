@@ -6,26 +6,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-<<<<<<< HEAD
     :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
-=======
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-<<<<<<< HEAD
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
 
     /* ── NAV ── */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-=======
-    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
     @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
     .nav-logo img{height:32px;width:auto;object-fit:contain;}
@@ -33,7 +23,6 @@
     .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
     .nav-link.active{color:var(--text);}
-<<<<<<< HEAD
     .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
     .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
     .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
@@ -62,10 +51,6 @@
       .footer-links{gap:14px;}
     }
     @media(max-width:480px){.footer-links{gap:10px;}}
-=======
-    @media(max-width:700px){.nav-links{gap:14px;}.nav-link{font-size:0.58rem;}}
-    @media(max-width:520px){nav{padding:10px 16px;}.nav-links{gap:10px;}}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
 
     .page-hero{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
     .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
@@ -76,19 +61,10 @@
     .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
     .page-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,2vw,1rem);color:var(--text2);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.3s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-<<<<<<< HEAD
-=======
-
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .container{max-width:1080px;margin:0 auto;padding:0 24px 100px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
     .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:32px;color:var(--text);}
-<<<<<<< HEAD
-=======
-
-    /* FOTOS GRID */
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .fotos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:80px;}
     @media(max-width:600px){.fotos-grid{grid-template-columns:repeat(2,1fr);}}
     .foto-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;aspect-ratio:4/3;position:relative;cursor:pointer;transition:all var(--tr);}
@@ -98,12 +74,6 @@
     .foto-card:hover img{opacity:1;}
     .foto-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text3);}
     .foto-placeholder span{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;}
-<<<<<<< HEAD
-=======
-    .foto-placeholder svg{opacity:0.3;}
-
-    /* VIDEOS GRID */
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .videos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:80px;}
     @media(max-width:600px){.videos-grid{grid-template-columns:1fr;}}
     .video-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
@@ -115,29 +85,18 @@
     .video-info{padding:16px 18px;}
     .video-titulo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
     .video-local{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;}
-<<<<<<< HEAD
     .membros-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:80px;}
     @media(max-width:700px){.membros-grid{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:400px){.membros-grid{grid-template-columns:repeat(2,1fr);}}
     .membro-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color var(--tr);}
     .membro-card:hover{border-color:var(--border-s);}
     .membro-foto{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;}
-=======
-
-    /* MEMBROS */
-    .membros-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:80px;}
-    @media(max-width:700px){.membros-grid{grid-template-columns:repeat(2,1fr);}}
-    .membro-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color var(--tr);}
-    .membro-card:hover{border-color:var(--border-s);}
-    .membro-foto{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .membro-foto img{width:100%;height:100%;object-fit:cover;}
     .membro-foto-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
     .membro-foto-ph svg{opacity:0.15;}
     .membro-info{padding:14px 16px;}
     .membro-nome{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.04em;color:var(--text);margin-bottom:2px;}
     .membro-role{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);}
-<<<<<<< HEAD
   </style>
 </head>
 <body>
@@ -148,31 +107,15 @@
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
-=======
-
-    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-  </style>
-</head>
-<body>
-<nav>
-  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
-  <div class="nav-links">
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     <a href="/sobre.html" class="nav-link active">Sobre</a>
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-<<<<<<< HEAD
     <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-=======
-  </div>
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
 </nav>
 
 <div class="page-hero">
@@ -184,73 +127,20 @@
 </div>
 
 <div class="container">
-<<<<<<< HEAD
-=======
-
-  <!-- MEMBROS -->
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
   <div style="margin-bottom:64px;">
     <p class="sec-eyebrow">A banda</p>
     <h2 class="sec-title">MEMBROS</h2>
     <div class="membros-grid">
-<<<<<<< HEAD
       <div class="membro-card"><div class="membro-foto"><div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div></div><div class="membro-info"><div class="membro-nome">DAVI</div><div class="membro-role">Guitarra & Vocal</div></div></div>
       <div class="membro-card"><div class="membro-foto"><div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div></div><div class="membro-info"><div class="membro-nome">JOÃO</div><div class="membro-role">Guitarra</div></div></div>
       <div class="membro-card"><div class="membro-foto"><div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div></div><div class="membro-info"><div class="membro-nome">KATILA</div><div class="membro-role">Teclados</div></div></div>
       <div class="membro-card"><div class="membro-foto"><div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div></div><div class="membro-info"><div class="membro-nome">VICTOR</div><div class="membro-role">Bateria</div></div></div>
     </div>
   </div>
-=======
-      <div class="membro-card">
-        <div class="membro-foto">
-          <!-- <img src="/imgs/membro1.jpg" alt=""/> -->
-          <div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-        </div>
-        <div class="membro-info">
-          <div class="membro-nome">DAVI</div>
-          <div class="membro-role">Guitarra & Vocal</div>
-        </div>
-      </div>
-      <div class="membro-card">
-        <div class="membro-foto">
-          <div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-        </div>
-        <div class="membro-info">
-          <div class="membro-nome">JOÃO</div>
-          <div class="membro-role">Guitarra</div>
-        </div>
-      </div>
-      <div class="membro-card">
-        <div class="membro-foto">
-          <div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-        </div>
-        <div class="membro-info">
-          <div class="membro-nome">KATILA</div>
-          <div class="membro-role">Teclados</div>
-        </div>
-      </div>
-      <div class="membro-card">
-        <div class="membro-foto">
-          <div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-        </div>
-        <div class="membro-info">
-          <div class="membro-nome">VICTOR</div>
-          <div class="membro-role">Bateria</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOTOS -->
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
   <div style="margin-bottom:64px;">
     <p class="sec-eyebrow">Galeria</p>
     <h2 class="sec-title">FOTOS</h2>
     <div class="fotos-grid">
-<<<<<<< HEAD
-=======
-      <!-- Substitua os placeholders por <img src="/imgs/foto1.jpg"/> -->
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
       <div class="foto-card"><div class="foto-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Adicione uma foto</span></div></div>
       <div class="foto-card"><div class="foto-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Adicione uma foto</span></div></div>
       <div class="foto-card"><div class="foto-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Adicione uma foto</span></div></div>
@@ -258,51 +148,20 @@
       <div class="foto-card"><div class="foto-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Adicione uma foto</span></div></div>
     </div>
   </div>
-<<<<<<< HEAD
-=======
-
-  <!-- VIDEOS -->
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
   <div>
     <p class="sec-eyebrow">Shows</p>
     <h2 class="sec-title">VÍDEOS</h2>
     <div class="videos-grid">
-<<<<<<< HEAD
       <div class="video-card"><div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div><div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div></div>
       <div class="video-card"><div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div><div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div></div>
       <div class="video-card"><div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div><div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div></div>
       <div class="video-card"><div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div><div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div></div>
     </div>
   </div>
-=======
-      <!-- Para adicionar um vídeo do YouTube, substitua o placeholder pelo iframe:
-           <div class="video-embed"><iframe src="https://www.youtube.com/embed/SEU_ID_AQUI" allowfullscreen></iframe></div>
-      -->
-      <div class="video-card">
-        <div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div>
-        <div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div>
-      </div>
-      <div class="video-card">
-        <div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div>
-        <div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div>
-      </div>
-      <div class="video-card">
-        <div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div>
-        <div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div>
-      </div>
-      <div class="video-card">
-        <div class="video-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9"/><polygon points="10,8 16,12 10,16"/></svg><span>Cole o link do YouTube</span></div>
-        <div class="video-info"><div class="video-titulo">SHOW AO VIVO</div><div class="video-local">Adicione o local e data</div></div>
-      </div>
-    </div>
-  </div>
-
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
 </div>
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-<<<<<<< HEAD
   <div class="footer-links">
     <a href="/sobre.html" class="footer-link">Sobre</a>
     <a href="/agenda.html" class="footer-link">Agenda</a>
@@ -320,9 +179,3 @@
 </script>
 </body>
 </html>
-=======
-  <span>Todos os direitos reservados</span>
-</footer>
-</body>
-</html>
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816

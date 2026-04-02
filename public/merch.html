@@ -6,26 +6,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-<<<<<<< HEAD
     :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
-=======
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-<<<<<<< HEAD
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
 
     /* ── NAV ── */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-=======
-    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
     @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
     .nav-logo img{height:32px;width:auto;object-fit:contain;}
@@ -33,7 +23,6 @@
     .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
     .nav-link.active{color:var(--text);}
-<<<<<<< HEAD
     .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
     .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
     .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
@@ -62,10 +51,6 @@
       .footer-links{gap:14px;}
     }
     @media(max-width:480px){.footer-links{gap:10px;}}
-=======
-    @media(max-width:700px){.nav-links{gap:14px;}.nav-link{font-size:0.58rem;}}
-    @media(max-width:520px){nav{padding:10px 16px;}.nav-links{gap:10px;}}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
 
     .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
     .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
@@ -75,15 +60,10 @@
     .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
     .page-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,2vw,1rem);color:var(--text2);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.3s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-<<<<<<< HEAD
-=======
-
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .container{max-width:1080px;margin:0 auto;padding:0 24px 100px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
     .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:36px;color:var(--text);}
-<<<<<<< HEAD
     .merch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:80px;}
     @media(max-width:700px){.merch-grid{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:420px){.merch-grid{grid-template-columns:1fr;}}
@@ -91,18 +71,6 @@
     .merch-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
     .merch-img{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
     .merch-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
-=======
-
-    .merch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:80px;}
-    @media(max-width:700px){.merch-grid{grid-template-columns:repeat(2,1fr);}}
-    @media(max-width:420px){.merch-grid{grid-template-columns:1fr;}}
-
-    .merch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all var(--tr);cursor:pointer;}
-    .merch-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
-    .merch-img{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-    .merch-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
-    .merch-img img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1;}
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .merch-emoji{font-size:4rem;position:relative;z-index:1;filter:drop-shadow(0 0 20px var(--red-glow));}
     .merch-badge{position:absolute;top:12px;right:12px;z-index:2;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px;border-radius:4px;}
     .badge-novo{background:var(--red);color:#fff;}
@@ -115,15 +83,10 @@
     .merch-btn{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:7px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
     .merch-btn:hover{border-color:var(--red);color:var(--red);}
     .merch-btn:disabled{opacity:0.3;cursor:not-allowed;}
-<<<<<<< HEAD
-=======
-
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     .aviso{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;display:flex;align-items:center;gap:16px;margin-bottom:60px;}
     .aviso-icon{font-size:1.5rem;flex-shrink:0;}
     .aviso-txt{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text2);letter-spacing:0.05em;line-height:1.8;}
     .aviso-txt strong{color:var(--text);}
-<<<<<<< HEAD
   </style>
 </head>
 <body>
@@ -134,31 +97,15 @@
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
-=======
-
-    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-  </style>
-</head>
-<body>
-<nav>
-  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
-  <div class="nav-links">
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
     <a href="/sobre.html" class="nav-link">Sobre</a>
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link active">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-<<<<<<< HEAD
     <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-=======
-  </div>
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
 </nav>
 
 <div class="page-hero">
@@ -167,7 +114,6 @@
   <h1 class="page-title">MERCH</h1>
   <p class="page-sub">Produtos exclusivos da Nexus Band</p>
 </div>
-<<<<<<< HEAD
 <div class="container">
   <div class="aviso">
     <span class="aviso-icon">📦</span>
@@ -183,115 +129,10 @@
     <div class="merch-card"><div class="merch-img"><span class="merch-emoji">🎨</span></div><div class="merch-info"><div class="merch-nome">PACK ADESIVOS</div><div class="merch-desc">6 adesivos em vinil impermeável com artes exclusivas da banda.</div><div class="merch-footer"><span class="merch-preco">R$ --</span><button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button></div></div></div>
     <div class="merch-card"><div class="merch-img"><span class="merch-badge badge-esgotado">Em breve</span><span class="merch-emoji">🥁</span></div><div class="merch-info"><div class="merch-nome">BAQUETAS ASSINADAS</div><div class="merch-desc">Baquetas autografadas pelo baterista. Edição limitada e numerada.</div><div class="merch-footer"><span class="merch-preco" style="color:var(--text3)">Em breve</span><button class="merch-btn" disabled>Indisponível</button></div></div></div>
   </div>
-=======
-
-<div class="container">
-
-  <div class="aviso">
-    <span class="aviso-icon">📦</span>
-    <div class="aviso-txt">
-      <strong>Pedidos via Instagram</strong><br/>
-      Para comprar, entre em contato pelo nosso Instagram <strong>@nexus.bandbr</strong>. Informamos disponibilidade de tamanhos e formas de pagamento.
-    </div>
-  </div>
-
-  <p class="sec-eyebrow">Coleção atual</p>
-  <h2 class="sec-title">PRODUTOS</h2>
-
-  <div class="merch-grid">
-    <div class="merch-card">
-      <div class="merch-img">
-        <span class="merch-badge badge-novo">Novo</span>
-        <!-- <img src="/imgs/merch-camiseta.jpg" alt="Camiseta"/> -->
-        <span class="merch-emoji">👕</span>
-      </div>
-      <div class="merch-info">
-        <div class="merch-nome">CAMISETA OFICIAL</div>
-        <div class="merch-desc">100% algodão, estampa serigrafia com o logo da banda. Disponível em P, M, G e GG.</div>
-        <div class="merch-footer">
-          <span class="merch-preco">R$ --</span>
-          <button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button>
-        </div>
-      </div>
-    </div>
-    <div class="merch-card">
-      <div class="merch-img">
-        <!-- <img src="/imgs/merch-palheta.jpg" alt="Palheta"/> -->
-        <span class="merch-emoji">🎸</span>
-      </div>
-      <div class="merch-info">
-        <div class="merch-nome">PALHETA EXCLUSIVA</div>
-        <div class="merch-desc">Palheta personalizada com o logo da Nexus. Espessura media. Pack com 3 unidades.</div>
-        <div class="merch-footer">
-          <span class="merch-preco">R$ --</span>
-          <button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button>
-        </div>
-      </div>
-    </div>
-    <div class="merch-card">
-      <div class="merch-img">
-        <!-- <img src="/imgs/merch-chaveiro.jpg" alt="Chaveiro"/> -->
-        <span class="merch-emoji">🔑</span>
-      </div>
-      <div class="merch-info">
-        <div class="merch-nome">CHAVEIRO NEXUS</div>
-        <div class="merch-desc">Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.</div>
-        <div class="merch-footer">
-          <span class="merch-preco">R$ --</span>
-          <button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button>
-        </div>
-      </div>
-    </div>
-    <div class="merch-card">
-      <div class="merch-img">
-        <!-- <img src="/imgs/merch-pin.jpg" alt="Pin"/> -->
-        <span class="merch-emoji">📌</span>
-      </div>
-      <div class="merch-info">
-        <div class="merch-nome">PIN COLECIONÁVEL</div>
-        <div class="merch-desc">Pin esmaltado com o logo da Nexus. Perfeito para jaquetas e mochilas.</div>
-        <div class="merch-footer">
-          <span class="merch-preco">R$ --</span>
-          <button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button>
-        </div>
-      </div>
-    </div>
-    <div class="merch-card">
-      <div class="merch-img">
-        <!-- <img src="/imgs/merch-adesivo.jpg" alt="Adesivos"/> -->
-        <span class="merch-emoji">🎨</span>
-      </div>
-      <div class="merch-info">
-        <div class="merch-nome">PACK ADESIVOS</div>
-        <div class="merch-desc">6 adesivos em vinil impermeável com artes exclusivas da banda.</div>
-        <div class="merch-footer">
-          <span class="merch-preco">R$ --</span>
-          <button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button>
-        </div>
-      </div>
-    </div>
-    <div class="merch-card">
-      <div class="merch-img">
-        <span class="merch-badge badge-esgotado">Em breve</span>
-        <span class="merch-emoji">🥁</span>
-      </div>
-      <div class="merch-info">
-        <div class="merch-nome">BAQUETAS ASSINADAS</div>
-        <div class="merch-desc">Baquetas autografadas pelo baterista. Edição limitada e numerada.</div>
-        <div class="merch-footer">
-          <span class="merch-preco" style="color:var(--text3)">Em breve</span>
-          <button class="merch-btn" disabled>Indisponível</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
 </div>
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-<<<<<<< HEAD
   <div class="footer-links">
     <a href="/sobre.html" class="footer-link">Sobre</a>
     <a href="/agenda.html" class="footer-link">Agenda</a>
@@ -309,9 +150,3 @@
 </script>
 </body>
 </html>
-=======
-  <span>Todos os direitos reservados</span>
-</footer>
-</body>
-</html>
->>>>>>> 79a17e0066f1a796e7c9727fc7af97c36bab0816
