@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   const { acao } = req.query;
 
-  // Login — retorna token simples
+  // Login
   if (acao === 'login') {
     if (req.method !== 'POST') return res.status(405).end();
     const { senha } = req.body;
@@ -28,12 +28,13 @@ export default async function handler(req, res) {
     return res.status(401).json({ erro: 'Senha incorreta' });
   }
 
-  // Todas as outras ações exigem autenticação
   if (!autenticar(req)) return res.status(401).json({ erro: 'Não autorizado' });
 
-  // Buscar resumo
+  // Resumo
   if (acao === 'resumo') {
-    const { data: bilhetes } = await supabase.from('bilhetes').select('numero, status, nome_comprador, email_comprador, pago_em');
+    const { data: bilhetes } = await supabase
+      .from('bilhetes')
+      .select('numero, status, nome_comprador, email_comprador, instagram_comprador, telefone_comprador, pago_em');
     const { data: config } = await supabase.from('config').select('chave, valor');
     const { data: sorteio } = await supabase.from('sorteio').select('*').order('realizado_em', { ascending: false }).limit(1);
 
@@ -47,27 +48,15 @@ export default async function handler(req, res) {
       pagos: bilhetes?.filter(b => b.status === 'pago').length || 0,
     };
 
-    return res.status(200).json({
-      bilhetes,
-      config: configObj,
-      stats,
-      ultimo_sorteio: sorteio?.[0] || null
-    });
+    return res.status(200).json({ bilhetes, config: configObj, stats, ultimo_sorteio: sorteio?.[0] || null });
   }
 
-  // Liberar bilhetes reservados há mais de 30 minutos
+  // Liberar expirados
   if (acao === 'liberar-expirados') {
     const trintaMinutosAtras = new Date(Date.now() - 30 * 60 * 1000).toISOString();
     const { data, error } = await supabase
       .from('bilhetes')
-      .update({
-        status: 'disponivel',
-        nome_comprador: null,
-        email_comprador: null,
-        telefone_comprador: null,
-        preference_id: null,
-        reservado_em: null
-      })
+      .update({ status: 'disponivel', nome_comprador: null, email_comprador: null, instagram_comprador: null, telefone_comprador: null, preference_id: null, reservado_em: null })
       .eq('status', 'reservado')
       .lt('reservado_em', trintaMinutosAtras)
       .select('numero');
@@ -76,13 +65,13 @@ export default async function handler(req, res) {
     return res.status(200).json({ liberados: data?.map(b => b.numero) || [] });
   }
 
-  // Realizar sorteio
+  // Sortear
   if (acao === 'sortear') {
     if (req.method !== 'POST') return res.status(405).end();
 
     const { data: pagos } = await supabase
       .from('bilhetes')
-      .select('numero, nome_comprador')
+      .select('numero, nome_comprador, instagram_comprador')
       .eq('status', 'pago');
 
     if (!pagos || pagos.length === 0)
@@ -92,12 +81,14 @@ export default async function handler(req, res) {
 
     await supabase.from('sorteio').insert({
       numero_sorteado: vencedor.numero,
-      nome_vencedor: vencedor.nome_comprador
+      nome_vencedor: vencedor.nome_comprador,
+      instagram_vencedor: vencedor.instagram_comprador || null
     });
 
     return res.status(200).json({
       numero_sorteado: vencedor.numero,
-      nome_vencedor: vencedor.nome_comprador
+      nome_vencedor: vencedor.nome_comprador,
+      instagram_vencedor: vencedor.instagram_comprador || null
     });
   }
 

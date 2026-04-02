@@ -4,98 +4,115 @@
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — Rifa Nexus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.18);--bg:#0c0c0c;--bg2:#141414;--bg3:#1c1c1c;--bg4:#242424;--border:rgba(255,255,255,0.08);--border-s:rgba(255,255,255,0.15);--text:#f0ede8;--text2:#888;--text3:#444;--glass:rgba(12,12,12,0.88);--radius:16px;--radius-sm:8px;--tr:0.35s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.18);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
-    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
 
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 40px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-    .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 2.5s ease-in-out infinite;}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
-    .nav-logo img{height:34px;width:auto;object-fit:contain;}
-    .nav-link{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
+    .nav-logo img{height:32px;width:auto;object-fit:contain;}
+    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
 
     /* LOGIN */
     #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px 20px;position:relative;overflow:hidden;}
-    .login-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.08;pointer-events:none;}
-    .lo1{width:500px;height:500px;background:var(--red);top:-150px;left:-100px;}
+    .login-orb{position:absolute;width:500px;height:500px;background:var(--red);border-radius:50%;filter:blur(120px);opacity:0.07;top:-160px;left:-120px;pointer-events:none;}
     .login-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 100%);pointer-events:none;}
     .login-box{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);padding:48px;width:100%;max-width:380px;text-align:center;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
     @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .login-ey{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+    .login-ey{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
     .login-ti{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:0.05em;color:var(--text);margin-bottom:6px;}
-    .login-sub{font-size:0.85rem;color:var(--text2);margin-bottom:32px;}
-    .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color var(--tr);margin-bottom:16px;}
+    .login-sub{font-size:0.84rem;color:var(--text2);margin-bottom:32px;}
+    .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;outline:none;transition:border-color var(--tr);margin-bottom:14px;}
     .login-box input:focus{border-color:var(--red);}
     .login-box input::placeholder{color:var(--text3);}
     .btn-red{width:100%;background:var(--red);border:none;color:#fff;padding:14px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;cursor:pointer;transition:all var(--tr);}
     .btn-red:hover{background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
 
     /* PAINEL */
-    #adminPanel{display:none;max-width:1000px;margin:0 auto;padding:100px 24px 60px;}
-    .adm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px;}
-    .adm-titulo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--text);}
-    .adm-sub{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:var(--text3);margin-top:4px;}
-    .adm-actions{display:flex;gap:8px;}
-    .btn-ghost{background:none;border:1px solid var(--border-s);color:var(--text2);padding:10px 18px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all var(--tr);}
-    .btn-ghost:hover{border-color:var(--text);color:var(--text);}
+    #adminPanel{display:none;max-width:1020px;margin:0 auto;padding:96px 24px 60px;}
+    .adm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
+    .adm-titulo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.04em;color:var(--text);}
+    .adm-sub{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--text3);margin-top:5px;}
+    .adm-actions{display:flex;gap:8px;flex-wrap:wrap;}
 
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:40px;}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:36px;}
     @media(max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
     .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;}
-    .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.05em;}
-    .stat-lbl{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase;margin-top:4px;}
-    .sn-green .stat-num{color:#4dde9a;}
-    .sn-yellow .stat-num{color:#f5c542;}
-    .sn-red .stat-num{color:var(--red);}
-    .sn-white .stat-num{color:var(--text);}
+    .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:0.05em;}
+    .stat-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase;margin-top:4px;}
+    .sn-green .stat-num{color:#4dde9a;} .sn-yellow .stat-num{color:#f5c542;} .sn-red .stat-num{color:var(--red);} .sn-white .stat-num{color:var(--text);}
 
-    .adm-section{margin-bottom:40px;}
-    .sec-lbl{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
-    .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+    .adm-section{margin-bottom:36px;}
+    .sec-ey{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+    .sec-ey::after{content:'';flex:1;height:1px;background:var(--border);}
 
     .acoes{display:flex;gap:10px;flex-wrap:wrap;}
+    .btn-ghost{background:none;border:1px solid var(--border-s);color:var(--text2);padding:10px 18px;border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:0.84rem;cursor:pointer;transition:all var(--tr);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+    .btn-ghost:hover{border-color:var(--text);color:var(--text);}
 
+    /* CONFIG EDITOR */
+    .config-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:600px){.config-grid{grid-template-columns:1fr;}}
+    .config-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;}
+    .config-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+    .config-label span{color:var(--text2);font-size:0.52rem;}
+    .config-input-row{display:flex;gap:8px;align-items:center;}
+    .config-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 13px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;outline:none;transition:border-color var(--tr);}
+    .config-input:focus{border-color:var(--red);}
+    .config-input::placeholder{color:var(--text3);}
+    .btn-save{background:var(--red);border:none;color:#fff;padding:10px 16px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;cursor:pointer;transition:all var(--tr);white-space:nowrap;}
+    .btn-save:hover{background:#ff2a10;}
+    .btn-save:disabled{opacity:0.4;cursor:not-allowed;}
+    .config-hint{font-size:0.7rem;color:var(--text3);margin-top:7px;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.04em;}
+
+    /* SORTEIO */
     .sorteio-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:24px;}
-    .sorteio-box p{font-size:0.85rem;color:var(--text2);margin-bottom:20px;line-height:1.7;}
-    .sorteio-resultado{margin-top:20px;padding:24px;background:rgba(29,160,80,0.06);border:1px solid rgba(29,160,80,0.3);border-radius:var(--radius-sm);display:none;text-align:center;}
-    .sorteio-numero{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:#4dde9a;letter-spacing:0.05em;}
+    .sorteio-box p{font-size:0.86rem;color:var(--text2);margin-bottom:20px;line-height:1.75;}
+    .sorteio-resultado{margin-top:20px;padding:28px;background:rgba(29,160,80,0.05);border:1px solid rgba(29,160,80,0.25);border-radius:var(--radius-sm);display:none;text-align:center;}
+    .sorteio-numero{font-family:'Bebas Neue',sans-serif;font-size:3.8rem;color:#4dde9a;letter-spacing:0.05em;}
     .sorteio-nome{font-size:1rem;color:var(--text2);margin-top:4px;}
+    .sorteio-insta{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--red);margin-top:6px;}
 
+    /* TABELA */
     .tabela-wrapper{overflow-x:auto;}
-    table{width:100%;border-collapse:collapse;font-size:0.85rem;}
-    th{text-align:left;padding:10px 12px;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
+    table{width:100%;border-collapse:collapse;font-size:0.84rem;}
+    th{text-align:left;padding:10px 12px;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
     td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2);}
     tr:hover td{background:var(--bg3);}
-    .badge{display:inline-block;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.05em;}
-    .badge-disponivel{background:var(--bg3);color:var(--text3);}
+    .badge{display:inline-block;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:0.64rem;font-weight:500;letter-spacing:0.05em;}
     .badge-reservado{background:#2a1f00;color:#f5c542;}
-    .badge-pago{background:rgba(160,26,7,0.2);color:var(--red);}
+    .badge-pago{background:rgba(160,26,7,0.18);color:var(--red);}
 
-    .toast{position:fixed;top:80px;right:24px;z-index:999;padding:14px 20px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.05em;transform:translateX(120%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);max-width:300px;border:1px solid;}
-    .toast.show{transform:translateX(0);}
-    .toast.ok{background:var(--bg2);border-color:#1a6040;color:#3dbb80;}
+    /* TOAST */
+    .toast{position:fixed;top:76px;right:24px;z-index:9999;padding:0;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.05em;transform:translateX(calc(100% + 48px));transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),padding 0.15s,opacity 0.25s;max-width:280px;border:0px solid transparent;opacity:0;overflow:hidden;pointer-events:none;}
+    .toast.show{transform:translateX(0);opacity:1;padding:12px 18px;border-width:1px;pointer-events:auto;}
+    .toast.ok{background:var(--bg2);border-color:#1a5038;color:#3dbb80;}
     .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
 
-    footer{border-top:1px solid var(--border);padding:24px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;display:flex;align-items:center;gap:8px;}
+    footer{border-top:1px solid var(--border);padding:24px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;display:flex;align-items:center;gap:8px;}
     footer img{height:18px;opacity:0.3;}
+
+    @media(max-width:680px){nav{padding:12px 18px;}}
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="/" class="nav-logo"><div class="nav-dot"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
   <a href="/" class="nav-link">← Voltar ao site</a>
 </nav>
 
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-grid"></div>
-  <div class="login-orb lo1"></div>
+  <div class="login-orb"></div>
   <div class="login-box">
     <div class="login-ey">Acesso restrito</div>
     <div class="login-ti">ADMIN</div>
@@ -118,6 +135,7 @@
     </div>
   </div>
 
+  <!-- STATS -->
   <div class="stats-grid">
     <div class="stat-card sn-white"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">Total</div></div>
     <div class="stat-card sn-green"><div class="stat-num" id="statDisponiveis">—</div><div class="stat-lbl">Disponíveis</div></div>
@@ -125,107 +143,176 @@
     <div class="stat-card sn-red"><div class="stat-num" id="statPagos">—</div><div class="stat-lbl">Pagos</div></div>
   </div>
 
+  <!-- AÇÕES -->
   <div class="adm-section">
-    <p class="sec-lbl">Ações</p>
+    <p class="sec-ey">Ações</p>
     <div class="acoes">
       <button class="btn-ghost" onclick="liberarExpirados()">🧹 Liberar expirados</button>
       <a href="/" class="btn-ghost" target="_blank">👁 Ver site</a>
     </div>
   </div>
 
+  <!-- CONFIGURAÇÕES -->
   <div class="adm-section">
-    <p class="sec-lbl">Sorteio</p>
+    <p class="sec-ey">Configurações da Rifa</p>
+    <div class="config-grid">
+
+      <div class="config-card">
+        <div class="config-label">Valor do bilhete <span>R$</span></div>
+        <div class="config-input-row">
+          <input type="number" class="config-input" id="cfgValor" placeholder="10.00" step="0.50" min="1"/>
+          <button class="btn-save" onclick="salvarConfig('valor_bilhete', document.getElementById('cfgValor').value, this)">Salvar</button>
+        </div>
+        <p class="config-hint">Valor em reais (ex: 10.00 → R$ 10,00)</p>
+      </div>
+
+      <div class="config-card">
+        <div class="config-label">Data do sorteio</div>
+        <div class="config-input-row">
+          <input type="date" class="config-input" id="cfgData"/>
+          <button class="btn-save" onclick="salvarConfig('data_sorteio', document.getElementById('cfgData').value, this)">Salvar</button>
+        </div>
+        <p class="config-hint">A data aparece no contador do site</p>
+      </div>
+
+      <div class="config-card" style="grid-column:1/-1;">
+        <div class="config-label">Quantidade de bilhetes <span>⚠️ requer SQL no Supabase</span></div>
+        <div class="config-input-row">
+          <input type="number" class="config-input" id="cfgTotal" placeholder="100" min="1" max="10000"/>
+          <button class="btn-save" onclick="salvarConfig('total_bilhetes', document.getElementById('cfgTotal').value, this)">Salvar config</button>
+        </div>
+        <p class="config-hint">
+          Atualiza o contador no site. Para gerar bilhetes físicos no banco, execute no SQL Editor do Supabase:<br/>
+          <code style="background:var(--bg3);padding:2px 6px;border-radius:3px;font-size:0.7rem;color:var(--text2);">INSERT INTO bilhetes (numero) SELECT generate_series(101, [NOVO_TOTAL]) ON CONFLICT DO NOTHING;</code>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SORTEIO -->
+  <div class="adm-section">
+    <p class="sec-ey">Sorteio</p>
     <div class="sorteio-box">
       <p>O sorteio é aleatório entre todos os bilhetes com pagamento confirmado. Essa ação não pode ser desfeita.</p>
       <button class="btn-red" style="width:auto;padding:12px 28px;" onclick="realizarSorteio()">🎲 Realizar Sorteio</button>
       <div class="sorteio-resultado" id="sorteioResultado">
         <div class="sorteio-numero" id="sorteioNumero"></div>
         <div class="sorteio-nome" id="sorteioNome"></div>
+        <div class="sorteio-insta" id="sorteioInsta"></div>
       </div>
     </div>
   </div>
 
+  <!-- TABELA -->
   <div class="adm-section">
-    <p class="sec-lbl">Bilhetes vendidos e reservados</p>
+    <p class="sec-ey">Bilhetes vendidos e reservados</p>
     <div class="tabela-wrapper">
       <table>
-        <thead><tr><th>Número</th><th>Status</th><th>Nome</th><th>E-mail</th><th>Pago em</th></tr></thead>
-        <tbody id="tabelaBilhetes"><tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text3);">Carregando...</td></tr></tbody>
+        <thead><tr><th>Número</th><th>Status</th><th>Nome</th><th>E-mail</th><th>Instagram</th><th>Pago em</th></tr></thead>
+        <tbody id="tabelaBilhetes"><tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text3);">Carregando...</td></tr></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<footer><img src="/imgs/nexusicon.png" alt="Nexus"/>© 2025 Nexus Band — Painel Admin</footer>
+<footer><img src="/imgs/nexusicon.png" alt="Nexus"/>© 2026 Nexus Band — Painel Admin</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-  let token = localStorage.getItem('nexus_admin_token');
-  if(token) verificarToken();
+let token=localStorage.getItem('nexus_admin_token');
+if(token)verificarToken();
 
-  async function login() {
-    const senha = document.getElementById('inputSenha').value;
-    try {
-      const res = await fetch('/api/admin?acao=login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha})});
-      const data = await res.json();
-      if(res.ok) { token = data.token; localStorage.setItem('nexus_admin_token', token); mostrarPainel(); }
-      else toast('Senha incorreta', 'err');
-    } catch { toast('Erro de conexão', 'err'); }
-  }
+async function login(){
+  const senha=document.getElementById('inputSenha').value;
+  try{
+    const res=await fetch('/api/admin?acao=login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha})});
+    const data=await res.json();
+    if(res.ok){token=data.token;localStorage.setItem('nexus_admin_token',token);mostrarPainel();}
+    else toast('Senha incorreta','err');
+  }catch{toast('Erro de conexão','err');}
+}
 
-  async function verificarToken() {
-    const res = await fetch('/api/admin?acao=resumo', {headers:{'Authorization':`Bearer ${token}`}});
-    if(res.ok) mostrarPainel();
-    else { localStorage.removeItem('nexus_admin_token'); token = null; }
-  }
+async function verificarToken(){
+  const res=await fetch('/api/admin?acao=resumo',{headers:{'Authorization':`Bearer ${token}`}});
+  if(res.ok)mostrarPainel();
+  else{localStorage.removeItem('nexus_admin_token');token=null;}
+}
 
-  function mostrarPainel() {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminPanel').style.display = 'block';
-    carregarDados();
-  }
+function mostrarPainel(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
+  carregarDados();
+}
+function sair(){localStorage.removeItem('nexus_admin_token');location.reload();}
 
-  function sair() { localStorage.removeItem('nexus_admin_token'); location.reload(); }
+async function carregarDados(){
+  try{
+    const res=await fetch('/api/admin?acao=resumo',{headers:{'Authorization':`Bearer ${token}`}});
+    const data=await res.json();
+    document.getElementById('statTotal').textContent=data.stats.total;
+    document.getElementById('statDisponiveis').textContent=data.stats.disponiveis;
+    document.getElementById('statReservados').textContent=data.stats.reservados;
+    document.getElementById('statPagos').textContent=data.stats.pagos;
+    document.getElementById('ultimaAtualizacao').textContent=`Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
 
-  async function carregarDados() {
-    try {
-      const res = await fetch('/api/admin?acao=resumo', {headers:{'Authorization':`Bearer ${token}`}});
-      const data = await res.json();
-      document.getElementById('statTotal').textContent = data.stats.total;
-      document.getElementById('statDisponiveis').textContent = data.stats.disponiveis;
-      document.getElementById('statReservados').textContent = data.stats.reservados;
-      document.getElementById('statPagos').textContent = data.stats.pagos;
-      document.getElementById('ultimaAtualizacao').textContent = `Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
-      const tbody = document.getElementById('tabelaBilhetes');
-      const relevantes = data.bilhetes.filter(b => b.status !== 'disponivel').sort((a,b) => a.numero - b.numero);
-      if(!relevantes.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Nenhum bilhete vendido ainda</td></tr>'; return; }
-      tbody.innerHTML = relevantes.map(b => `<tr><td><strong style="font-family:'DM Mono',monospace">${String(b.numero).padStart(3,'0')}</strong></td><td><span class="badge badge-${b.status}">${b.status}</span></td><td>${b.nome_comprador||'—'}</td><td>${b.email_comprador||'—'}</td><td>${b.pago_em?new Date(b.pago_em).toLocaleString('pt-BR'):'—'}</td></tr>`).join('');
-    } catch { toast('Erro ao carregar dados', 'err'); }
-  }
+    // Preencher campos config com valores atuais
+    if(data.config){
+      if(data.config.valor_bilhete) document.getElementById('cfgValor').value=data.config.valor_bilhete;
+      if(data.config.data_sorteio) document.getElementById('cfgData').value=data.config.data_sorteio;
+      if(data.config.total_bilhetes) document.getElementById('cfgTotal').value=data.config.total_bilhetes;
+    }
 
-  async function liberarExpirados() {
-    const res = await fetch('/api/admin?acao=liberar-expirados', {headers:{'Authorization':`Bearer ${token}`}});
-    const data = await res.json();
-    toast(`${data.liberados?.length||0} bilhete(s) liberado(s)`, 'ok');
-    carregarDados();
-  }
+    const tbody=document.getElementById('tabelaBilhetes');
+    const relevantes=data.bilhetes.filter(b=>b.status!=='disponivel').sort((a,b)=>a.numero-b.numero);
+    if(!relevantes.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Nenhum bilhete vendido ainda</td></tr>';return;}
+    tbody.innerHTML=relevantes.map(b=>`<tr>
+      <td><strong style="font-family:'DM Mono',monospace">${String(b.numero).padStart(3,'0')}</strong></td>
+      <td><span class="badge badge-${b.status}">${b.status}</span></td>
+      <td>${b.nome_comprador||'—'}</td>
+      <td>${b.email_comprador||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--red);">${b.instagram_comprador||'—'}</td>
+      <td>${b.pago_em?new Date(b.pago_em).toLocaleString('pt-BR'):'—'}</td>
+    </tr>`).join('');
+  }catch{toast('Erro ao carregar dados','err');}
+}
 
-  async function realizarSorteio() {
-    if(!confirm('Realizar o sorteio? Essa ação não pode ser desfeita.')) return;
-    const res = await fetch('/api/admin?acao=sortear', {method:'POST',headers:{'Authorization':`Bearer ${token}`}});
-    const data = await res.json();
-    if(!res.ok) { toast(data.erro||'Erro no sorteio', 'err'); return; }
-    document.getElementById('sorteioNumero').textContent = `#${String(data.numero_sorteado).padStart(3,'0')}`;
-    document.getElementById('sorteioNome').textContent = data.nome_vencedor||'—';
-    document.getElementById('sorteioResultado').style.display = 'block';
-    toast('Sorteio realizado!', 'ok');
-  }
+async function salvarConfig(chave, valor, btn){
+  if(!valor){toast('Valor não pode ser vazio','err');return;}
+  btn.disabled=true;btn.textContent='...';
+  try{
+    const res=await fetch('/api/admin?acao=config',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({chave,valor})});
+    if(res.ok){toast('Configuração salva!','ok');}
+    else{const d=await res.json();toast(d.erro||'Erro ao salvar','err');}
+  }catch{toast('Erro de conexão','err');}
+  btn.disabled=false;btn.textContent='Salvar';
+}
 
-  function toast(msg, tipo) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.className = `toast ${tipo} show`;
-    setTimeout(() => t.classList.remove('show'), 4000);
-  }
+async function liberarExpirados(){
+  const res=await fetch('/api/admin?acao=liberar-expirados',{headers:{'Authorization':`Bearer ${token}`}});
+  const data=await res.json();
+  toast(`${data.liberados?.length||0} bilhete(s) liberado(s)`,'ok');
+  carregarDados();
+}
+
+async function realizarSorteio(){
+  if(!confirm('Realizar o sorteio? Essa ação não pode ser desfeita.'))return;
+  const res=await fetch('/api/admin?acao=sortear',{method:'POST',headers:{'Authorization':`Bearer ${token}`}});
+  const data=await res.json();
+  if(!res.ok){toast(data.erro||'Erro no sorteio','err');return;}
+  document.getElementById('sorteioNumero').textContent=`#${String(data.numero_sorteado).padStart(3,'0')}`;
+  document.getElementById('sorteioNome').textContent=data.nome_vencedor||'—';
+  document.getElementById('sorteioInsta').textContent=data.instagram_vencedor||'';
+  document.getElementById('sorteioResultado').style.display='block';
+  toast('Sorteio realizado!','ok');
+}
+
+function toast(msg,tipo){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${tipo} show`;
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),4000);
+}
 </script>
 </body>
 </html>

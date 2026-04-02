@@ -2,25 +2,25 @@
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 
-const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  const { numeros, nome, email, telefone } = req.body;
+  const { numeros, nome, email, instagram, telefone } = req.body;
 
   if (!numeros || !Array.isArray(numeros) || numeros.length === 0)
     return res.status(400).json({ erro: 'Informe os números desejados' });
   if (!nome || !email)
     return res.status(400).json({ erro: 'Nome e e-mail são obrigatórios' });
+  if (!instagram)
+    return res.status(400).json({ erro: 'Instagram é obrigatório para notificação do prêmio' });
 
-  // Verificar se todos os números estão disponíveis
+  // Verificar disponibilidade
   const { data: bilhetesExistentes, error: erroBusca } = await supabase
     .from('bilhetes')
     .select('numero, status')
@@ -46,13 +46,14 @@ export default async function handler(req, res) {
   const valorUnitario = parseFloat(configValor?.valor || '10.00');
   const valorTotal = valorUnitario * numeros.length;
 
-  // Reservar os bilhetes temporariamente
+  // Reservar bilhetes
   const { error: erroReserva } = await supabase
     .from('bilhetes')
     .update({
       status: 'reservado',
       nome_comprador: nome,
       email_comprador: email,
+      instagram_comprador: instagram,
       telefone_comprador: telefone || null,
       reservado_em: new Date().toISOString()
     })
@@ -61,7 +62,17 @@ export default async function handler(req, res) {
 
   if (erroReserva) return res.status(500).json({ erro: 'Erro ao reservar bilhetes' });
 
-  // Criar preferência no Mercado Pago
+  // MODO DEMO: sem token do MP configurado
+  if (!process.env.MP_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN === 'SEU_TOKEN_AQUI') {
+    const numerosStr = numeros.map(n => String(n).padStart(3, '0')).join(', ');
+    return res.status(200).json({
+      modo_demo: true,
+      mensagem: `Bilhetes ${numerosStr} reservados para ${nome}! O link de pagamento será ativado em breve.`
+    });
+  }
+
+  // PAGAMENTO REAL via Mercado Pago
+  const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
   const preference = new Preference(mp);
   const numerosStr = numeros.join(', ');
 
@@ -69,16 +80,12 @@ export default async function handler(req, res) {
     const response = await preference.create({
       body: {
         items: [{
-          title: `Rifa Nexus - Bilhetes nº ${numerosStr}`,
+          title: `Rifa Nexus — Bilhetes nº ${numerosStr}`,
           quantity: 1,
           currency_id: 'BRL',
           unit_price: valorTotal
         }],
-        payer: {
-          name: nome,
-          email: email,
-          phone: telefone ? { number: telefone } : undefined
-        },
+        payer: { name: nome, email: email, phone: telefone ? { number: telefone } : undefined },
         payment_methods: {
           excluded_payment_types: [{ id: 'credit_card' }, { id: 'debit_card' }, { id: 'ticket' }]
         },
@@ -89,19 +96,11 @@ export default async function handler(req, res) {
           pending: `${process.env.SITE_URL}/pendente.html`
         },
         auto_return: 'approved',
-        metadata: {
-          numeros: numeros,
-          nome: nome,
-          email: email
-        }
+        metadata: { numeros, nome, email, instagram }
       }
     });
 
-    // Salvar preference_id nos bilhetes
-    await supabase
-      .from('bilhetes')
-      .update({ preference_id: response.id })
-      .in('numero', numeros);
+    await supabase.from('bilhetes').update({ preference_id: response.id }).in('numero', numeros);
 
     return res.status(200).json({
       preference_id: response.id,
@@ -110,10 +109,9 @@ export default async function handler(req, res) {
     });
 
   } catch (err) {
-    // Reverter reserva se falhar
     await supabase
       .from('bilhetes')
-      .update({ status: 'disponivel', nome_comprador: null, email_comprador: null, reservado_em: null })
+      .update({ status: 'disponivel', nome_comprador: null, email_comprador: null, instagram_comprador: null, reservado_em: null })
       .in('numero', numeros);
 
     console.error('Erro MP:', err);

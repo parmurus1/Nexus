@@ -57,3 +57,12 @@ CREATE POLICY "Leitura pública de config" ON config FOR SELECT USING (true);
 CREATE POLICY "Escrita via service_role em bilhetes" ON bilhetes FOR ALL USING (auth.role() = 'service_role');
 CREATE POLICY "Escrita via service_role em config" ON config FOR ALL USING (auth.role() = 'service_role');
 CREATE POLICY "Escrita via service_role em sorteio" ON sorteio FOR ALL USING (auth.role() = 'service_role');
+
+-- =====================================================
+-- MIGRAÇÃO: adicionar coluna instagram_comprador
+-- Execute este bloco se o banco já estiver criado
+-- =====================================================
+ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS instagram_comprador TEXT;
+
+-- Também adicionar coluna instagram_vencedor na tabela de sorteio
+ALTER TABLE sorteio ADD COLUMN IF NOT EXISTS instagram_vencedor TEXT;
