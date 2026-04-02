@@ -52,6 +52,11 @@
     .nav-link{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
 
+    .nav-logo img{
+      height:36px;width:auto;object-fit:contain;
+      filter:brightness(0) invert(1);
+    }
+
     /* HERO */
     .hero{
       min-height:100vh;display:flex;flex-direction:column;
@@ -290,7 +295,7 @@
 <body>
 
 <nav>
-  <div class="nav-logo"><div class="nav-dot"></div><img src="nexus-rifa/imgs/nexusicon.png" alt="Nexus Icon"></div>
+  <div class="nav-logo"><div class="nav-dot"></div><img src="/imgs/nexusicon.png" alt="Nexus Icon"></div>
   <div class="nav-right">
     <a href="/admin.html" class="nav-link">Admin</a>
   </div>
