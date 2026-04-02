@@ -4,59 +4,115 @@
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pagamento Pendente — Nexus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--red:#e8220a;--red-glow:rgba(232,34,10,0.18);--bg:#0c0c0c;--bg2:#141414;--bg3:#1c1c1c;--border:rgba(255,255,255,0.08);--border-s:rgba(255,255,255,0.15);--text:#f0ede8;--text2:#888;--text3:#444;--glass:rgba(12,12,12,0.88);--radius:16px;--radius-sm:8px;--tr:0.35s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
-    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 40px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-    .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 2.5s ease-in-out infinite;}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
-    .nav-logo img{height:34px;width:auto;object-fit:contain;}
-    .nav-link{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
+    .nav-logo img{height:32px;width:auto;object-fit:contain;}
+    .nav-links{display:flex;align-items:center;gap:24px;}
+    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
+    .nav-link.active{color:var(--text);}
+    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
+    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
+    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
+    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
+    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+    .footer-logo{display:flex;align-items:center;gap:8px;}
+    .footer-logo img{height:22px;opacity:0.3;}
+    .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+    .footer-link{color:var(--text3);text-decoration:none;transition:color var(--tr);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
+    .footer-link:hover{color:var(--text2);}
+    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
+    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
+    @media(max-width:768px){
+      nav{padding:10px 20px;}
+      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
+      .nav-links.open{display:flex;}
+      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
+      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
+      .nav-hamburger{display:flex;}
+      footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:20px;}
+      .footer-links{gap:14px;}
+    }
+    @media(max-width:480px){.footer-links{gap:10px;}}
 
-    .page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 60px;position:relative;overflow:hidden;}
-    .orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.07;pointer-events:none;}
-    .orb1{width:600px;height:600px;background:#b87a00;top:-200px;left:-100px;}
+    .page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 120px;position:relative;overflow:hidden;}
+    .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
     .grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 100%);pointer-events:none;}
-
-    /* spinner animado */
-    .spinner{width:72px;height:72px;border-radius:50%;border:2px solid rgba(245,197,66,0.15);border-top-color:rgba(245,197,66,0.8);animation:spin 1s linear infinite;margin:0 auto 24px;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    .box{background:var(--bg2);border:1px solid rgba(180,120,0,0.3);border-radius:var(--radius);padding:56px 48px;text-align:center;max-width:480px;width:100%;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
+    .box{border-radius:var(--radius);padding:52px 44px;text-align:center;max-width:480px;width:100%;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
     @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .box::before{content:'';position:absolute;inset:0;border-radius:var(--radius);background:radial-gradient(ellipse at top,rgba(180,120,0,0.06) 0%,transparent 70%);pointer-events:none;}
-
-    .label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:#f5c542;margin-bottom:10px;}
+    .box::before{content:'';position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;}
+    .icon-wrap{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.9rem;margin:0 auto 22px;}
+    .status-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:10px;}
     h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.04em;color:var(--text);margin-bottom:12px;line-height:1;}
     p{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:32px;}
-    .btn{display:inline-block;background:var(--red);color:#fff;padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;text-decoration:none;transition:all var(--tr);}
+    .btn{display:inline-block;background:var(--red);color:#fff;padding:13px 30px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;text-decoration:none;transition:all var(--tr);}
     .btn:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 8px 24px var(--red-glow);}
-
-    footer{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--border);padding:16px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;display:flex;align-items:center;gap:8px;background:var(--glass);backdrop-filter:blur(20px);}
-    footer img{height:18px;opacity:0.3;}
+    .spinner{width:68px;height:68px;border-radius:50%;border:2px solid rgba(245,197,66,0.15);border-top-color:rgba(245,197,66,0.8);animation:spin 1s linear infinite;margin:0 auto 22px;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:480px){.box{padding:36px 24px;}}
   </style>
 </head>
 <body>
+
 <nav>
-  <a href="/" class="nav-logo"><div class="nav-dot"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
-  <a href="/admin.html" class="nav-link">Admin</a>
+  <a href="/" class="nav-logo">
+    <div class="nav-pulse"></div>
+    <img src="/imgs/nexusicon.png" alt="Nexus"/>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="/sobre.html" class="nav-link">Sobre</a>
+    <a href="/agenda.html" class="nav-link">Agenda</a>
+    <a href="/merch.html" class="nav-link">Merch</a>
+    <a href="/contratantes.html" class="nav-link">Contratantes</a>
+    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
+  </div>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
 <div class="page">
   <div class="grid"></div>
-  <div class="orb orb1"></div>
-  <div class="box">
+  <div class="orb" style="width:600px;height:600px;background:#b87a00;opacity:0.07;top:-200px;left:-100px;"></div>
+  <div class="box" style="background:var(--bg2);border:1px solid rgba(180,120,0,0.3);">
     <div class="spinner"></div>
-    <div class="label">Aguardando confirmação</div>
+    <div class="status-label" style="color:#f5c542;">Aguardando confirmação</div>
     <h1>PROCESSANDO</h1>
     <p>Seu pagamento está sendo processado.<br/>Assim que for confirmado, seu(s) bilhete(s) será(ão) registrado(s) automaticamente.</p>
-    <a href="/" class="btn">Voltar ao site</a>
+    <a href="/rifa.html" class="btn">Voltar ao site</a>
   </div>
 </div>
-<footer><img src="/imgs/nexusicon.png" alt="Nexus"/>© 2025 Nexus Band</footer>
+
+<footer>
+  <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
+  <div class="footer-links">
+    <a href="/sobre.html" class="footer-link">Sobre</a>
+    <a href="/agenda.html" class="footer-link">Agenda</a>
+    <a href="/merch.html" class="footer-link">Merch</a>
+    <a href="/contratantes.html" class="footer-link">Contratantes</a>
+    <a href="/rifa.html" class="footer-link">Rifa</a>
+  </div>
+  <a href="/admin.html" class="footer-admin">Admin ↗</a>
+</footer>
+
+
+<script>
+  const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
+  if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
+</script>
 </body>
 </html>

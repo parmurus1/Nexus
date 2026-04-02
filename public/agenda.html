@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pagamento não concluído — Nexus</title>
+  <title>Agenda — Nexus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
@@ -13,6 +13,7 @@
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
 
+    /* ── NAV ── */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
@@ -29,6 +30,7 @@
     .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
@@ -37,6 +39,7 @@
     .footer-link:hover{color:var(--text2);}
     .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
     .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
+    /* ── RESPONSIVE ── */
     @media(max-width:768px){
       nav{padding:10px 20px;}
       .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
@@ -49,21 +52,31 @@
     }
     @media(max-width:480px){.footer-links{gap:10px;}}
 
-    .page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 120px;position:relative;overflow:hidden;}
-    .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
-    .grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 100%);pointer-events:none;}
-    .box{border-radius:var(--radius);padding:52px 44px;text-align:center;max-width:480px;width:100%;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
-    @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .box::before{content:'';position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;}
-    .icon-wrap{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.9rem;margin:0 auto 22px;}
-    .status-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:10px;}
-    h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.04em;color:var(--text);margin-bottom:12px;line-height:1;}
-    p{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:32px;}
-    .btn{display:inline-block;background:var(--red);color:#fff;padding:13px 30px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;text-decoration:none;transition:all var(--tr);}
-    .btn:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 8px 24px var(--red-glow);}
-    .spinner{width:68px;height:68px;border-radius:50%;border:2px solid rgba(245,197,66,0.15);border-top-color:rgba(245,197,66,0.8);animation:spin 1s linear infinite;margin:0 auto 22px;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:480px){.box{padding:36px 24px;}}
+    .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
+    .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
+    .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
+    .orb1{width:500px;height:500px;background:var(--red);opacity:0.08;top:-180px;right:-100px;}
+    .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
+    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
+    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .container{max-width:900px;margin:0 auto;padding:0 24px 100px;}
+    .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+    .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:28px;color:var(--text);}
+    .shows-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:60px;}
+    .show-item{background:var(--bg2);padding:24px 28px;display:grid;grid-template-columns:100px 1fr auto;align-items:center;gap:24px;transition:background var(--tr);}
+    .show-item:hover{background:var(--bg3);}
+    @media(max-width:600px){.show-item{grid-template-columns:72px 1fr;gap:14px;padding:18px 16px;}.show-tag{display:none;}}
+    .show-data{text-align:center;}
+    .show-dia{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1;color:var(--text);letter-spacing:0.02em;}
+    .show-mes{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);}
+    .show-ano{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+    .show-nome{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
+    .show-local{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);letter-spacing:0.06em;}
+    .show-horario{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--text3);margin-top:3px;}
+    .show-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid;}
+    .tag-confirmado{color:#3dbb80;border-color:rgba(61,187,128,0.3);background:rgba(61,187,128,0.06);}
+    .tag-breve{color:var(--text3);border-color:var(--border-s);}
   </style>
 </head>
 <body>
@@ -75,7 +88,7 @@
   </a>
   <div class="nav-links" id="navLinks">
     <a href="/sobre.html" class="nav-link">Sobre</a>
-    <a href="/agenda.html" class="nav-link">Agenda</a>
+    <a href="/agenda.html" class="nav-link active">Agenda</a>
     <a href="/merch.html" class="nav-link">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
     <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
@@ -85,15 +98,29 @@
   </button>
 </nav>
 
-<div class="page">
-  <div class="grid"></div>
-  <div class="orb" style="width:600px;height:600px;background:var(--red);opacity:0.08;top:-200px;left:-100px;"></div>
-  <div class="box" style="background:var(--bg2);border:1px solid rgba(160,26,7,0.4);">
-    <div class="icon-wrap" style="background:rgba(160,26,7,0.12);border:1px solid rgba(160,26,7,0.3);">😔</div>
-    <div class="status-label" style="color:var(--red);">Pagamento não concluído</div>
-    <h1>ALGO DEU ERRADO</h1>
-    <p>Não se preocupe — seus bilhetes foram liberados automaticamente.<br/>Você pode tentar novamente a qualquer momento.</p>
-    <a href="/rifa.html" class="btn">Tentar novamente</a>
+<div class="page-hero">
+  <div class="hero-orb orb1"></div>
+  <p class="page-eyebrow">Próximos shows</p>
+  <h1 class="page-title">AGENDA</h1>
+</div>
+<div class="container">
+  <p class="sec-eyebrow">Próximos shows</p>
+  <h2 class="sec-title">EM BREVE</h2>
+  <div class="shows-list">
+    <div class="show-item">
+      <div class="show-data"><div class="show-dia">15</div><div class="show-mes">MAI</div><div class="show-ano">2026</div></div>
+      <div><div class="show-nome">NOME DO EVENTO</div><div class="show-local">📍 Local do show — Cidade</div><div class="show-horario">🕐 Horário a confirmar</div></div>
+      <span class="show-tag tag-breve">Em breve</span>
+    </div>
+  </div>
+  <p class="sec-eyebrow" style="margin-top:60px;">Histórico</p>
+  <h2 class="sec-title">SHOWS PASSADOS</h2>
+  <div class="shows-list">
+    <div class="show-item" style="opacity:0.5;">
+      <div class="show-data"><div class="show-dia">--</div><div class="show-mes">---</div><div class="show-ano">----</div></div>
+      <div><div class="show-nome">ADICIONE OS SHOWS PASSADOS</div><div class="show-local">Local do show</div></div>
+      <span class="show-tag tag-confirmado">Realizado</span>
+    </div>
   </div>
 </div>
 
