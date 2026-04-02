@@ -53,7 +53,7 @@
     .nav-link:hover{color:var(--red);}
 
     .nav-logo img{
-      height:100px;width:auto;object-fit:contain;
+      height:36px;width:auto;object-fit:contain;
     }
 
     /* HERO */
@@ -294,7 +294,7 @@
 <body>
 
 <nav>
-  <div class="nav-logo"><div class="nav-dot"></div><img src="/imgs/nexusicon.png" alt="Nexus Icon"></div>
+  <div class="nav-logo"><div class="nav-dot"></div><img src="public/imgs/nexusicon.png" alt="Nexus Icon"></div>
   <div class="nav-right">
     <a href="/admin.html" class="nav-link">Admin</a>
   </div>
@@ -454,22 +454,59 @@
 
 <script>
 
-// CARROSSEL
+// CARROSSEL — loop infinito suave
 const track = document.getElementById('track');
 const dotsEl = document.getElementById('dots');
-const slides = track.querySelectorAll('.carr-slide');
-let ci = 0;
-slides.forEach((_,i) => {
+const originalSlides = Array.from(track.querySelectorAll('.carr-slide'));
+const total = originalSlides.length;
+
+const firstClone = originalSlides[0].cloneNode(true);
+const lastClone = originalSlides[total-1].cloneNode(true);
+track.appendChild(firstClone);
+track.insertBefore(lastClone, originalSlides[0]);
+
+let ci = 1;
+let transitioning = false;
+track.style.transition = 'none';
+track.style.transform = `translateX(-${ci * 100}%)`;
+
+originalSlides.forEach((_,i) => {
   const d = document.createElement('div');
   d.className = 'cdot' + (i===0?' on':'');
-  d.onclick = () => go(i);
+  d.onclick = () => { if(!transitioning) go(i+1); };
   dotsEl.appendChild(d);
 });
-function go(n) {
-  ci = (n + slides.length) % slides.length;
-  track.style.transform = `translateX(-${ci*100}%)`;
-  dotsEl.querySelectorAll('.cdot').forEach((d,i) => d.classList.toggle('on', i===ci));
+
+function updateDots() {
+  let real = ci - 1;
+  if(ci === 0) real = total - 1;
+  if(ci === total + 1) real = 0;
+  dotsEl.querySelectorAll('.cdot').forEach((d,i) => d.classList.toggle('on', i===real));
 }
+
+function go(n) {
+  if(transitioning) return;
+  transitioning = true;
+  ci = n;
+  track.style.transition = 'transform 0.6s cubic-bezier(0.4,0,0.2,1)';
+  track.style.transform = `translateX(-${ci * 100}%)`;
+  updateDots();
+}
+
+track.addEventListener('transitionend', () => {
+  transitioning = false;
+  if(ci === 0) {
+    track.style.transition = 'none';
+    ci = total;
+    track.style.transform = `translateX(-${ci * 100}%)`;
+  }
+  if(ci === total + 1) {
+    track.style.transition = 'none';
+    ci = 1;
+    track.style.transform = `translateX(-${ci * 100}%)`;
+  }
+});
+
 document.getElementById('prev').onclick = () => go(ci-1);
 document.getElementById('next').onclick = () => go(ci+1);
 let ap = setInterval(() => go(ci+1), 5000);
