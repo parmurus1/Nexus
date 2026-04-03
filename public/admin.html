@@ -113,6 +113,13 @@
     .toast.show{transform:translateX(0);opacity:1;padding:12px 18px;border-width:1px;pointer-events:auto;}
     .toast.ok{background:var(--bg2);border-color:#1a5038;color:#3dbb80;}
     .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
+
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .toggle-track{position:relative;width:44px;height:24px;background:var(--bg4);border:1px solid var(--border-s);border-radius:999px;transition:background 0.2s;cursor:pointer;flex-shrink:0;}
+    .toggle-track.on{background:var(--red);border-color:var(--red);}
+    .toggle-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform 0.2s;}
+    .toggle-track.on .toggle-thumb{transform:translateX(20px);}
+    .demo-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(232,34,10,0.15);color:var(--red);border:1px solid rgba(232,34,10,0.3);}
     @media(max-width:768px){#adminPanel{padding:80px 16px 60px;}.adm-header{flex-direction:column;}.adm-actions{width:100%;}.config-grid{grid-template-columns:1fr;}}
   </style>
 </head>
@@ -213,6 +220,23 @@
         </p>
       </div>
 
+
+      <div class="config-card" style="grid-column:1/-1;">
+        <div class="config-label">
+          Modo Demonstração
+          <span id="demoBadge" style="display:none" class="demo-badge">ATIVO</span>
+        </div>
+        <div class="toggle-row">
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
+            Quando ativo, os bilhetes podem ser reservados mas o pagamento Pix não é processado — ideal para testes antes de configurar o Mercado Pago.
+          </p>
+          <div class="toggle-track" id="demoToggle" onclick="toggleDemo()">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+        <p class="config-hint">O modo demo é ativado automaticamente quando <code>MP_ACCESS_TOKEN</code> não está configurado. Use esse toggle para forçá-lo mesmo com token ativo.</p>
+      </div>
+
     </div>
   </div>
 
@@ -283,6 +307,7 @@ async function carregarDados(){
     document.getElementById('statReservados').textContent=data.stats.reservados;
     document.getElementById('statPagos').textContent=data.stats.pagos;
     document.getElementById('ultimaAtualizacao').textContent=`Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
+    carregarModoDemo();
 
     // Preencher campos config com valores atuais
     if(data.config){
@@ -333,6 +358,37 @@ async function realizarSorteio(){
   document.getElementById('sorteioInsta').textContent=data.instagram_vencedor||'';
   document.getElementById('sorteioResultado').style.display='block';
   toast('Sorteio realizado!','ok');
+}
+
+async function carregarModoDemo() {
+  try {
+    const res = await fetch('/api/admin?acao=resumo', {headers:{'Authorization':`Bearer ${token}`}});
+    const data = await res.json();
+    const modoDemo = data.config?.modo_demo === 'true' || data.config?.modo_demo === true;
+    const toggle = document.getElementById('demoToggle');
+    const badge = document.getElementById('demoBadge');
+    if (modoDemo) { toggle.classList.add('on'); badge.style.display = 'inline-block'; }
+    else { toggle.classList.remove('on'); badge.style.display = 'none'; }
+  } catch {}
+}
+
+async function toggleDemo() {
+  const toggle = document.getElementById('demoToggle');
+  const badge = document.getElementById('demoBadge');
+  const isOn = toggle.classList.contains('on');
+  const novoValor = (!isOn).toString();
+  try {
+    const res = await fetch('/api/admin?acao=config', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify({chave:'modo_demo', valor: novoValor})
+    });
+    if (res.ok) {
+      toggle.classList.toggle('on');
+      badge.style.display = !isOn ? 'inline-block' : 'none';
+      toast(!isOn ? 'Modo demo ativado' : 'Modo demo desativado', 'ok');
+    } else { toast('Erro ao alterar modo demo','err'); }
+  } catch { toast('Erro de conexão','err'); }
 }
 
 function toast(msg,tipo){

@@ -62,8 +62,13 @@ export default async function handler(req, res) {
 
   if (erroReserva) return res.status(500).json({ erro: 'Erro ao reservar bilhetes' });
 
-  // MODO DEMO: sem token do MP configurado
-  if (!process.env.MP_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN === 'SEU_TOKEN_AQUI') {
+  // MODO DEMO: sem token do MP configurado OU forçado via config no Supabase
+  const { data: configDemo } = await supabase.from('config').select('valor').eq('chave', 'modo_demo').single();
+  const modoDemo = !process.env.MP_ACCESS_TOKEN
+    || process.env.MP_ACCESS_TOKEN === 'SEU_TOKEN_AQUI'
+    || configDemo?.valor === 'true';
+
+  if (modoDemo) {
     const numerosStr = numeros.map(n => String(n).padStart(3, '0')).join(', ');
     return res.status(200).json({
       modo_demo: true,

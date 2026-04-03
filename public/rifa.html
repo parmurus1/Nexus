@@ -97,7 +97,7 @@
 
     .hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:20px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
     .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(5.5rem,18vw,15rem);line-height:0.86;letter-spacing:0.01em;color:var(--text);position:relative;z-index:1;margin-bottom:6px;opacity:0;animation:rise 0.7s 0.2s forwards;}
-    .hero-title img{max-width: 500px; max-height: 500px;}
+    .hero-title img{width:min(340px,72vw);height:auto;display:block;margin:0 auto;}
     .hero-title .accent{color:var(--red);}
     .hero-sub{font-family:'Barlow Condensed',sans-serif;font-weight:400;font-size:clamp(0.85rem,2.2vw,1rem);color:var(--text2);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:52px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.35s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
@@ -125,7 +125,7 @@
     @media(max-width:660px){.carr-slide{grid-template-columns:1fr;}}
     .carr-visual{background:var(--bg3);display:flex;align-items:center;justify-content:center;min-height:320px;position:relative;overflow:hidden;}
     .carr-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 40% 50%,var(--red-mid) 0%,transparent 65%);}
-    .carr-visual::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,0.025) 28px,rgba(255,255,255,0.025) 29px);}
+    .carr-visual::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,0.025) 28px,rgba(255,255,255,0.025) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(255,255,255,0.025) 28px,rgba(255,255,255,0.025) 29px);}
     .carr-emoji{font-size:6.5rem;position:relative;z-index:1;filter:drop-shadow(0 0 32px var(--red-glow));animation:float 3.5s ease-in-out infinite;}
     @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
     .carr-info{padding:44px 36px;display:flex;flex-direction:column;justify-content:center;}
@@ -201,6 +201,16 @@
     .btn-cfm{width:100%;background:var(--red);border:none;color:#fff;padding:15px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);margin-top:6px;}
     .btn-cfm:hover:not(:disabled){background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
     .btn-cfm:disabled{opacity:0.4;cursor:not-allowed;}
+
+
+    /* LIGHTBOX */
+    .lb-ov{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.22s;}
+    .lb-ov.open{opacity:1;pointer-events:all;}
+    .lb-ov img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:8px;transform:scale(0.94);transition:transform 0.25s;}
+    .lb-ov.open img{transform:scale(1);}
+    .lb-close{position:absolute;top:18px;right:22px;font-size:1.6rem;color:rgba(255,255,255,0.5);cursor:pointer;line-height:1;transition:color 0.2s;}
+    .lb-close:hover{color:#fff;}
+    .carr-emoji{cursor:zoom-in;}
 
     /* TOAST — sem border/padding quando invisível */
     .toast{position:fixed;top:76px;right:24px;z-index:9999;padding:0;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.05em;transform:translateX(calc(100% + 48px));transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),padding 0.15s,opacity 0.25s;max-width:280px;border:0px solid transparent;opacity:0;overflow:hidden;pointer-events:none;}
@@ -449,6 +459,18 @@ function toast(msg,tipo){
 }
 
 load();setInterval(load,30000);
+
+// LIGHTBOX
+function lbOpen(src,alt){const ov=document.getElementById('lbOv');document.getElementById('lbImg').src=src;document.getElementById('lbImg').alt=alt||'';ov.classList.add('open');}
+function lbClose(){document.getElementById('lbOv').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lbClose();});
+// clique no emoji do carrossel abre lightbox (se tiver img real)
+document.querySelectorAll('.carr-visual').forEach(v=>{
+  v.style.cursor='default';
+  const img=v.querySelector('img');
+  if(img){v.style.cursor='zoom-in';v.addEventListener('click',()=>lbOpen(img.src,img.alt));}
+});
+
 </script>
 <script>
   const _toggle = document.getElementById('navToggle');
@@ -458,5 +480,10 @@ load();setInterval(load,30000);
     _links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_links.classList.remove('open');_toggle.classList.remove('open');}));
   }
 </script>
+
+<div class="lb-ov" id="lbOv" onclick="if(event.target===this)lbClose()">
+  <span class="lb-close" onclick="lbClose()">✕</span>
+  <img id="lbImg" src="" alt=""/>
+</div>
 </body>
 </html>
