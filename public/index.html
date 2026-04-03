@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nexus — Banda</title>
+
+  <meta name="description" content="Nexus é uma banda de São Paulo. Acompanhe nossa agenda, merch e a rifa oficial."/>
+  <meta property="og:title" content="Nexus — Banda"/>
+  <meta property="og:description" content="Shows, merch e rifa oficial da Nexus. Apoie nossa música."/>
+  <meta property="og:image" content="/imgs/og-image.jpg"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://nexus-rifa.vercel.app"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="/imgs/og-image.jpg"/>
+  <link rel="icon" type="image/png" href="/imgs/nexusicon.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
+    .nav-logo img{height:32px;width:auto;object-fit:contain;}
+    .nav-links{display:flex;align-items:center;gap:24px;}
+    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
+    .nav-link:hover{color:var(--red);}
+    .nav-link.active{color:var(--text);}
+    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
+    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
+    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
+    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
+    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+    .footer-logo{display:flex;align-items:center;gap:8px;}
+    .footer-logo img{height:22px;opacity:0.3;}
+    .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+    .footer-link{color:var(--text3);text-decoration:none;transition:color var(--tr);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
+    .footer-link:hover{color:var(--text2);}
+    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
+    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      nav{padding:10px 20px;}
+      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
+      .nav-links.open{display:flex;}
+      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
+      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
+      .nav-hamburger{display:flex;}
+      footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:20px;}
+    }
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden;}
+    .hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
+    .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
+    .orb1{width:700px;height:700px;background:var(--red);opacity:0.09;top:-300px;left:-200px;animation:drift1 18s ease-in-out infinite alternate;}
+    .orb2{width:500px;height:500px;background:#c01800;opacity:0.06;bottom:-200px;right:-100px;animation:drift2 22s ease-in-out infinite alternate;}
+    @keyframes drift1{to{transform:translate(80px,60px);}}
+    @keyframes drift2{to{transform:translate(-60px,-80px);}}
+
+    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--red);margin-bottom:28px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
+    .hero-logo{position:relative;z-index:1;opacity:0;animation:rise 0.8s 0.2s forwards;margin-bottom:32px;}
+    .hero-logo img{width:min(420px, 80vw);height:auto;filter:drop-shadow(0 0 40px rgba(232,34,10,0.25));}
+    .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.9rem,2.2vw,1.05rem);color:var(--text2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:56px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.4s forwards;}
+    @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+    .cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.55s forwards;margin-bottom:80px;}
+    .btn-primary{background:var(--red);color:#fff;padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;transition:all var(--tr);}
+    .btn-primary:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 10px 28px var(--red-glow);}
+    .btn-secondary{background:none;color:var(--text2);padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;border:1px solid var(--border-s);transition:all var(--tr);}
+    .btn-secondary:hover{border-color:var(--text);color:var(--text);}
+
+    /* CARDS SEÇÃO */
+    .section{max-width:1080px;margin:0 auto;padding:0 24px 120px;}
+    .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+    .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:36px;color:var(--text);}
+
+    .nav-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:60px;}
+    @media(max-width:700px){.nav-cards{grid-template-columns:repeat(2,1fr);}}
+    .nav-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;text-decoration:none;display:flex;flex-direction:column;gap:14px;transition:all var(--tr);position:relative;overflow:hidden;}
+    .nav-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 100%,var(--red-mid) 0%,transparent 60%);opacity:0;transition:opacity var(--tr);}
+    .nav-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
+    .nav-card:hover::before{opacity:1;}
+    .nav-card-icon{font-size:1.8rem;}
+    .nav-card-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);}
+    .nav-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);}
+    .nav-card-arrow{margin-top:auto;font-size:0.8rem;color:var(--text3);transition:color var(--tr);}
+    .nav-card:hover .nav-card-arrow{color:var(--red);}
+
+    /* RIFA DESTAQUE */
+    .rifa-banner{background:var(--bg2);border:1px solid rgba(232,34,10,0.2);border-radius:var(--radius);padding:40px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;position:relative;overflow:hidden;margin-bottom:60px;}
+    .rifa-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(232,34,10,0.06) 0%,transparent 60%);}
+    @media(max-width:600px){.rifa-banner{grid-template-columns:1fr;text-align:center;}}
+    .rifa-tag{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);background:rgba(232,34,10,0.1);border:1px solid rgba(232,34,10,0.2);padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:12px;}
+    .rifa-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:0.04em;color:var(--text);margin-bottom:8px;}
+    .rifa-desc{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:0;max-width:480px;}
+    .rifa-btn{position:relative;z-index:1;white-space:nowrap;}
+    @media(max-width:600px){.rifa-btn{width:100%;text-align:center;}}
+
+    /* INSTAGRAM */
+    .insta-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+    .insta-info{display:flex;align-items:center;gap:16px;}
+    .insta-icon{width:44px;height:44px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .insta-handle{font-family:'DM Mono',monospace;font-size:0.9rem;letter-spacing:0.04em;color:var(--text);}
+    .insta-followers{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+    .insta-link{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;border:1px solid var(--border-s);padding:9px 18px;border-radius:var(--radius-sm);transition:all var(--tr);}
+    .insta-link:hover{border-color:var(--red);color:var(--red);}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-pulse"></div>
+    <img src="/imgs/nexustitle.png" alt="Nexus"/>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="/sobre.html" class="nav-link">Sobre</a>
+    <a href="/agenda.html" class="nav-link">Agenda</a>
+    <a href="/merch.html" class="nav-link">Merch</a>
+    <a href="/contratantes.html" class="nav-link">Contratantes</a>
+    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
+  </div>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <p class="hero-eyebrow">Nexus Band · São Paulo</p>
+
+  <div class="hero-logo">
+    <img src="/imgs/nexustitle.png" alt="Nexus"/>
+  </div>
+
+  <p class="hero-sub">Música que conecta · Shows · Merch · Rifa</p>
+
+  <div class="cta-group">
+    <a href="/rifa.html" class="btn-primary">Participar da Rifa 🎟</a>
+    <a href="/sobre.html" class="btn-secondary">Sobre a Banda</a>
+  </div>
+</div>
+
+<div class="section">
+  <p class="sec-eyebrow">Explore</p>
+  <h2 class="sec-title">O QUE TEMOS</h2>
+
+  <div class="nav-cards">
+    <a href="/sobre.html" class="nav-card">
+      <span class="nav-card-icon">🎸</span>
+      <span class="nav-card-label">Conheça</span>
+      <span class="nav-card-title">SOBRE</span>
+      <span class="nav-card-arrow">→</span>
+    </a>
+    <a href="/agenda.html" class="nav-card">
+      <span class="nav-card-icon">📅</span>
+      <span class="nav-card-label">Próximos shows</span>
+      <span class="nav-card-title">AGENDA</span>
+      <span class="nav-card-arrow">→</span>
+    </a>
+    <a href="/merch.html" class="nav-card">
+      <span class="nav-card-icon">👕</span>
+      <span class="nav-card-label">Loja oficial</span>
+      <span class="nav-card-title">MERCH</span>
+      <span class="nav-card-arrow">→</span>
+    </a>
+    <a href="/contratantes.html" class="nav-card">
+      <span class="nav-card-icon">🎤</span>
+      <span class="nav-card-label">Informações técnicas</span>
+      <span class="nav-card-title">CONTRATANTES</span>
+      <span class="nav-card-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- RIFA DESTAQUE -->
+  <div class="rifa-banner">
+    <div>
+      <span class="rifa-tag">Campanha ativa</span>
+      <div class="rifa-title">RIFA NEXUS 2026</div>
+      <p class="rifa-desc">Apoie nossa música e concorra a prêmios exclusivos — palhetas, baquetas assinadas, camiseta oficial e muito mais.</p>
+    </div>
+    <a href="/rifa.html" class="btn-primary rifa-btn">Ver bilhetes →</a>
+  </div>
+
+  <!-- INSTAGRAM -->
+  <div class="insta-strip">
+    <div class="insta-info">
+      <div class="insta-icon">📷</div>
+      <div>
+        <div class="insta-handle">@nexus.bandbr</div>
+        <div class="insta-followers">Siga para acompanhar tudo</div>
+      </div>
+    </div>
+    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" class="insta-link">Seguir no Instagram →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">
+    <img src="/imgs/nexusicon.png" alt="Nexus"/>
+    <span>© 2026 Nexus Band</span>
+  </div>
+  <div class="footer-links">
+    <a href="/sobre.html" class="footer-link">Sobre</a>
+    <a href="/agenda.html" class="footer-link">Agenda</a>
+    <a href="/merch.html" class="footer-link">Merch</a>
+    <a href="/contratantes.html" class="footer-link">Contratantes</a>
+    <a href="/rifa.html" class="footer-link">Rifa</a>
+  </div>
+  <a href="/admin.html" class="footer-admin">Admin ↗</a>
+</footer>
+
+<script>
+  const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
+  if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
+</script>
+</body>
+</html>
