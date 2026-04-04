@@ -1,67 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="description" content="Loja oficial da Nexus Band. Camisetas, palhetas, pins e muito mais."/>
-  <meta property="og:title" content="Merch — Nexus"/>
-  <meta property="og:description" content="Loja oficial da Nexus Band. Camisetas, palhetas, pins e muito mais."/>
-  <meta property="og:image" content="/imgs/og-image.jpg"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://nexus-rifa.vercel.app/merch.html"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="/imgs/og-image.jpg"/>
-  <link rel="icon" type="image/png" href="/imgs/nexusicon.png"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Merch — Nexus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-
-    /* ── NAV ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
     @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
     .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:24px;}
+    .nav-links{display:flex;align-items:center;gap:20px;}
     .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
     .nav-link.active{color:var(--text);}
-    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
-    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
-    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
-    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
-    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    /* ── FOOTER ── */
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-    .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-    .footer-link{color:var(--text3);text-decoration:none;transition:color var(--tr);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
-    .footer-link:hover{color:var(--text2);}
-    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
-    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
-    /* ── RESPONSIVE ── */
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
-      .nav-links.open{display:flex;}
-      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
-      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
-      .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:20px;}
-      .footer-links{gap:14px;}
-    }
-    @media(max-width:480px){.footer-links{gap:10px;}}
+    .cart-btn{position:relative;background:none;border:1px solid var(--border-s);color:var(--text2);padding:8px 14px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:7px;}
+    .cart-btn:hover{border-color:var(--red);color:var(--text);}
+    .cart-count{background:var(--red);color:#fff;font-size:0.5rem;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:600;}
+    .cart-count.show{display:flex;}
+    @media(max-width:700px){.nav-links{gap:10px;}.nav-link{font-size:0.55rem;}}
+    @media(max-width:520px){nav{padding:10px 14px;}}
 
-    .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
+    .page-hero{min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 50px;position:relative;overflow:hidden;}
     .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
     .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
     .orb1{width:500px;height:500px;background:var(--red);opacity:0.08;top:-150px;left:-100px;}
@@ -69,61 +36,121 @@
     .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
     .page-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,2vw,1rem);color:var(--text2);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.3s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
     .container{max-width:1080px;margin:0 auto;padding:0 24px 100px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
     .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:36px;color:var(--text);}
-    .merch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:80px;}
+
+    .merch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
     @media(max-width:700px){.merch-grid{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:420px){.merch-grid{grid-template-columns:1fr;}}
-    .merch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all var(--tr);}
+    .merch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all var(--tr);cursor:pointer;}
     .merch-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
-    .merch-img{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:zoom-in;}
+    .merch-img{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
     .merch-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
+    .merch-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;}
     .merch-emoji{font-size:4rem;position:relative;z-index:1;filter:drop-shadow(0 0 20px var(--red-glow));}
     .merch-badge{position:absolute;top:12px;right:12px;z-index:2;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px;border-radius:4px;}
     .badge-novo{background:var(--red);color:#fff;}
-    .badge-esgotado{background:var(--bg4);color:var(--text3);border:1px solid var(--border-s);}
+    .badge-em-breve{background:var(--bg4);color:var(--text3);border:1px solid var(--border-s);}
     .merch-info{padding:16px 18px;}
     .merch-nome{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
-    .merch-desc{font-size:0.82rem;color:var(--text2);margin-bottom:12px;line-height:1.6;}
+    .merch-desc-short{font-size:0.82rem;color:var(--text2);margin-bottom:12px;line-height:1.5;}
     .merch-footer{display:flex;align-items:center;justify-content:space-between;}
     .merch-preco{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--red);}
-    .merch-btn{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:7px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
-    .merch-btn:hover{border-color:var(--red);color:var(--red);}
-    .merch-btn:disabled{opacity:0.3;cursor:not-allowed;}
-    .aviso{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;display:flex;align-items:center;gap:16px;margin-bottom:60px;}
-    .aviso-icon{font-size:1.5rem;flex-shrink:0;}
-    .aviso-txt{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text2);letter-spacing:0.05em;line-height:1.8;}
-    .aviso-txt strong{color:var(--text);}
+    .merch-add{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:7px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
+    .merch-add:hover{border-color:var(--red);color:var(--red);}
+    .merch-add:disabled{opacity:0.3;cursor:not-allowed;}
 
-    /* LIGHTBOX */
-    .lb-ov{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.22s;}
-    .lb-ov.open{opacity:1;pointer-events:all;}
-    .lb-ov img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:8px;transform:scale(0.94);transition:transform 0.25s;}
-    .lb-ov.open img{transform:scale(1);}
-    .lb-close{position:absolute;top:18px;right:22px;font-size:1.6rem;color:rgba(255,255,255,0.5);cursor:pointer;line-height:1;transition:color 0.2s;}
-    .lb-close:hover{color:#fff;}
-    .lb-caption{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:rgba(255,255,255,0.4);}
+    /* MODAL PRODUTO */
+    .modal-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    .modal-ov.open{opacity:1;pointer-events:all;}
+    .modal{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);width:100%;max-width:680px;position:relative;transform:translateY(16px);transition:transform 0.28s;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;}
+    @media(max-width:560px){.modal{grid-template-columns:1fr;}}
+    .modal-ov.open .modal{transform:translateY(0);}
+    .modal-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;z-index:10;transition:all var(--tr);}
+    .modal-x:hover{border-color:var(--red);color:var(--red);}
+    .modal-img-side{background:var(--bg3);display:flex;align-items:center;justify-content:center;min-height:280px;position:relative;overflow:hidden;border-radius:var(--radius) 0 0 var(--radius);}
+    @media(max-width:560px){.modal-img-side{border-radius:var(--radius) var(--radius) 0 0;min-height:200px;}}
+    .modal-img-side::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
+    .modal-big-emoji{font-size:6rem;position:relative;z-index:1;filter:drop-shadow(0 0 30px var(--red-glow));}
+    .modal-img-side img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;}
+    .modal-body{padding:28px 24px;display:flex;flex-direction:column;justify-content:center;gap:0;}
+    .modal-cat{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+    .modal-nome{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.04em;color:var(--text);line-height:1;margin-bottom:10px;}
+    .modal-desc{font-size:0.85rem;color:var(--text2);line-height:1.75;margin-bottom:16px;}
+    .modal-preco{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--red);margin-bottom:18px;}
+
+    .field-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+    .size-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+    .sz{width:42px;height:42px;border-radius:var(--radius-sm);border:1px solid var(--border-s);background:var(--bg3);color:var(--text2);font-family:'DM Mono',monospace;font-size:0.68rem;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;}
+    .sz:hover{border-color:var(--border-s);color:var(--text);}
+    .sz.on{border-color:var(--red);background:var(--red);color:#fff;}
+
+    .qty-row{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+    .qty-ctrl{display:flex;border:1px solid var(--border-s);border-radius:var(--radius-sm);overflow:hidden;}
+    .qb{width:34px;height:34px;background:var(--bg3);border:none;color:var(--text2);font-size:1rem;cursor:pointer;transition:all var(--tr);}
+    .qb:hover{background:var(--bg4);color:var(--text);}
+    .qn{width:34px;height:34px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text);border-left:1px solid var(--border);border-right:1px solid var(--border);}
+
+    .btn-add{width:100%;background:var(--red);border:none;color:#fff;padding:14px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);}
+    .btn-add:hover{background:#ff2a10;box-shadow:0 6px 20px var(--red-glow);}
+    .btn-add:disabled{opacity:0.4;cursor:not-allowed;}
+    .modal-hint{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--text3);text-align:center;margin-top:8px;letter-spacing:0.04em;}
+
+    /* DRAWER */
+    .cart-ov{position:fixed;inset:0;z-index:399;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .cart-ov.open{opacity:1;pointer-events:all;}
+    .drawer{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:100vw;background:var(--bg2);border-left:1px solid var(--border-s);z-index:400;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;}
+    .drawer.open{transform:translateX(0);}
+    .dh{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .dh-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.04em;}
+    .dh-x{background:none;border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;transition:all var(--tr);}
+    .dh-x:hover{border-color:var(--red);color:var(--red);}
+    .d-items{flex:1;overflow-y:auto;padding:12px 16px;}
+    .d-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+    .d-thumb{width:52px;height:52px;background:var(--bg3);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+    .d-info{flex:1;}
+    .d-nome{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:0.04em;color:var(--text);margin-bottom:2px;}
+    .d-det{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text3);letter-spacing:0.05em;margin-bottom:6px;}
+    .d-qty{display:flex;align-items:center;gap:8px;}
+    .dqb{width:22px;height:22px;background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:0.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--tr);}
+    .dqb:hover{border-color:var(--border-s);color:var(--text);}
+    .dqn{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);min-width:18px;text-align:center;}
+    .d-p{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;color:var(--red);align-self:flex-start;margin-top:2px;letter-spacing:0.04em;}
+    .d-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;}
+    .d-foot{padding:18px 20px;border-top:1px solid var(--border);}
+    .d-total-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
+    .d-total-lbl{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+    .d-total{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.04em;color:var(--text);}
+    .btn-finalizar{width:100%;background:var(--red);border:none;color:#fff;padding:13px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;cursor:pointer;transition:all var(--tr);}
+    .btn-finalizar:hover{background:#ff2a10;box-shadow:0 6px 20px var(--red-glow);}
+    .btn-finalizar:disabled{opacity:0.4;cursor:not-allowed;}
+    .d-hint{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--text3);text-align:center;margin-top:8px;letter-spacing:0.04em;}
+
+    .toast{position:fixed;top:76px;right:24px;z-index:9999;padding:0;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.05em;transform:translateX(calc(100% + 48px));transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),padding 0.15s,opacity 0.25s;max-width:280px;border:0 solid transparent;opacity:0;overflow:hidden;pointer-events:none;}
+    .toast.show{transform:translateX(0);opacity:1;padding:12px 18px;border-width:1px;pointer-events:auto;}
+    .toast.ok{background:var(--bg2);border-color:#1a5038;color:#3dbb80;}
+    .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
+
+    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .footer-logo{display:flex;align-items:center;gap:8px;}
+    .footer-logo img{height:22px;opacity:0.3;}
   </style>
 </head>
 <body>
-
 <nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/nexusicon.png" alt="Nexus"/>
-  </a>
-  <div class="nav-links" id="navLinks">
+  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <div class="nav-links">
     <a href="/sobre.html" class="nav-link">Sobre</a>
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link active">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
+    <button class="cart-btn" onclick="abrirDrawer()">
+      🛒 Carrinho <span class="cart-count" id="cartCount">0</span>
+    </button>
   </div>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
 <div class="page-hero">
@@ -132,81 +159,193 @@
   <h1 class="page-title">MERCH</h1>
   <p class="page-sub">Produtos exclusivos da Nexus Band</p>
 </div>
+
 <div class="container">
-  <div class="aviso">
-    <span class="aviso-icon">📦</span>
-    <div class="aviso-txt"><strong>Pedidos via Instagram</strong><br/>Para comprar, entre em contato pelo nosso Instagram <strong>@nexus.bandbr</strong>. Informamos disponibilidade de tamanhos e formas de pagamento.</div>
-  </div>
   <p class="sec-eyebrow">Coleção atual</p>
   <h2 class="sec-title">PRODUTOS</h2>
-  <div class="merch-grid">
-    <div class="merch-card"><div class="merch-img">
-          <span class="merch-badge badge-novo">Novo</span>
-          <img src="/imgs/merch-camiseta.jpg" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;"
-               onerror="this.style.display='none'"/>
-          <span class="merch-emoji">👕</span>
-        </div><div class="merch-info"><div class="merch-nome">CAMISETA OFICIAL</div><div class="merch-desc">100% algodão, estampa serigrafia com o logo da banda. Disponível em P, M, G e GG.</div><div class="merch-footer"><span class="merch-preco">R$ --</span><button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button></div></div></div>
-    <div class="merch-card"><div class="merch-img">
-          
-          <img src="/imgs/merch-palheta.jpg" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;"
-               onerror="this.style.display='none'"/>
-          <span class="merch-emoji">🎸</span>
-        </div><div class="merch-info"><div class="merch-nome">PALHETA EXCLUSIVA</div><div class="merch-desc">Palheta personalizada com o logo da Nexus. Pack com 3 unidades.</div><div class="merch-footer"><span class="merch-preco">R$ --</span><button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button></div></div></div>
-    <div class="merch-card"><div class="merch-img">
-          
-          <img src="/imgs/merch-chaveiro.jpg" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;"
-               onerror="this.style.display='none'"/>
-          <span class="merch-emoji">🔑</span>
-        </div><div class="merch-info"><div class="merch-nome">CHAVEIRO NEXUS</div><div class="merch-desc">Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.</div><div class="merch-footer"><span class="merch-preco">R$ --</span><button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button></div></div></div>
-    <div class="merch-card"><div class="merch-img">
-          
-          <img src="/imgs/merch-pin.jpg" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;"
-               onerror="this.style.display='none'"/>
-          <span class="merch-emoji">📌</span>
-        </div><div class="merch-info"><div class="merch-nome">PIN COLECIONÁVEL</div><div class="merch-desc">Pin esmaltado com o logo da Nexus. Perfeito para jaquetas e mochilas.</div><div class="merch-footer"><span class="merch-preco">R$ --</span><button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button></div></div></div>
-    <div class="merch-card"><div class="merch-img">
-          
-          <img src="/imgs/merch-adesivos.jpg" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;"
-               onerror="this.style.display='none'"/>
-          <span class="merch-emoji">🎨</span>
-        </div><div class="merch-info"><div class="merch-nome">PACK ADESIVOS</div><div class="merch-desc">6 adesivos em vinil impermeável com artes exclusivas da banda.</div><div class="merch-footer"><span class="merch-preco">R$ --</span><button class="merch-btn" onclick="window.open('https://instagram.com/nexus.bandbr','_blank')">Pedir →</button></div></div></div>
-    <div class="merch-card"><div class="merch-img">
-          <span class="merch-badge badge-esgotado">Em breve</span>
-          <img src="/imgs/merch-baquetas.jpg" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;"
-               onerror="this.style.display='none'"/>
-          <span class="merch-emoji">🥁</span>
-        </div><div class="merch-info"><div class="merch-nome">BAQUETAS ASSINADAS</div><div class="merch-desc">Baquetas autografadas pelo baterista. Edição limitada e numerada.</div><div class="merch-footer"><span class="merch-preco" style="color:var(--text3)">Em breve</span><button class="merch-btn" disabled>Indisponível</button></div></div></div>
+  <div class="merch-grid" id="grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="mOv" onclick="if(event.target===this)fecharModal()">
+  <div class="modal">
+    <button class="modal-x" onclick="fecharModal()">✕</button>
+    <div class="modal-img-side" id="mImg"></div>
+    <div class="modal-body">
+      <div class="modal-cat" id="mCat"></div>
+      <div class="modal-nome" id="mNome"></div>
+      <div class="modal-desc" id="mDesc"></div>
+      <div class="modal-preco" id="mPreco"></div>
+      <div id="mSizes" style="display:none">
+        <div class="field-lbl">Tamanho</div>
+        <div class="size-row" id="sizeRow"></div>
+      </div>
+      <div class="qty-row">
+        <span class="field-lbl">Qtd.</span>
+        <div class="qty-ctrl">
+          <button class="qb" onclick="dQty(-1)">−</button>
+          <div class="qn" id="qn">1</div>
+          <button class="qb" onclick="dQty(1)">+</button>
+        </div>
+      </div>
+      <button class="btn-add" id="btnAdd" onclick="addCart()">Adicionar ao Carrinho</button>
+      <p class="modal-hint">Pagamento via WhatsApp após o pedido</p>
+    </div>
   </div>
 </div>
+
+<!-- DRAWER -->
+<div class="cart-ov" id="cOv" onclick="fecharDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dh">
+    <span class="dh-title">CARRINHO</span>
+    <button class="dh-x" onclick="fecharDrawer()">✕</button>
+  </div>
+  <div class="d-items" id="dItems"></div>
+  <div class="d-foot">
+    <div class="d-total-row">
+      <span class="d-total-lbl">Total</span>
+      <span class="d-total" id="dTotal">R$ 0,00</span>
+    </div>
+    <button class="btn-finalizar" id="btnFin" onclick="finalizar()" disabled>Finalizar via WhatsApp →</button>
+    <p class="d-hint">Você será redirecionado para o WhatsApp</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <a href="/admin.html" class="footer-admin">Admin ↗</a>
+  <span>Todos os direitos reservados</span>
+  <span style="font-family:'DM Mono',monospace;font-size:0.58rem;opacity:0.35;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
-
 <script>
-  const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
-  if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
-</script>
+const WA = '5511999999999'; // ← substitua pelo número real
 
-<div class="lb-ov" id="lbOv" onclick="if(event.target===this||event.target.classList.contains('lb-close'))lbClose()">
-  <span class="lb-close">✕</span>
-  <img id="lbImg" src="" alt=""/>
-  <span class="lb-caption" id="lbCap"></span>
-</div>
-<script>
-function lbOpen(src,cap){const ov=document.getElementById('lbOv');document.getElementById('lbImg').src=src;document.getElementById('lbCap').textContent=cap||'';ov.classList.add('open');}
-function lbClose(){document.getElementById('lbOv').classList.remove('open');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')lbClose();});
-document.querySelectorAll('.merch-img').forEach(div=>{
-  div.addEventListener('click',()=>{
-    const img=div.querySelector('img');
-    const nome=div.closest('.merch-card')?.querySelector('.merch-nome')?.textContent||'';
-    if(img&&img.style.display!=='none')lbOpen(img.src,nome);
-  });
-});
-</script>
+const PRODS = [
+  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',desc:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
+  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',desc:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'/imgs/merch-palheta.jpg',sizes:[],ativo:true},
+  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',desc:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'/imgs/merch-chaveiro.jpg',sizes:[],ativo:true},
+  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',desc:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'/imgs/merch-pin.jpg',sizes:[],ativo:true},
+  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',desc:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'/imgs/merch-adesivos.jpg',sizes:[],ativo:true},
+  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',desc:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'/imgs/merch-baquetas.jpg',badge:'Em breve',sizes:[],ativo:false},
+];
 
+let cart=[], prodAtual=null, tamSel=null, qty=1;
+
+function renderGrid(){
+  document.getElementById('grid').innerHTML = PRODS.map(p=>`
+    <div class="merch-card" onclick="${p.ativo?`abrirProd('${p.id}')`:''}" style="${!p.ativo?'cursor:default':''}">
+      <div class="merch-img">
+        ${p.badge?`<span class="merch-badge ${p.ativo?'badge-novo':'badge-em-breve'}">${p.badge}</span>`:''}
+        <img src="${p.img}" onerror="this.style.display='none'" alt=""/>
+        <span class="merch-emoji">${p.emoji}</span>
+      </div>
+      <div class="merch-info">
+        <div class="merch-nome">${p.nome}</div>
+        <div class="merch-desc-short">${p.desc.slice(0,55)}…</div>
+        <div class="merch-footer">
+          <span class="merch-preco" style="${!p.ativo?'color:var(--text3)':''}">${p.ativo?(p.preco>0?`R$ ${p.preco.toFixed(2).replace('.',',')}':'R$ --'):'Em breve'}</span>
+          <button class="merch-add" ${!p.ativo?'disabled':''} onclick="event.stopPropagation();${p.ativo?`abrirProd('${p.id}')`:''}">${p.ativo?'Ver →':'Indisponível'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function abrirProd(id){
+  prodAtual=PRODS.find(p=>p.id===id); if(!prodAtual)return;
+  tamSel=null; qty=1;
+  document.getElementById('mCat').textContent=prodAtual.cat;
+  document.getElementById('mNome').textContent=prodAtual.nome;
+  document.getElementById('mDesc').textContent=prodAtual.desc;
+  document.getElementById('mPreco').textContent=prodAtual.preco>0?`R$ ${prodAtual.preco.toFixed(2).replace('.',',')}`:'A confirmar';
+  document.getElementById('qn').textContent=1;
+  document.getElementById('mImg').innerHTML=`<img src="${prodAtual.img}" onerror="this.style.display='none'" alt=""/><span class="modal-big-emoji">${prodAtual.emoji}</span>`;
+  const ss=document.getElementById('mSizes'), sr=document.getElementById('sizeRow');
+  if(prodAtual.sizes.length){
+    ss.style.display='block';
+    sr.innerHTML=prodAtual.sizes.map(s=>`<button class="sz" onclick="selTam('${s}',this)">${s}</button>`).join('');
+    document.getElementById('btnAdd').disabled=true;
+  } else {
+    ss.style.display='none'; tamSel='único';
+    document.getElementById('btnAdd').disabled=false;
+  }
+  document.getElementById('mOv').classList.add('open');
+}
+
+function selTam(t,el){
+  tamSel=t;
+  document.querySelectorAll('.sz').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('btnAdd').disabled=false;
+}
+
+function dQty(d){qty=Math.max(1,qty+d);document.getElementById('qn').textContent=qty;}
+
+function addCart(){
+  if(!prodAtual||!tamSel)return;
+  const key=prodAtual.id+(tamSel!=='único'?`-${tamSel}`:'');
+  const ex=cart.find(i=>i.key===key);
+  if(ex) ex.qty+=qty;
+  else cart.push({key,id:prodAtual.id,nome:prodAtual.nome,emoji:prodAtual.emoji,tam:tamSel,preco:prodAtual.preco,qty});
+  fecharModal(); syncCart();
+  toast(`${prodAtual.nome} adicionado!`,'ok');
+}
+
+function fecharModal(){document.getElementById('mOv').classList.remove('open');}
+
+function syncCart(){
+  const tot=cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  const qtd=cart.reduce((s,i)=>s+i.qty,0);
+  const cc=document.getElementById('cartCount');
+  cc.textContent=qtd; qtd>0?cc.classList.add('show'):cc.classList.remove('show');
+  document.getElementById('dTotal').textContent=tot>0?`R$ ${tot.toFixed(2).replace('.',',')}`:'A confirmar';
+  document.getElementById('btnFin').disabled=cart.length===0;
+  const di=document.getElementById('dItems');
+  if(!cart.length){di.innerHTML='<div class="d-empty"><span>🛒</span><span>Carrinho vazio</span></div>';return;}
+  di.innerHTML=cart.map(i=>`
+    <div class="d-item">
+      <div class="d-thumb">${i.emoji}</div>
+      <div class="d-info">
+        <div class="d-nome">${i.nome}</div>
+        <div class="d-det">${i.tam!=='único'?`Tamanho: ${i.tam}`:''}</div>
+        <div class="d-qty">
+          <button class="dqb" onclick="dItemQty('${i.key}',-1)">−</button>
+          <span class="dqn">${i.qty}</span>
+          <button class="dqb" onclick="dItemQty('${i.key}',1)">+</button>
+        </div>
+      </div>
+      <div class="d-p">${i.preco>0?`R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')}':'—'}</div>
+    </div>`).join('');
+}
+
+function dItemQty(key,d){
+  const it=cart.find(i=>i.key===key); if(!it)return;
+  it.qty+=d; if(it.qty<=0) cart=cart.filter(i=>i.key!==key);
+  syncCart();
+}
+
+function abrirDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('cOv').classList.add('open');}
+function fecharDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('cOv').classList.remove('open');}
+
+function finalizar(){
+  if(!cart.length)return;
+  let msg='🎸 *Pedido Nexus Band*\n\n';
+  cart.forEach(i=>{msg+=`• ${i.nome}`;if(i.tam!=='único')msg+=` — Tamanho ${i.tam}`;msg+=` × ${i.qty}`;if(i.preco>0)msg+=` (R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')})`;msg+='\n';});
+  const t=cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  if(t>0)msg+=`\n*Total: R$ ${t.toFixed(2).replace('.',',')}*`;
+  msg+='\n\nOlá! Gostaria de fechar esse pedido 🤘';
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function toast(msg,tipo){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${tipo} show`;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+renderGrid();syncCart();
+</script>
 </body>
 </html>
