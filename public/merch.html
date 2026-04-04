@@ -31,12 +31,18 @@
     .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
     .nav-link.active{color:var(--text);}
-    .cart-btn{position:relative;background:none;border:1px solid var(--border-s);color:var(--text2);padding:8px 14px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:7px;}
+    .cart-btn{position:relative;background:var(--bg2);border:1px solid var(--border-s);color:var(--text2);width:40px;height:40px;border-radius:50%;font-family:'DM Mono',monospace;font-size:0.85rem;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;}
     .cart-btn:hover{border-color:var(--red);color:var(--text);}
-    .cart-count{background:var(--red);color:#fff;font-size:0.5rem;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:600;}
+    .cart-count{background:var(--red);color:#fff;font-size:0.48rem;min-width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:600;padding:0 3px;position:absolute;top:-4px;right:-4px;}
     .cart-count.show{display:flex;}
-    @media(max-width:700px){.nav-links{gap:10px;}.nav-link{font-size:0.55rem;}}
-    @media(max-width:520px){nav{padding:10px 14px;}}
+    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
+    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
+    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
+    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
+    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    @media(max-width:768px){nav{padding:10px 20px;}.nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}.nav-links.open{display:flex;}.nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}.nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}.nav-hamburger{display:flex;}}
 
     .page-hero{min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 50px;position:relative;overflow:hidden;}
     .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
@@ -52,23 +58,22 @@
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
     .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:36px;color:var(--text);}
 
-    .merch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-    @media(max-width:700px){.merch-grid{grid-template-columns:repeat(2,1fr);}}
-    @media(max-width:420px){.merch-grid{grid-template-columns:1fr;}}
+    .merch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+    @media(max-width:700px){.merch-grid{grid-template-columns:1fr;}}
     .merch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all var(--tr);cursor:pointer;}
     .merch-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
-    .merch-img{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    .merch-img{aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
     .merch-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
     .merch-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;}
-    .merch-emoji{font-size:4rem;position:relative;z-index:1;filter:drop-shadow(0 0 20px var(--red-glow));}
+    .merch-emoji{font-size:5.5rem;position:relative;z-index:1;filter:drop-shadow(0 0 20px var(--red-glow));}
     .merch-badge{position:absolute;top:12px;right:12px;z-index:2;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px;border-radius:4px;}
     .badge-novo{background:var(--red);color:#fff;}
     .badge-em-breve{background:var(--bg4);color:var(--text3);border:1px solid var(--border-s);}
-    .merch-info{padding:16px 18px;}
-    .merch-nome{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
+    .merch-info{padding:20px 22px;}
+    .merch-nome{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.04em;color:var(--text);margin-bottom:6px;}
     .merch-desc-short{font-size:0.82rem;color:var(--text2);margin-bottom:12px;line-height:1.5;}
     .merch-footer{display:flex;align-items:center;justify-content:space-between;}
-    .merch-preco{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--red);}
+    .merch-preco{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.04em;color:var(--red);}
     .merch-add{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:7px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
     .merch-add:hover{border-color:var(--red);color:var(--red);}
     .merch-add:disabled{opacity:0.3;cursor:not-allowed;}
@@ -144,23 +149,29 @@
     .toast.ok{background:var(--bg2);border-color:#1a5038;color:#3dbb80;}
     .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
 
-    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;}.footer-dev{display:flex;justify-content:flex-end;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
+    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);text-align:center;}
+    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="/sobre.html" class="nav-link">Sobre</a>
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link active">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <button class="cart-btn" onclick="abrirDrawer()">
-      🛒 Carrinho <span class="cart-count" id="cartCount">0</span>
-    </button>
+    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
   </div>
+  <button class="cart-btn" onclick="abrirDrawer()" id="cartBtnFloat">
+    🛒 <span class="cart-count" id="cartCount">0</span>
+  </button>
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <div class="page-hero">
@@ -226,14 +237,14 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span>Todos os direitos reservados</span>
-  <span style="font-family:'DM Mono',monospace;font-size:0.58rem;opacity:0.35;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <a href="/admin.html" class="footer-admin">Admin ↗</a>
+  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>
 const WA = '5511999999999'; // ← substitua pelo número real
 
-const PRODS = [
+const DEFAULT_PRODS = [
   {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',desc:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
   {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',desc:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'/imgs/merch-palheta.jpg',sizes:[],ativo:true},
   {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',desc:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'/imgs/merch-chaveiro.jpg',sizes:[],ativo:true},
@@ -241,6 +252,12 @@ const PRODS = [
   {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',desc:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'/imgs/merch-adesivos.jpg',sizes:[],ativo:true},
   {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',desc:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'/imgs/merch-baquetas.jpg',badge:'Em breve',sizes:[],ativo:false},
 ];
+
+// Read from localStorage (synced from admin panel)
+const PRODS = (() => {
+  const raw = localStorage.getItem('nexus_merch');
+  return raw ? JSON.parse(raw) : DEFAULT_PRODS;
+})();
 
 let cart=[], prodAtual=null, tamSel=null, qty=1;
 
@@ -356,6 +373,10 @@ function toast(msg,tipo){
 }
 
 renderGrid();syncCart();
+
+// Nav hamburger
+const _nt=document.getElementById('navToggle'),_nl=document.getElementById('navLinks');
+if(_nt&&_nl){_nt.addEventListener('click',()=>{_nl.classList.toggle('open');_nt.classList.toggle('open');});_nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_nl.classList.remove('open');_nt.classList.remove('open');}));}
 </script>
 </body>
 </html>

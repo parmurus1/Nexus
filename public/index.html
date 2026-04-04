@@ -45,7 +45,7 @@
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
 
     /* FOOTER */
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}.footer-dev{display:flex;justify-content:flex-end;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
     .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -221,7 +221,7 @@
     <span>© 2026 Nexus Band</span>
   </div>
   <a href="/admin.html" class="footer-admin">Admin ↗</a>
-  <span style="font-family:'DM Mono',monospace;font-size:0.58rem;opacity:0.35;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>

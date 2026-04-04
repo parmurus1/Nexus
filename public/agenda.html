@@ -40,7 +40,7 @@
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
     /* ── FOOTER ── */
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}.footer-dev{display:flex;justify-content:flex-end;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
     .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -113,53 +113,67 @@
   <h1 class="page-title">AGENDA</h1>
 </div>
 <div class="container">
-  <p class="sec-eyebrow">Próximos shows</p>
-  <h2 class="sec-title">EM BREVE</h2>
-  <div class="shows-list">
-    <div class="show-item">
-      <div class="show-data"><div class="show-dia">25</div><div class="show-mes">ABR</div><div class="show-ano">2026</div></div>
-      <div><div class="show-nome">Palco Arteculando</div><div class="show-local">📍 Casa de Cultura Hip-Hop Sul — São Paulo</div><div class="show-horario">🕐 Horário a confirmar</div></div>
-      <span class="show-tag tag-breve">Em breve</span>
-    </div>
-  </div>
-  <p class="sec-eyebrow" style="margin-top:60px;">Histórico</p>
-  <h2 class="sec-title">SHOWS PASSADOS</h2>
-    <div class="shows-list">
-    <div class="show-item" style="opacity:0.65;">
-      <div class="show-data">
-        <div class="show-dia">26</div>
-        <div class="show-mes">MAR</div>
-        <div class="show-ano">2025</div>
-      </div>
-      <div>
-        <div class="show-nome">BIBLIOTECA MUSICAL</div>
-        <div class="show-local">📍 Senac Nações Unidas — São Paulo</div>
-        <div class="show-horario">🕐 18:15</div>
-      </div>
-      <span class="show-tag tag-confirmado">Realizado</span>
-    </div>
-    <div class="show-item" style="opacity:0.65;">
-      <div class="show-data">
-        <div class="show-dia">30</div>
-        <div class="show-mes">OUT</div>
-        <div class="show-ano">2024</div>
-      </div>
-      <div>
-        <div class="show-nome">HALLOWEEN SENAC</div>
-        <div class="show-local">📍 Senac Nações Unidas — São Paulo</div>
-        <div class="show-horario">🕐 18:30</div>
-      </div>
-      <span class="show-tag tag-confirmado">Realizado</span>
-    </div>
-  </div>
-    </div>
+  <div id="agendaContent">
+    <!-- carregado via JS -->
   </div>
 </div>
+
+<script>
+const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+function carregarShows() {
+  const raw = localStorage.getItem('nexus_shows');
+  const shows = raw ? JSON.parse(raw) : [
+    {id:'s1',nome:'Palco Arteculando',local:'Casa de Cultura Hip-Hop Sul — São Paulo',data:'2026-04-25',horario:'Horário a confirmar',feito:false},
+    {id:'s2',nome:'BIBLIOTECA MUSICAL',local:'Senac Nações Unidas — São Paulo',data:'2025-03-26',horario:'18:15',feito:true},
+    {id:'s3',nome:'HALLOWEEN SENAC',local:'Senac Nações Unidas — São Paulo',data:'2024-10-30',horario:'18:30',feito:true}
+  ];
+  
+  const hoje = new Date();
+  const proximos = shows.filter(s => !s.feito && new Date(s.data+'T12:00:00') >= hoje).sort((a,b)=>new Date(a.data)-new Date(b.data));
+  const passados = shows.filter(s => s.feito || new Date(s.data+'T12:00:00') < hoje).sort((a,b)=>new Date(b.data)-new Date(a.data));
+  
+  let html = '';
+  
+  if(proximos.length) {
+    html += `<p class="sec-eyebrow">Próximos shows</p><h2 class="sec-title">EM BREVE</h2><div class="shows-list">`;
+    proximos.forEach(s => { html += renderShow(s, false); });
+    html += `</div>`;
+  } else {
+    html += `<p class="sec-eyebrow">Próximos shows</p><h2 class="sec-title">EM BREVE</h2><div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;margin-bottom:60px;"><p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;">Nenhum show agendado no momento</p></div>`;
+  }
+  
+  if(passados.length) {
+    html += `<p class="sec-eyebrow" style="margin-top:60px;">Histórico</p><h2 class="sec-title">SHOWS PASSADOS</h2><div class="shows-list">`;
+    passados.forEach(s => { html += renderShow(s, true); });
+    html += `</div>`;
+  }
+  
+  document.getElementById('agendaContent').innerHTML = html;
+}
+
+function renderShow(s, passado) {
+  const d = new Date(s.data+'T12:00:00');
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = MESES[d.getMonth()];
+  const ano = d.getFullYear();
+  const tagHtml = passado || s.feito
+    ? `<span class="show-tag tag-confirmado">Realizado</span>`
+    : `<span class="show-tag tag-breve">Em breve</span>`;
+  return `<div class="show-item" style="${passado||s.feito?'opacity:0.65;':''}">
+    <div class="show-data"><div class="show-dia">${dia}</div><div class="show-mes">${mes}</div><div class="show-ano">${ano}</div></div>
+    <div><div class="show-nome">${s.nome}</div><div class="show-local">📍 ${s.local}</div><div class="show-horario">🕐 ${s.horario}</div></div>
+    ${tagHtml}
+  </div>`;
+}
+
+carregarShows();
+</script>
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
   <a href="/admin.html" class="footer-admin">Admin ↗</a>
-  <span style="font-family:'DM Mono',monospace;font-size:0.58rem;opacity:0.35;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 
