@@ -49,6 +49,9 @@
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
 
+    .hero-logo{position:relative;z-index:1;opacity:0;animation:rise 0.8s 0.2s forwards;margin-bottom:32px;}
+    .hero-logo img{width:min(420px, 80vw);height:auto;filter:drop-shadow(0 0 40px rgba(232,34,10,0.25));}
+
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}.footer-dev{display:flex;justify-content:flex-end;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
@@ -228,6 +231,7 @@
 <nav>
   <a href="/" class="nav-logo">
     <div class="nav-pulse"></div>
+    
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
@@ -246,7 +250,7 @@
   <div class="hero-orb orb1"></div>
   <div class="hero-orb orb2"></div>
   <p class="hero-eyebrow">Nexus · Campanha 2026</p>
-  <h1 class="hero-title">RIFA<br/><img src="/imgs/nexustitle.png"></h1>
+  <h1 class="hero-title">RIFA<br/><div class="hero-logo"><img src="/imgs/nexustitle.png"></div></h1>
   <p class="hero-sub">Apoie nossa música e concorra a prêmios exclusivos</p>
   <div class="stats-row">
     <div class="stat"><div class="stat-lbl">Valor do bilhete</div><div class="stat-val r" id="sValor">R$ —</div></div>
