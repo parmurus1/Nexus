@@ -244,25 +244,32 @@
 <script>
 const WA = '5511999999999'; // ← substitua pelo número real
 
-const DEFAULT_PRODS = [
-  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',desc:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
-  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',desc:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'/imgs/merch-palheta.jpg',sizes:[],ativo:true},
-  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',desc:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'/imgs/merch-chaveiro.jpg',sizes:[],ativo:true},
-  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',desc:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'/imgs/merch-pin.jpg',sizes:[],ativo:true},
-  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',desc:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'/imgs/merch-adesivos.jpg',sizes:[],ativo:true},
-  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',desc:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'/imgs/merch-baquetas.jpg',badge:'Em breve',sizes:[],ativo:false},
-];
-
-// Read from localStorage (synced from admin panel)
-const PRODS = (() => {
-  const raw = localStorage.getItem('nexus_merch');
-  return raw ? JSON.parse(raw) : DEFAULT_PRODS;
-})();
-
+let PRODS = [];
 let cart=[], prodAtual=null, tamSel=null, qty=1;
 
+async function init() {
+  try {
+    const r = await fetch('/api/produtos');
+    const j = await r.json();
+    PRODS = (j.produtos || []).map(p => ({
+      ...p,
+      desc: p.descricao,
+      sizes: p.sizes || []
+    }));
+  } catch {
+    PRODS = [];
+  }
+  renderGrid();
+  syncCart();
+}
+
 function renderGrid(){
-  document.getElementById('grid').innerHTML = PRODS.map(p=>`
+  const grid = document.getElementById('grid');
+  if(!PRODS.length) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text3);padding:60px 0;letter-spacing:0.1em;text-transform:uppercase;">Nenhum produto disponível no momento</p>';
+    return;
+  }
+  grid.innerHTML = PRODS.map(p=>`
     <div class="merch-card" onclick="${p.ativo?`abrirProd('${p.id}')`:''}" style="${!p.ativo?'cursor:default':''}">
       <div class="merch-img">
         ${p.badge?`<span class="merch-badge ${p.ativo?'badge-novo':'badge-em-breve'}">${p.badge}</span>`:''}
@@ -285,7 +292,7 @@ function abrirProd(id){
   tamSel=null; qty=1;
   document.getElementById('mCat').textContent=prodAtual.cat;
   document.getElementById('mNome').textContent=prodAtual.nome;
-  document.getElementById('mDesc').textContent=prodAtual.desc;
+  document.getElementById('mDesc').textContent=prodAtual.desc||prodAtual.descricao||'';
   document.getElementById('mPreco').textContent=prodAtual.preco>0?`R$ ${prodAtual.preco.toFixed(2).replace('.',',')}`:'A confirmar';
   document.getElementById('qn').textContent=1;
   document.getElementById('mImg').innerHTML=`<img src="${prodAtual.img}" onerror="this.style.display='none'" alt=""/><span class="modal-big-emoji">${prodAtual.emoji}</span>`;
@@ -372,7 +379,7 @@ function toast(msg,tipo){
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-renderGrid();syncCart();
+init();
 
 // Nav hamburger
 const _nt=document.getElementById('navToggle'),_nl=document.getElementById('navLinks');

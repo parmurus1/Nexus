@@ -121,46 +121,53 @@
 <script>
 const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
-function carregarShows() {
-  const raw = localStorage.getItem('nexus_shows');
-  const shows = raw ? JSON.parse(raw) : [
-    {id:'s1',nome:'Palco Arteculando',local:'Casa de Cultura Hip-Hop Sul — São Paulo',data:'2026-04-25',horario:'Horário a confirmar',feito:false},
-    {id:'s2',nome:'BIBLIOTECA MUSICAL',local:'Senac Nações Unidas — São Paulo',data:'2025-03-26',horario:'18:15',feito:true},
-    {id:'s3',nome:'HALLOWEEN SENAC',local:'Senac Nações Unidas — São Paulo',data:'2024-10-30',horario:'18:30',feito:true}
-  ];
-  
-  const hoje = new Date();
+async function carregarShows() {
+  const el = document.getElementById('agendaContent');
+  el.innerHTML = '<p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);text-align:center;padding:60px 0;letter-spacing:0.1em;">Carregando...</p>';
+
+  let shows = [];
+  try {
+    const r = await fetch('/api/shows');
+    const j = await r.json();
+    shows = j.shows || [];
+  } catch {
+    el.innerHTML = '<p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--red);text-align:center;padding:60px 0;">Erro ao carregar shows.</p>';
+    return;
+  }
+
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
   const proximos = shows.filter(s => !s.feito && new Date(s.data+'T12:00:00') >= hoje).sort((a,b)=>new Date(a.data)-new Date(b.data));
   const passados = shows.filter(s => s.feito || new Date(s.data+'T12:00:00') < hoje).sort((a,b)=>new Date(b.data)-new Date(a.data));
-  
+
   let html = '';
-  
-  if(proximos.length) {
-    html += `<p class="sec-eyebrow">Próximos shows</p><h2 class="sec-title">EM BREVE</h2><div class="shows-list">`;
+
+  html += `<p class="sec-eyebrow">Próximos shows</p><h2 class="sec-title">EM BREVE</h2>`;
+  if (proximos.length) {
+    html += `<div class="shows-list">`;
     proximos.forEach(s => { html += renderShow(s, false); });
     html += `</div>`;
   } else {
-    html += `<p class="sec-eyebrow">Próximos shows</p><h2 class="sec-title">EM BREVE</h2><div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;margin-bottom:60px;"><p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;">Nenhum show agendado no momento</p></div>`;
+    html += `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;margin-bottom:60px;"><p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;">Nenhum show agendado no momento</p></div>`;
   }
-  
-  if(passados.length) {
+
+  if (passados.length) {
     html += `<p class="sec-eyebrow" style="margin-top:60px;">Histórico</p><h2 class="sec-title">SHOWS PASSADOS</h2><div class="shows-list">`;
     passados.forEach(s => { html += renderShow(s, true); });
     html += `</div>`;
   }
-  
-  document.getElementById('agendaContent').innerHTML = html;
+
+  el.innerHTML = html;
 }
 
 function renderShow(s, passado) {
-  const d = new Date(s.data+'T12:00:00');
-  const dia = String(d.getDate()).padStart(2,'0');
+  const d = new Date(s.data + 'T12:00:00');
+  const dia = String(d.getDate()).padStart(2, '0');
   const mes = MESES[d.getMonth()];
   const ano = d.getFullYear();
   const tagHtml = passado || s.feito
     ? `<span class="show-tag tag-confirmado">Realizado</span>`
     : `<span class="show-tag tag-breve">Em breve</span>`;
-  return `<div class="show-item" style="${passado||s.feito?'opacity:0.65;':''}">
+  return `<div class="show-item" style="${passado || s.feito ? 'opacity:0.65;' : ''}">
     <div class="show-data"><div class="show-dia">${dia}</div><div class="show-mes">${mes}</div><div class="show-ano">${ano}</div></div>
     <div><div class="show-nome">${s.nome}</div><div class="show-local">📍 ${s.local}</div><div class="show-horario">🕐 ${s.horario}</div></div>
     ${tagHtml}

@@ -446,32 +446,38 @@ function toast(msg,tipo){
 
 // ─── SHOWS MANAGEMENT ──────────────────────────────────────────────────────
 const MESES_SHORT = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+let _showsCache = [];
+let _prodsCache = [];
 
-function getShows() {
-  const raw = localStorage.getItem('nexus_shows');
-  return raw ? JSON.parse(raw) : [
-    {id:'s1',nome:'Palco Arteculando',local:'Casa de Cultura Hip-Hop Sul — São Paulo',data:'2026-04-25',horario:'Horário a confirmar',feito:false},
-    {id:'s2',nome:'BIBLIOTECA MUSICAL',local:'Senac Nações Unidas — São Paulo',data:'2025-03-26',horario:'18:15',feito:true},
-    {id:'s3',nome:'HALLOWEEN SENAC',local:'Senac Nações Unidas — São Paulo',data:'2024-10-30',horario:'18:30',feito:true}
-  ];
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
 }
 
-function saveShows(shows) { localStorage.setItem('nexus_shows', JSON.stringify(shows)); }
-
-function renderShows() {
-  const shows = getShows().sort((a,b)=>new Date(b.data)-new Date(a.data));
+async function renderShows() {
   const el = document.getElementById('showsList');
-  if(!shows.length) { el.innerHTML='<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Nenhum show cadastrado</p>'; return; }
-  el.innerHTML = shows.map(s => {
-    const d = new Date(s.data+'T12:00:00');
+  el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Carregando...</p>';
+  try {
+    const r = await fetch('/api/shows', { headers: authHeaders() });
+    const j = await r.json();
+    _showsCache = (j.shows || []).sort((a,b) => new Date(b.data) - new Date(a.data));
+  } catch {
+    el.innerHTML = '<p style="color:var(--red);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Erro ao carregar shows.</p>';
+    return;
+  }
+  if (!_showsCache.length) {
+    el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Nenhum show cadastrado</p>';
+    return;
+  }
+  el.innerHTML = _showsCache.map(s => {
+    const d = new Date(s.data + 'T12:00:00');
     const fmt = `${String(d.getDate()).padStart(2,'0')} ${MESES_SHORT[d.getMonth()]} ${d.getFullYear()}`;
-    return `<div class="item-row ${s.feito?'done':''}">
+    return `<div class="item-row ${s.feito ? 'done' : ''}">
       <div class="item-info">
         <div class="item-nome">${s.nome}</div>
         <div class="item-det">${fmt} · ${s.horario} · 📍 ${s.local}</div>
       </div>
       <div class="item-actions">
-        ${!s.feito?`<button class="btn-xs green" onclick="marcarFeito('${s.id}')">✓ Realizado</button>`:`<span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:#3dbb80;padding:0 6px;">Realizado</span>`}
+        ${!s.feito ? `<button class="btn-xs green" onclick="marcarFeito('${s.id}')">✓ Realizado</button>` : `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:#3dbb80;padding:0 6px;">Realizado</span>`}
         <button class="btn-xs" onclick="editarShow('${s.id}')">Editar</button>
         <button class="btn-xs red" onclick="excluirShow('${s.id}')">Excluir</button>
       </div>
@@ -482,82 +488,82 @@ function renderShows() {
 function abrirModalShow(id) {
   document.getElementById('modalShowTitle').textContent = id ? 'EDITAR SHOW' : 'ADICIONAR SHOW';
   document.getElementById('showEditId').value = id || '';
-  if(id) {
-    const s = getShows().find(x=>x.id===id);
-    document.getElementById('showNome').value = s.nome;
-    document.getElementById('showLocal').value = s.local;
-    document.getElementById('showData').value = s.data;
-    document.getElementById('showHorario').value = s.horario;
+  if (id) {
+    const s = _showsCache.find(x => x.id === id);
+    if (s) {
+      document.getElementById('showNome').value = s.nome;
+      document.getElementById('showLocal').value = s.local;
+      document.getElementById('showData').value = s.data;
+      document.getElementById('showHorario').value = s.horario;
+    }
   } else {
-    document.getElementById('showNome').value='';
-    document.getElementById('showLocal').value='';
-    document.getElementById('showData').value='';
-    document.getElementById('showHorario').value='';
+    ['showNome','showLocal','showData','showHorario'].forEach(i => document.getElementById(i).value = '');
   }
   document.getElementById('modalShowOv').classList.add('open');
 }
-
 function fecharModalShow() { document.getElementById('modalShowOv').classList.remove('open'); }
-
 function editarShow(id) { abrirModalShow(id); }
 
-function salvarShow() {
+async function salvarShow() {
   const nome = document.getElementById('showNome').value.trim();
   const local = document.getElementById('showLocal').value.trim();
   const data = document.getElementById('showData').value;
-  if(!nome||!local||!data) { toast('Preencha nome, local e data','err'); return; }
+  if (!nome || !local || !data) { toast('Preencha nome, local e data', 'err'); return; }
   const id = document.getElementById('showEditId').value;
-  const shows = getShows();
-  if(id) {
-    const idx = shows.findIndex(s=>s.id===id);
-    shows[idx] = {...shows[idx], nome, local, data, horario: document.getElementById('showHorario').value.trim()||'A confirmar'};
-  } else {
-    shows.push({id:'s'+Date.now(), nome, local, data, horario: document.getElementById('showHorario').value.trim()||'A confirmar', feito:false});
-  }
-  saveShows(shows); renderShows(); fecharModalShow();
-  toast('Show salvo!','ok');
+  const horario = document.getElementById('showHorario').value.trim() || 'A confirmar';
+  const body = JSON.stringify({ nome, local, data, horario });
+  try {
+    const r = id
+      ? await fetch(`/api/shows?id=${id}`, { method: 'PUT', headers: authHeaders(), body })
+      : await fetch('/api/shows', { method: 'POST', headers: authHeaders(), body });
+    if (!r.ok) throw new Error();
+    toast('Show salvo!', 'ok');
+    fecharModalShow();
+    renderShows();
+  } catch { toast('Erro ao salvar show', 'err'); }
 }
 
-function marcarFeito(id) {
-  const shows = getShows();
-  const idx = shows.findIndex(s=>s.id===id);
-  shows[idx].feito = true;
-  saveShows(shows); renderShows();
-  toast('Show marcado como realizado!','ok');
+async function marcarFeito(id) {
+  try {
+    const r = await fetch(`/api/shows?id=${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ feito: true }) });
+    if (!r.ok) throw new Error();
+    toast('Show marcado como realizado!', 'ok');
+    renderShows();
+  } catch { toast('Erro ao atualizar show', 'err'); }
 }
 
-function excluirShow(id) {
-  if(!confirm('Excluir este show?')) return;
-  saveShows(getShows().filter(s=>s.id!==id));
-  renderShows(); toast('Show excluído','ok');
+async function excluirShow(id) {
+  if (!confirm('Excluir este show?')) return;
+  try {
+    const r = await fetch(`/api/shows?id=${id}`, { method: 'DELETE', headers: authHeaders() });
+    if (!r.ok) throw new Error();
+    toast('Show excluído', 'ok');
+    renderShows();
+  } catch { toast('Erro ao excluir show', 'err'); }
 }
 
 // ─── MERCH MANAGEMENT ─────────────────────────────────────────────────────
-const DEFAULT_PRODS = [
-  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',desc:'100% algodão, estampa serigrafia com o logo da banda.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
-  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',desc:'Palheta personalizada com o logo da Nexus. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'/imgs/merch-palheta.jpg',sizes:[],ativo:true},
-  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',desc:'Chaveiro metálico com o símbolo da Nexus.',preco:0,emoji:'🔑',img:'/imgs/merch-chaveiro.jpg',sizes:[],ativo:true},
-  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',desc:'Pin esmaltado com o logo da Nexus.',preco:0,emoji:'📌',img:'/imgs/merch-pin.jpg',sizes:[],ativo:true},
-  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',desc:'6 adesivos em vinil impermeável com artes exclusivas.',preco:0,emoji:'🎨',img:'/imgs/merch-adesivos.jpg',sizes:[],ativo:true},
-  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',desc:'Baquetas autografadas pelo baterista. Edição limitada.',preco:0,emoji:'🥁',img:'/imgs/merch-baquetas.jpg',badge:'Em breve',sizes:[],ativo:false},
-];
-
-function getProds() {
-  const raw = localStorage.getItem('nexus_merch');
-  return raw ? JSON.parse(raw) : DEFAULT_PRODS;
-}
-function saveProds(prods) { localStorage.setItem('nexus_merch', JSON.stringify(prods)); }
-
-function renderMerch() {
-  const prods = getProds();
+async function renderMerch() {
   const el = document.getElementById('merchList');
-  if(!prods.length) { el.innerHTML='<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Nenhum produto cadastrado</p>'; return; }
-  el.innerHTML = prods.map(p => `
-    <div class="item-row ${!p.ativo?'done':''}">
+  el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Carregando...</p>';
+  try {
+    const r = await fetch('/api/produtos', { headers: authHeaders() });
+    const j = await r.json();
+    _prodsCache = j.produtos || [];
+  } catch {
+    el.innerHTML = '<p style="color:var(--red);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Erro ao carregar produtos.</p>';
+    return;
+  }
+  if (!_prodsCache.length) {
+    el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Nenhum produto cadastrado</p>';
+    return;
+  }
+  el.innerHTML = _prodsCache.map(p => `
+    <div class="item-row ${!p.ativo ? 'done' : ''}">
       <span style="font-size:1.4rem;flex-shrink:0;">${p.emoji}</span>
       <div class="item-info">
-        <div class="item-nome">${p.nome} ${p.badge?`<span style="font-family:'DM Mono',monospace;font-size:0.52rem;background:var(--red);color:#fff;padding:2px 6px;border-radius:4px;margin-left:6px;">${p.badge}</span>`:''}</div>
-        <div class="item-det">${p.cat} · ${p.preco>0?`R$ ${p.preco.toFixed(2).replace('.',',')}`:' A confirmar'} · ${p.ativo?'Ativo':'Inativo'}</div>
+        <div class="item-nome">${p.nome} ${p.badge ? `<span style="font-family:'DM Mono',monospace;font-size:0.52rem;background:var(--red);color:#fff;padding:2px 6px;border-radius:4px;margin-left:6px;">${p.badge}</span>` : ''}</div>
+        <div class="item-det">${p.cat} · ${p.preco > 0 ? `R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}` : 'A confirmar'} · ${p.ativo ? 'Ativo' : 'Inativo'}</div>
       </div>
       <div class="item-actions">
         <button class="btn-xs" onclick="editarMerch('${p.id}')">Editar</button>
@@ -569,58 +575,66 @@ function renderMerch() {
 function abrirModalMerch(id) {
   document.getElementById('modalMerchTitle').textContent = id ? 'EDITAR PRODUTO' : 'ADICIONAR PRODUTO';
   document.getElementById('merchEditId').value = id || '';
-  if(id) {
-    const p = getProds().find(x=>x.id===id);
-    document.getElementById('merchNome').value = p.nome;
-    document.getElementById('merchCat').value = p.cat;
-    document.getElementById('merchEmoji').value = p.emoji;
-    document.getElementById('merchPreco').value = p.preco;
-    document.getElementById('merchBadge').value = p.badge||'';
-    document.getElementById('merchDesc').value = p.desc;
-    document.getElementById('merchSizes').value = p.sizes.join(', ');
-    document.getElementById('merchImg').value = p.img||'';
-    document.getElementById('merchAtivo').checked = p.ativo;
+  if (id) {
+    const p = _prodsCache.find(x => x.id === id);
+    if (p) {
+      document.getElementById('merchNome').value = p.nome;
+      document.getElementById('merchCat').value = p.cat;
+      document.getElementById('merchEmoji').value = p.emoji;
+      document.getElementById('merchPreco').value = p.preco;
+      document.getElementById('merchBadge').value = p.badge || '';
+      document.getElementById('merchDesc').value = p.descricao || '';
+      document.getElementById('merchSizes').value = (p.sizes || []).join(', ');
+      document.getElementById('merchImg').value = p.img || '';
+      document.getElementById('merchAtivo').checked = p.ativo;
+    }
   } else {
-    ['merchNome','merchCat','merchEmoji','merchBadge','merchDesc','merchSizes','merchImg'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('merchPreco').value='0';
-    document.getElementById('merchAtivo').checked=true;
+    ['merchNome','merchCat','merchEmoji','merchBadge','merchDesc','merchSizes','merchImg'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('merchPreco').value = '0';
+    document.getElementById('merchAtivo').checked = true;
   }
   document.getElementById('modalMerchOv').classList.add('open');
 }
-
 function fecharModalMerch() { document.getElementById('modalMerchOv').classList.remove('open'); }
 function editarMerch(id) { abrirModalMerch(id); }
 
-function salvarMerch() {
+async function salvarMerch() {
   const nome = document.getElementById('merchNome').value.trim();
-  const desc = document.getElementById('merchDesc').value.trim();
-  if(!nome||!desc) { toast('Preencha nome e descrição','err'); return; }
+  const descricao = document.getElementById('merchDesc').value.trim();
+  if (!nome || !descricao) { toast('Preencha nome e descrição', 'err'); return; }
   const id = document.getElementById('merchEditId').value;
   const rawSizes = document.getElementById('merchSizes').value;
-  const sizes = rawSizes ? rawSizes.split(',').map(s=>s.trim()).filter(Boolean) : [];
-  const prod = {
-    id: id || 'p'+Date.now(),
+  const sizes = rawSizes ? rawSizes.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const body = JSON.stringify({
     nome,
-    cat: document.getElementById('merchCat').value.trim()||'Geral',
-    emoji: document.getElementById('merchEmoji').value.trim()||'🎵',
-    preco: parseFloat(document.getElementById('merchPreco').value)||0,
-    badge: document.getElementById('merchBadge').value.trim()||null,
-    desc,
+    cat: document.getElementById('merchCat').value.trim() || 'Geral',
+    emoji: document.getElementById('merchEmoji').value.trim() || '🎵',
+    preco: parseFloat(document.getElementById('merchPreco').value) || 0,
+    badge: document.getElementById('merchBadge').value.trim() || null,
+    descricao,
     sizes,
-    img: document.getElementById('merchImg').value.trim()||'',
+    img: document.getElementById('merchImg').value.trim() || null,
     ativo: document.getElementById('merchAtivo').checked
-  };
-  const prods = getProds();
-  if(id) { const idx=prods.findIndex(p=>p.id===id); prods[idx]=prod; }
-  else prods.push(prod);
-  saveProds(prods); renderMerch(); fecharModalMerch();
-  toast('Produto salvo!','ok');
+  });
+  try {
+    const r = id
+      ? await fetch(`/api/produtos?id=${id}`, { method: 'PUT', headers: authHeaders(), body })
+      : await fetch('/api/produtos', { method: 'POST', headers: authHeaders(), body });
+    if (!r.ok) throw new Error();
+    toast('Produto salvo!', 'ok');
+    fecharModalMerch();
+    renderMerch();
+  } catch { toast('Erro ao salvar produto', 'err'); }
 }
 
-function excluirMerch(id) {
-  if(!confirm('Excluir este produto?')) return;
-  saveProds(getProds().filter(p=>p.id!==id));
-  renderMerch(); toast('Produto excluído','ok');
+async function excluirMerch(id) {
+  if (!confirm('Excluir este produto?')) return;
+  try {
+    const r = await fetch(`/api/produtos?id=${id}`, { method: 'DELETE', headers: authHeaders() });
+    if (!r.ok) throw new Error();
+    toast('Produto excluído', 'ok');
+    renderMerch();
+  } catch { toast('Erro ao excluir produto', 'err'); }
 }
 
 // Init shows/merch on panel load
@@ -629,10 +643,6 @@ function mostrarPainel() {
   _origMostrar();
   renderShows();
   renderMerch();
-}
-// Also init if panel is already shown
-if(document.getElementById('adminPanel').style.display==='block') {
-  renderShows(); renderMerch();
 }
 </script>
 <!-- MODAL SHOW -->

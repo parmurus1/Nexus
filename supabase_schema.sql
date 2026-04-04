@@ -66,3 +66,64 @@ ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS instagram_comprador TEXT;
 
 -- Também adicionar coluna instagram_vencedor na tabela de sorteio
 ALTER TABLE sorteio ADD COLUMN IF NOT EXISTS instagram_vencedor TEXT;
+
+
+-- =====================================================
+-- MIGRAÇÃO: Tabelas de shows e produtos (merch)
+-- Execute este bloco no SQL Editor do Supabase
+-- =====================================================
+
+-- Tabela de shows da agenda
+CREATE TABLE IF NOT EXISTS shows (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nome TEXT NOT NULL,
+  local TEXT NOT NULL,
+  data DATE NOT NULL,
+  horario TEXT DEFAULT 'A confirmar',
+  feito BOOLEAN DEFAULT false,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabela de produtos do merch
+CREATE TABLE IF NOT EXISTS produtos (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nome TEXT NOT NULL,
+  cat TEXT DEFAULT 'Geral',
+  emoji TEXT DEFAULT '🎵',
+  preco NUMERIC(10,2) DEFAULT 0,
+  badge TEXT,
+  descricao TEXT,
+  sizes TEXT[] DEFAULT '{}',
+  img TEXT,
+  ativo BOOLEAN DEFAULT true,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Habilitar RLS
+ALTER TABLE shows ENABLE ROW LEVEL SECURITY;
+ALTER TABLE produtos ENABLE ROW LEVEL SECURITY;
+
+-- Leitura pública
+CREATE POLICY "Leitura pública de shows" ON shows FOR SELECT USING (true);
+CREATE POLICY "Leitura pública de produtos" ON produtos FOR SELECT USING (true);
+
+-- Escrita apenas via service_role (backend/API)
+CREATE POLICY "Escrita via service_role em shows" ON shows FOR ALL USING (auth.role() = 'service_role');
+CREATE POLICY "Escrita via service_role em produtos" ON produtos FOR ALL USING (auth.role() = 'service_role');
+
+-- Inserir produtos padrão (opcional — pode remover se quiser começar do zero)
+INSERT INTO produtos (nome, cat, emoji, preco, badge, descricao, sizes, ativo) VALUES
+  ('CAMISETA OFICIAL', 'Vestuário', '👕', 0, 'Novo', '100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.', ARRAY['P','M','G','GG'], true),
+  ('PALHETA EXCLUSIVA', 'Acessórios', '🎸', 0, NULL, 'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.', '{}', true),
+  ('CHAVEIRO NEXUS', 'Acessórios', '🔑', 0, NULL, 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.', '{}', true),
+  ('PIN COLECIONÁVEL', 'Acessórios', '📌', 0, NULL, 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.', '{}', true),
+  ('PACK ADESIVOS', 'Colecionáveis', '🎨', 0, NULL, '6 adesivos em vinil impermeável com artes exclusivas da banda.', '{}', true),
+  ('BAQUETAS ASSINADAS', 'Colecionáveis', '🥁', 0, 'Em breve', 'Baquetas autografadas pelo baterista. Edição limitada e numerada.', '{}', false)
+ON CONFLICT DO NOTHING;
+
+-- Inserir shows padrão (opcional)
+INSERT INTO shows (nome, local, data, horario, feito) VALUES
+  ('Palco Arteculando', 'Casa de Cultura Hip-Hop Sul — São Paulo', '2026-04-25', 'A confirmar', false),
+  ('BIBLIOTECA MUSICAL', 'Senac Nações Unidas — São Paulo', '2025-03-26', '18:15', true),
+  ('HALLOWEEN SENAC', 'Senac Nações Unidas — São Paulo', '2024-10-30', '18:30', true)
+ON CONFLICT DO NOTHING;
