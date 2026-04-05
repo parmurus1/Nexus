@@ -675,8 +675,8 @@ function fecharFormProduto(){ document.getElementById('prodOv').classList.remove
 
 async function salvarProduto(){
   const nome = document.getElementById('pNome').value.trim();
-  const desc = document.getElementById('pDesc').value.trim();
-  if(!nome||!desc){ toast('Preencha nome e descrição','err'); return; }
+  const descricao = document.getElementById('pDesc').value.trim();
+  if(!nome||!descricao){ toast('Preencha nome e descrição','err'); return; }
   const btn = document.getElementById('btnSalvarProd');
   btn.disabled=true; btn.textContent='Salvando...';
   const id = document.getElementById('pId').value;
