@@ -46,8 +46,8 @@ export default async function handler(req, res) {
 
   // ── POST: criar produto ─────────────────────────────────────────────────
   if (req.method === 'POST') {
-    const { nome, cat, desc, preco, emoji, img, badge, sizes, ativo } = req.body;
-    if (!nome || !desc) return res.status(400).json({ erro: 'nome e descrição são obrigatórios' });
+    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo } = req.body;
+    if (!nome || !descricao) return res.status(400).json({ erro: 'nome e descrição são obrigatórios' });
 
     // Verifica se a tabela existe antes de inserir
     const { count, error: checkError } = await supabase
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       .insert({
         nome,
         cat: cat || '',
-        desc,
+        descricao,
         preco: preco != null ? parseFloat(preco) : 0,
         emoji: emoji || '📦',
         img: img || '',
@@ -89,11 +89,11 @@ export default async function handler(req, res) {
     const id = req.query.id;
     if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
 
-    const { nome, cat, desc, preco, emoji, img, badge, sizes, ativo } = req.body;
+    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo } = req.body;
     const updates = {};
     if (nome  !== undefined) updates.nome  = nome;
     if (cat   !== undefined) updates.cat   = cat;
-    if (desc  !== undefined) updates.desc  = desc;
+    if (descricao !== undefined) updates.descricao = descricao;
     if (preco !== undefined) updates.preco = parseFloat(preco) || 0;
     if (emoji !== undefined) updates.emoji = emoji;
     if (img   !== undefined) updates.img   = img;

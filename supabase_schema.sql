@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS produtos (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nome TEXT NOT NULL,
   cat TEXT DEFAULT '',
-  desc TEXT NOT NULL,
+  descricao TEXT NOT NULL,
   preco NUMERIC(10,2) DEFAULT 0,
   emoji TEXT DEFAULT '📦',
   img TEXT DEFAULT '',
@@ -108,7 +108,7 @@ CREATE POLICY "Leitura pública de produtos" ON produtos FOR SELECT USING (true)
 CREATE POLICY "Escrita via service_role em produtos" ON produtos FOR ALL USING (auth.role() = 'service_role');
 
 -- Dados iniciais de exemplo (remova se preferir começar vazio)
-INSERT INTO produtos (nome, cat, desc, preco, emoji, badge, sizes, ativo, ordem) VALUES
+INSERT INTO produtos (nome, cat, descricao, preco, emoji, badge, sizes, ativo, ordem) VALUES
   ('CAMISETA OFICIAL', 'Vestuário', '100% algodão, estampa serigrafia com o logo da banda.', 0, '👕', 'Novo', ARRAY['P','M','G','GG'], true, 1),
   ('PALHETA EXCLUSIVA', 'Acessórios', 'Palheta personalizada com o logo da Nexus. Pack com 3 unidades.', 0, '🎸', NULL, '{}', true, 2),
   ('CHAVEIRO NEXUS', 'Acessórios', 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium.', 0, '🔑', NULL, '{}', true, 3),
