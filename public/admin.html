@@ -663,7 +663,7 @@ function abrirFormProduto(id){
   document.getElementById('pNome').value = p?.nome||'';
   document.getElementById('pCat').value = p?.cat||'';
   document.getElementById('pPreco').value = p?.preco||0;
-  document.getElementById('pDesc').value = p?.desc||'';
+  document.getElementById('pDesc').value = p?.descricao||'';
   document.getElementById('pSizes').value = (p?.sizes||[]).join(', ');
   document.getElementById('pImg').value = p?.img||'';
   document.getElementById('pBadge').value = p?.badge||'';
@@ -683,7 +683,7 @@ async function salvarProduto(){
   const sizesRaw = document.getElementById('pSizes').value.trim();
   const payload = {
     emoji: document.getElementById('pEmoji').value.trim(),
-    nome, cat: document.getElementById('pCat').value.trim(), desc,
+    nome, cat: document.getElementById('pCat').value.trim(), descricao,
     preco: parseFloat(document.getElementById('pPreco').value)||0,
     sizes: sizesRaw ? sizesRaw.split(',').map(s=>s.trim()).filter(Boolean) : [],
     img: document.getElementById('pImg').value.trim(),
