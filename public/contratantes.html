@@ -69,7 +69,7 @@
     .container{max-width:1080px;margin:0 auto;padding:0 24px 100px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
-    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:32px;color:var(--text);}
+    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-top:32px;color:var(--text);}
     .contato-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:64px;}
     @media(max-width:600px){.contato-grid{grid-template-columns:1fr;}}
     .contato-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color var(--tr);}
@@ -79,10 +79,10 @@
     .contato-valor{font-size:0.95rem;color:var(--text);font-weight:400;}
     .contato-valor a{color:var(--red);text-decoration:none;}
     .contato-valor a:hover{text-decoration:underline;}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:46px;}
     @media(max-width:700px){.grid-2{grid-template-columns:1fr;}}
     .banda-foto{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-    .foto-wrap{aspect-ratio:16/9;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    .foto-wrap{background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
     .foto-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
     .foto-wrap img{width:100%;height:100%;object-fit:cover;}
     .foto-ph{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--text3);}
@@ -190,7 +190,7 @@
   <!-- FOTO + BIO -->
   <p class="sec-eyebrow">Apresentação</p>
   <h2 class="sec-title">A BANDA</h2>
-  <div class="grid-2">
+  <div class="grid-2", style="margin-bottom:46px;">
     <div class="banda-foto">
       <div class="foto-wrap">
         <!-- Substitua por: <img src="/imgs/banda-foto.jpg" alt="Nexus Band"/> -->
