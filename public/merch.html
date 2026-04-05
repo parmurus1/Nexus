@@ -288,12 +288,12 @@ const WA = '5511999999999';
 
 // Produtos: tenta carregar do Supabase via /api/bilhetes (config), fallback para dados padrão
 const PRODS_DEFAULT = [
-  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',desc:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
-  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',desc:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'',sizes:[],ativo:true},
-  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',desc:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'',sizes:[],ativo:true},
-  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',desc:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'',sizes:[],ativo:true},
-  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',desc:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'',sizes:[],ativo:true},
-  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',desc:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'',badge:'Em breve',sizes:[],ativo:false},
+  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',descricao:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
+  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',descricao:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'',sizes:[],ativo:true},
+  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',descricao:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'',sizes:[],ativo:true},
+  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',descricao:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'',sizes:[],ativo:true},
+  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',descricao:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'',sizes:[],ativo:true},
+  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',descricao:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'',badge:'Em breve',sizes:[],ativo:false},
 ];
 
 let PRODS = [];
@@ -344,7 +344,7 @@ function abrirProd(id){
   tamSel=null; qty=1;
   document.getElementById('mCat').textContent=prodAtual.cat||'';
   document.getElementById('mNome').textContent=prodAtual.nome;
-  document.getElementById('mDesc').textContent=prodAtual.desc;
+  document.getElementById('mDesc').textContent=prodAtual.descricao;
   document.getElementById('mPreco').textContent=prodAtual.preco>0?`R$ ${prodAtual.preco.toFixed(2).replace('.',',')}`:'A confirmar';
   document.getElementById('qn').textContent=1;
   const imgSide=document.getElementById('mImg');
