@@ -2,39 +2,29 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="description" content="Apoie a Nexus e concorra a prêmios exclusivos. Compre seu bilhete!"/>
-  <meta property="og:title" content="Rifa — Nexus Band"/>
-  <meta property="og:description" content="Apoie a Nexus e concorra a prêmios exclusivos. Compre seu bilhete!"/>
-  <meta property="og:image" content="/imgs/og-image.png"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://nexus-rifa.vercel.app/rifa.html"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="/imgs/og-image.png"/>
   <link rel="icon" type="image/png" href="/imgs/nexusicon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Merch — Nexus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
     ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
     @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
     .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:20px;}
+    .nav-links{display:flex;align-items:center;gap:24px;}
     .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
     .nav-link:hover{color:var(--red);}
     .nav-link.active{color:var(--text);}
-    .cart-btn{position:relative;background:var(--bg2);border:1px solid var(--border-s);color:var(--text2);width:40px;height:40px;border-radius:50%;font-family:'DM Mono',monospace;font-size:0.85rem;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;}
-    .cart-btn:hover{border-color:var(--red);color:var(--text);}
-    .cart-count{background:var(--red);color:#fff;font-size:0.48rem;min-width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:600;padding:0 3px;position:absolute;top:-4px;right:-4px;}
-    .cart-count.show{display:flex;}
     .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
     .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
     .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
@@ -42,8 +32,14 @@
     .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    @media(max-width:768px){nav{padding:10px 20px;}.nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}.nav-links.open{display:flex;}.nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}.nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}.nav-hamburger{display:flex;}}
 
+    /* ── CART FLOAT ── */
+    .cart-float{position:fixed;bottom:28px;right:28px;z-index:200;background:var(--red);color:#fff;border:none;width:52px;height:52px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 20px var(--red-glow);transition:all var(--tr);}
+    .cart-float:hover{transform:scale(1.1);box-shadow:0 6px 28px var(--red-glow);}
+    .cart-float-badge{position:absolute;top:-4px;right:-4px;background:#fff;color:var(--red);font-family:'DM Mono',monospace;font-size:0.55rem;font-weight:600;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+    .cart-float-badge.show{display:flex;}
+
+    /* ── HERO ── */
     .page-hero{min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 50px;position:relative;overflow:hidden;}
     .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
     .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
@@ -53,32 +49,46 @@
     .page-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,2vw,1rem);color:var(--text2);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.3s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-    .container{max-width:1080px;margin:0 auto;padding:0 24px 100px;}
+    .container{max-width:1080px;margin:0 auto;padding:0 24px 120px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
     .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:36px;color:var(--text);}
 
+    .aviso{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;display:flex;align-items:center;gap:16px;margin-bottom:48px;}
+    .aviso-icon{font-size:1.4rem;flex-shrink:0;}
+    .aviso-txt{font-family:'DM Mono',monospace;font-size:0.63rem;color:var(--text2);letter-spacing:0.04em;line-height:1.8;}
+    .aviso-txt strong{color:var(--text);}
+
+    /* ── MERCH GRID — Cards Maiores ── */
     .merch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
-    @media(max-width:700px){.merch-grid{grid-template-columns:1fr;}}
-    .merch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all var(--tr);cursor:pointer;}
-    .merch-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
-    .merch-img{aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    @media(max-width:620px){.merch-grid{grid-template-columns:1fr;}}
+
+    .merch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all var(--tr);cursor:pointer;display:grid;grid-template-columns:280px 1fr;}
+    .merch-card:hover{border-color:var(--border-s);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+    @media(max-width:900px){.merch-card{grid-template-columns:1fr;}}
+    @media(max-width:620px){.merch-card{grid-template-columns:1fr;}}
+
+    .merch-img{background:var(--bg3);display:flex;align-items:center;justify-content:center;min-height:220px;position:relative;overflow:hidden;}
     .merch-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
     .merch-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.85;}
-    .merch-emoji{font-size:5.5rem;position:relative;z-index:1;filter:drop-shadow(0 0 20px var(--red-glow));}
-    .merch-badge{position:absolute;top:12px;right:12px;z-index:2;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px;border-radius:4px;}
+    .merch-emoji{font-size:5rem;position:relative;z-index:1;filter:drop-shadow(0 0 24px var(--red-glow));}
+    .merch-badge{position:absolute;top:14px;right:14px;z-index:2;font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;border-radius:5px;}
     .badge-novo{background:var(--red);color:#fff;}
     .badge-em-breve{background:var(--bg4);color:var(--text3);border:1px solid var(--border-s);}
-    .merch-info{padding:20px 22px;}
-    .merch-nome{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.04em;color:var(--text);margin-bottom:6px;}
-    .merch-desc-short{font-size:0.82rem;color:var(--text2);margin-bottom:12px;line-height:1.5;}
-    .merch-footer{display:flex;align-items:center;justify-content:space-between;}
-    .merch-preco{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.04em;color:var(--red);}
-    .merch-add{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:7px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
-    .merch-add:hover{border-color:var(--red);color:var(--red);}
-    .merch-add:disabled{opacity:0.3;cursor:not-allowed;}
 
-    /* MODAL PRODUTO */
+    .merch-body{padding:28px 24px;display:flex;flex-direction:column;justify-content:center;gap:12px;}
+    .merch-cat{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);}
+    .merch-nome{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:0.04em;color:var(--text);line-height:1;}
+    .merch-desc{font-size:0.9rem;color:var(--text2);line-height:1.75;}
+    .merch-preco{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--red);}
+    .merch-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .btn-ver{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:10px 18px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
+    .btn-ver:hover{border-color:var(--red);color:var(--red);}
+    .btn-add-cart{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.1em;background:var(--red);border:none;color:#fff;padding:10px 22px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
+    .btn-add-cart:hover{background:#ff2a10;box-shadow:0 4px 16px var(--red-glow);}
+    .btn-add-cart:disabled{opacity:0.3;cursor:not-allowed;}
+
+    /* ── MODAL ── */
     .modal-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
     .modal-ov.open{opacity:1;pointer-events:all;}
     .modal{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);width:100%;max-width:680px;position:relative;transform:translateY(16px);transition:transform 0.28s;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;}
@@ -96,25 +106,22 @@
     .modal-nome{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.04em;color:var(--text);line-height:1;margin-bottom:10px;}
     .modal-desc{font-size:0.85rem;color:var(--text2);line-height:1.75;margin-bottom:16px;}
     .modal-preco{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--red);margin-bottom:18px;}
-
     .field-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
     .size-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
     .sz{width:42px;height:42px;border-radius:var(--radius-sm);border:1px solid var(--border-s);background:var(--bg3);color:var(--text2);font-family:'DM Mono',monospace;font-size:0.68rem;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;}
     .sz:hover{border-color:var(--border-s);color:var(--text);}
     .sz.on{border-color:var(--red);background:var(--red);color:#fff;}
-
     .qty-row{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
     .qty-ctrl{display:flex;border:1px solid var(--border-s);border-radius:var(--radius-sm);overflow:hidden;}
     .qb{width:34px;height:34px;background:var(--bg3);border:none;color:var(--text2);font-size:1rem;cursor:pointer;transition:all var(--tr);}
     .qb:hover{background:var(--bg4);color:var(--text);}
     .qn{width:34px;height:34px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text);border-left:1px solid var(--border);border-right:1px solid var(--border);}
-
     .btn-add{width:100%;background:var(--red);border:none;color:#fff;padding:14px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);}
     .btn-add:hover{background:#ff2a10;box-shadow:0 6px 20px var(--red-glow);}
     .btn-add:disabled{opacity:0.4;cursor:not-allowed;}
     .modal-hint{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--text3);text-align:center;margin-top:8px;letter-spacing:0.04em;}
 
-    /* DRAWER */
+    /* ── DRAWER ── */
     .cart-ov{position:fixed;inset:0;z-index:399;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.3s;}
     .cart-ov.open{opacity:1;pointer-events:all;}
     .drawer{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:100vw;background:var(--bg2);border-left:1px solid var(--border-s);z-index:400;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;}
@@ -149,16 +156,33 @@
     .toast.ok{background:var(--bg2);border-color:#1a5038;color:#3dbb80;}
     .toast.err{background:var(--bg2);border-color:var(--red-dim);color:var(--red);}
 
-    footer{border-top:1px solid var(--border);padding:36px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;}.footer-dev{display:flex;justify-content:flex-end;}
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
     .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);text-align:center;}
     .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:10px 20px;}
+      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
+      .nav-links.open{display:flex;}
+      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
+      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
+      .nav-hamburger{display:flex;}
+      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
+    }
+    @media(max-width:900px){.merch-card{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
+
 <nav>
-  <a href="/" class="nav-logo"><div class="nav-pulse"></div><img src="/imgs/nexusicon.png" alt="Nexus"/></a>
+  <a href="/" class="nav-logo">
+    <div class="nav-pulse"></div>
+    <img src="/imgs/nexusicon.png" alt="Nexus"/>
+  </a>
   <div class="nav-links" id="navLinks">
     <a href="/sobre.html" class="nav-link">Sobre</a>
     <a href="/agenda.html" class="nav-link">Agenda</a>
@@ -166,13 +190,16 @@
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
     <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
   </div>
-  <button class="cart-btn" onclick="abrirDrawer()" id="cartBtnFloat">
-    🛒 <span class="cart-count" id="cartCount">0</span>
-  </button>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<!-- CARRINHO FLUTUANTE -->
+<button class="cart-float" onclick="abrirDrawer()" title="Carrinho">
+  🛒
+  <span class="cart-float-badge" id="cartCount">0</span>
+</button>
 
 <div class="page-hero">
   <div class="hero-orb orb1"></div>
@@ -182,12 +209,25 @@
 </div>
 
 <div class="container">
+  <div class="aviso">
+    <span class="aviso-icon">📦</span>
+    <div class="aviso-txt">
+      <strong>Pedidos via WhatsApp</strong><br/>
+      Selecione os itens e finalize pelo WhatsApp. Confirmamos disponibilidade e combinamos o envio.
+    </div>
+  </div>
+
   <p class="sec-eyebrow">Coleção atual</p>
   <h2 class="sec-title">PRODUTOS</h2>
-  <div class="merch-grid" id="grid"></div>
+  <div class="merch-grid" id="grid">
+    <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;">
+      <div style="width:20px;height:20px;border:1.5px solid var(--border-s);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 16px;"></div>
+      Carregando produtos...
+    </div>
+  </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL PRODUTO -->
 <div class="modal-ov" id="mOv" onclick="if(event.target===this)fecharModal()">
   <div class="modal">
     <button class="modal-x" onclick="fecharModal()">✕</button>
@@ -215,7 +255,7 @@
   </div>
 </div>
 
-<!-- DRAWER -->
+<!-- DRAWER CARRINHO -->
 <div class="cart-ov" id="cOv" onclick="fecharDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="dh">
@@ -238,50 +278,62 @@
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
   <a href="/admin.html" class="footer-admin">Admin ↗</a>
-  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <script>
-const WA = '5511999999999'; // ← substitua pelo número real
+const WA = '5511999999999';
+
+// Produtos: tenta carregar do Supabase via /api/bilhetes (config), fallback para dados padrão
+const PRODS_DEFAULT = [
+  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',desc:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
+  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',desc:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'',sizes:[],ativo:true},
+  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',desc:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'',sizes:[],ativo:true},
+  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',desc:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'',sizes:[],ativo:true},
+  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',desc:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'',sizes:[],ativo:true},
+  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',desc:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'',badge:'Em breve',sizes:[],ativo:false},
+];
 
 let PRODS = [];
 let cart=[], prodAtual=null, tamSel=null, qty=1;
 
-async function init() {
-  try {
+async function loadProdutos(){
+  try{
     const r = await fetch('/api/produtos');
-    const j = await r.json();
-    PRODS = (j.produtos || []).map(p => ({
-      ...p,
-      desc: p.descricao,
-      sizes: p.sizes || []
-    }));
-  } catch {
-    PRODS = [];
-  }
+    if(r.ok){
+      const d = await r.json();
+      PRODS = d.produtos || PRODS_DEFAULT;
+    } else { PRODS = PRODS_DEFAULT; }
+  } catch { PRODS = PRODS_DEFAULT; }
   renderGrid();
-  syncCart();
 }
 
 function renderGrid(){
-  const grid = document.getElementById('grid');
-  if(!PRODS.length) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text3);padding:60px 0;letter-spacing:0.1em;text-transform:uppercase;">Nenhum produto disponível no momento</p>';
+  const g = document.getElementById('grid');
+  if(!PRODS.length){
+    g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;letter-spacing:0.1em;">Nenhum produto cadastrado</div>';
     return;
   }
-  grid.innerHTML = PRODS.map(p=>`
-    <div class="merch-card" onclick="${p.ativo?`abrirProd('${p.id}')`:''}" style="${!p.ativo?'cursor:default':''}">
-      <div class="merch-img">
+  g.innerHTML = PRODS.map(p=>`
+    <div class="merch-card" style="${!p.ativo?'opacity:0.55;cursor:default':''}">
+      <div class="merch-img" onclick="${p.ativo?`abrirProd('${p.id}')`:''}" style="${p.ativo?'cursor:pointer':''}">
         ${p.badge?`<span class="merch-badge ${p.ativo?'badge-novo':'badge-em-breve'}">${p.badge}</span>`:''}
-        <img src="${p.img}" onerror="this.style.display='none'" alt=""/>
-        <span class="merch-emoji">${p.emoji}</span>
+        ${p.img?`<img src="${p.img}" onerror="this.style.display='none'" alt=""/>`:'' }
+        <span class="merch-emoji">${p.emoji||'📦'}</span>
       </div>
-      <div class="merch-info">
+      <div class="merch-body">
+        <div class="merch-cat">${p.cat||'Produto'}</div>
         <div class="merch-nome">${p.nome}</div>
-        <div class="merch-desc-short">${p.desc.slice(0,55)}…</div>
-        <div class="merch-footer">
-          <span class="merch-preco" style="${!p.ativo?'color:var(--text3)':''}">${p.ativo?(p.preco>0?`R$ ${p.preco.toFixed(2).replace('.',',')}':'R$ --'):'Em breve'}</span>
-          <button class="merch-add" ${!p.ativo?'disabled':''} onclick="event.stopPropagation();${p.ativo?`abrirProd('${p.id}')`:''}">${p.ativo?'Ver →':'Indisponível'}</button>
+        <div class="merch-desc">${p.desc}</div>
+        <div class="merch-preco" style="${!p.ativo?'color:var(--text3)':''}">
+          ${p.ativo?(p.preco>0?`R$ ${p.preco.toFixed(2).replace('.',',')}`:'R$ --'):'Em breve'}
+        </div>
+        <div class="merch-actions">
+          ${p.ativo?`<button class="btn-ver" onclick="abrirProd('${p.id}')">Ver detalhes</button>
+          <button class="btn-add-cart" onclick="abrirProd('${p.id}')">Adicionar →</button>`
+          :`<button class="btn-ver" disabled style="opacity:0.4;cursor:not-allowed;">Indisponível</button>`}
         </div>
       </div>
     </div>`).join('');
@@ -290,45 +342,31 @@ function renderGrid(){
 function abrirProd(id){
   prodAtual=PRODS.find(p=>p.id===id); if(!prodAtual)return;
   tamSel=null; qty=1;
-  document.getElementById('mCat').textContent=prodAtual.cat;
+  document.getElementById('mCat').textContent=prodAtual.cat||'';
   document.getElementById('mNome').textContent=prodAtual.nome;
-  document.getElementById('mDesc').textContent=prodAtual.desc||prodAtual.descricao||'';
+  document.getElementById('mDesc').textContent=prodAtual.desc;
   document.getElementById('mPreco').textContent=prodAtual.preco>0?`R$ ${prodAtual.preco.toFixed(2).replace('.',',')}`:'A confirmar';
   document.getElementById('qn').textContent=1;
-  document.getElementById('mImg').innerHTML=`<img src="${prodAtual.img}" onerror="this.style.display='none'" alt=""/><span class="modal-big-emoji">${prodAtual.emoji}</span>`;
+  const imgSide=document.getElementById('mImg');
+  imgSide.innerHTML=`${prodAtual.img?`<img src="${prodAtual.img}" onerror="this.style.display='none'" alt=""/>`:''}<span class="modal-big-emoji">${prodAtual.emoji||'📦'}</span>`;
   const ss=document.getElementById('mSizes'), sr=document.getElementById('sizeRow');
-  if(prodAtual.sizes.length){
+  if(prodAtual.sizes&&prodAtual.sizes.length){
     ss.style.display='block';
     sr.innerHTML=prodAtual.sizes.map(s=>`<button class="sz" onclick="selTam('${s}',this)">${s}</button>`).join('');
     document.getElementById('btnAdd').disabled=true;
-  } else {
-    ss.style.display='none'; tamSel='único';
-    document.getElementById('btnAdd').disabled=false;
-  }
+  } else { ss.style.display='none'; tamSel='único'; document.getElementById('btnAdd').disabled=false; }
   document.getElementById('mOv').classList.add('open');
 }
-
-function selTam(t,el){
-  tamSel=t;
-  document.querySelectorAll('.sz').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('btnAdd').disabled=false;
-}
-
+function selTam(t,el){tamSel=t;document.querySelectorAll('.sz').forEach(b=>b.classList.remove('on'));el.classList.add('on');document.getElementById('btnAdd').disabled=false;}
 function dQty(d){qty=Math.max(1,qty+d);document.getElementById('qn').textContent=qty;}
-
 function addCart(){
   if(!prodAtual||!tamSel)return;
   const key=prodAtual.id+(tamSel!=='único'?`-${tamSel}`:'');
   const ex=cart.find(i=>i.key===key);
-  if(ex) ex.qty+=qty;
-  else cart.push({key,id:prodAtual.id,nome:prodAtual.nome,emoji:prodAtual.emoji,tam:tamSel,preco:prodAtual.preco,qty});
-  fecharModal(); syncCart();
-  toast(`${prodAtual.nome} adicionado!`,'ok');
+  if(ex)ex.qty+=qty; else cart.push({key,id:prodAtual.id,nome:prodAtual.nome,emoji:prodAtual.emoji||'📦',tam:tamSel,preco:prodAtual.preco,qty});
+  fecharModal();syncCart();toast(`${prodAtual.nome} adicionado!`,'ok');
 }
-
 function fecharModal(){document.getElementById('mOv').classList.remove('open');}
-
 function syncCart(){
   const tot=cart.reduce((s,i)=>s+i.preco*i.qty,0);
   const qtd=cart.reduce((s,i)=>s+i.qty,0);
@@ -350,40 +388,28 @@ function syncCart(){
           <button class="dqb" onclick="dItemQty('${i.key}',1)">+</button>
         </div>
       </div>
-      <div class="d-p">${i.preco>0?`R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')}':'—'}</div>
+      <div class="d-p">${i.preco>0?`R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')}`:' — '}</div>
     </div>`).join('');
 }
-
-function dItemQty(key,d){
-  const it=cart.find(i=>i.key===key); if(!it)return;
-  it.qty+=d; if(it.qty<=0) cart=cart.filter(i=>i.key!==key);
-  syncCart();
-}
-
+function dItemQty(key,d){const it=cart.find(i=>i.key===key);if(!it)return;it.qty+=d;if(it.qty<=0)cart=cart.filter(i=>i.key!==key);syncCart();}
 function abrirDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('cOv').classList.add('open');}
 function fecharDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('cOv').classList.remove('open');}
-
 function finalizar(){
   if(!cart.length)return;
   let msg='🎸 *Pedido Nexus Band*\n\n';
-  cart.forEach(i=>{msg+=`• ${i.nome}`;if(i.tam!=='único')msg+=` — Tamanho ${i.tam}`;msg+=` × ${i.qty}`;if(i.preco>0)msg+=` (R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')})`;msg+='\n';});
+  cart.forEach(i=>{msg+=`• ${i.nome}`;if(i.tam!=='único')msg+=` — Tam. ${i.tam}`;msg+=` × ${i.qty}`;if(i.preco>0)msg+=` (R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')})`;msg+='\n';});
   const t=cart.reduce((s,i)=>s+i.preco*i.qty,0);
   if(t>0)msg+=`\n*Total: R$ ${t.toFixed(2).replace('.',',')}*`;
   msg+='\n\nOlá! Gostaria de fechar esse pedido 🤘';
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
 }
+function toast(msg,tipo){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${tipo} show`;clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);}
 
-function toast(msg,tipo){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className=`toast ${tipo} show`;
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
-}
+const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
+if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
 
-init();
-
-// Nav hamburger
-const _nt=document.getElementById('navToggle'),_nl=document.getElementById('navLinks');
-if(_nt&&_nl){_nt.addEventListener('click',()=>{_nl.classList.toggle('open');_nt.classList.toggle('open');});_nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_nl.classList.remove('open');_nt.classList.remove('open');}));}
+loadProdutos();
+syncCart();
 </script>
 </body>
 </html>

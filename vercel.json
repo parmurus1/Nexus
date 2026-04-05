@@ -1,6 +1,8 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/api/shows/:id", "destination": "/api/shows?id=:id" },
+    { "source": "/api/produtos/:id", "destination": "/api/produtos?id=:id" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/public/$1" }
   ]

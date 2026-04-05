@@ -1,31 +1,13 @@
 // api/admin.js
 import { createClient } from '@supabase/supabase-js';
-import crypto from 'crypto';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
-// Gera um token seguro derivado da senha (não expõe a senha em si)
-function gerarToken() {
-  return crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD + '_nexus').digest('hex');
-}
 
 function autenticar(req) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Bearer ')) return false;
-  const token = auth.replace('Bearer ', '');
-  return token === gerarToken();
-}
-
-// Helper: garante que req.body seja parseado mesmo em ESM na Vercel
-async function parseBody(req) {
-  if (req.body && typeof req.body === 'object') return req.body;
-  return new Promise((resolve) => {
-    let raw = '';
-    req.on('data', chunk => { raw += chunk; });
-    req.on('end', () => {
-      try { resolve(JSON.parse(raw)); } catch { resolve({}); }
-    });
-  });
+  const senha = auth.replace('Bearer ', '');
+  return senha === process.env.ADMIN_PASSWORD;
 }
 
 export default async function handler(req, res) {
@@ -39,10 +21,9 @@ export default async function handler(req, res) {
   // Login
   if (acao === 'login') {
     if (req.method !== 'POST') return res.status(405).end();
-    const body = await parseBody(req);
-    const { senha } = body;
+    const { senha } = req.body;
     if (senha === process.env.ADMIN_PASSWORD) {
-      return res.status(200).json({ ok: true, token: gerarToken() });
+      return res.status(200).json({ ok: true, token: process.env.ADMIN_PASSWORD });
     }
     return res.status(401).json({ erro: 'Senha incorreta' });
   }
@@ -113,8 +94,7 @@ export default async function handler(req, res) {
 
   // Atualizar configuração
   if (acao === 'config' && req.method === 'POST') {
-    const body = await parseBody(req);
-    const { chave, valor } = body;
+    const { chave, valor } = req.body;
     if (!chave || valor === undefined) return res.status(400).json({ erro: 'Dados inválidos' });
 
     const { error } = await supabase

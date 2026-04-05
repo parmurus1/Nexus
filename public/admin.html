@@ -30,7 +30,7 @@
     .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}.footer-dev{display:flex;justify-content:flex-end;}
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
     .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -45,7 +45,7 @@
       .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
       .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
       .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:20px;}
+      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
       .footer-links{gap:14px;}
     }
     @media(max-width:480px){.footer-links{gap:10px;}}
@@ -121,33 +121,31 @@
     .toggle-track.on .toggle-thumb{transform:translateX(20px);}
     .demo-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(232,34,10,0.15);color:var(--red);border:1px solid rgba(232,34,10,0.3);}
     @media(max-width:768px){#adminPanel{padding:80px 16px 60px;}.adm-header{flex-direction:column;}.adm-actions{width:100%;}.config-grid{grid-template-columns:1fr;}}
-
-    /* SHOWS / MERCH ADMIN */
-    .item-list{display:flex;flex-direction:column;gap:8px;}
-    .item-row{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-    .item-row.done{opacity:0.5;}
-    .item-info{flex:1;min-width:0;}
-    .item-nome{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.04em;color:var(--text);}
-    .item-det{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--text3);letter-spacing:0.05em;margin-top:2px;}
-    .item-actions{display:flex;gap:6px;flex-shrink:0;}
-    .btn-xs{background:none;border:1px solid var(--border-s);color:var(--text2);padding:6px 10px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.58rem;cursor:pointer;transition:all var(--tr);}
-    .btn-xs:hover{border-color:var(--text);color:var(--text);}
-    .btn-xs.green:hover{border-color:#3dbb80;color:#3dbb80;}
-    .btn-xs.red:hover{border-color:var(--red);color:var(--red);}
-    .modal-admin-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
-    .modal-admin-ov.open{opacity:1;pointer-events:all;}
-    .modal-admin{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);padding:32px;width:100%;max-width:480px;position:relative;transform:translateY(14px);transition:transform 0.25s;max-height:90vh;overflow-y:auto;}
-    .modal-admin-ov.open .modal-admin{transform:translateY(0);}
-    .modal-admin-x{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:all var(--tr);}
-    .modal-admin-x:hover{border-color:var(--red);color:var(--red);}
-    .modal-admin-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.04em;margin-bottom:20px;color:var(--text);}
-    .fg-adm{margin-bottom:14px;}
-    .fg-adm label{display:block;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
-    .fg-adm input,.fg-adm textarea,.fg-adm select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 13px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.9rem;outline:none;transition:border-color var(--tr);}
-    .fg-adm input:focus,.fg-adm textarea:focus,.fg-adm select:focus{border-color:var(--red);}
-    .fg-adm textarea{resize:vertical;min-height:80px;}
-    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .tag-feito{background:rgba(61,187,128,0.1);color:#3dbb80;border-color:rgba(61,187,128,0.3);}
+    .crud-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .act-btn{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
+    .act-btn:hover{border-color:var(--border-s);color:var(--text);}
+    .act-btn.del:hover{border-color:var(--red-dim);color:var(--red);}
+    .act-btn.done{border-color:rgba(61,187,128,0.4)!important;color:#3dbb80!important;}
+    .modal-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    .modal-ov.open{opacity:1;pointer-events:all;}
+    .modal-form{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);padding:36px;width:100%;max-width:520px;position:relative;transform:translateY(18px);transition:transform 0.28s;max-height:90vh;overflow-y:auto;}
+    .modal-ov.open .modal-form{transform:translateY(0);}
+    .modal-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;transition:all var(--tr);}
+    .modal-x:hover{border-color:var(--red);color:var(--red);}
+    .modal-ey{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:20px;}
+    .fg{margin-bottom:14px;}
+    .fg label{display:block;font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);margin-bottom:7px;}
+    .fg input,.fg select,.fg textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 13px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;outline:none;transition:border-color var(--tr);}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);}
+    .fg input::placeholder,.fg textarea::placeholder{color:var(--text3);}
+    .fg select option{background:var(--bg3);}
+    .btn-cfm{width:100%;background:var(--red);border:none;color:#fff;padding:14px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);margin-top:4px;}
+    .btn-cfm:hover{background:#ff2a10;box-shadow:0 6px 20px var(--red-glow);}
+    .btn-cfm:disabled{opacity:0.4;cursor:not-allowed;}
+    .badge-realizado{background:rgba(61,187,128,0.1);color:#3dbb80;}
+    .badge-confirmado{background:rgba(61,187,128,0.05);color:#3dbb80;border:1px solid rgba(61,187,128,0.3);}
+    .badge-breve{background:var(--bg3);color:var(--text3);}
+    .badge-cancelado{background:rgba(160,26,7,0.1);color:var(--red);}
   </style>
 </head>
 <body>
@@ -281,25 +279,7 @@
     </div>
   </div>
 
-  <!-- SHOWS -->
-  <div class="adm-section">
-    <p class="sec-ey">Agenda de Shows</p>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
-      <button class="btn-ghost" onclick="abrirModalShow()">+ Adicionar show</button>
-    </div>
-    <div class="item-list" id="showsList"></div>
-  </div>
-
-  <!-- MERCH -->
-  <div class="adm-section">
-    <p class="sec-ey">Produtos (Merch)</p>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
-      <button class="btn-ghost" onclick="abrirModalMerch()">+ Adicionar produto</button>
-    </div>
-    <div class="item-list" id="merchList"></div>
-  </div>
-
-  <!-- TABELA -->
+  <!-- TABELA BILHETES -->
   <div class="adm-section">
     <p class="sec-ey">Bilhetes vendidos e reservados</p>
     <div class="tabela-wrapper">
@@ -309,12 +289,97 @@
       </table>
     </div>
   </div>
+
+  <!-- ══ SHOWS ══ -->
+  <div class="adm-section">
+    <p class="sec-ey">Agenda de Shows</p>
+    <div class="crud-header">
+      <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;">Gerencie os shows que aparecem na página Agenda.</p>
+      <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormShow()">+ Adicionar Show</button>
+    </div>
+    <div class="tabela-wrapper" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tabelaShows"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PRODUTOS MERCH ══ -->
+  <div class="adm-section">
+    <p class="sec-ey">Produtos (Merch)</p>
+    <div class="crud-header">
+      <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;">Gerencie os produtos exibidos na página Merch.</p>
+      <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormProduto()">+ Adicionar Produto</button>
+    </div>
+    <div class="tabela-wrapper" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>Emoji</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tabelaProdutos"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL SHOW ── -->
+<div class="modal-ov" id="showOv" onclick="if(event.target===this)fecharFormShow()">
+  <div class="modal-form">
+    <button class="modal-x" onclick="fecharFormShow()">✕</button>
+    <div class="modal-ey" id="showFormEy">Novo Show</div>
+    <div class="fg"><label>Nome do evento *</label><input type="text" id="sNome" placeholder="Ex: Festival Rock SP"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="fg"><label>Data *</label><input type="date" id="sData"/></div>
+      <div class="fg"><label>Horário</label><input type="time" id="sHora" placeholder="20:00"/></div>
+    </div>
+    <div class="fg"><label>Local *</label><input type="text" id="sLocal" placeholder="Ex: Espaço das Américas, SP"/></div>
+    <div class="fg">
+      <label>Status</label>
+      <select id="sStatus" class="config-input">
+        <option value="breve">Em breve</option>
+        <option value="confirmado">Confirmado</option>
+        <option value="realizado">Realizado</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
+    </div>
+    <div class="fg"><label>Link de ingressos (opcional)</label><input type="url" id="sLink" placeholder="https://..."/></div>
+    <input type="hidden" id="sId"/>
+    <button class="btn-cfm" id="btnSalvarShow" onclick="salvarShow()">Salvar Show</button>
+  </div>
+</div>
+
+<!-- ── MODAL PRODUTO ── -->
+<div class="modal-ov" id="prodOv" onclick="if(event.target===this)fecharFormProduto()">
+  <div class="modal-form">
+    <button class="modal-x" onclick="fecharFormProduto()">✕</button>
+    <div class="modal-ey" id="prodFormEy">Novo Produto</div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:12px;">
+      <div class="fg"><label>Emoji</label><input type="text" id="pEmoji" placeholder="👕" maxlength="4" style="text-align:center;font-size:1.5rem;"/></div>
+      <div class="fg"><label>Nome *</label><input type="text" id="pNome" placeholder="Ex: Camiseta Oficial"/></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="fg"><label>Categoria</label><input type="text" id="pCat" placeholder="Vestuário, Acessórios..."/></div>
+      <div class="fg"><label>Preço (R$) — 0 = "R$ --"</label><input type="number" id="pPreco" placeholder="0" min="0" step="0.50"/></div>
+    </div>
+    <div class="fg"><label>Descrição *</label><textarea id="pDesc" rows="3" placeholder="Descrição do produto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;resize:vertical;outline:none;"></textarea></div>
+    <div class="fg"><label>Tamanhos disponíveis (separados por vírgula)</label><input type="text" id="pSizes" placeholder="P, M, G, GG — deixe vazio se não tiver"/></div>
+    <div class="fg"><label>URL da imagem (opcional)</label><input type="url" id="pImg" placeholder="/imgs/merch-camiseta.jpg"/></div>
+    <div class="fg"><label>Badge (opcional)</label><input type="text" id="pBadge" placeholder="Ex: Novo, Em breve"/></div>
+    <div class="fg">
+      <label>Status</label>
+      <select id="pAtivo" class="config-input">
+        <option value="true">Ativo (disponível)</option>
+        <option value="false">Inativo (em breve)</option>
+      </select>
+    </div>
+    <input type="hidden" id="pId"/>
+    <button class="btn-cfm" id="btnSalvarProd" onclick="salvarProduto()">Salvar Produto</button>
+  </div>
 </div>
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <a href="/admin.html" class="footer-admin">Admin ↗</a>
-  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <a href="/admin.html" class="footer-admin" style="text-align:center;">Admin ↗</a>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>
@@ -341,6 +406,8 @@ function mostrarPainel(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('adminPanel').style.display='block';
   carregarDados();
+  carregarShows();
+  carregarProdutos();
 }
 function sair(){localStorage.removeItem('nexus_admin_token');location.reload();}
 
@@ -443,250 +510,190 @@ function toast(msg,tipo){
   clearTimeout(t._timer);
   t._timer=setTimeout(()=>t.classList.remove('show'),4000);
 }
+</script>
+<script>
+// ══════════════ SHOWS ══════════════
+let showsData = [];
 
-// ─── SHOWS MANAGEMENT ──────────────────────────────────────────────────────
-const MESES_SHORT = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
-let _showsCache = [];
-let _prodsCache = [];
-
-function authHeaders() {
-  return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+async function carregarShows(){
+  try{
+    const res = await fetch('/api/shows');
+    if(res.ok){ const d = await res.json(); showsData = d.shows||[]; }
+    else { showsData = []; }
+  }catch{ showsData = []; }
+  renderTabelaShows();
 }
 
-async function renderShows() {
-  const el = document.getElementById('showsList');
-  el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Carregando...</p>';
-  try {
-    const r = await fetch('/api/shows', { headers: authHeaders() });
-    const j = await r.json();
-    _showsCache = (j.shows || []).sort((a,b) => new Date(b.data) - new Date(a.data));
-  } catch {
-    el.innerHTML = '<p style="color:var(--red);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Erro ao carregar shows.</p>';
+function renderTabelaShows(){
+  const tbody = document.getElementById('tabelaShows');
+  if(!showsData.length){
+    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;">Nenhum show cadastrado</td></tr>';
     return;
   }
-  if (!_showsCache.length) {
-    el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Nenhum show cadastrado</p>';
-    return;
-  }
-  el.innerHTML = _showsCache.map(s => {
-    const d = new Date(s.data + 'T12:00:00');
-    const fmt = `${String(d.getDate()).padStart(2,'0')} ${MESES_SHORT[d.getMonth()]} ${d.getFullYear()}`;
-    return `<div class="item-row ${s.feito ? 'done' : ''}">
-      <div class="item-info">
-        <div class="item-nome">${s.nome}</div>
-        <div class="item-det">${fmt} · ${s.horario} · 📍 ${s.local}</div>
-      </div>
-      <div class="item-actions">
-        ${!s.feito ? `<button class="btn-xs green" onclick="marcarFeito('${s.id}')">✓ Realizado</button>` : `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:#3dbb80;padding:0 6px;">Realizado</span>`}
-        <button class="btn-xs" onclick="editarShow('${s.id}')">Editar</button>
-        <button class="btn-xs red" onclick="excluirShow('${s.id}')">Excluir</button>
-      </div>
-    </div>`;
+  const statusLabel = {breve:'Em breve',confirmado:'Confirmado',realizado:'Realizado',cancelado:'Cancelado'};
+  tbody.innerHTML = showsData.map(s=>{
+    const d = s.data ? new Date(s.data+'T12:00:00') : null;
+    const dataFmt = d ? d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase() : '—';
+    return `<tr>
+      <td style="font-family:'DM Mono',monospace;font-size:0.78rem;">${dataFmt}</td>
+      <td><strong>${s.nome}</strong></td>
+      <td style="color:var(--text2);font-size:0.84rem;">${s.local||'—'}</td>
+      <td><span class="badge badge-${s.status||'breve'}">${statusLabel[s.status]||s.status||'—'}</span></td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="act-btn" onclick="editarShow('${s.id}')">✏ Editar</button>
+        ${s.status!=='realizado'?`<button class="act-btn done" onclick="marcarRealizado('${s.id}')">✓ Realizado</button>`:''}
+        <button class="act-btn del" onclick="excluirShow('${s.id}')">✕ Excluir</button>
+      </td>
+    </tr>`;
   }).join('');
 }
 
-function abrirModalShow(id) {
-  document.getElementById('modalShowTitle').textContent = id ? 'EDITAR SHOW' : 'ADICIONAR SHOW';
-  document.getElementById('showEditId').value = id || '';
-  if (id) {
-    const s = _showsCache.find(x => x.id === id);
-    if (s) {
-      document.getElementById('showNome').value = s.nome;
-      document.getElementById('showLocal').value = s.local;
-      document.getElementById('showData').value = s.data;
-      document.getElementById('showHorario').value = s.horario;
-    }
-  } else {
-    ['showNome','showLocal','showData','showHorario'].forEach(i => document.getElementById(i).value = '');
-  }
-  document.getElementById('modalShowOv').classList.add('open');
+function abrirFormShow(id){
+  const s = id ? showsData.find(x=>x.id===id) : null;
+  document.getElementById('showFormEy').textContent = s ? 'Editar Show' : 'Novo Show';
+  document.getElementById('sNome').value = s?.nome||'';
+  document.getElementById('sData').value = s?.data||'';
+  document.getElementById('sHora').value = s?.hora||'';
+  document.getElementById('sLocal').value = s?.local||'';
+  document.getElementById('sStatus').value = s?.status||'breve';
+  document.getElementById('sLink').value = s?.link||'';
+  document.getElementById('sId').value = s?.id||'';
+  document.getElementById('showOv').classList.add('open');
 }
-function fecharModalShow() { document.getElementById('modalShowOv').classList.remove('open'); }
-function editarShow(id) { abrirModalShow(id); }
+function fecharFormShow(){ document.getElementById('showOv').classList.remove('open'); }
 
-async function salvarShow() {
-  const nome = document.getElementById('showNome').value.trim();
-  const local = document.getElementById('showLocal').value.trim();
-  const data = document.getElementById('showData').value;
-  if (!nome || !local || !data) { toast('Preencha nome, local e data', 'err'); return; }
-  const id = document.getElementById('showEditId').value;
-  const horario = document.getElementById('showHorario').value.trim() || 'A confirmar';
-  const body = JSON.stringify({ nome, local, data, horario });
-  try {
-    const r = id
-      ? await fetch(`/api/shows?id=${id}`, { method: 'PUT', headers: authHeaders(), body })
-      : await fetch('/api/shows', { method: 'POST', headers: authHeaders(), body });
-    if (!r.ok) throw new Error();
-    toast('Show salvo!', 'ok');
-    fecharModalShow();
-    renderShows();
-  } catch { toast('Erro ao salvar show', 'err'); }
-}
-
-async function marcarFeito(id) {
-  try {
-    const r = await fetch(`/api/shows?id=${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ feito: true }) });
-    if (!r.ok) throw new Error();
-    toast('Show marcado como realizado!', 'ok');
-    renderShows();
-  } catch { toast('Erro ao atualizar show', 'err'); }
+async function salvarShow(){
+  const nome = document.getElementById('sNome').value.trim();
+  const data = document.getElementById('sData').value;
+  const local = document.getElementById('sLocal').value.trim();
+  if(!nome||!data||!local){ toast('Preencha nome, data e local','err'); return; }
+  const btn = document.getElementById('btnSalvarShow');
+  btn.disabled=true; btn.textContent='Salvando...';
+  const id = document.getElementById('sId').value;
+  const payload = {
+    nome, data, hora: document.getElementById('sHora').value,
+    local, status: document.getElementById('sStatus').value,
+    link: document.getElementById('sLink').value.trim()
+  };
+  try{
+    const res = await fetch('/api/shows'+(id?`/${id}`:''), {
+      method: id?'PUT':'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify(payload)
+    });
+    if(res.ok){ toast(id?'Show atualizado!':'Show criado!','ok'); fecharFormShow(); carregarShows(); }
+    else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
+  }catch{ toast('Erro de conexão','err'); }
+  btn.disabled=false; btn.textContent='Salvar Show';
 }
 
-async function excluirShow(id) {
-  if (!confirm('Excluir este show?')) return;
-  try {
-    const r = await fetch(`/api/shows?id=${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (!r.ok) throw new Error();
-    toast('Show excluído', 'ok');
-    renderShows();
-  } catch { toast('Erro ao excluir show', 'err'); }
-}
-
-// ─── MERCH MANAGEMENT ─────────────────────────────────────────────────────
-async function renderMerch() {
-  const el = document.getElementById('merchList');
-  el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Carregando...</p>';
-  try {
-    const r = await fetch('/api/produtos', { headers: authHeaders() });
-    const j = await r.json();
-    _prodsCache = j.produtos || [];
-  } catch {
-    el.innerHTML = '<p style="color:var(--red);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Erro ao carregar produtos.</p>';
-    return;
-  }
-  if (!_prodsCache.length) {
-    el.innerHTML = '<p style="color:var(--text3);font-family:'DM Mono',monospace;font-size:0.7rem;text-align:center;padding:24px;">Nenhum produto cadastrado</p>';
-    return;
-  }
-  el.innerHTML = _prodsCache.map(p => `
-    <div class="item-row ${!p.ativo ? 'done' : ''}">
-      <span style="font-size:1.4rem;flex-shrink:0;">${p.emoji}</span>
-      <div class="item-info">
-        <div class="item-nome">${p.nome} ${p.badge ? `<span style="font-family:'DM Mono',monospace;font-size:0.52rem;background:var(--red);color:#fff;padding:2px 6px;border-radius:4px;margin-left:6px;">${p.badge}</span>` : ''}</div>
-        <div class="item-det">${p.cat} · ${p.preco > 0 ? `R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}` : 'A confirmar'} · ${p.ativo ? 'Ativo' : 'Inativo'}</div>
-      </div>
-      <div class="item-actions">
-        <button class="btn-xs" onclick="editarMerch('${p.id}')">Editar</button>
-        <button class="btn-xs red" onclick="excluirMerch('${p.id}')">Excluir</button>
-      </div>
-    </div>`).join('');
-}
-
-function abrirModalMerch(id) {
-  document.getElementById('modalMerchTitle').textContent = id ? 'EDITAR PRODUTO' : 'ADICIONAR PRODUTO';
-  document.getElementById('merchEditId').value = id || '';
-  if (id) {
-    const p = _prodsCache.find(x => x.id === id);
-    if (p) {
-      document.getElementById('merchNome').value = p.nome;
-      document.getElementById('merchCat').value = p.cat;
-      document.getElementById('merchEmoji').value = p.emoji;
-      document.getElementById('merchPreco').value = p.preco;
-      document.getElementById('merchBadge').value = p.badge || '';
-      document.getElementById('merchDesc').value = p.descricao || '';
-      document.getElementById('merchSizes').value = (p.sizes || []).join(', ');
-      document.getElementById('merchImg').value = p.img || '';
-      document.getElementById('merchAtivo').checked = p.ativo;
-    }
-  } else {
-    ['merchNome','merchCat','merchEmoji','merchBadge','merchDesc','merchSizes','merchImg'].forEach(i => document.getElementById(i).value = '');
-    document.getElementById('merchPreco').value = '0';
-    document.getElementById('merchAtivo').checked = true;
-  }
-  document.getElementById('modalMerchOv').classList.add('open');
-}
-function fecharModalMerch() { document.getElementById('modalMerchOv').classList.remove('open'); }
-function editarMerch(id) { abrirModalMerch(id); }
-
-async function salvarMerch() {
-  const nome = document.getElementById('merchNome').value.trim();
-  const descricao = document.getElementById('merchDesc').value.trim();
-  if (!nome || !descricao) { toast('Preencha nome e descrição', 'err'); return; }
-  const id = document.getElementById('merchEditId').value;
-  const rawSizes = document.getElementById('merchSizes').value;
-  const sizes = rawSizes ? rawSizes.split(',').map(s => s.trim()).filter(Boolean) : [];
-  const body = JSON.stringify({
-    nome,
-    cat: document.getElementById('merchCat').value.trim() || 'Geral',
-    emoji: document.getElementById('merchEmoji').value.trim() || '🎵',
-    preco: parseFloat(document.getElementById('merchPreco').value) || 0,
-    badge: document.getElementById('merchBadge').value.trim() || null,
-    descricao,
-    sizes,
-    img: document.getElementById('merchImg').value.trim() || null,
-    ativo: document.getElementById('merchAtivo').checked
+async function marcarRealizado(id){
+  const res = await fetch(`/api/shows/${id}`,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+    body: JSON.stringify({status:'realizado'})
   });
-  try {
-    const r = id
-      ? await fetch(`/api/produtos?id=${id}`, { method: 'PUT', headers: authHeaders(), body })
-      : await fetch('/api/produtos', { method: 'POST', headers: authHeaders(), body });
-    if (!r.ok) throw new Error();
-    toast('Produto salvo!', 'ok');
-    fecharModalMerch();
-    renderMerch();
-  } catch { toast('Erro ao salvar produto', 'err'); }
+  if(res.ok){ toast('Marcado como realizado!','ok'); carregarShows(); }
+  else toast('Erro ao atualizar','err');
 }
 
-async function excluirMerch(id) {
-  if (!confirm('Excluir este produto?')) return;
-  try {
-    const r = await fetch(`/api/produtos?id=${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (!r.ok) throw new Error();
-    toast('Produto excluído', 'ok');
-    renderMerch();
-  } catch { toast('Erro ao excluir produto', 'err'); }
+async function excluirShow(id){
+  if(!confirm('Excluir este show?')) return;
+  const res = await fetch(`/api/shows/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+  if(res.ok){ toast('Show excluído','ok'); carregarShows(); }
+  else toast('Erro ao excluir','err');
 }
 
-// Init shows/merch on panel load
-const _origMostrar = mostrarPainel;
-function mostrarPainel() {
-  _origMostrar();
-  renderShows();
-  renderMerch();
+function editarShow(id){ abrirFormShow(id); }
+
+// ══════════════ PRODUTOS ══════════════
+let produtosData = [];
+
+async function carregarProdutos(){
+  try{
+    const res = await fetch('/api/produtos');
+    if(res.ok){ const d = await res.json(); produtosData = d.produtos||[]; }
+    else produtosData = [];
+  }catch{ produtosData = []; }
+  renderTabelaProdutos();
 }
+
+function renderTabelaProdutos(){
+  const tbody = document.getElementById('tabelaProdutos');
+  if(!produtosData.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;">Nenhum produto cadastrado</td></tr>';
+    return;
+  }
+  tbody.innerHTML = produtosData.map(p=>`<tr>
+    <td style="font-size:1.4rem;text-align:center;">${p.emoji||'📦'}</td>
+    <td><strong>${p.nome}</strong></td>
+    <td style="color:var(--text2);font-size:0.84rem;">${p.cat||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--red);">
+      ${p.preco>0?`R$ ${Number(p.preco).toFixed(2).replace('.',',')}`:' — '}
+    </td>
+    <td><span class="badge ${p.ativo?'badge-confirmado':'badge-breve'}">${p.ativo?'Ativo':'Inativo'}</span></td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="act-btn" onclick="editarProduto('${p.id}')">✏ Editar</button>
+      <button class="act-btn del" onclick="excluirProduto('${p.id}')">✕ Excluir</button>
+    </td>
+  </tr>`).join('');
+}
+
+function abrirFormProduto(id){
+  const p = id ? produtosData.find(x=>x.id===id) : null;
+  document.getElementById('prodFormEy').textContent = p ? 'Editar Produto' : 'Novo Produto';
+  document.getElementById('pEmoji').value = p?.emoji||'';
+  document.getElementById('pNome').value = p?.nome||'';
+  document.getElementById('pCat').value = p?.cat||'';
+  document.getElementById('pPreco').value = p?.preco||0;
+  document.getElementById('pDesc').value = p?.desc||'';
+  document.getElementById('pSizes').value = (p?.sizes||[]).join(', ');
+  document.getElementById('pImg').value = p?.img||'';
+  document.getElementById('pBadge').value = p?.badge||'';
+  document.getElementById('pAtivo').value = String(p?.ativo!==false);
+  document.getElementById('pId').value = p?.id||'';
+  document.getElementById('prodOv').classList.add('open');
+}
+function fecharFormProduto(){ document.getElementById('prodOv').classList.remove('open'); }
+
+async function salvarProduto(){
+  const nome = document.getElementById('pNome').value.trim();
+  const desc = document.getElementById('pDesc').value.trim();
+  if(!nome||!desc){ toast('Preencha nome e descrição','err'); return; }
+  const btn = document.getElementById('btnSalvarProd');
+  btn.disabled=true; btn.textContent='Salvando...';
+  const id = document.getElementById('pId').value;
+  const sizesRaw = document.getElementById('pSizes').value.trim();
+  const payload = {
+    emoji: document.getElementById('pEmoji').value.trim(),
+    nome, cat: document.getElementById('pCat').value.trim(), desc,
+    preco: parseFloat(document.getElementById('pPreco').value)||0,
+    sizes: sizesRaw ? sizesRaw.split(',').map(s=>s.trim()).filter(Boolean) : [],
+    img: document.getElementById('pImg').value.trim(),
+    badge: document.getElementById('pBadge').value.trim(),
+    ativo: document.getElementById('pAtivo').value === 'true'
+  };
+  try{
+    const res = await fetch('/api/produtos'+(id?`/${id}`:''), {
+      method: id?'PUT':'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify(payload)
+    });
+    if(res.ok){ toast(id?'Produto atualizado!':'Produto criado!','ok'); fecharFormProduto(); carregarProdutos(); }
+    else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
+  }catch{ toast('Erro de conexão','err'); }
+  btn.disabled=false; btn.textContent='Salvar Produto';
+}
+
+async function excluirProduto(id){
+  if(!confirm('Excluir este produto?')) return;
+  const res = await fetch(`/api/produtos/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+  if(res.ok){ toast('Produto excluído','ok'); carregarProdutos(); }
+  else toast('Erro ao excluir','err');
+}
+
+function editarProduto(id){ abrirFormProduto(id); }
 </script>
-<!-- MODAL SHOW -->
-<div class="modal-admin-ov" id="modalShowOv" onclick="if(event.target===this)fecharModalShow()">
-  <div class="modal-admin">
-    <button class="modal-admin-x" onclick="fecharModalShow()">✕</button>
-    <div class="modal-admin-title" id="modalShowTitle">ADICIONAR SHOW</div>
-    <input type="hidden" id="showEditId"/>
-    <div class="fg-adm"><label>Nome do show *</label><input type="text" id="showNome" placeholder="Ex: Festival de Verão"/></div>
-    <div class="fg-adm"><label>Local *</label><input type="text" id="showLocal" placeholder="Ex: Audio Club — São Paulo"/></div>
-    <div class="row-2">
-      <div class="fg-adm"><label>Data *</label><input type="date" id="showData"/></div>
-      <div class="fg-adm"><label>Horário</label><input type="text" id="showHorario" placeholder="Ex: 21:00"/></div>
-    </div>
-    <button class="btn-red" style="width:100%;margin-top:6px;" onclick="salvarShow()">Salvar</button>
-  </div>
-</div>
-
-<!-- MODAL MERCH -->
-<div class="modal-admin-ov" id="modalMerchOv" onclick="if(event.target===this)fecharModalMerch()">
-  <div class="modal-admin">
-    <button class="modal-admin-x" onclick="fecharModalMerch()">✕</button>
-    <div class="modal-admin-title" id="modalMerchTitle">ADICIONAR PRODUTO</div>
-    <input type="hidden" id="merchEditId"/>
-    <div class="fg-adm"><label>Nome *</label><input type="text" id="merchNome" placeholder="Ex: Camiseta Oficial"/></div>
-    <div class="row-2">
-      <div class="fg-adm"><label>Categoria</label><input type="text" id="merchCat" placeholder="Ex: Vestuário"/></div>
-      <div class="fg-adm"><label>Emoji</label><input type="text" id="merchEmoji" placeholder="👕" maxlength="4"/></div>
-    </div>
-    <div class="row-2">
-      <div class="fg-adm"><label>Preço (R$) *</label><input type="number" id="merchPreco" placeholder="0.00" step="0.50" min="0"/></div>
-      <div class="fg-adm"><label>Badge</label><input type="text" id="merchBadge" placeholder="Ex: Novo"/></div>
-    </div>
-    <div class="fg-adm"><label>Descrição *</label><textarea id="merchDesc" placeholder="Descrição do produto..."></textarea></div>
-    <div class="fg-adm"><label>Tamanhos (separados por vírgula ou deixe vazio)</label><input type="text" id="merchSizes" placeholder="Ex: P, M, G, GG"/></div>
-    <div class="fg-adm"><label>URL da imagem (opcional)</label><input type="text" id="merchImg" placeholder="/imgs/merch-produto.jpg"/></div>
-    <div class="fg-adm" style="display:flex;align-items:center;gap:10px;">
-      <input type="checkbox" id="merchAtivo" checked style="width:auto;"/>
-      <label style="display:inline;font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);letter-spacing:0.1em;">Produto ativo (visível na loja)</label>
-    </div>
-    <button class="btn-red" style="width:100%;margin-top:10px;" onclick="salvarMerch()">Salvar produto</button>
-  </div>
-</div>
-
 <script>
   const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
   if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}

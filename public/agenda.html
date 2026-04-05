@@ -1,28 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="description" content="Próximos shows e histórico de apresentações da Nexus Band."/>
-  <meta property="og:title" content="Agenda — Nexus"/>
-  <meta property="og:description" content="Próximos shows e histórico de apresentações da Nexus Band."/>
-  <meta property="og:image" content="/imgs/og-image.png"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://nexus-rifa.vercel.app/agenda.html"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="/imgs/og-image.png"/>
-  <link rel="icon" type="image/png" href="/imgs/nexusicon.png"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agenda — Nexus</title>
+  <link rel="icon" type="image/png" href="/imgs/nexusicon.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
 
-    /* ── NAV ── */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
     .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
@@ -39,27 +30,6 @@
     .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    /* ── FOOTER ── */
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}.footer-dev{display:flex;justify-content:flex-end;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-    .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-    .footer-link{color:var(--text3);text-decoration:none;transition:color var(--tr);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
-    .footer-link:hover{color:var(--text2);}
-    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
-    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
-    /* ── RESPONSIVE ── */
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
-      .nav-links.open{display:flex;}
-      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
-      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
-      .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:20px;}
-      .footer-links{gap:14px;}
-    }
-    @media(max-width:480px){.footer-links{gap:10px;}}
 
     .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
     .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
@@ -68,24 +38,50 @@
     .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
     .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
     .container{max-width:900px;margin:0 auto;padding:0 24px 100px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
     .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
     .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:28px;color:var(--text);}
-    .shows-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:60px;}
-    .show-item{background:var(--bg2);padding:24px 28px;display:grid;grid-template-columns:100px 1fr auto;align-items:center;gap:24px;transition:background var(--tr);}
+
+    .shows-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+    .show-item{background:var(--bg2);padding:22px 28px;display:grid;grid-template-columns:88px 1fr auto;align-items:center;gap:20px;transition:background var(--tr);}
     .show-item:hover{background:var(--bg3);}
+    .show-item.realizado{opacity:0.5;}
     @media(max-width:600px){.show-item{grid-template-columns:72px 1fr;gap:14px;padding:18px 16px;}.show-tag{display:none;}}
     .show-data{text-align:center;}
-    .show-dia{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1;color:var(--text);letter-spacing:0.02em;}
-    .show-mes{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);}
-    .show-ano{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
-    .show-nome{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
-    .show-local{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);letter-spacing:0.06em;}
-    .show-horario{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--text3);margin-top:3px;}
-    .show-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid;}
+    .show-dia{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;line-height:1;color:var(--text);letter-spacing:0.02em;}
+    .show-mes{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);}
+    .show-ano{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+    .show-nome{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.04em;color:var(--text);margin-bottom:4px;}
+    .show-local{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text2);letter-spacing:0.05em;}
+    .show-horario{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--text3);margin-top:3px;}
+    .show-link{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--red);text-decoration:none;margin-top:5px;display:inline-block;}
+    .show-link:hover{text-decoration:underline;}
+    .show-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid;white-space:nowrap;}
     .tag-confirmado{color:#3dbb80;border-color:rgba(61,187,128,0.3);background:rgba(61,187,128,0.06);}
     .tag-breve{color:var(--text3);border-color:var(--border-s);}
+    .tag-realizado{color:var(--text3);border-color:var(--border);background:transparent;}
+    .tag-cancelado{color:var(--red-dim);border-color:rgba(160,26,7,0.3);background:rgba(160,26,7,0.04);}
+
+    .empty-state{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;margin-bottom:20px;}
+    .empty-state p{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}
+    .footer-logo{display:flex;align-items:center;gap:8px;}
+    .footer-logo img{height:22px;opacity:0.3;}
+    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);text-align:center;}
+    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
+
+    @media(max-width:768px){
+      nav{padding:10px 20px;}
+      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
+      .nav-links.open{display:flex;}
+      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
+      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
+      .nav-hamburger{display:flex;}
+      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
+    }
   </style>
 </head>
 <body>
@@ -112,81 +108,86 @@
   <p class="page-eyebrow">Próximos shows</p>
   <h1 class="page-title">AGENDA</h1>
 </div>
+
 <div class="container">
-  <div id="agendaContent">
-    <!-- carregado via JS -->
+
+  <p class="sec-eyebrow">Próximos shows</p>
+  <h2 class="sec-title">EM BREVE</h2>
+  <div id="proximosWrap">
+    <div class="empty-state"><p>Carregando...</p></div>
   </div>
+
+  <p class="sec-eyebrow" style="margin-top:56px;">Histórico</p>
+  <h2 class="sec-title">SHOWS PASSADOS</h2>
+  <div id="passadosWrap">
+    <div class="empty-state"><p>Carregando...</p></div>
+  </div>
+
 </div>
-
-<script>
-const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
-
-async function carregarShows() {
-  const el = document.getElementById('agendaContent');
-  el.innerHTML = '<p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);text-align:center;padding:60px 0;letter-spacing:0.1em;">Carregando...</p>';
-
-  let shows = [];
-  try {
-    const r = await fetch('/api/shows');
-    const j = await r.json();
-    shows = j.shows || [];
-  } catch {
-    el.innerHTML = '<p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--red);text-align:center;padding:60px 0;">Erro ao carregar shows.</p>';
-    return;
-  }
-
-  const hoje = new Date(); hoje.setHours(0,0,0,0);
-  const proximos = shows.filter(s => !s.feito && new Date(s.data+'T12:00:00') >= hoje).sort((a,b)=>new Date(a.data)-new Date(b.data));
-  const passados = shows.filter(s => s.feito || new Date(s.data+'T12:00:00') < hoje).sort((a,b)=>new Date(b.data)-new Date(a.data));
-
-  let html = '';
-
-  html += `<p class="sec-eyebrow">Próximos shows</p><h2 class="sec-title">EM BREVE</h2>`;
-  if (proximos.length) {
-    html += `<div class="shows-list">`;
-    proximos.forEach(s => { html += renderShow(s, false); });
-    html += `</div>`;
-  } else {
-    html += `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;margin-bottom:60px;"><p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;">Nenhum show agendado no momento</p></div>`;
-  }
-
-  if (passados.length) {
-    html += `<p class="sec-eyebrow" style="margin-top:60px;">Histórico</p><h2 class="sec-title">SHOWS PASSADOS</h2><div class="shows-list">`;
-    passados.forEach(s => { html += renderShow(s, true); });
-    html += `</div>`;
-  }
-
-  el.innerHTML = html;
-}
-
-function renderShow(s, passado) {
-  const d = new Date(s.data + 'T12:00:00');
-  const dia = String(d.getDate()).padStart(2, '0');
-  const mes = MESES[d.getMonth()];
-  const ano = d.getFullYear();
-  const tagHtml = passado || s.feito
-    ? `<span class="show-tag tag-confirmado">Realizado</span>`
-    : `<span class="show-tag tag-breve">Em breve</span>`;
-  return `<div class="show-item" style="${passado || s.feito ? 'opacity:0.65;' : ''}">
-    <div class="show-data"><div class="show-dia">${dia}</div><div class="show-mes">${mes}</div><div class="show-ano">${ano}</div></div>
-    <div><div class="show-nome">${s.nome}</div><div class="show-local">📍 ${s.local}</div><div class="show-horario">🕐 ${s.horario}</div></div>
-    ${tagHtml}
-  </div>`;
-}
-
-carregarShows();
-</script>
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
   <a href="/admin.html" class="footer-admin">Admin ↗</a>
-  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
-
 <script>
-  const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
-  if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
+const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+const TAG_MAP = {
+  breve:     {cls:'tag-breve',     label:'Em breve'},
+  confirmado:{cls:'tag-confirmado',label:'Confirmado ✓'},
+  realizado: {cls:'tag-realizado', label:'Realizado'},
+  cancelado: {cls:'tag-cancelado', label:'Cancelado'},
+};
+
+function renderShow(s){
+  const d = s.data ? new Date(s.data + 'T12:00:00') : null;
+  const dia  = d ? String(d.getDate()).padStart(2,'0') : '--';
+  const mes  = d ? MESES[d.getMonth()] : '---';
+  const ano  = d ? d.getFullYear()     : '----';
+  const tag  = TAG_MAP[s.status] || {cls:'tag-breve', label: s.status||'Em breve'};
+  return `
+  <div class="show-item${s.status==='realizado'?' realizado':''}">
+    <div class="show-data">
+      <div class="show-dia">${dia}</div>
+      <div class="show-mes">${mes}</div>
+      <div class="show-ano">${ano}</div>
+    </div>
+    <div>
+      <div class="show-nome">${s.nome}</div>
+      <div class="show-local">📍 ${s.local||'Local a confirmar'}</div>
+      ${s.hora?`<div class="show-horario">🕐 ${s.hora}</div>`:''}
+      ${s.link?`<a href="${s.link}" target="_blank" class="show-link">🎟 Ingressos →</a>`:''}
+    </div>
+    <span class="show-tag ${tag.cls}">${tag.label}</span>
+  </div>`;
+}
+
+async function carregarAgenda(){
+  let shows = [];
+  try{
+    const r = await fetch('/api/shows');
+    if(r.ok){ const d = await r.json(); shows = d.shows||[]; }
+  }catch{}
+
+  const proximos = shows.filter(s => s.status !== 'realizado' && s.status !== 'cancelado');
+  const passados = shows.filter(s => s.status === 'realizado' || s.status === 'cancelado').reverse();
+
+  const proxWrap = document.getElementById('proximosWrap');
+  proxWrap.innerHTML = proximos.length
+    ? '<div class="shows-list">' + proximos.map(renderShow).join('') + '</div>'
+    : '<div class="empty-state"><p>Nenhum show agendado no momento</p></div>';
+
+  const passWrap = document.getElementById('passadosWrap');
+  passWrap.innerHTML = passados.length
+    ? '<div class="shows-list">' + passados.map(renderShow).join('') + '</div>'
+    : '<div class="empty-state"><p>Nenhum show no histórico ainda</p></div>';
+}
+
+const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
+if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
+
+carregarAgenda();
 </script>
 </body>
 </html>

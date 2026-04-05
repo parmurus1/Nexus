@@ -1,5 +1,4 @@
 -- Execute este SQL no painel do Supabase (SQL Editor)
--- Este é o schema completo e atualizado. Use-o para novos bancos.
 
 -- Tabela de bilhetes
 CREATE TABLE bilhetes (
@@ -8,7 +7,6 @@ CREATE TABLE bilhetes (
   status TEXT NOT NULL DEFAULT 'disponivel', -- 'disponivel' | 'reservado' | 'pago'
   nome_comprador TEXT,
   email_comprador TEXT,
-  instagram_comprador TEXT,
   telefone_comprador TEXT,
   payment_id TEXT,
   preference_id TEXT,
@@ -29,7 +27,6 @@ CREATE TABLE sorteio (
   id SERIAL PRIMARY KEY,
   numero_sorteado INTEGER,
   nome_vencedor TEXT,
-  instagram_vencedor TEXT,
   realizado_em TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -41,8 +38,7 @@ INSERT INTO config (chave, valor) VALUES
   ('data_sorteio', '2025-05-31'),
   ('total_bilhetes', '100'),
   ('rifa_ativa', 'true'),
-  ('chave_pix', 'SEU_PIX_AQUI'),
-  ('modo_demo', 'false');
+  ('chave_pix', 'SEU_PIX_AQUI');
 
 -- Inserir os 100 bilhetes
 INSERT INTO bilhetes (numero)
@@ -62,72 +58,61 @@ CREATE POLICY "Escrita via service_role em bilhetes" ON bilhetes FOR ALL USING (
 CREATE POLICY "Escrita via service_role em config" ON config FOR ALL USING (auth.role() = 'service_role');
 CREATE POLICY "Escrita via service_role em sorteio" ON sorteio FOR ALL USING (auth.role() = 'service_role');
 
+-- =====================================================
+-- MIGRAÇÃO: adicionar coluna instagram_comprador
+-- Execute este bloco se o banco já estiver criado
+-- =====================================================
+ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS instagram_comprador TEXT;
+
+-- Também adicionar coluna instagram_vencedor na tabela de sorteio
+ALTER TABLE sorteio ADD COLUMN IF NOT EXISTS instagram_vencedor TEXT;
 
 -- =====================================================
--- Tabelas de shows e produtos (merch)
+-- TABELA: shows (para a página Agenda)
 -- =====================================================
-
--- Tabela de shows da agenda
 CREATE TABLE IF NOT EXISTS shows (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nome TEXT NOT NULL,
-  local TEXT NOT NULL,
   data DATE NOT NULL,
-  horario TEXT DEFAULT 'A confirmar',
-  feito BOOLEAN DEFAULT false,
-  criado_em TIMESTAMPTZ DEFAULT NOW()
+  hora TEXT,
+  local TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'breve', -- 'breve' | 'confirmado' | 'realizado' | 'cancelado'
+  link TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabela de produtos do merch
+ALTER TABLE shows ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Leitura pública de shows" ON shows FOR SELECT USING (true);
+CREATE POLICY "Escrita via service_role em shows" ON shows FOR ALL USING (auth.role() = 'service_role');
+
+-- =====================================================
+-- TABELA: produtos (para a página Merch)
+-- =====================================================
 CREATE TABLE IF NOT EXISTS produtos (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nome TEXT NOT NULL,
-  cat TEXT DEFAULT 'Geral',
-  emoji TEXT DEFAULT '🎵',
+  cat TEXT DEFAULT '',
+  desc TEXT NOT NULL,
   preco NUMERIC(10,2) DEFAULT 0,
+  emoji TEXT DEFAULT '📦',
+  img TEXT DEFAULT '',
   badge TEXT,
-  descricao TEXT,
   sizes TEXT[] DEFAULT '{}',
-  img TEXT,
   ativo BOOLEAN DEFAULT true,
-  criado_em TIMESTAMPTZ DEFAULT NOW()
+  ordem INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Habilitar RLS
-ALTER TABLE shows ENABLE ROW LEVEL SECURITY;
 ALTER TABLE produtos ENABLE ROW LEVEL SECURITY;
-
--- Leitura pública
-CREATE POLICY "Leitura pública de shows" ON shows FOR SELECT USING (true);
 CREATE POLICY "Leitura pública de produtos" ON produtos FOR SELECT USING (true);
-
--- Escrita apenas via service_role (backend/API)
-CREATE POLICY "Escrita via service_role em shows" ON shows FOR ALL USING (auth.role() = 'service_role');
 CREATE POLICY "Escrita via service_role em produtos" ON produtos FOR ALL USING (auth.role() = 'service_role');
 
--- Inserir produtos padrão (opcional — pode remover se quiser começar do zero)
-INSERT INTO produtos (nome, cat, emoji, preco, badge, descricao, sizes, ativo) VALUES
-  ('CAMISETA OFICIAL', 'Vestuário', '👕', 0, 'Novo', '100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.', ARRAY['P','M','G','GG'], true),
-  ('PALHETA EXCLUSIVA', 'Acessórios', '🎸', 0, NULL, 'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.', '{}', true),
-  ('CHAVEIRO NEXUS', 'Acessórios', '🔑', 0, NULL, 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.', '{}', true),
-  ('PIN COLECIONÁVEL', 'Acessórios', '📌', 0, NULL, 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.', '{}', true),
-  ('PACK ADESIVOS', 'Colecionáveis', '🎨', 0, NULL, '6 adesivos em vinil impermeável com artes exclusivas da banda.', '{}', true),
-  ('BAQUETAS ASSINADAS', 'Colecionáveis', '🥁', 0, 'Em breve', 'Baquetas autografadas pelo baterista. Edição limitada e numerada.', '{}', false)
+-- Dados iniciais de exemplo (remova se preferir começar vazio)
+INSERT INTO produtos (nome, cat, desc, preco, emoji, badge, sizes, ativo, ordem) VALUES
+  ('CAMISETA OFICIAL', 'Vestuário', '100% algodão, estampa serigrafia com o logo da banda.', 0, '👕', 'Novo', ARRAY['P','M','G','GG'], true, 1),
+  ('PALHETA EXCLUSIVA', 'Acessórios', 'Palheta personalizada com o logo da Nexus. Pack com 3 unidades.', 0, '🎸', NULL, '{}', true, 2),
+  ('CHAVEIRO NEXUS', 'Acessórios', 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium.', 0, '🔑', NULL, '{}', true, 3),
+  ('PIN COLECIONÁVEL', 'Acessórios', 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.', 0, '📌', NULL, '{}', true, 4),
+  ('PACK ADESIVOS', 'Colecionáveis', '6 adesivos em vinil impermeável com artes exclusivas da banda.', 0, '🎨', NULL, '{}', true, 5),
+  ('BAQUETAS ASSINADAS', 'Colecionáveis', 'Baquetas autografadas pelo baterista. Edição limitada e numerada.', 0, '🥁', 'Em breve', '{}', false, 6)
 ON CONFLICT DO NOTHING;
-
--- Inserir shows padrão (opcional)
-INSERT INTO shows (nome, local, data, horario, feito) VALUES
-  ('Palco Arteculando', 'Casa de Cultura Hip-Hop Sul — São Paulo', '2026-04-25', 'A confirmar', false),
-  ('BIBLIOTECA MUSICAL', 'Senac Nações Unidas — São Paulo', '2025-03-26', '18:15', true),
-  ('HALLOWEEN SENAC', 'Senac Nações Unidas — São Paulo', '2024-10-30', '18:30', true)
-ON CONFLICT DO NOTHING;
-
-
--- =====================================================
--- MIGRAÇÃO (se o banco já existe e foi criado com schema antigo)
--- Execute apenas os comandos abaixo se necessário
--- =====================================================
-
--- ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS instagram_comprador TEXT;
--- ALTER TABLE sorteio ADD COLUMN IF NOT EXISTS instagram_vencedor TEXT;
--- INSERT INTO config (chave, valor) VALUES ('modo_demo', 'false') ON CONFLICT DO NOTHING;

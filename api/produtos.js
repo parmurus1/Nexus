@@ -1,29 +1,12 @@
-// api/produtos.js
+// api/produtos.js — CRUD de produtos para a merch
 import { createClient } from '@supabase/supabase-js';
-import crypto from 'crypto';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
-function gerarToken() {
-  return crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD + '_nexus').digest('hex');
-}
 
 function autenticar(req) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === gerarToken();
-}
-
-// Helper: garante que req.body seja parseado mesmo em ESM na Vercel
-async function parseBody(req) {
-  if (req.body && typeof req.body === 'object') return req.body;
-  return new Promise((resolve) => {
-    let raw = '';
-    req.on('data', chunk => { raw += chunk; });
-    req.on('end', () => {
-      try { resolve(JSON.parse(raw)); } catch { resolve({}); }
-    });
-  });
+  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
 }
 
 export default async function handler(req, res) {
@@ -32,74 +15,76 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // GET público — retorna apenas produtos ativos (ou todos se admin)
+  // GET — público: retorna todos os produtos
   if (req.method === 'GET') {
-    const isAdmin = autenticar(req);
-    let query = supabase.from('produtos').select('*').order('criado_em', { ascending: true });
-    if (!isAdmin) query = query.eq('ativo', true);
-    const { data, error } = await query;
-    if (error) return res.status(500).json({ erro: 'Erro ao buscar produtos' });
-    return res.status(200).json({ produtos: data || [] });
+    const { data, error } = await supabase
+      .from('produtos')
+      .select('*')
+      .order('ordem', { ascending: true });
+    if (error) {
+      // Tabela pode não existir ainda — retorna array vazio
+      return res.status(200).json({ produtos: [] });
+    }
+    // Deserializar o campo sizes (armazenado como text[])
+    const produtos = (data || []).map(p => ({
+      ...p,
+      sizes: Array.isArray(p.sizes) ? p.sizes : (p.sizes ? JSON.parse(p.sizes) : []),
+      ativo: p.ativo !== false
+    }));
+    return res.status(200).json({ produtos });
   }
 
   if (!autenticar(req)) return res.status(401).json({ erro: 'Não autorizado' });
 
-  // POST — criar
+  // POST — criar produto
   if (req.method === 'POST') {
-    const { nome, cat, emoji, preco, badge, descricao, sizes, img, ativo } = await parseBody(req);
-    if (!nome || !descricao) return res.status(400).json({ erro: 'nome e descricao são obrigatórios' });
-    const { data: novo, error } = await supabase
+    const { nome, cat, desc, preco, emoji, img, badge, sizes, ativo } = req.body;
+    if (!nome || !desc) return res.status(400).json({ erro: 'nome e desc são obrigatórios' });
+    const { data: inserted, error } = await supabase
       .from('produtos')
       .insert({
-        nome,
-        cat: cat || 'Geral',
-        emoji: emoji || '🎵',
-        preco: parseFloat(preco) || 0,
+        nome, cat: cat || '', desc,
+        preco: preco || 0,
+        emoji: emoji || '📦',
+        img: img || '',
         badge: badge || null,
-        descricao,
         sizes: sizes || [],
-        img: img || null,
         ativo: ativo !== false
       })
       .select()
       .single();
     if (error) return res.status(500).json({ erro: 'Erro ao criar produto' });
-    return res.status(201).json({ produto: novo });
+    return res.status(201).json({ produto: inserted });
   }
 
-  // PUT — editar
+  // PUT — editar produto
   if (req.method === 'PUT') {
-    const { id } = req.query;
-    if (!id) return res.status(400).json({ erro: 'id obrigatório' });
-    const { nome, cat, emoji, preco, badge, descricao, sizes, img, ativo } = await parseBody(req);
-    const campos = {};
-    if (nome !== undefined) campos.nome = nome;
-    if (cat !== undefined) campos.cat = cat;
-    if (emoji !== undefined) campos.emoji = emoji;
-    if (preco !== undefined) campos.preco = parseFloat(preco) || 0;
-    if (badge !== undefined) campos.badge = badge || null;
-    if (descricao !== undefined) campos.descricao = descricao;
-    if (sizes !== undefined) campos.sizes = sizes;
-    if (img !== undefined) campos.img = img || null;
-    if (ativo !== undefined) campos.ativo = ativo;
-    const { data: atualizado, error } = await supabase
-      .from('produtos')
-      .update(campos)
-      .eq('id', id)
-      .select()
-      .single();
+    const id = req.query.id;
+    if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
+    const { nome, cat, desc, preco, emoji, img, badge, sizes, ativo } = req.body;
+    const updates = {};
+    if (nome !== undefined) updates.nome = nome;
+    if (cat !== undefined) updates.cat = cat;
+    if (desc !== undefined) updates.desc = desc;
+    if (preco !== undefined) updates.preco = preco;
+    if (emoji !== undefined) updates.emoji = emoji;
+    if (img !== undefined) updates.img = img;
+    if (badge !== undefined) updates.badge = badge || null;
+    if (sizes !== undefined) updates.sizes = sizes;
+    if (ativo !== undefined) updates.ativo = ativo;
+    const { error } = await supabase.from('produtos').update(updates).eq('id', id);
     if (error) return res.status(500).json({ erro: 'Erro ao atualizar produto' });
-    return res.status(200).json({ produto: atualizado });
+    return res.status(200).json({ ok: true });
   }
 
-  // DELETE — excluir
+  // DELETE — excluir produto
   if (req.method === 'DELETE') {
-    const { id } = req.query;
-    if (!id) return res.status(400).json({ erro: 'id obrigatório' });
+    const id = req.query.id;
+    if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
     const { error } = await supabase.from('produtos').delete().eq('id', id);
     if (error) return res.status(500).json({ erro: 'Erro ao excluir produto' });
     return res.status(200).json({ ok: true });
   }
 
-  return res.status(405).end();
+  return res.status(405).json({ erro: 'Método não permitido' });
 }

@@ -160,13 +160,12 @@
       font-family:'DM Mono',monospace;
       font-size:0.64rem;
       letter-spacing:0.1em;
-      display:flex;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
       align-items:center;
-      justify-content:space-between;
       flex-wrap:wrap;
       gap:16px;
     }
-    .footer-dev{display:flex;justify-content:flex-end;}
     .footer-logo{
       display:flex;
       align-items:center;
@@ -191,7 +190,17 @@
       text-transform:uppercase;
     }
     .footer-link:hover{color:var(--text2);}
-    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
+    .footer-admin{
+      color:var(--text3);
+      text-decoration:none;
+      font-size:0.6rem;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      border:1px solid var(--border);
+      padding:5px 12px;
+      border-radius:999px;
+      transition:all var(--tr);
+    }
     .footer-admin:hover{
       color:var(--text2);
       border-color:var(--border-s);
@@ -232,9 +241,8 @@
       .nav-hamburger{display:flex;}
       footer{
         padding:24px 20px;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:20px;
+        grid-template-columns:1fr;
+        gap:14px;
       }
       .footer-links{gap:14px;}
     }
@@ -373,14 +381,6 @@
       overflow:hidden;
       transition:border-color var(--tr);
       cursor:pointer;
-      display:flex;
-      flex-direction:column;
-    }
-    .membro-foto img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
     }
     .membro-card:hover{border-color:var(--border-s);}
     .membro-foto{
@@ -436,18 +436,18 @@
       border:1px solid var(--border);
       border-radius:var(--radius-sm);
       overflow:hidden;
+      aspect-ratio:4/3;
       position:relative;
       cursor:zoom-in;
       transition:all var(--tr);
-      min-height:200px;
     }
     .foto-card:hover{
       border-color:var(--border-s);
       transform:translateY(-2px);
     }
-    .fotos-grid .foto-card:first-child{
+    .foto-card:first-child{
       grid-column:span 2;
-      min-height:280px;
+      aspect-ratio:16/9;
     }
     .foto-card img{
       width:100%;
@@ -832,12 +832,9 @@
 </div>
 
 <footer>
-  <div class="footer-logo">
-    <img src="/imgs/nexusicon.png" alt="Nexus"/>
-    <span>© 2026 Nexus Band</span>
-  </div>
-  <a href="/admin.html" class="footer-admin">Admin ↗</a>
-  <span class="footer-dev" style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;">Desenvolvido por Murilo Neves Teixeira</span>
+  <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
+  <a href="/admin.html" class="footer-admin" style="text-align:center;">Admin ↗</a>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>
