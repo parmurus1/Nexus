@@ -1,4 +1,5 @@
 -- Execute este SQL no painel do Supabase (SQL Editor)
+-- Este é o schema completo e atualizado. Use-o para novos bancos.
 
 -- Tabela de bilhetes
 CREATE TABLE bilhetes (
@@ -7,6 +8,7 @@ CREATE TABLE bilhetes (
   status TEXT NOT NULL DEFAULT 'disponivel', -- 'disponivel' | 'reservado' | 'pago'
   nome_comprador TEXT,
   email_comprador TEXT,
+  instagram_comprador TEXT,
   telefone_comprador TEXT,
   payment_id TEXT,
   preference_id TEXT,
@@ -27,6 +29,7 @@ CREATE TABLE sorteio (
   id SERIAL PRIMARY KEY,
   numero_sorteado INTEGER,
   nome_vencedor TEXT,
+  instagram_vencedor TEXT,
   realizado_em TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -38,7 +41,8 @@ INSERT INTO config (chave, valor) VALUES
   ('data_sorteio', '2025-05-31'),
   ('total_bilhetes', '100'),
   ('rifa_ativa', 'true'),
-  ('chave_pix', 'SEU_PIX_AQUI');
+  ('chave_pix', 'SEU_PIX_AQUI'),
+  ('modo_demo', 'false');
 
 -- Inserir os 100 bilhetes
 INSERT INTO bilhetes (numero)
@@ -58,19 +62,9 @@ CREATE POLICY "Escrita via service_role em bilhetes" ON bilhetes FOR ALL USING (
 CREATE POLICY "Escrita via service_role em config" ON config FOR ALL USING (auth.role() = 'service_role');
 CREATE POLICY "Escrita via service_role em sorteio" ON sorteio FOR ALL USING (auth.role() = 'service_role');
 
--- =====================================================
--- MIGRAÇÃO: adicionar coluna instagram_comprador
--- Execute este bloco se o banco já estiver criado
--- =====================================================
-ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS instagram_comprador TEXT;
-
--- Também adicionar coluna instagram_vencedor na tabela de sorteio
-ALTER TABLE sorteio ADD COLUMN IF NOT EXISTS instagram_vencedor TEXT;
-
 
 -- =====================================================
--- MIGRAÇÃO: Tabelas de shows e produtos (merch)
--- Execute este bloco no SQL Editor do Supabase
+-- Tabelas de shows e produtos (merch)
 -- =====================================================
 
 -- Tabela de shows da agenda
@@ -127,3 +121,13 @@ INSERT INTO shows (nome, local, data, horario, feito) VALUES
   ('BIBLIOTECA MUSICAL', 'Senac Nações Unidas — São Paulo', '2025-03-26', '18:15', true),
   ('HALLOWEEN SENAC', 'Senac Nações Unidas — São Paulo', '2024-10-30', '18:30', true)
 ON CONFLICT DO NOTHING;
+
+
+-- =====================================================
+-- MIGRAÇÃO (se o banco já existe e foi criado com schema antigo)
+-- Execute apenas os comandos abaixo se necessário
+-- =====================================================
+
+-- ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS instagram_comprador TEXT;
+-- ALTER TABLE sorteio ADD COLUMN IF NOT EXISTS instagram_vencedor TEXT;
+-- INSERT INTO config (chave, valor) VALUES ('modo_demo', 'false') ON CONFLICT DO NOTHING;

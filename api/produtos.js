@@ -1,12 +1,29 @@
 // api/produtos.js
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+
+function gerarToken() {
+  return crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD + '_nexus').digest('hex');
+}
 
 function autenticar(req) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
+  return auth.replace('Bearer ', '') === gerarToken();
+}
+
+// Helper: garante que req.body seja parseado mesmo em ESM na Vercel
+async function parseBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  return new Promise((resolve) => {
+    let raw = '';
+    req.on('data', chunk => { raw += chunk; });
+    req.on('end', () => {
+      try { resolve(JSON.parse(raw)); } catch { resolve({}); }
+    });
+  });
 }
 
 export default async function handler(req, res) {
@@ -29,7 +46,7 @@ export default async function handler(req, res) {
 
   // POST — criar
   if (req.method === 'POST') {
-    const { nome, cat, emoji, preco, badge, descricao, sizes, img, ativo } = req.body;
+    const { nome, cat, emoji, preco, badge, descricao, sizes, img, ativo } = await parseBody(req);
     if (!nome || !descricao) return res.status(400).json({ erro: 'nome e descricao são obrigatórios' });
     const { data: novo, error } = await supabase
       .from('produtos')
@@ -54,7 +71,7 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const { id } = req.query;
     if (!id) return res.status(400).json({ erro: 'id obrigatório' });
-    const { nome, cat, emoji, preco, badge, descricao, sizes, img, ativo } = req.body;
+    const { nome, cat, emoji, preco, badge, descricao, sizes, img, ativo } = await parseBody(req);
     const campos = {};
     if (nome !== undefined) campos.nome = nome;
     if (cat !== undefined) campos.cat = cat;
