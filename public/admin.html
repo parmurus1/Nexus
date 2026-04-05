@@ -525,7 +525,7 @@ async function carregarShows(){
       showsData = [];
       if(!res.ok){
         document.getElementById('tabelaShows').innerHTML=
-          '<tr><td colspan="5" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>shows</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
+          '<tr><td colspan="5" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>shows</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
         return;
       }
     }
@@ -626,7 +626,7 @@ async function carregarProdutos(){
       produtosData = d.produtos||[];
       if(d.aviso){
         document.getElementById('tabelaProdutos').innerHTML=
-          '<tr><td colspan="6" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>produtos</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
+          '<tr><td colspan="6" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>produtos</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
         return;
       }
     }
