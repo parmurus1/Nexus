@@ -102,22 +102,70 @@
     .mapa-body{padding:24px;}
 
     /* ── MAPA DE PALCO — imagem responsiva ── */
-    .mapa-visual{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
-    .mapa-visual img{
-      display:block;
-      width:100%;
-      height:auto;
-      /* em telas muito pequenas permite rolar horizontalmente se a imagem for muito densa */
-      min-width:0;
+    .mapa-visual{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;position:relative;cursor:zoom-in;}
+    .mapa-visual img{display:block;width:100%;height:auto;min-width:0;transition:opacity var(--tr);}
+    .mapa-visual:hover img{opacity:0.9;}
+    .mapa-hint{
+      position:absolute;
+      bottom:12px;left:50%;
+      transform:translateX(-50%);
+      background:rgba(8,8,8,0.82);
+      border:1px solid var(--border-s);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      border-radius:999px;
+      padding:6px 14px;
+      font-family:'DM Mono',monospace;
+      font-size:0.58rem;
+      letter-spacing:0.1em;
+      color:var(--text2);
+      white-space:nowrap;
+      pointer-events:none;
+      display:flex;align-items:center;gap:6px;
     }
-    /* em mobile: contém scroll horizontal para preservar legibilidade */
+    /* em mobile: scroll horizontal */
     @media(max-width:600px){
-      .mapa-visual{overflow-x:auto;}
-      .mapa-visual img{
-        min-width:560px; /* garante que os elementos do mapa sejam legíveis */
-        width:100%;
-      }
+      .mapa-visual{overflow-x:auto;cursor:zoom-in;}
+      .mapa-visual img{min-width:560px;width:100%;}
     }
+
+    /* ── LIGHTBOX DO MAPA ── */
+    .mapa-lb{
+      position:fixed;inset:0;z-index:9999;
+      background:rgba(0,0,0,0.94);
+      display:flex;align-items:center;justify-content:center;
+      padding:16px;
+      opacity:0;pointer-events:none;
+      transition:opacity 0.22s;
+    }
+    .mapa-lb.open{opacity:1;pointer-events:all;}
+    .mapa-lb-inner{
+      position:relative;
+      max-width:min(1200px,96vw);
+      max-height:92vh;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .mapa-lb img{
+      max-width:100%;
+      max-height:88vh;
+      object-fit:contain;
+      border-radius:var(--radius-sm);
+      border:1px solid var(--border-s);
+      transform:scale(0.95);
+      transition:transform 0.25s;
+    }
+    .mapa-lb.open img{transform:scale(1);}
+    .mapa-lb-close{
+      position:absolute;top:-14px;right:-14px;
+      width:32px;height:32px;
+      background:var(--bg4);border:1px solid var(--border-s);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.9rem;color:var(--text2);
+      cursor:pointer;transition:all var(--tr);
+      line-height:1;
+    }
+    .mapa-lb-close:hover{border-color:var(--red);color:var(--red);}
 
     .mapa-obs{margin-top:16px;padding:14px 16px;background:var(--bg4);border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);line-height:1.8;}
     .mapa-obs strong{color:var(--text);}
@@ -204,12 +252,21 @@
   <div class="mapa-palco">
     <div class="mapa-header">
       <span class="mapa-titulo">Disposição do palco</span>
-      <!-- <a href="/docs/mapa-palco.pdf" class="mapa-download" download>⬇ Baixar PDF</a> -->
+      <a href="/imgs/mapa-palco.jpeg" download="mapa-palco-nexus.jpeg" class="mapa-download">⬇ Baixar imagem</a>
     </div>
     <div class="mapa-body">
-      <div class="mapa-visual">
+      <div class="mapa-visual" id="mapaVisual" onclick="mapaLbOpen()">
         <img src="/imgs/mapa-palco.jpeg" alt="Disposição do palco — Nexus Band"/>
+        <div class="mapa-hint">🔍 Clique na imagem para ver o mapa completo</div>
       </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MAPA -->
+  <div class="mapa-lb" id="mapaLb" onclick="if(event.target===this)mapaLbClose()">
+    <div class="mapa-lb-inner">
+      <div class="mapa-lb-close" onclick="mapaLbClose()">✕</div>
+      <img src="/imgs/mapa-palco.jpeg" alt="Mapa de palco — Nexus Band"/>
     </div>
   </div>
 
@@ -223,7 +280,7 @@
         <li>Sistema PA adequado ao espaço</li>
         <li>Mesa de som com mínimo 16 canais</li>
         <li>10 tomadas de 110v</li>
-        <li>4 monitores de retorno (wedge)</li>
+        <li>3 monitores de retorno (wedge)</li>
         <li>Técnico de som no PA durante o show</li>
         <li>DI box para 2 guitarras, 1 baixo e 1 teclado</li>
       </ul>
@@ -270,6 +327,10 @@
 <script>
   const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
   if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
+
+  function mapaLbOpen(){document.getElementById('mapaLb').classList.add('open');}
+  function mapaLbClose(){document.getElementById('mapaLb').classList.remove('open');}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')mapaLbClose();});
 </script>
 </body>
 </html>
