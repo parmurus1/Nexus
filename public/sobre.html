@@ -503,10 +503,12 @@
       border-radius:var(--radius);
       overflow:hidden;
     }
+    /* Shorts embed — portrait 9:16 */
     .video-embed{
       position:relative;
-      padding-bottom:56.25%;
+      padding-bottom:177.78%;
       height:0;
+      background:var(--bg3);
     }
     .video-embed iframe{
       position:absolute;
@@ -515,24 +517,6 @@
       width:100%;
       height:100%;
       border:none;
-    }
-    .video-placeholder{
-      aspect-ratio:16/9;
-      background:var(--bg3);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-      border-bottom:1px solid var(--border);
-    }
-    .video-placeholder svg{opacity:0.2;}
-    .video-placeholder span{
-      font-family:'DM Mono',monospace;
-      font-size:0.6rem;
-      letter-spacing:0.1em;
-      color:var(--text3);
-      text-transform:uppercase;
     }
     .video-info{padding:16px 18px;}
     .video-titulo{
@@ -787,7 +771,14 @@
 
     <div class="videos-grid">
       <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/JECQqubB5Dc?playsinline=1">
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube.com/embed/JECQqubB5Dc"
+            title="Nexus — Show ao vivo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
         <div class="video-info">
           <div class="video-titulo">SHOW AO VIVO</div>
@@ -796,12 +787,14 @@
       </div>
 
       <div class="video-card">
-        <div class="video-placeholder">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <circle cx="12" cy="12" r="9"/>
-            <polygon points="10,8 16,12 10,16"/>
-          </svg>
-          <span>Cole o link do YouTube</span>
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube.com/embed/_ElioiT5R8Q"
+            title="Nexus — Show ao vivo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
         <div class="video-info">
           <div class="video-titulo">SHOW AO VIVO</div>
@@ -810,12 +803,14 @@
       </div>
 
       <div class="video-card">
-        <div class="video-placeholder">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <circle cx="12" cy="12" r="9"/>
-            <polygon points="10,8 16,12 10,16"/>
-          </svg>
-          <span>Cole o link do YouTube</span>
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube.com/embed/93pcz_6b-JM"
+            title="Nexus — Show ao vivo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
         <div class="video-info">
           <div class="video-titulo">SHOW AO VIVO</div>
@@ -824,12 +819,14 @@
       </div>
 
       <div class="video-card">
-        <div class="video-placeholder">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <circle cx="12" cy="12" r="9"/>
-            <polygon points="10,8 16,12 10,16"/>
-          </svg>
-          <span>Cole o link do YouTube</span>
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube.com/embed/o3ycjRGmkhc"
+            title="Nexus — Show ao vivo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
         <div class="video-info">
           <div class="video-titulo">SHOW AO VIVO</div>
