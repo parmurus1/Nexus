@@ -429,9 +429,6 @@
       gap:8px;
       margin-bottom:80px;
     }
-    @media(max-width:600px){
-      .fotos-grid{grid-template-columns:repeat(2,1fr);}
-    }
     .foto-card{
       background:var(--bg3);
       border:1px solid var(--border);
@@ -486,6 +483,67 @@
       font-size:0.6rem;
       letter-spacing:0.15em;
       text-transform:uppercase;
+    }
+
+    /* MOBILE CAROUSEL */
+    @media(max-width:600px){
+      .fotos-section-wrap{
+        /* extend past container padding so cards bleed to screen edge */
+        margin-left:-24px;
+        margin-right:-24px;
+      }
+      .fotos-grid{
+        display:flex;
+        flex-direction:row;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        gap:10px;
+        padding:0 24px 12px;
+        margin-bottom:80px;
+        /* hide scrollbar */
+        scrollbar-width:none;
+      }
+      .fotos-grid::-webkit-scrollbar{display:none;}
+      .foto-card{
+        flex:0 0 78vw;
+        max-width:320px;
+        aspect-ratio:4/3!important;
+        min-height:unset!important;
+        scroll-snap-align:start;
+        transform:none!important;
+      }
+      /* reset desktop grid overrides */
+      .foto-card:first-child,
+      .foto-card:nth-child(2){
+        grid-column:unset;
+        grid-row:unset;
+        aspect-ratio:4/3!important;
+        min-height:unset!important;
+      }
+      /* dots indicator */
+      .fotos-dots{
+        display:flex;
+        justify-content:center;
+        gap:6px;
+        margin-top:-68px;
+        margin-bottom:80px;
+      }
+      .fotos-dot{
+        width:5px;
+        height:5px;
+        border-radius:50%;
+        background:var(--text3);
+        transition:background var(--tr), transform var(--tr);
+      }
+      .fotos-dot.active{
+        background:var(--red);
+        transform:scale(1.3);
+      }
+    }
+    @media(min-width:601px){
+      .fotos-dots{display:none;}
+      .fotos-section-wrap{margin-left:0;margin-right:0;}
     }
 
     .videos-grid{
@@ -692,7 +750,8 @@
     <p class="sec-eyebrow">Galeria</p>
     <h2 class="sec-title">FOTOS</h2>
 
-    <div class="fotos-grid">
+    <div class="fotos-section-wrap">
+    <div class="fotos-grid" id="fotosGrid">
       <div class="foto-card" style="grid-column:span 2;">
         <img src="/imgs/show-03.jpeg" alt="Nexus show" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.28s"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
@@ -762,6 +821,15 @@
           <span>/imgs/show-05.jpeg</span>
         </div>
       </div>
+    </div><!-- /fotos-grid -->
+    </div><!-- /fotos-section-wrap -->
+
+    <div class="fotos-dots" id="fotosDots">
+      <div class="fotos-dot active"></div>
+      <div class="fotos-dot"></div>
+      <div class="fotos-dot"></div>
+      <div class="fotos-dot"></div>
+      <div class="fotos-dot"></div>
     </div>
   </div>
 
@@ -899,6 +967,28 @@
       });
     }
   });
+</script>
+
+<script>
+  /* Carousel dots — mobile only */
+  (function(){
+    const grid = document.getElementById('fotosGrid');
+    const dots = document.querySelectorAll('#fotosDots .fotos-dot');
+    if(!grid || !dots.length) return;
+    function update(){
+      const cards = grid.querySelectorAll('.foto-card');
+      const sl = grid.scrollLeft;
+      const w  = grid.clientWidth;
+      let closest = 0, minDist = Infinity;
+      cards.forEach((c, i) => {
+        const dist = Math.abs(c.offsetLeft - sl - 24); /* 24 = padding */
+        if(dist < minDist){ minDist = dist; closest = i; }
+      });
+      dots.forEach((d,i) => d.classList.toggle('active', i === closest));
+    }
+    grid.addEventListener('scroll', update, {passive:true});
+    update();
+  })();
 </script>
 
 </body>
