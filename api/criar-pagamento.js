@@ -92,7 +92,8 @@ export default async function handler(req, res) {
         }],
         payer: { name: nome, email: email, phone: telefone ? { number: telefone } : undefined },
         payment_methods: {
-          excluded_payment_types: [{ id: 'credit_card' }, { id: 'debit_card' }, { id: 'ticket' }]
+          excluded_payment_types: [{ id: 'credit_card' }, { id: 'debit_card' }, { id: 'ticket' }],
+          default_payment_method_id: 'pix'
         },
         notification_url: `${process.env.SITE_URL}/api/webhook`,
         back_urls: {

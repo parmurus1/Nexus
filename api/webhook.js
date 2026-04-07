@@ -29,6 +29,7 @@ export default async function handler(req, res) {
               nome_comprador: null,
               email_comprador: null,
               telefone_comprador: null,
+              instagram_comprador: null,
               preference_id: null,
               payment_id: null,
               reservado_em: null
