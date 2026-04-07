@@ -136,7 +136,7 @@
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
+    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -224,6 +224,20 @@
 <script>
   const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
   if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
+</script>
+<script>
+(async()=>{
+  try{
+    const res=await fetch("/api/config");
+    if(res.ok){
+      const d=await res.json();
+      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
+        const el=document.getElementById("navRifa");
+        if(el){el.style.display="";}
+      }
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

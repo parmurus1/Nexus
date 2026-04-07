@@ -30,11 +30,11 @@ export default async function handler(req, res) {
 
   // POST — criar show
   if (req.method === 'POST') {
-    const { nome, data, hora, local, status, link } = req.body;
+    const { nome, data, hora, local, status, link, gratuito } = req.body;
     if (!nome || !data || !local) return res.status(400).json({ erro: 'nome, data e local são obrigatórios' });
     const { data: inserted, error } = await supabase
       .from('shows')
-      .insert({ nome, data, hora: hora || null, local, status: status || 'breve', link: link || null })
+      .insert({ nome, data, hora: hora || null, local, status: status || 'breve', link: link || null, gratuito: gratuito || false })
       .select()
       .single();
     if (error) return res.status(500).json({ erro: 'Erro ao criar show' });
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const id = req.query.id;
     if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
-    const { nome, data, hora, local, status, link } = req.body;
+    const { nome, data, hora, local, status, link, gratuito } = req.body;
     const updates = {};
     if (nome !== undefined) updates.nome = nome;
     if (data !== undefined) updates.data = data;
@@ -53,6 +53,7 @@ export default async function handler(req, res) {
     if (local !== undefined) updates.local = local;
     if (status !== undefined) updates.status = status;
     if (link !== undefined) updates.link = link || null;
+    if (gratuito !== undefined) updates.gratuito = gratuito;
     const { error } = await supabase.from('shows').update(updates).eq('id', id);
     if (error) return res.status(500).json({ erro: 'Erro ao atualizar show' });
     return res.status(200).json({ ok: true });

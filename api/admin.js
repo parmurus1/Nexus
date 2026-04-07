@@ -99,8 +99,7 @@ export default async function handler(req, res) {
 
     const { error } = await supabase
       .from('config')
-      .update({ valor: String(valor) })
-      .eq('chave', chave);
+      .upsert({ chave, valor: String(valor) }, { onConflict: 'chave' });
 
     if (error) return res.status(500).json({ erro: 'Erro ao atualizar config' });
     return res.status(200).json({ ok: true });

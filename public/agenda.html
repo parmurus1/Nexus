@@ -60,6 +60,7 @@
     .show-link:hover{text-decoration:underline;}
     .show-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid;white-space:nowrap;}
     .tag-confirmado{color:#3dbb80;border-color:rgba(61,187,128,0.3);background:rgba(61,187,128,0.06);}
+    .tag-breve{color:#3dbb80!important;border-color:rgba(61,187,128,0.3)!important;background:rgba(61,187,128,0.06)!important;}
     .tag-breve{color:var(--text3);border-color:var(--border-s);}
     .tag-realizado{color:var(--text3);border-color:var(--border);background:transparent;}
     .tag-cancelado{color:var(--red-dim);border-color:rgba(160,26,7,0.3);background:rgba(160,26,7,0.04);}
@@ -96,7 +97,7 @@
     <a href="/agenda.html" class="nav-link active">Agenda</a>
     <a href="/merch.html" class="nav-link">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
+    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -135,7 +136,7 @@
 const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 const TAG_MAP = {
   breve:     {cls:'tag-breve',     label:'Em breve'},
-  confirmado:{cls:'tag-confirmado',label:'Confirmado ✓'},
+  confirmado:{cls:'tag-breve',     label:'Em breve'},
   realizado: {cls:'tag-realizado', label:'Realizado'},
   cancelado: {cls:'tag-cancelado', label:'Cancelado'},
 };
@@ -157,7 +158,7 @@ function renderShow(s){
       <div class="show-nome">${s.nome}</div>
       <div class="show-local">📍 ${s.local||'Local a confirmar'}</div>
       ${s.hora?`<div class="show-horario">🕐 ${s.hora}</div>`:''}
-      ${s.link?`<a href="${s.link}" target="_blank" class="show-link">🎟 Ingressos →</a>`:''}
+      ${(s.gratuito || !s.link)?`<span class="show-link" style="color:#3dbb80;cursor:default;">✓ Entrada gratuita</span>`:`<a href="${s.link}" target="_blank" class="show-link">🎟 Ingressos →</a>`}
     </div>
     <span class="show-tag ${tag.cls}">${tag.label}</span>
   </div>`;
@@ -188,6 +189,20 @@ const _t=document.getElementById('navToggle'),_l=document.getElementById('navLin
 if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
 
 carregarAgenda();
+</script>
+<script>
+(async()=>{
+  try{
+    const res=await fetch("/api/config");
+    if(res.ok){
+      const d=await res.json();
+      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
+        const el=document.getElementById("navRifa");
+        if(el){el.style.display="";}
+      }
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

@@ -235,7 +235,7 @@
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa active">Rifa 🎟</a>
+    <a href="/rifa.html" class="nav-link nav-rifa active" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -486,5 +486,19 @@ document.querySelectorAll('.carr-visual').forEach(v=>{
   <span class="lb-close" onclick="lbClose()">✕</span>
   <img id="lbImg" src="" alt=""/>
 </div>
+<script>
+(async()=>{
+  try{
+    const res=await fetch("/api/config");
+    if(res.ok){
+      const d=await res.json();
+      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
+        const el=document.getElementById("navRifa");
+        if(el){el.style.display="";}
+      }
+    }
+  }catch(e){}
+})();
+</script>
 </body>
 </html>

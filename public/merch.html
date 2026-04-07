@@ -188,7 +188,7 @@
     <a href="/agenda.html" class="nav-link">Agenda</a>
     <a href="/merch.html" class="nav-link active">Merch</a>
     <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
+    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -410,6 +410,20 @@ if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.class
 
 loadProdutos();
 syncCart();
+</script>
+<script>
+(async()=>{
+  try{
+    const res=await fetch("/api/config");
+    if(res.ok){
+      const d=await res.json();
+      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
+        const el=document.getElementById("navRifa");
+        if(el){el.style.display="";}
+      }
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

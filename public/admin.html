@@ -262,6 +262,22 @@
         <p class="config-hint">O modo demo é ativado automaticamente quando <code>MP_ACCESS_TOKEN</code> não está configurado. Use esse toggle para forçá-lo mesmo com token ativo.</p>
       </div>
 
+      <div class="config-card" style="grid-column:1/-1;">
+        <div class="config-label">
+          Aba Rifa no Menu
+          <span id="rifaNavBadge" style="display:none" class="demo-badge" style="background:rgba(61,187,128,0.12);color:#3dbb80;border-color:rgba(61,187,128,0.3);">ATIVO</span>
+        </div>
+        <div class="toggle-row">
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
+            Quando ativo, o link da <strong>Rifa 🎟</strong> aparece no menu de navegação de todas as páginas. Desative para ocultá-lo temporariamente sem remover a página.
+          </p>
+          <div class="toggle-track" id="rifaNavToggle" onclick="toggleRifaNav()">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+        <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
+      </div>
+
     </div>
   </div>
 
@@ -336,12 +352,19 @@
       <label>Status</label>
       <select id="sStatus" class="config-input">
         <option value="breve">Em breve</option>
-        <option value="confirmado">Confirmado</option>
         <option value="realizado">Realizado</option>
         <option value="cancelado">Cancelado</option>
       </select>
     </div>
-    <div class="fg"><label>Link de ingressos (opcional)</label><input type="url" id="sLink" placeholder="https://..."/></div>
+    <div class="fg" id="fgLink">
+      <label id="labelLink">Link de ingressos (opcional)</label>
+      <input type="url" id="sLink" placeholder="https://..." style="margin-bottom:8px;"/>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);">
+        <input type="checkbox" id="sGratuito" onchange="toggleGratuito()" style="accent-color:#3dbb80;width:15px;height:15px;cursor:pointer;"/>
+        Entrada gratuita
+      </label>
+      <p id="hintGratuito" style="display:none;font-size:0.56rem;color:#3dbb80;margin-top:6px;font-family:'DM Mono',monospace;letter-spacing:0.04em;">✓ Entrada gratuita</p>
+    </div>
     <input type="hidden" id="sId"/>
     <button class="btn-cfm" id="btnSalvarShow" onclick="salvarShow()">Salvar Show</button>
   </div>
@@ -424,6 +447,13 @@ async function carregarDados(){
     document.getElementById('ultimaAtualizacao').textContent=`Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
     carregarModoDemo();
 
+    // Carregar estado do toggle Rifa Nav
+    const rifaVisivel = data.config?.rifa_nav_visivel === 'true' || data.config?.rifa_nav_visivel === true;
+    const rifaToggle = document.getElementById('rifaNavToggle');
+    const rifaBadge = document.getElementById('rifaNavBadge');
+    if (rifaVisivel) { rifaToggle.classList.add('on'); rifaBadge.style.display = 'inline-block'; }
+    else { rifaToggle.classList.remove('on'); rifaBadge.style.display = 'none'; }
+
     // Preencher campos config com valores atuais
     if(data.config){
       if(data.config.valor_bilhete) document.getElementById('cfgValor').value=data.config.valor_bilhete;
@@ -485,6 +515,43 @@ async function carregarModoDemo() {
     if (modoDemo) { toggle.classList.add('on'); badge.style.display = 'inline-block'; }
     else { toggle.classList.remove('on'); badge.style.display = 'none'; }
   } catch {}
+}
+
+async function toggleRifaNav() {
+  const toggle = document.getElementById('rifaNavToggle');
+  const badge = document.getElementById('rifaNavBadge');
+  const isOn = toggle.classList.contains('on');
+  const novoValor = (!isOn).toString();
+  try {
+    const res = await fetch('/api/admin?acao=config', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify({chave:'rifa_nav_visivel', valor: novoValor})
+    });
+    if (res.ok) {
+      toggle.classList.toggle('on');
+      badge.style.display = !isOn ? 'inline-block' : 'none';
+      toast(!isOn ? 'Aba Rifa ativada no menu' : 'Aba Rifa ocultada do menu', 'ok');
+    } else { toast('Erro ao alterar visibilidade da rifa','err'); }
+  } catch { toast('Erro de conexão','err'); }
+}
+
+async function toggleDemo() {
+  const cb = document.getElementById('sGratuito');
+  const linkInput = document.getElementById('sLink');
+  const labelLink = document.getElementById('labelLink');
+  const hint = document.getElementById('hintGratuito');
+  if(cb.checked){
+    linkInput.style.display='none';
+    labelLink.style.color='#3dbb80';
+    labelLink.textContent='Entrada gratuita';
+    hint.style.display='block';
+  } else {
+    linkInput.style.display='';
+    labelLink.style.color='';
+    labelLink.textContent='Link de ingressos (opcional)';
+    hint.style.display='none';
+  }
 }
 
 async function toggleDemo() {
@@ -565,7 +632,10 @@ function abrirFormShow(id){
   document.getElementById('sHora').value = s?.hora||'';
   document.getElementById('sLocal').value = s?.local||'';
   document.getElementById('sStatus').value = s?.status||'breve';
+  const gratuito = !s?.link && s?.id; // se show existente sem link = gratuito
   document.getElementById('sLink').value = s?.link||'';
+  document.getElementById('sGratuito').checked = !!(s?.gratuito);
+  toggleGratuito();
   document.getElementById('sId').value = s?.id||'';
   document.getElementById('showOv').classList.add('open');
 }
@@ -579,10 +649,12 @@ async function salvarShow(){
   const btn = document.getElementById('btnSalvarShow');
   btn.disabled=true; btn.textContent='Salvando...';
   const id = document.getElementById('sId').value;
+  const isGratuito = document.getElementById('sGratuito').checked;
   const payload = {
     nome, data, hora: document.getElementById('sHora').value,
     local, status: document.getElementById('sStatus').value,
-    link: document.getElementById('sLink').value.trim()
+    link: isGratuito ? '' : document.getElementById('sLink').value.trim(),
+    gratuito: isGratuito
   };
   try{
     const res = await fetch('/api/shows'+(id?`/${id}`:''), {
