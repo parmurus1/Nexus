@@ -114,14 +114,20 @@
     .rifa-btn{position:relative;z-index:1;white-space:nowrap;}
     @media(max-width:600px){.rifa-btn{width:100%;text-align:center;}}
 
-    /* INSTAGRAM */
-    .insta-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-    .insta-info{display:flex;align-items:center;gap:16px;}
-    .insta-icon{width:44px;height:44px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
-    .insta-handle{font-family:'DM Mono',monospace;font-size:0.9rem;letter-spacing:0.04em;color:var(--text);}
-    .insta-followers{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
-    .insta-link{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;border:1px solid var(--border-s);padding:9px 18px;border-radius:var(--radius-sm);transition:all var(--tr);}
-    .insta-link:hover{border-color:var(--red);color:var(--red);}
+    /* SOCIAL MEDIA */
+    .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:60px;}
+    @media(max-width:700px){.social-grid{grid-template-columns:1fr;}}
+    .social-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+    .social-info{display:flex;align-items:center;gap:16px;}
+    .social-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    .insta-icon{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+    .tiktok-icon{background:linear-gradient(135deg,#000,#222);position:relative;}
+    .tiktok-icon::before{content:'';position:absolute;inset:2px;background:var(--bg2);border-radius:8px;}
+    .tiktok-icon::after{content:'🎵';position:relative;z-index:1;}
+    .social-handle{font-family:'DM Mono',monospace;font-size:0.9rem;letter-spacing:0.04em;color:var(--text);}
+    .social-desc{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+    .social-link{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;border:1px solid var(--border-s);padding:9px 18px;border-radius:var(--radius-sm);transition:all var(--tr);white-space:nowrap;}
+    .social-link:hover{border-color:var(--red);color:var(--red);}
   </style>
 </head>
 <body>
@@ -162,6 +168,31 @@
 </div>
 
 <div class="section">
+  <!-- REDES SOCIAIS -->
+  <div class="social-grid">
+    <div class="social-strip">
+      <div class="social-info">
+        <div class="social-icon insta-icon">📷</div>
+        <div>
+          <div class="social-handle">@nexus.bandbr</div>
+          <div class="social-desc">Siga para acompanhar tudo</div>
+        </div>
+      </div>
+      <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" class="social-link">Instagram →</a>
+    </div>
+
+    <div class="social-strip">
+      <div class="social-info">
+        <div class="social-icon tiktok-icon"></div>
+        <div>
+          <div class="social-handle">@nexus.band</div>
+          <div class="social-desc">Vídeos e bastidores</div>
+        </div>
+      </div>
+      <a href="https://tiktok.com/@nexus.band" target="_blank" rel="noopener" class="social-link">TikTok →</a>
+    </div>
+  </div>
+
   <p class="sec-eyebrow">Explore</p>
   <h2 class="sec-title">O QUE TEMOS</h2>
 
@@ -200,18 +231,6 @@
       <p class="rifa-desc">Apoie nossa música e concorra a prêmios exclusivos — palhetas, baquetas assinadas, camiseta oficial e muito mais.</p>
     </div>
     <a href="/rifa.html" class="btn-primary rifa-btn">Ver bilhetes →</a>
-  </div>
-
-  <!-- INSTAGRAM -->
-  <div class="insta-strip">
-    <div class="insta-info">
-      <div class="insta-icon">📷</div>
-      <div>
-        <div class="insta-handle">@nexus.bandbr</div>
-        <div class="insta-followers">Siga para acompanhar tudo</div>
-      </div>
-    </div>
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" class="insta-link">Seguir no Instagram →</a>
   </div>
 </div>
 
