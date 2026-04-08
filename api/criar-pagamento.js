@@ -90,19 +90,22 @@ export default async function handler(req, res) {
           currency_id: 'BRL',
           unit_price: valorTotal
         }],
-        payer: { name: nome, email: email, phone: telefone ? { number: telefone } : undefined },
+        payer: { 
+          name: nome, 
+          email: email
+        },
         payment_methods: {
-          excluded_payment_types: [{ id: 'credit_card' }, { id: 'debit_card' }, { id: 'ticket' }],
-          default_payment_method_id: 'pix'
+          installments: 1
         },
         notification_url: `${process.env.SITE_URL}/api/webhook`,
         back_urls: {
           success: `${process.env.SITE_URL}/sucesso.html`,
-          failure: `${process.env.SITE_URL}/falha.html`,
-          pending: `${process.env.SITE_URL}/pendente.html`
+          failure: `${process.env.SITE_URL}/rifa.html`,
+          pending: `${process.env.SITE_URL}/rifa.html`
         },
         auto_return: 'approved',
-        metadata: { numeros, nome, email, instagram }
+        external_reference: `rifa-${numeros.join('-')}`,
+        metadata: { numeros, nome, email, instagram, telefone }
       }
     });
 
@@ -121,6 +124,10 @@ export default async function handler(req, res) {
       .in('numero', numeros);
 
     console.error('Erro MP:', err);
-    return res.status(500).json({ erro: 'Erro ao criar pagamento' });
+    console.error('Detalhes:', JSON.stringify(err.response?.data || err.message));
+    return res.status(500).json({ 
+      erro: 'Erro ao criar pagamento no Mercado Pago',
+      detalhes: err.message 
+    });
   }
 }
