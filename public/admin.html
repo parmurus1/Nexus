@@ -537,24 +537,6 @@ async function toggleRifaNav() {
 }
 
 async function toggleDemo() {
-  const cb = document.getElementById('sGratuito');
-  const linkInput = document.getElementById('sLink');
-  const labelLink = document.getElementById('labelLink');
-  const hint = document.getElementById('hintGratuito');
-  if(cb.checked){
-    linkInput.style.display='none';
-    labelLink.style.color='#3dbb80';
-    labelLink.textContent='Entrada gratuita';
-    hint.style.display='block';
-  } else {
-    linkInput.style.display='';
-    labelLink.style.color='';
-    labelLink.textContent='Link de ingressos (opcional)';
-    hint.style.display='none';
-  }
-}
-
-async function toggleDemo() {
   const toggle = document.getElementById('demoToggle');
   const badge = document.getElementById('demoBadge');
   const isOn = toggle.classList.contains('on');
@@ -686,6 +668,26 @@ async function excluirShow(id){
 }
 
 function editarShow(id){ abrirFormShow(id); }
+
+function toggleGratuito(){
+  const isGratuito = document.getElementById('sGratuito').checked;
+  const linkInput = document.getElementById('sLink');
+  const hintGratuito = document.getElementById('hintGratuito');
+  const labelLink = document.getElementById('labelLink');
+  
+  if(isGratuito){
+    linkInput.disabled = true;
+    linkInput.value = '';
+    linkInput.style.opacity = '0.5';
+    hintGratuito.style.display = 'block';
+    labelLink.textContent = 'Link de ingressos (desabilitado)';
+  } else {
+    linkInput.disabled = false;
+    linkInput.style.opacity = '1';
+    hintGratuito.style.display = 'none';
+    labelLink.textContent = 'Link de ingressos (opcional)';
+  }
+}
 
 // ══════════════ PRODUTOS ══════════════
 let produtosData = [];

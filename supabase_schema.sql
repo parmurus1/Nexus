@@ -78,12 +78,19 @@ CREATE TABLE IF NOT EXISTS shows (
   local TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'breve', -- 'breve' | 'confirmado' | 'realizado' | 'cancelado'
   link TEXT,
+  gratuito BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 ALTER TABLE shows ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Leitura pública de shows" ON shows FOR SELECT USING (true);
 CREATE POLICY "Escrita via service_role em shows" ON shows FOR ALL USING (auth.role() = 'service_role');
+
+-- =====================================================
+-- MIGRAÇÃO: adicionar coluna gratuito na tabela shows
+-- Execute este bloco se a tabela shows já estiver criada
+-- =====================================================
+ALTER TABLE shows ADD COLUMN IF NOT EXISTS gratuito BOOLEAN DEFAULT false;
 
 -- =====================================================
 -- TABELA: produtos (para a página Merch)
