@@ -159,10 +159,10 @@
     <img src="/imgs/nexustitle.png" alt="Nexus"/>
   </div>
 
-  <p class="hero-sub">Música que conecta · Shows · Merch · Rifa</p>
+  <p class="hero-sub">Música que conecta · Shows · Merch<span id="heroRifaText"> · Rifa</span></p>
 
   <div class="cta-group">
-    <a href="/rifa.html" class="btn-primary">Participar da Rifa 🎟</a>
+    <a href="/rifa.html" class="btn-primary" id="heroRifaBtn" style="display:none">Participar da Rifa 🎟</a>
     <a href="/sobre.html" class="btn-secondary">Sobre a Banda</a>
   </div>
 </div>
@@ -224,7 +224,7 @@
   </div>
 
   <!-- RIFA DESTAQUE -->
-  <div class="rifa-banner">
+  <div class="rifa-banner" id="rifaBanner" style="display:none">
     <div>
       <span class="rifa-tag">Campanha ativa</span>
       <div class="rifa-title">RIFA NEXUS 2026</div>
@@ -250,9 +250,23 @@
     const res=await fetch("/api/config");
     if(res.ok){
       const d=await res.json();
-      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
-        const el=document.getElementById("navRifa");
-        if(el){el.style.display="";}
+      const rifaVisivel = d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true;
+      
+      // Aba de navegação
+      const navRifa = document.getElementById("navRifa");
+      if(navRifa && rifaVisivel){
+        navRifa.style.display="";
+      }
+      
+      // Elementos da página inicial
+      if(rifaVisivel){
+        const heroRifaBtn = document.getElementById("heroRifaBtn");
+        const heroRifaText = document.getElementById("heroRifaText");
+        const rifaBanner = document.getElementById("rifaBanner");
+        
+        if(heroRifaBtn) heroRifaBtn.style.display="";
+        if(heroRifaText) heroRifaText.style.display="";
+        if(rifaBanner) rifaBanner.style.display="";
       }
     }
   }catch(e){}
