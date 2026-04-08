@@ -201,6 +201,8 @@
     .btn-cfm{width:100%;background:var(--red);border:none;color:#fff;padding:15px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);margin-top:6px;}
     .btn-cfm:hover:not(:disabled){background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
     .btn-cfm:disabled{opacity:0.4;cursor:not-allowed;}
+    .btn-sec{width:100%;background:transparent;border:1px solid var(--border-s);color:var(--text2);padding:12px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);}
+    .btn-sec:hover{border-color:var(--text);color:var(--text);}
 
 
     /* LIGHTBOX */
@@ -349,6 +351,23 @@
   </div>
 </div>
 
+<!-- MODAL PAGAMENTO -->
+<div class="modal-ov" id="pagamentoOv" onclick="if(event.target===this)fecharPagamento()">
+  <div class="modal" style="text-align:center;max-width:500px;">
+    <div style="font-size:2.2rem;margin-bottom:14px;">💳</div>
+    <div class="modal-ey">Redirecionar para Pagamento</div>
+    <div class="modal-ti">Mercado Pago</div>
+    <p class="modal-sb" style="margin-top:8px;line-height:1.75;">
+      Você será redirecionado para completar o pagamento via Pix no Mercado Pago.
+    </p>
+    <div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:var(--radius-sm);padding:14px 16px;margin:18px 0;font-size:0.82rem;color:var(--text2);line-height:1.75;">
+      ⚠️ Se o bloqueador de anúncios impedir a abertura, clique no botão abaixo novamente.
+    </div>
+    <button class="btn-cfm" id="btnAbrirPagamento" onclick="abrirLinkPagamento()">Ir para o Pagamento →</button>
+    <button class="btn-sec" onclick="fecharPagamento()" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <footer>
@@ -448,8 +467,26 @@ async function finalizar(){
     const d=await r.json();
     if(!r.ok){toast(d.erro||'Erro ao criar pagamento.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';return;}
     if(d.modo_demo){fecharModal();sel.clear();updateBar();document.getElementById('demoMsg').textContent=d.mensagem;document.getElementById('demoOv').classList.add('open');load();return;}
-    window.location.href=d.init_point;
+    // Guardar link e abrir modal
+    window.linkPagamentoMP = d.init_point;
+    fecharModal();
+    document.getElementById('pagamentoOv').classList.add('open');
+    // Tentar abrir automaticamente
+    setTimeout(() => abrirLinkPagamento(), 500);
   }catch{toast('Erro de conexão.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';}
+}
+
+function abrirLinkPagamento(){
+  if(window.linkPagamentoMP){
+    window.open(window.linkPagamentoMP, '_blank') || (window.location.href = window.linkPagamentoMP);
+  }
+}
+
+function fecharPagamento(){
+  document.getElementById('pagamentoOv').classList.remove('open');
+  sel.clear();
+  updateBar();
+  load();
 }
 
 function toast(msg,tipo){
