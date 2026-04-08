@@ -46,6 +46,13 @@ export default async function handler(req, res) {
   const valorUnitario = parseFloat(configValor?.valor || '10.00');
   const valorTotal = valorUnitario * numeros.length;
 
+  // Validar valor mínimo do Mercado Pago (R$ 1,00)
+  if (valorTotal < 1.00) {
+    return res.status(400).json({ 
+      erro: 'Valor mínimo para pagamento via PIX é R$ 1,00. Configure o valor do bilhete para pelo menos R$ 1,00 no painel admin.' 
+    });
+  }
+
   // Reservar bilhetes
   const { error: erroReserva } = await supabase
     .from('bilhetes')
@@ -75,7 +82,7 @@ export default async function handler(req, res) {
       mensagem: `Bilhetes ${numerosStr} reservados para ${nome}! O link de pagamento será ativado em breve.`
     });
   }
-
+  // Verificar se MP_ACCESS_TOKEN está configurado
   // PAGAMENTO REAL via Mercado Pago
   const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
   const preference = new Preference(mp);
@@ -95,16 +102,18 @@ export default async function handler(req, res) {
           email: email
         },
         payment_methods: {
-          installments: 1
+          installments: 12,
+          default_payment_method_id: 'pix'
         },
-        notification_url: `${process.env.SITE_URL}/api/webhook`,
         back_urls: {
-          success: `${process.env.SITE_URL}/sucesso.html`,
-          failure: `${process.env.SITE_URL}/rifa.html`,
-          pending: `${process.env.SITE_URL}/rifa.html`
+          success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso.html`,
+          failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/rifa.html`,
+          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/rifa.html`
         },
         auto_return: 'approved',
-        external_reference: `rifa-${numeros.join('-')}`,
+        statement_descriptor: 'RIFA NEXUS',
+        external_reference: `rifa-${Date.now()}-${numeros.join('-')}`,
+        notification_url: process.env.SITE_URL ? `${process.env.SITE_URL}/api/webhook` : undefined,
         metadata: { numeros, nome, email, instagram, telefone }
       }
     });
