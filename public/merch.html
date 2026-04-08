@@ -318,7 +318,7 @@ function renderGrid(){
       <div class="merch-body">
         <div class="merch-cat">${p.cat||'Produto'}</div>
         <div class="merch-nome">${p.nome}</div>
-        <div class="merch-desc">${p.desc}</div>
+        <div class="merch-desc">${p.descricao || p.desc || ''}</div>
         <div class="merch-preco" style="${!p.ativo?'color:var(--text3)':''}">
           ${p.ativo?(p.preco>0?`R$ ${p.preco.toFixed(2).replace('.',',')}`:'R$ --'):'Em breve'}
         </div>
