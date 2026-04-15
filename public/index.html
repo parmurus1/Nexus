@@ -80,7 +80,13 @@
     .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.9rem,2.2vw,1.05rem);color:var(--text2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:56px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.4s forwards;}
     @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 
-    .cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.55s forwards;margin-bottom:80px;}
+    .cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.55s forwards;margin-bottom:52px;}
+    .scroll-mouse{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.85s forwards;cursor:pointer;}
+    .scroll-mouse:hover .mouse-body{border-color:var(--red);box-shadow:0 0 18px rgba(232,34,10,0.35);}
+    .mouse-body{width:24px;height:38px;border:2px solid rgba(255,255,255,0.35);border-radius:12px;display:flex;justify-content:center;padding-top:6px;transition:border-color 0.3s,box-shadow 0.3s;}
+    .mouse-wheel{width:3px;height:7px;background:var(--red);border-radius:2px;animation:scroll-wheel 1.8s ease-in-out infinite;}
+    @keyframes scroll-wheel{0%{transform:translateY(0);opacity:1;}60%{transform:translateY(10px);opacity:0;}61%{transform:translateY(0);opacity:0;}100%{transform:translateY(0);opacity:1;}}
+    .scroll-mouse-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
     .btn-primary{background:var(--red);color:#fff;padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;transition:all var(--tr);}
     .btn-primary:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 10px 28px var(--red-glow);}
     .btn-secondary{background:none;color:var(--text2);padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;border:1px solid var(--border-s);transition:all var(--tr);}
@@ -163,7 +169,12 @@
 
   <div class="cta-group">
     <a href="/rifa.html" class="btn-primary" id="heroRifaBtn" style="display:none">Participar da Rifa 🎟</a>
-    <a href="/sobre.html" class="btn-secondary">Sobre a Banda</a>
+    <a href="/sobre.html" class="btn-primary">Sobre a Banda</a>
+  </div>
+
+  <div class="scroll-mouse" onclick="window.scrollBy({top:window.innerHeight,behavior:'smooth'})">
+    <div class="mouse-body"><div class="mouse-wheel"></div></div>
+    <span class="scroll-mouse-label">scroll</span>
   </div>
 </div>
 

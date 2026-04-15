@@ -109,10 +109,12 @@
     .stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.85rem;letter-spacing:0.04em;color:var(--text);}
     .stat-val.r{color:var(--red);}
 
-    .scroll-hint{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.75s forwards;}
-    .scroll-hint span{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);}
-    .scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--red),transparent);animation:breathe 2.2s ease-in-out infinite;}
-    @keyframes breathe{0%,100%{opacity:0.3}50%{opacity:1}}
+    .scroll-mouse{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.75s forwards;cursor:pointer;}
+    .scroll-mouse:hover .mouse-body{border-color:var(--red);box-shadow:0 0 18px rgba(232,34,10,0.35);}
+    .mouse-body{width:24px;height:38px;border:2px solid rgba(255,255,255,0.35);border-radius:12px;display:flex;justify-content:center;padding-top:6px;transition:border-color 0.3s,box-shadow 0.3s;}
+    .mouse-wheel{width:3px;height:7px;background:var(--red);border-radius:2px;animation:scroll-wheel 1.8s ease-in-out infinite;}
+    @keyframes scroll-wheel{0%{transform:translateY(0);opacity:1;}60%{transform:translateY(10px);opacity:0;}61%{transform:translateY(0);opacity:0;}100%{transform:translateY(0);opacity:1;}}
+    .scroll-mouse-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
 
     section{max-width:1080px;margin:0 auto;padding:80px 24px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
@@ -256,7 +258,10 @@
     <div class="stat"><div class="stat-lbl">Sorteio em</div><div class="stat-val" id="sData">—</div></div>
     <div class="stat"><div class="stat-lbl">Vendidos</div><div class="stat-val r" id="sVend">—</div></div>
   </div>
-  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+  <div class="scroll-mouse" onclick="window.scrollBy({top:window.innerHeight,behavior:'smooth'})">
+    <div class="mouse-body"><div class="mouse-wheel"></div></div>
+    <span class="scroll-mouse-label">scroll</span>
+  </div>
 </div>
 
 <section>
