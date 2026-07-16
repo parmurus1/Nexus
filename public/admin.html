@@ -10,7 +10,7 @@
   <script defer src="/_vercel/insights/script.js"></script>
   
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#8c8883;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
@@ -33,7 +33,7 @@
     .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
     .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -338,6 +338,20 @@
       </table>
     </div>
   </div>
+
+  <div class="adm-section">
+    <p class="sec-ey">Membros (Sobre)</p>
+    <div class="crud-header">
+      <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;">Gerencie os cards de membros e o painel de detalhes exibido ao clicar em cada um, na página Sobre.</p>
+      <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormMembro()">+ Adicionar Membro</button>
+    </div>
+    <div class="tabela-wrapper" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>Foto</th><th>Nome</th><th>Função</th><th>Ordem</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tabelaMembros"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- ── MODAL SHOW ── -->
@@ -402,9 +416,36 @@
   </div>
 </div>
 
+<!-- ── MODAL MEMBRO ── -->
+<div class="modal-ov" id="membroOv" onclick="if(event.target===this)fecharFormMembro()">
+  <div class="modal-form">
+    <button class="modal-x" onclick="fecharFormMembro()">✕</button>
+    <div class="modal-ey" id="membroFormEy">Novo Membro</div>
+    <div class="fg"><label>Nome *</label><input type="text" id="mNome" placeholder="Ex: DAVI"/></div>
+    <div class="fg"><label>Função / instrumento</label><input type="text" id="mFuncao" placeholder="Ex: Guitarra & Vocal"/></div>
+    <div class="fg"><label>URL da foto</label><input type="url" id="mFoto" placeholder="/imgs/membro-nome.jpeg"/></div>
+    <div class="fg"><label>Bio / descrição (exibida no painel ao clicar no card)</label><textarea id="mBio" rows="4" placeholder="Um pouco sobre o membro..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;resize:vertical;outline:none;"></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="fg"><label>Instagram (opcional)</label><input type="text" id="mInstagram" placeholder="@usuario ou link"/></div>
+      <div class="fg"><label>TikTok (opcional)</label><input type="text" id="mTiktok" placeholder="@usuario ou link"/></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="fg"><label>Ordem de exibição</label><input type="number" id="mOrdem" placeholder="1" min="0" step="1"/></div>
+      <div class="fg">
+        <label>Status</label>
+        <select id="mAtivo" class="config-input">
+          <option value="true">Ativo (visível)</option>
+          <option value="false">Inativo (oculto)</option>
+        </select>
+      </div>
+    </div>
+    <input type="hidden" id="mId"/>
+    <button class="btn-cfm" id="btnSalvarMembro" onclick="salvarMembro()">Salvar Membro</button>
+  </div>
+</div>
+
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <a href="/admin.html" class="footer-admin" style="text-align:center;">Admin ↗</a>
   <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
@@ -436,6 +477,7 @@ function mostrarPainel(){
   carregarDados();
   carregarShows();
   carregarProdutos();
+  carregarMembros();
 }
 function sair(){localStorage.removeItem('nexus_admin_token');location.reload();}
 
@@ -787,6 +829,97 @@ async function excluirProduto(id){
 }
 
 function editarProduto(id){ abrirFormProduto(id); }
+
+let membrosData = [];
+
+async function carregarMembros(){
+  try{
+    const res = await fetch('/api/membros');
+    if(res.ok){
+      const d = await res.json();
+      membrosData = d.membros||[];
+      if(d.aviso){
+        document.getElementById('tabelaMembros').innerHTML=
+          '<tr><td colspan="6" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>membros</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
+        return;
+      }
+    }
+    else membrosData = [];
+  }catch{ membrosData = []; }
+  renderTabelaMembros();
+}
+
+function renderTabelaMembros(){
+  const tbody = document.getElementById('tabelaMembros');
+  if(!membrosData.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;">Nenhum membro cadastrado</td></tr>';
+    return;
+  }
+  tbody.innerHTML = membrosData.map(m=>`<tr>
+    <td style="text-align:center;">${m.foto?`<img src="${m.foto}" alt="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:inline-block;"/>`:'—'}</td>
+    <td><strong>${m.nome}</strong></td>
+    <td style="color:var(--text2);font-size:0.84rem;">${m.funcao||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--text2);">${m.ordem??'—'}</td>
+    <td><span class="badge ${m.ativo?'badge-confirmado':'badge-breve'}">${m.ativo?'Ativo':'Inativo'}</span></td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="act-btn" onclick="editarMembro('${m.id}')">✏ Editar</button>
+      <button class="act-btn del" onclick="excluirMembro('${m.id}')">✕ Excluir</button>
+    </td>
+  </tr>`).join('');
+}
+
+function abrirFormMembro(id){
+  const m = id ? membrosData.find(x=>x.id===id) : null;
+  document.getElementById('membroFormEy').textContent = m ? 'Editar Membro' : 'Novo Membro';
+  document.getElementById('mNome').value = m?.nome||'';
+  document.getElementById('mFuncao').value = m?.funcao||'';
+  document.getElementById('mFoto').value = m?.foto||'';
+  document.getElementById('mBio').value = m?.bio||'';
+  document.getElementById('mInstagram').value = m?.instagram||'';
+  document.getElementById('mTiktok').value = m?.tiktok||'';
+  document.getElementById('mOrdem').value = m?.ordem??(membrosData.length+1);
+  document.getElementById('mAtivo').value = String(m?.ativo!==false);
+  document.getElementById('mId').value = m?.id||'';
+  document.getElementById('membroOv').classList.add('open');
+}
+function fecharFormMembro(){ document.getElementById('membroOv').classList.remove('open'); }
+
+async function salvarMembro(){
+  const nome = document.getElementById('mNome').value.trim();
+  if(!nome){ toast('Preencha o nome do membro','err'); return; }
+  const btn = document.getElementById('btnSalvarMembro');
+  btn.disabled=true; btn.textContent='Salvando...';
+  const id = document.getElementById('mId').value;
+  const payload = {
+    nome,
+    funcao: document.getElementById('mFuncao').value.trim(),
+    foto: document.getElementById('mFoto').value.trim(),
+    bio: document.getElementById('mBio').value.trim(),
+    instagram: document.getElementById('mInstagram').value.trim(),
+    tiktok: document.getElementById('mTiktok').value.trim(),
+    ordem: parseInt(document.getElementById('mOrdem').value,10)||0,
+    ativo: document.getElementById('mAtivo').value === 'true'
+  };
+  try{
+    const res = await fetch('/api/membros'+(id?`/${id}`:''), {
+      method: id?'PUT':'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify(payload)
+    });
+    if(res.ok){ toast(id?'Membro atualizado!':'Membro criado!','ok'); fecharFormMembro(); carregarMembros(); }
+    else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
+  }catch{ toast('Erro de conexão','err'); }
+  btn.disabled=false; btn.textContent='Salvar Membro';
+}
+
+async function excluirMembro(id){
+  if(!confirm('Excluir este membro?')) return;
+  const res = await fetch(`/api/membros/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+  if(res.ok){ toast('Membro excluído','ok'); carregarMembros(); }
+  else toast('Erro ao excluir','err');
+}
+
+function editarMembro(id){ abrirFormMembro(id); }
 </script>
 <script>
   const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');

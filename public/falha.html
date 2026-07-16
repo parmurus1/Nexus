@@ -10,7 +10,7 @@
   <script defer src="/_vercel/insights/script.js"></script>
 
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#3a3836;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
+    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#8c8883;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
@@ -33,7 +33,7 @@
     .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}
+    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
     .footer-logo{display:flex;align-items:center;gap:8px;}
     .footer-logo img{height:22px;opacity:0.3;}
     .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -103,8 +103,7 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <a href="/admin.html" class="footer-admin" style="text-align:center;">Admin ↗</a>
-  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span id="devTrigger" title="" style="cursor:pointer;text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 
@@ -125,6 +124,10 @@
     }
   }catch(e){}
 })();
+</script>
+<script>
+  var _dt = document.getElementById('devTrigger');
+  if (_dt) { _dt.addEventListener('click', function(){ window.location.href = '/admin.html'; }); }
 </script>
 </body>
 </html>

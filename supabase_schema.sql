@@ -123,3 +123,35 @@ INSERT INTO produtos (nome, cat, descricao, preco, emoji, badge, sizes, ativo, o
   ('PACK ADESIVOS', 'Colecionáveis', '6 adesivos em vinil impermeável com artes exclusivas da banda.', 0, '🎨', NULL, '{}', true, 5),
   ('BAQUETAS ASSINADAS', 'Colecionáveis', 'Baquetas autografadas pelo baterista. Edição limitada e numerada.', 0, '🥁', 'Em breve', '{}', false, 6)
 ON CONFLICT DO NOTHING;
+
+-- =====================================================
+-- TABELA: membros (para a página Sobre / painel de membro)
+-- Execute este bloco no SQL Editor do Supabase para habilitar
+-- a edição dos membros pelo painel admin.
+-- =====================================================
+CREATE TABLE IF NOT EXISTS membros (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nome TEXT NOT NULL,
+  funcao TEXT DEFAULT '',
+  foto TEXT DEFAULT '',
+  bio TEXT DEFAULT '',
+  instagram TEXT DEFAULT '',
+  tiktok TEXT DEFAULT '',
+  ativo BOOLEAN DEFAULT true,
+  ordem INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE membros ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Leitura pública de membros" ON membros FOR SELECT USING (true);
+CREATE POLICY "Escrita via service_role em membros" ON membros FOR ALL USING (auth.role() = 'service_role');
+
+-- Dados iniciais: os membros que já existiam no site (fixos no HTML) + 1 novo, para
+-- você preencher com foto/bio/instagram reais direto pelo painel admin.
+INSERT INTO membros (nome, funcao, foto, bio, instagram, tiktok, ativo, ordem) VALUES
+  ('DAVI', 'Guitarra & Vocal', '/imgs/membro-davi.jpeg', '', '', '', true, 1),
+  ('JOÃO', 'Guitarra', '/imgs/membro-joao.jpeg', '', '', '', true, 2),
+  ('ATILA', 'Teclados', '/imgs/membro-atila.jpeg', '', '', '', true, 3),
+  ('VICTOR', 'Bateria', '/imgs/membro-victor.jpeg', '', '', '', true, 4),
+  ('NOVO MEMBRO', 'Instrumento', '', 'Edite este card pelo painel admin: adicione foto, função e uma breve bio.', '', '', true, 5)
+ON CONFLICT DO NOTHING;
