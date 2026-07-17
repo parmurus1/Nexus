@@ -281,6 +281,22 @@
         <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
       </div>
 
+      <div class="config-card" style="grid-column:1/-1;">
+        <div class="config-label">
+          Modo Venom 🖤
+          <span id="venomBadge" style="display:none" class="demo-badge" style="background:rgba(255,255,255,0.1);color:#f2f2f2;border-color:rgba(255,255,255,0.3);">ATIVO</span>
+        </div>
+        <div class="toggle-row">
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
+            Ativa um tema alternativo preto e branco em todo o site, com tentáculos animados. Afeta todas as páginas públicas assim que forem recarregadas.
+          </p>
+          <div class="toggle-track" id="venomToggle" onclick="toggleVenomMode()">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+        <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
+      </div>
+
     </div>
   </div>
 
@@ -499,6 +515,13 @@ async function carregarDados(){
     if (rifaVisivel) { rifaToggle.classList.add('on'); rifaBadge.style.display = 'inline-block'; }
     else { rifaToggle.classList.remove('on'); rifaBadge.style.display = 'none'; }
 
+    // Carregar estado do toggle Modo Venom
+    const venomAtivo = data.config?.venom_mode === 'true' || data.config?.venom_mode === true;
+    const venomToggle = document.getElementById('venomToggle');
+    const venomBadge = document.getElementById('venomBadge');
+    if (venomAtivo) { venomToggle.classList.add('on'); venomBadge.style.display = 'inline-block'; }
+    else { venomToggle.classList.remove('on'); venomBadge.style.display = 'none'; }
+
     // Preencher campos config com valores atuais
     if(data.config){
       if(data.config.valor_bilhete) document.getElementById('cfgValor').value=data.config.valor_bilhete;
@@ -578,6 +601,26 @@ async function toggleRifaNav() {
       badge.style.display = !isOn ? 'inline-block' : 'none';
       toast(!isOn ? 'Aba Rifa ativada no menu' : 'Aba Rifa ocultada do menu', 'ok');
     } else { toast('Erro ao alterar visibilidade da rifa','err'); }
+  } catch { toast('Erro de conexão','err'); }
+}
+
+async function toggleVenomMode() {
+  const toggle = document.getElementById('venomToggle');
+  const badge = document.getElementById('venomBadge');
+  const isOn = toggle.classList.contains('on');
+  const novoValor = (!isOn).toString();
+  try {
+    const res = await fetch('/api/admin?acao=config', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify({chave:'venom_mode', valor: novoValor})
+    });
+    if (res.ok) {
+      toggle.classList.toggle('on');
+      badge.style.display = !isOn ? 'inline-block' : 'none';
+      toast(!isOn ? 'Modo Venom ativado 🖤' : 'Modo Venom desativado', 'ok');
+      setTimeout(() => window.location.reload(), 600);
+    } else { toast('Erro ao alterar Modo Venom','err'); }
   } catch { toast('Erro de conexão','err'); }
 }
 
@@ -925,5 +968,6 @@ function editarMembro(id){ abrirFormMembro(id); }
   const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
   if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
 </script>
+<script src="/venom.js" defer></script>
 </body>
 </html>
