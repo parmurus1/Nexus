@@ -674,11 +674,12 @@
       border:1px solid var(--border-s);
       border-radius:var(--radius);
       width:100%;
-      max-width:420px;
+      max-width:640px;
       max-height:88vh;
       overflow-y:auto;
       display:flex;
-      flex-direction:column;
+      flex-direction:row;
+      align-items:stretch;
       position:relative;
       transform:translateY(16px) scale(0.97);
       transition:transform 0.25s;
@@ -698,8 +699,10 @@
     .mb-close:hover{color:#fff;}
     .mb-foto{
       background:var(--bg3);
-      aspect-ratio:16/10;
+      width:42%;
+      min-width:130px;
       flex-shrink:0;
+      align-self:stretch;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -708,7 +711,9 @@
     .mb-foto img{width:100%;height:100%;object-fit:cover;}
     .mb-foto-ph svg{opacity:0.3;}
     .mb-body{
-      padding:26px 26px 30px;
+      flex:1;
+      min-width:0;
+      padding:22px 20px 26px;
       display:flex;
       flex-direction:column;
     }
@@ -756,6 +761,13 @@
       transition:all var(--tr);
     }
     .mb-social:hover{background:rgba(232,34,10,0.1);}
+    @media(max-width:480px){
+      .mb-foto{width:38%;min-width:110px;}
+      .mb-body{padding:16px 14px 20px;}
+      .mb-nome{font-size:1.5rem;}
+      .mb-bio{font-size:0.8rem;margin-top:10px;}
+      .mb-socials{margin-top:14px;}
+    }
   </style>
 </head>
 <body>
