@@ -155,3 +155,25 @@ INSERT INTO membros (nome, funcao, foto, bio, instagram, tiktok, ativo, ordem) V
   ('VICTOR', 'Bateria', '/imgs/membro-victor.jpeg', '', '', '', true, 4),
   ('NOVO MEMBRO', 'Instrumento', '', 'Edite este card pelo painel admin: adicione foto, função e uma breve bio.', '', '', true, 5)
 ON CONFLICT DO NOTHING;
+
+-- =====================================================
+-- STORAGE: bucket para upload das fotos dos membros
+-- Execute este bloco no SQL Editor do Supabase para habilitar
+-- o upload de fotos direto pelo painel admin (aba Membros).
+-- =====================================================
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('membros-fotos', 'membros-fotos', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Leitura pública das fotos (necessário para elas aparecerem no site)
+CREATE POLICY "Leitura pública fotos membros"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'membros-fotos');
+
+-- Upload/edição/exclusão apenas via service_role (usado pela API do admin,
+-- protegida pela senha em ADMIN_PASSWORD)
+CREATE POLICY "Service role gerencia fotos membros"
+ON storage.objects FOR ALL
+USING (bucket_id = 'membros-fotos' AND auth.role() = 'service_role')
+WITH CHECK (bucket_id = 'membros-fotos' AND auth.role() = 'service_role');
+
