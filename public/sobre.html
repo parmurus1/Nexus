@@ -355,6 +355,17 @@
       height:1px;
       background:var(--border);
     }
+    .sec-note{
+      font-family:'DM Mono',monospace;
+      font-size:0.6rem;
+      letter-spacing:0.3em;
+      text-transform:uppercase;
+      color:var(--red);
+      margin-bottom:14px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
     .sec-title{
       font-family:'Bebas Neue',sans-serif;
       font-size:clamp(2.5rem,5vw,4.5rem);
@@ -803,7 +814,7 @@
   <div style="margin-bottom:64px;">
     <p class="sec-eyebrow">A banda</p>
     <h2 class="sec-title">MEMBROS</h2>
-    <p class="sec-eyebrow">Clique na imagem para ver mais detalhes</p>
+    <p class="sec-note">Clique na imagem para ver mais detalhes</p>
 
     <div class="membros-grid" id="membrosGrid">
       <!-- Preenchido via JS a partir de /api/membros (editável pelo painel admin) -->
