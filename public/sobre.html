@@ -631,10 +631,35 @@
       object-fit:contain;
       border-radius:8px;
       transform:scale(0.94);
-      transition:transform 0.25s;
+      transition:transform 0.25s, opacity 0.18s;
+      touch-action:pan-y;
+      user-select:none;
+      -webkit-user-select:none;
     }
     .lb-ov.open img{
       transform:scale(1);
+    }
+    .lb-arrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:2rem;
+      color:rgba(255,255,255,0.5);
+      cursor:pointer;
+      line-height:1;
+      padding:10px 14px;
+      user-select:none;
+      transition:color 0.2s;
+      z-index:2;
+    }
+    .lb-arrow:hover{color:#fff;}
+    .lb-prev{left:6px;}
+    .lb-next{right:6px;}
+    @media(max-width:700px){
+      .lb-arrow{font-size:1.6rem;padding:8px 10px;}
+    }
+    @media(min-width:601px){
+      .lb-arrow{display:none;}
     }
     .lb-close{
       position:absolute;
@@ -1004,7 +1029,9 @@
 
 <div class="lb-ov" id="lbOv" onclick="if(event.target===this||event.target.classList.contains('lb-close'))lbClose()">
   <span class="lb-close">✕</span>
+  <span class="lb-arrow lb-prev" onclick="event.stopPropagation();lbPrev()">‹</span>
   <img id="lbImg" src="" alt=""/>
+  <span class="lb-arrow lb-next" onclick="event.stopPropagation();lbNext()">›</span>
   <span class="lb-caption" id="lbCap"></span>
 </div>
 
@@ -1121,11 +1148,27 @@
 </script>
 
 <script>
-  function lbOpen(src, cap) {
-    const ov = document.getElementById('lbOv');
+  const lbPhotos = Array.from(document.querySelectorAll('.foto-card img')).map(img => ({
+    img, src: img.src, cap: img.alt
+  }));
+  let lbIndex = 0;
+
+  function lbRender() {
+    const p = lbPhotos[lbIndex];
+    if (!p) return;
     const img = document.getElementById('lbImg');
-    img.src = src;
-    document.getElementById('lbCap').textContent = cap || '';
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = p.src;
+      document.getElementById('lbCap').textContent = p.cap || '';
+      img.style.opacity = '1';
+    }, 90);
+  }
+
+  function lbOpen(index) {
+    lbIndex = index;
+    const ov = document.getElementById('lbOv');
+    lbRender();
     ov.classList.add('open');
   }
 
@@ -1133,17 +1176,57 @@
     document.getElementById('lbOv').classList.remove('open');
   }
 
+  function lbNext() {
+    lbIndex = (lbIndex + 1) % lbPhotos.length;
+    lbRender();
+  }
+
+  function lbPrev() {
+    lbIndex = (lbIndex - 1 + lbPhotos.length) % lbPhotos.length;
+    lbRender();
+  }
+
+  function isLbMobile() {
+    return window.matchMedia('(max-width:600px)').matches;
+  }
+
   document.addEventListener('keydown', e => {
+    const ov = document.getElementById('lbOv');
+    if (!ov.classList.contains('open')) return;
     if (e.key === 'Escape') lbClose();
+    if (!isLbMobile()) return;
+    if (e.key === 'ArrowRight') lbNext();
+    if (e.key === 'ArrowLeft') lbPrev();
   });
 
-  document.querySelectorAll('.foto-card img').forEach(img => {
+  lbPhotos.forEach(({ img }, i) => {
     img.closest('.foto-card').addEventListener('click', () => {
-      if (img.style.display !== 'none') lbOpen(img.src, img.alt);
+      if (img.style.display !== 'none') lbOpen(i);
     });
   });
 
+  /* Swipe (touch) navigation — fullscreen mobile gallery only */
+  (function(){
+    const ov = document.getElementById('lbOv');
+    let startX = 0, startY = 0, tracking = false;
 
+    ov.addEventListener('touchstart', e => {
+      if (!isLbMobile() || e.touches.length !== 1) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+
+    ov.addEventListener('touchend', e => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) lbNext(); else lbPrev();
+      }
+    }, { passive: true });
+  })();
 </script>
 
 <script>
