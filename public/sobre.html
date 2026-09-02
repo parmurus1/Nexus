@@ -410,8 +410,8 @@
     .membro-foto img{
       width:100%;
       height:100%;
-      object-fit:cover;
-      object-position:top center;
+      object-fit:contain;
+      object-position:center;
     }
     .membro-foto-ph{
       width:100%;
@@ -747,7 +747,7 @@
       justify-content:center;
       overflow:hidden;
     }
-    .mb-foto img{width:100%;height:100%;object-fit:cover;}
+    .mb-foto img{width:100%;height:100%;object-fit:contain;object-position:center;}
     .mb-foto-ph svg{opacity:0.3;}
     .mb-body{
       flex:1;
@@ -812,7 +812,6 @@
         min-width:unset;
         flex-shrink:0;
       }
-      .mb-foto img{object-position:top center;}
     }
     @media(max-width:480px){
       .mb-foto{height:52vw;max-height:230px;}
