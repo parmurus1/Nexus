@@ -800,8 +800,22 @@
       transition:all var(--tr);
     }
     .mb-social:hover{background:rgba(232,34,10,0.1);}
+    @media(max-width:600px){
+      .mb-panel{
+        flex-direction:column;
+        max-height:92vh;
+      }
+      .mb-foto{
+        width:100%;
+        height:46vw;
+        max-height:280px;
+        min-width:unset;
+        flex-shrink:0;
+      }
+      .mb-foto img{object-position:top center;}
+    }
     @media(max-width:480px){
-      .mb-foto{width:38%;min-width:110px;}
+      .mb-foto{height:52vw;max-height:230px;}
       .mb-body{padding:16px 14px 20px;}
       .mb-nome{font-size:1.5rem;}
       .mb-bio{font-size:0.8rem;margin-top:10px;}
