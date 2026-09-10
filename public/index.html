@@ -101,7 +101,10 @@
     .cta-card:hover .cta-icon-wrap{background:radial-gradient(circle,rgba(232,34,10,0.35) 0%,rgba(232,34,10,0.08) 65%,transparent 100%);}
     .cta-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text2);transition:color var(--tr);}
     .cta-card:hover .cta-label{color:var(--red);}
-    @media(max-width:600px){.cta-card{width:88px;height:88px;}}
+    @media(max-width:600px){
+      .cta-card{width:auto;height:auto;aspect-ratio:1/1;}
+      .cta-group{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:280px;margin-left:auto;margin-right:auto;justify-content:center;}
+    }
 
     /* CARDS SEÇÃO */
     .section{max-width:1080px;margin:0 auto;padding:0 24px 120px;}
