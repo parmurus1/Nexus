@@ -11,6 +11,25 @@ const MELHOR_ENVIO_BASE = {
   producao: 'https://www.melhorenvio.com.br/api/v2/me/shipment/calculate'
 };
 
+// Raiz da API (sem o path de cálculo) — usada para montar os demais endpoints
+// (carrinho, checkout, geração de etiqueta, saldo da carteira).
+function apiRoot() {
+  return process.env.MELHOR_ENVIO_SANDBOX === 'true'
+    ? 'https://sandbox.melhorenvio.com.br/api/v2'
+    : 'https://www.melhorenvio.com.br/api/v2';
+}
+
+function headersPadrao() {
+  const token = process.env.MELHOR_ENVIO_TOKEN;
+  if (!token) throw new Error('MELHOR_ENVIO_TOKEN não configurado');
+  return {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': `Bearer ${token}`,
+    'User-Agent': 'Nexus Band Merch (contato@nexusband.com)'
+  };
+}
+
 function limparCep(cep) {
   return String(cep || '').replace(/\D/g, '');
 }
@@ -75,6 +94,169 @@ export async function calcularFreteMelhorEnvio({ cepOrigem, cepDestino, itens })
       prazo_dias: op.custom_delivery_time ?? op.delivery_time ?? null
     }))
     .sort((a, b) => a.preco - b.preco);
+}
+
+// ── Saldo da carteira do Melhor Envio ──────────────────────────────────────
+// Antes de comprar uma etiqueta é preciso garantir que há saldo suficiente
+// na carteira (crédito pré-pago, separado do Mercado Pago). Se não houver,
+// a compra falha — então checamos antes para dar um erro claro e evitar
+// tentativas inúteis.
+export async function consultarSaldoCarteira() {
+  const resp = await fetch(`${apiRoot()}/me/balance`, {
+    method: 'GET',
+    headers: headersPadrao()
+  });
+  if (!resp.ok) {
+    const texto = await resp.text().catch(() => '');
+    throw new Error(`Não foi possível consultar o saldo da carteira (${resp.status}): ${texto.slice(0, 300)}`);
+  }
+  const data = await resp.json();
+  // A API retorna algo como { balance: 123.45 }
+  return Number(data.balance ?? data.balance_available ?? 0);
+}
+
+// ── 1. Inserir o frete escolhido no carrinho do Melhor Envio ──────────────
+// Precisa dos dados completos do destinatário e do remetente (endereço,
+// itens etc). Retorna o "orderId" usado nas etapas seguintes.
+export async function inserirNoCarrinho({ cepOrigem, destinatario, itens, servicoId }) {
+  const products = itens.map((i, idx) => ({
+    name: i.nome || `Item ${idx + 1}`,
+    quantity: Number(i.qty) || 1,
+    unitary_value: Number(i.preco) || 0.01
+  }));
+
+  const volumes = itens.map(i => ({
+    width: Math.max(11, Number(i.largura_cm) || 20),
+    height: Math.max(2, Number(i.altura_cm) || 5),
+    length: Math.max(16, Number(i.comprimento_cm) || 25),
+    weight: Math.max(0.05, Number(i.peso_kg) || 0.3)
+  }));
+
+  const body = {
+    service: Number(servicoId),
+    from: { postal_code: limparCep(cepOrigem) },
+    to: {
+      name: destinatario.nome,
+      address: destinatario.endereco,
+      number: destinatario.numero,
+      complement: destinatario.complemento || '',
+      district: destinatario.bairro || '',
+      city: destinatario.cidade || '',
+      state_abbr: destinatario.uf || '',
+      postal_code: limparCep(destinatario.cep),
+      country_id: 'BR'
+    },
+    products,
+    volumes,
+    options: {
+      insurance_value: itens.reduce((s, i) => s + (Number(i.preco) || 0) * (Number(i.qty) || 1), 0),
+      receipt: false,
+      own_hand: false
+    }
+  };
+
+  const resp = await fetch(`${apiRoot()}/me/cart`, {
+    method: 'POST',
+    headers: headersPadrao(),
+    body: JSON.stringify(body)
+  });
+
+  if (!resp.ok) {
+    const texto = await resp.text().catch(() => '');
+    throw new Error(`Erro ao inserir no carrinho do Melhor Envio (${resp.status}): ${texto.slice(0, 300)}`);
+  }
+
+  const data = await resp.json();
+  return data.id; // orderId do item inserido no carrinho
+}
+
+// ── 2. Comprar (pagar) a etiqueta com saldo da carteira ────────────────────
+export async function comprarEtiqueta(orderId) {
+  const resp = await fetch(`${apiRoot()}/me/shipment/checkout`, {
+    method: 'POST',
+    headers: headersPadrao(),
+    body: JSON.stringify({ orders: [orderId] })
+  });
+
+  if (!resp.ok) {
+    const texto = await resp.text().catch(() => '');
+    if (resp.status === 400 && /saldo|balance|insufic/i.test(texto)) {
+      throw new Error('SALDO_INSUFICIENTE');
+    }
+    throw new Error(`Erro ao comprar etiqueta (${resp.status}): ${texto.slice(0, 300)}`);
+  }
+  return resp.json();
+}
+
+// ── 3. Gerar a etiqueta (rastreio + link do PDF) ────────────────────────────
+export async function gerarEtiqueta(orderId) {
+  const resp = await fetch(`${apiRoot()}/me/shipment/generate`, {
+    method: 'POST',
+    headers: headersPadrao(),
+    body: JSON.stringify({ orders: [orderId] })
+  });
+
+  if (!resp.ok) {
+    const texto = await resp.text().catch(() => '');
+    throw new Error(`Erro ao gerar etiqueta (${resp.status}): ${texto.slice(0, 300)}`);
+  }
+
+  const data = await resp.json();
+  // Resposta traz um objeto por orderId com o link de impressão e tracking
+  const info = Array.isArray(data) ? data[0] : data[orderId] || data;
+  return {
+    rastreio: info?.tracking || null,
+    link_etiqueta: info?.url || info?.print?.url || null
+  };
+}
+
+// ── Orquestrador: roda as 3 etapas em sequência para um pedido pago ────────
+// Pensado para ser chamado pelo webhook assim que o pagamento é aprovado.
+// Nunca lança para o chamador travar o fluxo do webhook — sempre retorna um
+// objeto { ok, ...} descrevendo o resultado, incluindo falhas de saldo.
+export async function gerarEtiquetaParaPedido(pedido) {
+  try {
+    if (!pedido.frete_service_id) {
+      return { ok: false, status: 'falha', erro: 'Pedido sem frete_service_id salvo — não é possível gerar etiqueta automaticamente.' };
+    }
+
+    // 1. Checa saldo antes de gastar chamadas com carrinho/checkout
+    const saldo = await consultarSaldoCarteira();
+    if (saldo < Number(pedido.frete_valor || 0)) {
+      return { ok: false, status: 'falha_saldo', erro: `Saldo insuficiente na carteira do Melhor Envio (R$ ${saldo.toFixed(2)}). Recarregue e gere a etiqueta manualmente.` };
+    }
+
+    const cepOrigem = process.env.CEP_ORIGEM;
+    if (!cepOrigem) throw new Error('CEP_ORIGEM não configurado');
+
+    const orderId = await inserirNoCarrinho({
+      cepOrigem,
+      destinatario: {
+        nome: pedido.nome_comprador,
+        cep: pedido.cep,
+        endereco: pedido.endereco,
+        numero: pedido.numero,
+        complemento: pedido.complemento,
+        bairro: pedido.bairro,
+        cidade: pedido.cidade,
+        uf: pedido.uf
+      },
+      itens: pedido.itens,
+      servicoId: pedido.frete_service_id
+    });
+
+    await comprarEtiqueta(orderId);
+    const { rastreio, link_etiqueta } = await gerarEtiqueta(orderId);
+
+    return { ok: true, status: 'gerada', etiqueta_id: orderId, rastreio, link_etiqueta };
+
+  } catch (err) {
+    if (err.message === 'SALDO_INSUFICIENTE') {
+      return { ok: false, status: 'falha_saldo', erro: 'Saldo insuficiente na carteira do Melhor Envio. Recarregue e gere a etiqueta manualmente.' };
+    }
+    console.error('Erro ao gerar etiqueta automaticamente:', err.message);
+    return { ok: false, status: 'falha', erro: err.message };
+  }
 }
 
 export default async function handler(req, res) {

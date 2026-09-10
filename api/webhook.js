@@ -1,6 +1,7 @@
 // api/webhook.js
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
+import { gerarEtiquetaParaPedido } from './frete.js';
 
 const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
@@ -33,6 +34,53 @@ export default async function handler(req, res) {
           .update({ status: 'pago', payment_id: String(pagamento.id), pago_em: new Date().toISOString() })
           .eq('id', pedidoId);
         console.log(`✅ Pedido merch confirmado: ${pedidoId} - ${pagamento.payer?.email}`);
+
+        // Gera a etiqueta de envio automaticamente no Melhor Envio.
+        // IMPORTANTE: isso nunca deve impedir a confirmação do pagamento acima —
+        // por isso está isolado num try/catch próprio e só atualiza colunas de
+        // rastreio/status da etiqueta, nunca o status do pedido em si.
+        try {
+          const { data: pedidoCompleto } = await supabase
+            .from('pedidos_merch')
+            .select('*')
+            .eq('id', pedidoId)
+            .single();
+
+          if (pedidoCompleto) {
+            const resultado = await gerarEtiquetaParaPedido(pedidoCompleto);
+
+            if (resultado.ok) {
+              await supabase
+                .from('pedidos_merch')
+                .update({
+                  me_status: 'gerada',
+                  me_etiqueta_id: String(resultado.etiqueta_id),
+                  me_rastreio: resultado.rastreio,
+                  me_link_etiqueta: resultado.link_etiqueta,
+                  me_etiqueta_gerada_em: new Date().toISOString(),
+                  me_erro: null
+                })
+                .eq('id', pedidoId);
+              console.log(`📦 Etiqueta gerada automaticamente para pedido ${pedidoId}: ${resultado.rastreio || 'sem rastreio ainda'}`);
+            } else {
+              await supabase
+                .from('pedidos_merch')
+                .update({ me_status: resultado.status, me_erro: resultado.erro })
+                .eq('id', pedidoId);
+              // falha_saldo é esperada de vez em quando — loga como aviso, não erro grave
+              const nivel = resultado.status === 'falha_saldo' ? '⚠️' : '❌';
+              console.error(`${nivel} Etiqueta não gerada automaticamente (pedido ${pedidoId}): ${resultado.erro}`);
+            }
+          }
+        } catch (erroEtiqueta) {
+          console.error(`❌ Erro inesperado ao tentar gerar etiqueta do pedido ${pedidoId}:`, erroEtiqueta.message);
+          await supabase
+            .from('pedidos_merch')
+            .update({ me_status: 'falha', me_erro: erroEtiqueta.message })
+            .eq('id', pedidoId)
+            .catch(() => {}); // se até essa atualização falhar, não deixa quebrar o webhook
+        }
+
       } else if (pagamento.status === 'cancelled' || pagamento.status === 'rejected') {
         await supabase.from('pedidos_merch').update({ status: 'cancelado' }).eq('id', pedidoId);
       }

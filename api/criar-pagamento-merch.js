@@ -76,6 +76,7 @@ export default async function handler(req, res) {
       frete_transportadora: frete.transportadora,
       frete_prazo_dias: frete.prazo_dias,
       frete_valor: frete.preco,
+      frete_service_id: String(frete.id), // necessário para gerar a etiqueta no Melhor Envio após o pagamento
       status: 'pendente'
     })
     .select()

@@ -233,6 +233,15 @@ ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_transportadora TEXT;
 ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_prazo_dias INTEGER;
 ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_valor NUMERIC(10,2) DEFAULT 0;
 
+-- Etiqueta gerada automaticamente no Melhor Envio após o pagamento aprovado (via webhook)
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_service_id TEXT; -- id da opção de frete escolhida (necessário para o carrinho do Melhor Envio)
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS me_etiqueta_id TEXT;   -- id da etiqueta/pedido no Melhor Envio
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS me_rastreio TEXT;      -- código de rastreio da transportadora
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS me_link_etiqueta TEXT; -- URL do PDF da etiqueta para impressão
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS me_status TEXT DEFAULT 'nao_gerada'; -- 'nao_gerada' | 'gerada' | 'falha_saldo' | 'falha'
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS me_erro TEXT;          -- mensagem de erro, se a geração falhar
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS me_etiqueta_gerada_em TIMESTAMPTZ;
+
 ALTER TABLE pedidos_merch ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Escrita via service_role em pedidos_merch" ON pedidos_merch FOR ALL USING (auth.role() = 'service_role');
 -- Sem policy de SELECT pública: pedidos só são lidos pelo backend/admin (service_role).
