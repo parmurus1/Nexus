@@ -92,7 +92,7 @@
     .btn-add-cart:disabled{opacity:0.3;cursor:not-allowed;}
 
     /* ── MODAL ── */
-    .modal-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    .modal-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
     .modal-ov.open{opacity:1;pointer-events:all;}
     .modal{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);width:100%;max-width:680px;position:relative;transform:translateY(16px);transition:transform 0.28s;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;}
     @media(max-width:560px){.modal{grid-template-columns:1fr;}}
@@ -299,7 +299,7 @@
 
 <!-- MODAL CHECKOUT (dados do comprador) -->
 <div class="modal-ov" id="checkoutOv" onclick="if(event.target===this)fecharCheckout()">
-  <div class="modal" style="grid-template-columns:1fr;max-width:420px;padding:32px;">
+  <div class="modal" style="grid-template-columns:1fr;max-width:640px;padding:32px;">
     <button class="modal-x" onclick="fecharCheckout()">✕</button>
     <div class="modal-ey">Finalizar compra</div>
     <div class="modal-ti">Pagamento Pix</div>
@@ -535,6 +535,7 @@ function abrirCheckout(){
   if(!cart.length)return;
   const semPreco=cart.some(i=>!i.preco||i.preco<=0);
   if(semPreco){toast('Um ou mais itens ainda não têm preço definido. Use o WhatsApp.','err');return;}
+  fecharDrawer();
   const tot=cart.reduce((s,i)=>s+i.preco*i.qty,0);
   document.getElementById('checkoutRes').innerHTML=cart.map(i=>`${i.nome}${i.tam!=='único'?` (${i.tam})`:''} × ${i.qty}`).join('<br/>')+`<br/><br/>Subtotal: <strong>R$ ${tot.toFixed(2).replace('.',',')}</strong>`;
   // reseta o estado de frete a cada novo checkout — o frete é sempre recalculado

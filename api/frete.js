@@ -54,6 +54,9 @@ export async function calcularFreteMelhorEnvio({ cepOrigem, cepDestino, itens })
 
   if (!resp.ok) {
     const texto = await resp.text().catch(() => '');
+    if (resp.status === 401 || resp.status === 403) {
+      throw new Error(`Autenticação recusada pelo Melhor Envio (${resp.status}). Verifique se MELHOR_ENVIO_TOKEN é válido e combina com MELHOR_ENVIO_SANDBOX (token de sandbox só funciona na URL de sandbox, e vice-versa). Resposta: ${texto.slice(0, 300)}`);
+    }
     throw new Error(`Melhor Envio respondeu ${resp.status}: ${texto.slice(0, 300)}`);
   }
 
@@ -100,6 +103,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ opcoes });
   } catch (err) {
     console.error('Erro ao calcular frete:', err.message);
+    console.error('Config usada -> CEP_ORIGEM:', cepOrigem, '| MELHOR_ENVIO_SANDBOX:', process.env.MELHOR_ENVIO_SANDBOX, '| token presente:', !!process.env.MELHOR_ENVIO_TOKEN);
     return res.status(500).json({ erro: 'Não foi possível calcular o frete agora. Tente novamente ou finalize pelo WhatsApp.' });
   }
 }
