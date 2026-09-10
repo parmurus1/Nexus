@@ -314,6 +314,10 @@
       <input type="email" id="cEmail" placeholder="seu@email.com"/>
     </div>
     <div class="fg">
+      <label>CPF <span class="req-badge">OBRIGATÓRIO</span> <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(exigido pela transportadora na etiqueta)</span></label>
+      <input type="text" id="cCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpf(this)"/>
+    </div>
+    <div class="fg">
       <label>Telefone <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
       <input type="tel" id="cTel" placeholder="(00) 00000-0000"/>
     </div>
@@ -554,6 +558,28 @@ function maskCep(el){
   if(v.replace('-','').length===8)calcularFrete(); // calcula automaticamente ao completar o CEP
 }
 
+function maskCpf(el){
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>9)v=v.slice(0,9)+'-'+v.slice(9);
+  if(v.length>6)v=v.slice(0,6)+'.'+v.slice(6);
+  if(v.length>3)v=v.slice(0,3)+'.'+v.slice(3);
+  el.value=v;
+}
+
+// Valida os dígitos verificadores do CPF (não só o formato)
+function cpfValido(cpf){
+  cpf=String(cpf||'').replace(/\D/g,'');
+  if(cpf.length!==11||/^(\d)\1{10}$/.test(cpf))return false;
+  for(let t=9;t<11;t++){
+    let soma=0;
+    for(let i=0;i<t;i++)soma+=parseInt(cpf[i])*(t+1-i);
+    let d=(soma*10)%11;
+    if(d===10)d=0;
+    if(d!==parseInt(cpf[t]))return false;
+  }
+  return true;
+}
+
 // Busca o endereço pelo CEP (ViaCEP) só pra preencher rua/bairro/cidade/UF —
 // o valor do frete em si é sempre calculado pelo backend (Melhor Envio).
 async function buscarEnderecoPorCep(cep){
@@ -640,6 +666,7 @@ function atualizarTotalCheckout(){
 async function confirmarPagamento(){
   const nome=document.getElementById('cNome').value.trim();
   const email=document.getElementById('cEmail').value.trim();
+  const cpf=document.getElementById('cCpf').value.replace(/\D/g,'');
   const tel=document.getElementById('cTel').value.trim();
   const ig=document.getElementById('cInstagram').value.trim();
   const cep=document.getElementById('cCep').value.replace(/\D/g,'');
@@ -650,23 +677,24 @@ async function confirmarPagamento(){
   const cidade=document.getElementById('cCidade').value.trim();
   const uf=document.getElementById('cUf').value.trim();
 
-  ['cNome','cEmail','cCep','cRua','cNumero'].forEach(id=>document.getElementById(id).classList.remove('invalid'));
+  ['cNome','cEmail','cCpf','cCep','cRua','cNumero'].forEach(id=>document.getElementById(id).classList.remove('invalid'));
 
   let erro=false;
   if(!nome){document.getElementById('cNome').classList.add('invalid');erro=true;}
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('cEmail').classList.add('invalid');erro=true;}
+  if(!cpfValido(cpf)){document.getElementById('cCpf').classList.add('invalid');erro=true;}
   if(cep.length!==8){document.getElementById('cCep').classList.add('invalid');erro=true;}
   if(!rua){document.getElementById('cRua').classList.add('invalid');erro=true;}
   if(!numero){document.getElementById('cNumero').classList.add('invalid');erro=true;}
   if(!freteEscolhido){toast('Calcule e escolha uma opção de frete antes de continuar.','err');return;}
-  if(erro){toast('Preencha todos os campos obrigatórios.','err');return;}
+  if(erro){toast('Preencha todos os campos obrigatórios (confira o CPF).','err');return;}
 
   const btn=document.getElementById('btnCfm');
   btn.disabled=true;btn.textContent='Processando...';
   try{
     const itens=cart.map(i=>({nome:i.nome,tam:i.tam,qty:i.qty,preco:i.preco}));
     const body={
-      itens,nome,email,telefone:tel,instagram:ig,
+      itens,nome,email,cpf,telefone:tel,instagram:ig,
       cep,uf,cidade,endereco:rua,numero,complemento,bairro,
       frete_servico_id:freteEscolhido.id
     };

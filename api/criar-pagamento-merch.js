@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
   const {
-    itens, nome, email, telefone, instagram,
+    itens, nome, email, cpf, telefone, instagram,
     cep, uf, cidade, endereco, numero, complemento, bairro,
     frete_servico_id // id da opção de frete escolhida pelo usuário (veio de /api/frete)
   } = req.body;
@@ -22,6 +22,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ erro: 'Carrinho vazio' });
   if (!nome || !email)
     return res.status(400).json({ erro: 'Nome e e-mail são obrigatórios' });
+  const cpfLimpo = String(cpf || '').replace(/\D/g, '');
+  if (cpfLimpo.length !== 11)
+    return res.status(400).json({ erro: 'CPF inválido — é exigido pela transportadora para gerar a etiqueta de envio.' });
   if (!cep || !endereco || !numero)
     return res.status(400).json({ erro: 'Endereço de entrega incompleto' });
 
@@ -68,6 +71,7 @@ export default async function handler(req, res) {
       valor_total: valorTotal,
       nome_comprador: nome,
       email_comprador: email,
+      cpf_comprador: cpfLimpo,
       telefone_comprador: telefone || null,
       instagram_comprador: instagram || null,
       cep, uf: uf || null, cidade: cidade || null,
@@ -133,7 +137,10 @@ export default async function handler(req, res) {
         back_urls: {
           success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso.html`,
           failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/merch.html`,
-          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/merch.html`
+          // Pix aprova de forma assíncrona (o Mercado Pago não redireciona
+          // sozinho nesse caso) — manda pra uma tela nossa que fica
+          // consultando /api/pedido-status e redireciona assim que aprovar.
+          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/pendente.html?pedido=${pedido.id}`
         },
         auto_return: 'approved',
         statement_descriptor: 'NEXUS MERCH',

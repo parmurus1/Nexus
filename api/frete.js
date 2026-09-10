@@ -158,6 +158,7 @@ export async function inserirNoCarrinho({ cepOrigem, destinatario, itens, servic
     from: remetente,
     to: {
       name: destinatario.nome,
+      document: destinatario.cpf,
       address: destinatario.endereco,
       number: destinatario.numero,
       complement: destinatario.complemento || '',
@@ -260,6 +261,7 @@ export async function gerarEtiquetaParaPedido(pedido) {
       cepOrigem,
       destinatario: {
         nome: pedido.nome_comprador,
+        cpf: pedido.cpf_comprador,
         cep: pedido.cep,
         endereco: pedido.endereco,
         numero: pedido.numero,
