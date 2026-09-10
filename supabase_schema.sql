@@ -177,3 +177,27 @@ ON storage.objects FOR ALL
 USING (bucket_id = 'membros-fotos' AND auth.role() = 'service_role')
 WITH CHECK (bucket_id = 'membros-fotos' AND auth.role() = 'service_role');
 
+-- =====================================================
+-- TABELA: pedidos_merch (checkout da loja via Mercado Pago)
+-- Execute este bloco no SQL Editor do Supabase para habilitar
+-- o pagamento via Pix na aba Merch.
+-- =====================================================
+CREATE TABLE IF NOT EXISTS pedidos_merch (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  itens JSONB NOT NULL,               -- [{nome, tam, qty, preco}]
+  valor_total NUMERIC NOT NULL,
+  nome_comprador TEXT NOT NULL,
+  email_comprador TEXT NOT NULL,
+  telefone_comprador TEXT,
+  instagram_comprador TEXT,
+  status TEXT NOT NULL DEFAULT 'pendente', -- 'pendente' | 'pago' | 'cancelado'
+  preference_id TEXT,
+  payment_id TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW(),
+  pago_em TIMESTAMPTZ
+);
+
+ALTER TABLE pedidos_merch ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Escrita via service_role em pedidos_merch" ON pedidos_merch FOR ALL USING (auth.role() = 'service_role');
+-- Sem policy de SELECT pública: pedidos só são lidos pelo backend/admin (service_role).
+

@@ -17,6 +17,28 @@ export default async function handler(req, res) {
     const payment = new Payment(mp);
     const pagamento = await payment.get({ id: data.id });
 
+    // Pagamento aprovado ou não — identificar se é rifa ou merch pela metadata
+    const tipo = pagamento.metadata?.tipo === 'merch' ? 'merch' : 'rifa';
+
+    if (tipo === 'merch') {
+      const pedidoId = pagamento.metadata?.pedido_id;
+      if (!pedidoId) {
+        console.error('Metadata de pedido_id não encontrada no pagamento', pagamento.id);
+        return res.status(200).json({ ok: true });
+      }
+
+      if (pagamento.status === 'approved') {
+        await supabase
+          .from('pedidos_merch')
+          .update({ status: 'pago', payment_id: String(pagamento.id), pago_em: new Date().toISOString() })
+          .eq('id', pedidoId);
+        console.log(`✅ Pedido merch confirmado: ${pedidoId} - ${pagamento.payer?.email}`);
+      } else if (pagamento.status === 'cancelled' || pagamento.status === 'rejected') {
+        await supabase.from('pedidos_merch').update({ status: 'cancelado' }).eq('id', pedidoId);
+      }
+      return res.status(200).json({ ok: true });
+    }
+
     if (pagamento.status !== 'approved') {
       // Se expirou ou falhou, liberar os bilhetes
       if (pagamento.status === 'cancelled' || pagamento.status === 'rejected') {

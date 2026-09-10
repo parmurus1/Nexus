@@ -150,9 +150,30 @@
     .d-total-lbl{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
     .d-total{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.04em;color:var(--text);}
     .btn-finalizar{width:100%;background:var(--red);border:none;color:#fff;padding:13px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;cursor:pointer;transition:all var(--tr);}
-    .btn-finalizar:hover{background:#ff2a10;box-shadow:0 6px 20px var(--red-glow);}
+    .btn-finalizar:hover:not(:disabled){background:#ff2a10;box-shadow:0 6px 20px var(--red-glow);}
     .btn-finalizar:disabled{opacity:0.4;cursor:not-allowed;}
+    .btn-wa{width:100%;background:none;border:1px solid var(--border-s);color:var(--text2);padding:11px;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);margin-top:8px;}
+    .btn-wa:hover:not(:disabled){border-color:var(--text);color:var(--text);}
+    .btn-wa:disabled{opacity:0.4;cursor:not-allowed;}
     .d-hint{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--text3);text-align:center;margin-top:8px;letter-spacing:0.04em;}
+
+    /* CHECKOUT MODAL (dados do comprador p/ Mercado Pago) */
+    .modal-ey{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+    .modal-ti{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.04em;color:var(--text);margin-bottom:6px;}
+    .modal-sb{font-size:0.84rem;color:var(--text2);margin-bottom:22px;}
+    .modal-res{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px;font-size:0.83rem;color:var(--text2);line-height:1.85;}
+    .modal-res strong{color:var(--red);font-weight:500;}
+    .fg{margin-bottom:14px;}
+    .fg label{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);margin-bottom:7px;}
+    .req-badge{background:var(--red);color:#fff;font-size:0.48rem;padding:1px 5px;border-radius:3px;letter-spacing:0.1em;}
+    .fg input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;outline:none;transition:border-color var(--tr);}
+    .fg input:focus{border-color:var(--red);}
+    .fg input::placeholder{color:var(--text3);}
+    .fg input.invalid{border-color:var(--red)!important;}
+    .btn-cfm{width:100%;background:var(--red);border:none;color:#fff;padding:15px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.15em;cursor:pointer;transition:all var(--tr);margin-top:6px;}
+    .btn-cfm:hover:not(:disabled){background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
+    .btn-cfm:disabled{opacity:0.4;cursor:not-allowed;}
+
 
     .toast{position:fixed;top:76px;right:24px;z-index:9999;padding:0;border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.05em;transform:translateX(calc(100% + 48px));transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),padding 0.15s,opacity 0.25s;max-width:280px;border:0 solid transparent;opacity:0;overflow:hidden;pointer-events:none;}
     .toast.show{transform:translateX(0);opacity:1;padding:12px 18px;border-width:1px;pointer-events:auto;}
@@ -263,8 +284,65 @@
       <span class="d-total-lbl">Total</span>
       <span class="d-total" id="dTotal">R$ 0,00</span>
     </div>
-    <button class="btn-finalizar" id="btnFin" onclick="finalizar()" disabled>Finalizar via WhatsApp →</button>
-    <p class="d-hint">Você será redirecionado para o WhatsApp</p>
+    <button class="btn-finalizar" id="btnFin" onclick="abrirCheckout()" disabled>Pagar com Pix (Mercado Pago) →</button>
+    <button class="btn-wa" id="btnWa" onclick="finalizarWA()" disabled>Ou finalizar via WhatsApp</button>
+    <p class="d-hint">Pagamento processado com segurança pelo Mercado Pago</p>
+  </div>
+</div>
+
+<!-- MODAL CHECKOUT (dados do comprador) -->
+<div class="modal-ov" id="checkoutOv" onclick="if(event.target===this)fecharCheckout()">
+  <div class="modal" style="grid-template-columns:1fr;max-width:420px;padding:32px;">
+    <button class="modal-x" onclick="fecharCheckout()">✕</button>
+    <div class="modal-ey">Finalizar compra</div>
+    <div class="modal-ti">Pagamento Pix</div>
+    <p class="modal-sb">Preencha seus dados — você será redirecionado para o Mercado Pago.</p>
+    <div class="modal-res" id="checkoutRes"></div>
+    <div class="fg">
+      <label>Nome completo <span class="req-badge">OBRIGATÓRIO</span></label>
+      <input type="text" id="cNome" placeholder="Seu nome completo"/>
+    </div>
+    <div class="fg">
+      <label>E-mail <span class="req-badge">OBRIGATÓRIO</span></label>
+      <input type="email" id="cEmail" placeholder="seu@email.com"/>
+    </div>
+    <div class="fg">
+      <label>Telefone <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
+      <input type="tel" id="cTel" placeholder="(00) 00000-0000"/>
+    </div>
+    <div class="fg">
+      <label>Instagram <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
+      <input type="text" id="cInstagram" placeholder="@seuusuario"/>
+    </div>
+    <button class="btn-cfm" id="btnCfm" onclick="confirmarPagamento()">Ir para o Pagamento →</button>
+  </div>
+</div>
+
+<!-- MODAL DEMO -->
+<div class="modal-ov" id="demoOv" onclick="if(event.target===this)fecharDemo()">
+  <div class="modal" style="grid-template-columns:1fr;max-width:420px;text-align:center;padding:32px;">
+    <button class="modal-x" onclick="fecharDemo()">✕</button>
+    <div style="font-size:2.2rem;margin-bottom:14px;">🎸</div>
+    <div class="modal-ey">Modo demonstração</div>
+    <div class="modal-ti">Pedido registrado!</div>
+    <p class="modal-sb" id="demoMsg" style="margin-top:8px;line-height:1.75;"></p>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin:18px 0;font-size:0.82rem;color:var(--text2);line-height:1.75;">
+      ⚡ O pagamento via Pix será ativado assim que o Mercado Pago for configurado.
+    </div>
+    <button class="btn-cfm" onclick="fecharDemo()">Entendido</button>
+  </div>
+</div>
+
+<!-- MODAL REDIRECIONAR PAGAMENTO -->
+<div class="modal-ov" id="pagamentoOv">
+  <div class="modal" style="grid-template-columns:1fr;max-width:420px;text-align:center;padding:32px;">
+    <div class="modal-ey">Redirecionar para Pagamento</div>
+    <div class="modal-ti">Quase lá!</div>
+    <p class="modal-sb" style="margin-top:8px;line-height:1.75;">
+      Se a página do Mercado Pago não abriu automaticamente, clique no botão abaixo.
+    </p>
+    <button class="btn-cfm" id="btnAbrirPagamento" onclick="abrirLinkPagamento()">Ir para o Pagamento →</button>
+    <button class="btn-wa" style="margin-top:10px;" onclick="fecharPagamentoOv()">Fechar</button>
   </div>
 </div>
 
@@ -367,7 +445,11 @@ function syncCart(){
   const cc=document.getElementById('cartCount');
   cc.textContent=qtd; qtd>0?cc.classList.add('show'):cc.classList.remove('show');
   document.getElementById('dTotal').textContent=tot>0?`R$ ${tot.toFixed(2).replace('.',',')}`:'A confirmar';
-  document.getElementById('btnFin').disabled=cart.length===0;
+  const semPreco=cart.some(i=>!i.preco||i.preco<=0);
+  const btnFin=document.getElementById('btnFin');
+  btnFin.disabled=cart.length===0||semPreco;
+  btnFin.title=semPreco?'Um ou mais itens ainda não têm preço definido — finalize via WhatsApp':'';
+  document.getElementById('btnWa').disabled=cart.length===0;
   const di=document.getElementById('dItems');
   if(!cart.length){di.innerHTML='<div class="d-empty"><span>🛒</span><span>Carrinho vazio</span></div>';return;}
   di.innerHTML=cart.map(i=>`
@@ -388,7 +470,58 @@ function syncCart(){
 function dItemQty(key,d){const it=cart.find(i=>i.key===key);if(!it)return;it.qty+=d;if(it.qty<=0)cart=cart.filter(i=>i.key!==key);syncCart();}
 function abrirDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('cOv').classList.add('open');}
 function fecharDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('cOv').classList.remove('open');}
-function finalizar(){
+
+function abrirCheckout(){
+  if(!cart.length)return;
+  const semPreco=cart.some(i=>!i.preco||i.preco<=0);
+  if(semPreco){toast('Um ou mais itens ainda não têm preço definido. Use o WhatsApp.','err');return;}
+  const tot=cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  document.getElementById('checkoutRes').innerHTML=cart.map(i=>`${i.nome}${i.tam!=='único'?` (${i.tam})`:''} × ${i.qty}`).join('<br/>')+`<br/><br/>Total: <strong>R$ ${tot.toFixed(2).replace('.',',')}</strong>`;
+  document.getElementById('checkoutOv').classList.add('open');
+}
+function fecharCheckout(){document.getElementById('checkoutOv').classList.remove('open');}
+
+async function confirmarPagamento(){
+  const nome=document.getElementById('cNome').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
+  const tel=document.getElementById('cTel').value.trim();
+  const ig=document.getElementById('cInstagram').value.trim();
+
+  document.getElementById('cNome').classList.remove('invalid');
+  document.getElementById('cEmail').classList.remove('invalid');
+
+  let erro=false;
+  if(!nome){document.getElementById('cNome').classList.add('invalid');erro=true;}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('cEmail').classList.add('invalid');erro=true;}
+  if(erro){toast('Preencha todos os campos obrigatórios.','err');return;}
+
+  const btn=document.getElementById('btnCfm');
+  btn.disabled=true;btn.textContent='Processando...';
+  try{
+    const itens=cart.map(i=>({nome:i.nome,tam:i.tam,qty:i.qty,preco:i.preco}));
+    const r=await fetch('/api/criar-pagamento-merch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({itens,nome,email,telefone:tel,instagram:ig})});
+    const d=await r.json();
+    if(!r.ok){toast(d.erro||'Erro ao criar pagamento.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';return;}
+    if(d.modo_demo){
+      fecharCheckout();cart=[];syncCart();fecharDrawer();
+      document.getElementById('demoMsg').textContent=d.mensagem;
+      document.getElementById('demoOv').classList.add('open');
+      btn.disabled=false;btn.textContent='Ir para o Pagamento →';
+      return;
+    }
+    window.linkPagamentoMP=d.init_point;
+    fecharCheckout();
+    document.getElementById('pagamentoOv').classList.add('open');
+    setTimeout(()=>abrirLinkPagamento(),500);
+    cart=[];syncCart();fecharDrawer();
+    btn.disabled=false;btn.textContent='Ir para o Pagamento →';
+  }catch{toast('Erro de conexão.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';}
+}
+function fecharDemo(){document.getElementById('demoOv').classList.remove('open');}
+function abrirLinkPagamento(){if(window.linkPagamentoMP){window.open(window.linkPagamentoMP,'_blank')||(window.location.href=window.linkPagamentoMP);}}
+function fecharPagamentoOv(){document.getElementById('pagamentoOv').classList.remove('open');}
+
+function finalizarWA(){
   if(!cart.length)return;
   let msg='🎸 *Pedido Nexus Band*\n\n';
   cart.forEach(i=>{msg+=`• ${i.nome}`;if(i.tam!=='único')msg+=` — Tam. ${i.tam}`;msg+=` × ${i.qty}`;if(i.preco>0)msg+=` (R$ ${(i.preco*i.qty).toFixed(2).replace('.',',')})`;msg+='\n';});
