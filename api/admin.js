@@ -51,6 +51,17 @@ export default async function handler(req, res) {
     return res.status(200).json({ bilhetes, config: configObj, stats, ultimo_sorteio: sorteio?.[0] || null });
   }
 
+  // Pedidos da loja (merch) — quem comprou, quando pagou e status da etiqueta no Melhor Envio
+  if (acao === 'pedidos-merch') {
+    const { data: pedidos, error } = await supabase
+      .from('pedidos_merch')
+      .select('id, itens, valor_total, nome_comprador, email_comprador, telefone_comprador, instagram_comprador, status, payment_id, frete_servico, frete_transportadora, frete_valor, me_status, me_rastreio, me_link_etiqueta, me_erro, criado_em, pago_em')
+      .order('criado_em', { ascending: false });
+
+    if (error) return res.status(500).json({ erro: 'Erro ao buscar pedidos de merch' });
+    return res.status(200).json({ pedidos: pedidos || [] });
+  }
+
   // Liberar expirados
   if (acao === 'liberar-expirados') {
     const trintaMinutosAtras = new Date(Date.now() - 30 * 60 * 1000).toISOString();

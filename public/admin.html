@@ -325,6 +325,18 @@
     </div>
   </div>
 
+  <!-- ══ PEDIDOS MERCH ══ -->
+  <div class="adm-section">
+    <p class="sec-ey">Pedidos Merch</p>
+    <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;margin-bottom:16px;">Quem comprou, quando pagou e o status da etiqueta gerada automaticamente no Melhor Envio.</p>
+    <div class="tabela-wrapper">
+      <table>
+        <thead><tr><th>Data</th><th>Nome</th><th>E-mail</th><th>Valor</th><th>Pagamento</th><th>Pago em</th><th>Melhor Envio</th><th>Rastreio</th></tr></thead>
+        <tbody id="tabelaPedidosMerch"><tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- ══ SHOWS ══ -->
   <div class="adm-section">
     <p class="sec-ey">Agenda de Shows</p>
@@ -515,9 +527,41 @@ function mostrarPainel(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('adminPanel').style.display='block';
   carregarDados();
+  carregarPedidosMerch();
   carregarShows();
   carregarProdutos();
   carregarMembros();
+}
+
+async function carregarPedidosMerch(){
+  const tbody=document.getElementById('tabelaPedidosMerch');
+  try{
+    const res=await fetch('/api/admin?acao=pedidos-merch',{headers:{'Authorization':`Bearer ${token}`}});
+    const data=await res.json();
+    if(!res.ok){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">${data.erro||'Erro ao carregar pedidos'}</td></tr>`;return;}
+    const pedidos=data.pedidos||[];
+    if(!pedidos.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">Nenhum pedido ainda</td></tr>';return;}
+
+    const badgePagamento={pago:'badge-confirmado',pendente:'badge-breve',cancelado:'badge-cancelado'};
+    const badgeME={gerada:'badge-confirmado',nao_gerada:'badge-breve',falha_saldo:'badge-cancelado',falha:'badge-cancelado'};
+    const labelME={gerada:'Gerada',nao_gerada:'Não gerada',falha_saldo:'Falha (saldo)',falha:'Falha'};
+
+    tbody.innerHTML=pedidos.map(p=>{
+      const meStatus=p.me_status||'nao_gerada';
+      const meTitulo=p.me_erro?` title="${String(p.me_erro).replace(/"/g,'&quot;')}"`:'';
+      const rastreio=p.me_link_etiqueta?`<a href="${p.me_link_etiqueta}" target="_blank" style="color:var(--red);">${p.me_rastreio||'ver etiqueta'}</a>`:(p.me_rastreio||'—');
+      return `<tr>
+        <td>${p.criado_em?new Date(p.criado_em).toLocaleString('pt-BR'):'—'}</td>
+        <td>${p.nome_comprador||'—'}</td>
+        <td>${p.email_comprador||'—'}</td>
+        <td>R$ ${Number(p.valor_total||0).toFixed(2)}</td>
+        <td><span class="badge ${badgePagamento[p.status]||'badge-breve'}">${p.status}</span></td>
+        <td>${p.pago_em?new Date(p.pago_em).toLocaleString('pt-BR'):'—'}</td>
+        <td${meTitulo}><span class="badge ${badgeME[meStatus]||'badge-breve'}">${labelME[meStatus]||meStatus}</span></td>
+        <td style="font-family:'DM Mono',monospace;font-size:0.78rem;">${rastreio}</td>
+      </tr>`;
+    }).join('');
+  }catch{tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">Erro de conexão</td></tr>';}
 }
 function sair(){localStorage.removeItem('nexus_admin_token');location.reload();}
 
@@ -531,6 +575,7 @@ async function carregarDados(){
     document.getElementById('statPagos').textContent=data.stats.pagos;
     document.getElementById('ultimaAtualizacao').textContent=`Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
     carregarModoDemo();
+    carregarPedidosMerch();
 
     // Carregar estado do toggle Rifa Nav
     const rifaVisivel = data.config?.rifa_nav_visivel === 'true' || data.config?.rifa_nav_visivel === true;
