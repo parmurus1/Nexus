@@ -94,6 +94,15 @@
     .btn-secondary{background:none;color:var(--text2);padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;border:1px solid var(--border-s);transition:all var(--tr);}
     .btn-secondary:hover{border-color:var(--text);color:var(--text);}
 
+    /* CTA CARDS (estilo ícone quadrado) */
+    .cta-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:104px;height:104px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:all var(--tr);}
+    .cta-card:hover{border-color:var(--red);box-shadow:0 0 22px rgba(232,34,10,0.25);transform:translateY(-3px);}
+    .cta-icon-wrap{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle,rgba(232,34,10,0.22) 0%,rgba(232,34,10,0.05) 65%,transparent 100%);display:flex;align-items:center;justify-content:center;font-size:1.15rem;transition:all var(--tr);}
+    .cta-card:hover .cta-icon-wrap{background:radial-gradient(circle,rgba(232,34,10,0.35) 0%,rgba(232,34,10,0.08) 65%,transparent 100%);}
+    .cta-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text2);transition:color var(--tr);}
+    .cta-card:hover .cta-label{color:var(--red);}
+    @media(max-width:600px){.cta-card{width:88px;height:88px;}}
+
     /* CARDS SEÇÃO */
     .section{max-width:1080px;margin:0 auto;padding:0 24px 120px;}
     .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
@@ -170,11 +179,26 @@
   <p class="hero-sub">Onde tudo se encontra</p>
 
   <div class="cta-group">
-    <a href="/rifa.html" class="btn-primary" id="heroRifaBtn" style="display:none">Participar da Rifa 🎟</a>
-    <a href="/sobre.html" class="btn-primary">Sobre a Banda</a>
-    <a href="/agenda.html" class="btn-primary">Agenda</a>
-    <a href="/merch.html" class="btn-primary">Merch</a>
-    <a href="/contratantes.html" class="btn-primary">Contratantes</a>
+    <a href="/rifa.html" class="cta-card" id="heroRifaBtn" style="display:none">
+      <span class="cta-icon-wrap">🎟</span>
+      <span class="cta-label">Rifa</span>
+    </a>
+    <a href="/sobre.html" class="cta-card">
+      <span class="cta-icon-wrap">🎸</span>
+      <span class="cta-label">Sobre</span>
+    </a>
+    <a href="/agenda.html" class="cta-card">
+      <span class="cta-icon-wrap">📅</span>
+      <span class="cta-label">Agenda</span>
+    </a>
+    <a href="/merch.html" class="cta-card">
+      <span class="cta-icon-wrap">👕</span>
+      <span class="cta-label">Merch</span>
+    </a>
+    <a href="/contratantes.html" class="cta-card">
+      <span class="cta-icon-wrap">🎤</span>
+      <span class="cta-label">Contratantes</span>
+    </a>
   </div>
 
   <div class="scroll-mouse" onclick="window.scrollBy({top:window.innerHeight,behavior:'smooth'})">
