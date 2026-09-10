@@ -151,7 +151,13 @@ export async function inserirNoCarrinho({ cepOrigem, destinatario, itens, servic
     options: {
       insurance_value: itens.reduce((s, i) => s + (Number(i.preco) || 0) * (Number(i.qty) || 1), 0),
       receipt: false,
-      own_hand: false
+      own_hand: false,
+      // Sem CNPJ/nota fiscal: usamos Declaração de Conteúdo Eletrônica (DC-e).
+      // O Melhor Envio gera a DC-e automaticamente a partir do array "products"
+      // acima (nome, quantidade, valor unitário) — não precisa anexar nada manualmente.
+      // IMPORTANTE: não enviar options.invoice.key junto com non_commercial — são
+      // mutuamente exclusivos (nota fiscal OU declaração de conteúdo, nunca os dois).
+      non_commercial: true
     }
   };
 
