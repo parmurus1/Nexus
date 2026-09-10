@@ -132,9 +132,30 @@ export async function inserirNoCarrinho({ cepOrigem, destinatario, itens, servic
     weight: Math.max(0.05, Number(i.peso_kg) || 0.3)
   }));
 
+  // Dados do REMETENTE (vocês) — fixos, vêm de variáveis de ambiente porque
+  // não mudam pedido a pedido. Sem isso o Melhor Envio recusa com 422
+  // ("from.name é obrigatório", etc).
+  const remetente = {
+    name: process.env.REMETENTE_NOME,
+    document: process.env.REMETENTE_CPF, // CPF só números — pessoa física
+    address: process.env.REMETENTE_ENDERECO,
+    number: process.env.REMETENTE_NUMERO,
+    complement: process.env.REMETENTE_COMPLEMENTO || '',
+    district: process.env.REMETENTE_BAIRRO,
+    city: process.env.REMETENTE_CIDADE,
+    state_abbr: process.env.REMETENTE_UF,
+    postal_code: limparCep(cepOrigem),
+    country_id: 'BR'
+  };
+  const faltando = ['name', 'document', 'address', 'number', 'district', 'city', 'state_abbr']
+    .filter(campo => !remetente[campo]);
+  if (faltando.length) {
+    throw new Error(`Dados do remetente incompletos nas variáveis de ambiente (faltando: ${faltando.map(c => 'REMETENTE_' + c.toUpperCase()).join(', ')}). Configure-as na Vercel.`);
+  }
+
   const body = {
     service: Number(servicoId),
-    from: { postal_code: limparCep(cepOrigem) },
+    from: remetente,
     to: {
       name: destinatario.nome,
       address: destinatario.endereco,
