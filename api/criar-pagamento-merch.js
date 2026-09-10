@@ -1,6 +1,7 @@
 // api/criar-pagamento-merch.js — checkout da loja (merch) via Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
+import { calcularFreteMelhorEnvio } from './frete.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -11,12 +12,18 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  const { itens, nome, email, telefone, instagram } = req.body;
+  const {
+    itens, nome, email, telefone, instagram,
+    cep, uf, cidade, endereco, numero, complemento, bairro,
+    frete_servico_id // id da opção de frete escolhida pelo usuário (veio de /api/frete)
+  } = req.body;
 
   if (!itens || !Array.isArray(itens) || itens.length === 0)
     return res.status(400).json({ erro: 'Carrinho vazio' });
   if (!nome || !email)
     return res.status(400).json({ erro: 'Nome e e-mail são obrigatórios' });
+  if (!cep || !endereco || !numero)
+    return res.status(400).json({ erro: 'Endereço de entrega incompleto' });
 
   // Cada item precisa ter preço definido (> 0). Produtos "a confirmar" (preco 0)
   // não podem ir pro Mercado Pago — o front-end direciona esses pro WhatsApp.
@@ -27,7 +34,25 @@ export default async function handler(req, res) {
     });
   }
 
-  const valorTotal = itens.reduce((s, i) => s + Number(i.preco) * Number(i.qty || 1), 0);
+  // ── Frete: NUNCA confiar em um valor vindo do front. Recalcula no servidor
+  // chamando a API do Melhor Envio de novo e usa a opção escolhida pelo id. ──
+  let frete = { servico: null, transportadora: null, preco: 0, prazo_dias: null };
+  try {
+    const cepOrigem = process.env.CEP_ORIGEM;
+    if (!cepOrigem) throw new Error('CEP_ORIGEM não configurado no servidor');
+    const opcoes = await calcularFreteMelhorEnvio({ cepOrigem, cepDestino: cep, itens });
+    const escolhida = opcoes.find(o => String(o.id) === String(frete_servico_id));
+    if (!escolhida) {
+      return res.status(400).json({ erro: 'Opção de frete inválida ou expirada. Recalcule o frete e tente novamente.' });
+    }
+    frete = escolhida;
+  } catch (err) {
+    console.error('Erro ao revalidar frete:', err.message);
+    return res.status(500).json({ erro: 'Não foi possível confirmar o valor do frete agora. Tente novamente.' });
+  }
+
+  const subtotal = itens.reduce((s, i) => s + Number(i.preco) * Number(i.qty || 1), 0);
+  const valorTotal = subtotal + frete.preco;
 
   if (valorTotal < 1.00) {
     return res.status(400).json({
@@ -45,6 +70,12 @@ export default async function handler(req, res) {
       email_comprador: email,
       telefone_comprador: telefone || null,
       instagram_comprador: instagram || null,
+      cep, uf: uf || null, cidade: cidade || null,
+      endereco, numero, complemento: complemento || null, bairro: bairro || null,
+      frete_servico: frete.servico,
+      frete_transportadora: frete.transportadora,
+      frete_prazo_dias: frete.prazo_dias,
+      frete_valor: frete.preco,
       status: 'pendente'
     })
     .select()
@@ -70,13 +101,30 @@ export default async function handler(req, res) {
   try {
     const response = await preference.create({
       body: {
-        items: itens.map(i => ({
-          title: `${i.nome}${i.tam && i.tam !== 'único' ? ` (${i.tam})` : ''}`,
-          quantity: Number(i.qty || 1),
-          currency_id: 'BRL',
-          unit_price: Number(i.preco)
-        })),
-        payer: { name: nome, email },
+        items: [
+          ...itens.map(i => ({
+            title: `${i.nome}${i.tam && i.tam !== 'único' ? ` (${i.tam})` : ''}`,
+            quantity: Number(i.qty || 1),
+            currency_id: 'BRL',
+            unit_price: Number(i.preco)
+          })),
+          {
+            title: `Frete (${frete.transportadora || 'Transportadora'} - ${frete.servico || ''})`,
+            quantity: 1,
+            currency_id: 'BRL',
+            unit_price: frete.preco
+          }
+        ],
+        payer: { name: nome, email, address: { zip_code: cep } },
+        shipments: {
+          receiver_address: {
+            zip_code: cep,
+            street_name: endereco,
+            street_number: numero,
+            city_name: cidade || '',
+            state_name: uf || ''
+          }
+        },
         payment_methods: {
           installments: 12,
           default_payment_method_id: 'pix'
@@ -90,7 +138,7 @@ export default async function handler(req, res) {
         statement_descriptor: 'NEXUS MERCH',
         external_reference: `merch-${pedido.id}`,
         notification_url: process.env.SITE_URL ? `${process.env.SITE_URL}/api/webhook` : undefined,
-        metadata: { tipo: 'merch', pedido_id: pedido.id, nome, email, telefone, instagram }
+        metadata: { tipo: 'merch', pedido_id: pedido.id, nome, email, telefone, instagram, frete_valor: frete.preco }
       }
     });
 

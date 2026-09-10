@@ -36,7 +36,12 @@ export default async function handler(req, res) {
     const produtos = (data || []).map(p => ({
       ...p,
       sizes: Array.isArray(p.sizes) ? p.sizes : (p.sizes ? JSON.parse(p.sizes) : []),
-      ativo: p.ativo !== false
+      ativo: p.ativo !== false,
+      // Fallback para produtos antigos sem peso/dimensões cadastrados
+      peso_kg: p.peso_kg ?? 0.3,
+      altura_cm: p.altura_cm ?? 5,
+      largura_cm: p.largura_cm ?? 20,
+      comprimento_cm: p.comprimento_cm ?? 25
     }));
     return res.status(200).json({ produtos });
   }
@@ -46,7 +51,7 @@ export default async function handler(req, res) {
 
   // ── POST: criar produto ─────────────────────────────────────────────────
   if (req.method === 'POST') {
-    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo } = req.body;
+    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo, peso_kg, altura_cm, largura_cm, comprimento_cm } = req.body;
     if (!nome || !descricao) return res.status(400).json({ erro: 'nome e descrição são obrigatórios' });
 
     // Verifica se a tabela existe antes de inserir
@@ -72,7 +77,11 @@ export default async function handler(req, res) {
         badge: badge || null,
         sizes: Array.isArray(sizes) ? sizes : [],
         ativo: ativo !== false,
-        ordem: 99
+        ordem: 99,
+        peso_kg: peso_kg != null ? parseFloat(peso_kg) : 0.3,
+        altura_cm: altura_cm != null ? parseFloat(altura_cm) : 5,
+        largura_cm: largura_cm != null ? parseFloat(largura_cm) : 20,
+        comprimento_cm: comprimento_cm != null ? parseFloat(comprimento_cm) : 25
       })
       .select()
       .single();
@@ -89,7 +98,7 @@ export default async function handler(req, res) {
     const id = req.query.id;
     if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
 
-    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo } = req.body;
+    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo, peso_kg, altura_cm, largura_cm, comprimento_cm } = req.body;
     const updates = {};
     if (nome  !== undefined) updates.nome  = nome;
     if (cat   !== undefined) updates.cat   = cat;
@@ -100,6 +109,10 @@ export default async function handler(req, res) {
     if (badge !== undefined) updates.badge = badge || null;
     if (sizes !== undefined) updates.sizes = Array.isArray(sizes) ? sizes : [];
     if (ativo !== undefined) updates.ativo = ativo;
+    if (peso_kg !== undefined) updates.peso_kg = parseFloat(peso_kg) || 0.3;
+    if (altura_cm !== undefined) updates.altura_cm = parseFloat(altura_cm) || 5;
+    if (largura_cm !== undefined) updates.largura_cm = parseFloat(largura_cm) || 20;
+    if (comprimento_cm !== undefined) updates.comprimento_cm = parseFloat(comprimento_cm) || 25;
 
     const { error } = await supabase.from('produtos').update(updates).eq('id', id);
     if (error) {

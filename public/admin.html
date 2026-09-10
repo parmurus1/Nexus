@@ -421,6 +421,16 @@
     <div class="fg"><label>URL da imagem (opcional)</label><input type="url" id="pImg" placeholder="/imgs/merch-camiseta.jpg"/></div>
     <div class="fg"><label>Badge (opcional)</label><input type="text" id="pBadge" placeholder="Ex: Novo, Em breve"/></div>
     <div class="fg">
+      <label>Peso e dimensões da embalagem (usados no cálculo de frete)</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <input type="number" id="pPeso" placeholder="Peso (kg)" min="0.01" step="0.01"/>
+        <input type="number" id="pAltura" placeholder="Altura (cm)" min="2" step="0.5"/>
+        <input type="number" id="pLargura" placeholder="Largura (cm)" min="11" step="0.5"/>
+        <input type="number" id="pComprimento" placeholder="Comprim. (cm)" min="16" step="0.5"/>
+      </div>
+      <span style="font-size:0.58rem;color:var(--text3);">Correios exigem no mínimo 2×11×16cm por pacote. Se não souber, deixe os valores padrão.</span>
+    </div>
+    <div class="fg">
       <label>Status</label>
       <select id="pAtivo" class="config-input">
         <option value="true">Ativo (disponível)</option>
@@ -843,6 +853,10 @@ function abrirFormProduto(id){
   document.getElementById('pSizes').value = (p?.sizes||[]).join(', ');
   document.getElementById('pImg').value = p?.img||'';
   document.getElementById('pBadge').value = p?.badge||'';
+  document.getElementById('pPeso').value = p?.peso_kg ?? 0.3;
+  document.getElementById('pAltura').value = p?.altura_cm ?? 5;
+  document.getElementById('pLargura').value = p?.largura_cm ?? 20;
+  document.getElementById('pComprimento').value = p?.comprimento_cm ?? 25;
   document.getElementById('pAtivo').value = String(p?.ativo!==false);
   document.getElementById('pId').value = p?.id||'';
   document.getElementById('prodOv').classList.add('open');
@@ -864,6 +878,10 @@ async function salvarProduto(){
     sizes: sizesRaw ? sizesRaw.split(',').map(s=>s.trim()).filter(Boolean) : [],
     img: document.getElementById('pImg').value.trim(),
     badge: document.getElementById('pBadge').value.trim(),
+    peso_kg: parseFloat(document.getElementById('pPeso').value)||0.3,
+    altura_cm: parseFloat(document.getElementById('pAltura').value)||5,
+    largura_cm: parseFloat(document.getElementById('pLargura').value)||20,
+    comprimento_cm: parseFloat(document.getElementById('pComprimento').value)||25,
     ativo: document.getElementById('pAtivo').value === 'true'
   };
   try{

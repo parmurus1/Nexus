@@ -107,8 +107,19 @@ CREATE TABLE IF NOT EXISTS produtos (
   sizes TEXT[] DEFAULT '{}',
   ativo BOOLEAN DEFAULT true,
   ordem INTEGER DEFAULT 0,
+  -- Dados usados no cálculo de frete via Melhor Envio (peso em kg, dimensões em cm)
+  peso_kg NUMERIC(6,3) DEFAULT 0.3,
+  altura_cm NUMERIC(6,2) DEFAULT 5,
+  largura_cm NUMERIC(6,2) DEFAULT 20,
+  comprimento_cm NUMERIC(6,2) DEFAULT 25,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- MIGRAÇÃO: se a tabela "produtos" já existir sem essas colunas, rode:
+ALTER TABLE produtos ADD COLUMN IF NOT EXISTS peso_kg NUMERIC(6,3) DEFAULT 0.3;
+ALTER TABLE produtos ADD COLUMN IF NOT EXISTS altura_cm NUMERIC(6,2) DEFAULT 5;
+ALTER TABLE produtos ADD COLUMN IF NOT EXISTS largura_cm NUMERIC(6,2) DEFAULT 20;
+ALTER TABLE produtos ADD COLUMN IF NOT EXISTS comprimento_cm NUMERIC(6,2) DEFAULT 25;
 
 ALTER TABLE produtos ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Leitura pública de produtos" ON produtos FOR SELECT USING (true);
@@ -193,9 +204,34 @@ CREATE TABLE IF NOT EXISTS pedidos_merch (
   status TEXT NOT NULL DEFAULT 'pendente', -- 'pendente' | 'pago' | 'cancelado'
   preference_id TEXT,
   payment_id TEXT,
+  -- Endereço de entrega e frete calculado via Melhor Envio
+  cep TEXT,
+  uf TEXT,
+  cidade TEXT,
+  endereco TEXT,
+  numero TEXT,
+  complemento TEXT,
+  bairro TEXT,
+  frete_servico TEXT,   -- ex: "PAC", "SEDEX"
+  frete_transportadora TEXT, -- ex: "Correios"
+  frete_prazo_dias INTEGER,
+  frete_valor NUMERIC(10,2) DEFAULT 0,
   criado_em TIMESTAMPTZ DEFAULT NOW(),
   pago_em TIMESTAMPTZ
 );
+
+-- MIGRAÇÃO: se a tabela "pedidos_merch" já existir sem essas colunas, rode:
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS cep TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS uf TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS cidade TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS endereco TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS numero TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS complemento TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS bairro TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_servico TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_transportadora TEXT;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_prazo_dias INTEGER;
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS frete_valor NUMERIC(10,2) DEFAULT 0;
 
 ALTER TABLE pedidos_merch ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Escrita via service_role em pedidos_merch" ON pedidos_merch FOR ALL USING (auth.role() = 'service_role');

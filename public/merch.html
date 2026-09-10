@@ -167,6 +167,13 @@
     .fg label{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);margin-bottom:7px;}
     .req-badge{background:var(--red);color:#fff;font-size:0.48rem;padding:1px 5px;border-radius:3px;letter-spacing:0.1em;}
     .fg input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;outline:none;transition:border-color var(--tr);}
+    .frete-op{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);cursor:pointer;margin-bottom:8px;transition:all var(--tr);}
+    .frete-op:hover{border-color:var(--border-s);}
+    .frete-op.on{border-color:var(--red);background:var(--red-mid);}
+    .frete-op-info{display:flex;flex-direction:column;gap:2px;}
+    .frete-op-nome{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;color:var(--text);font-weight:600;}
+    .frete-op-prazo{font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--text3);letter-spacing:0.06em;}
+    .frete-op-preco{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--red);}
     .fg input:focus{border-color:var(--red);}
     .fg input::placeholder{color:var(--text3);}
     .fg input.invalid{border-color:var(--red)!important;}
@@ -314,7 +321,58 @@
       <label>Instagram <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
       <input type="text" id="cInstagram" placeholder="@seuusuario"/>
     </div>
-    <button class="btn-cfm" id="btnCfm" onclick="confirmarPagamento()">Ir para o Pagamento →</button>
+
+    <div style="height:1px;background:var(--border);margin:18px 0;"></div>
+    <div class="modal-ey" style="margin-bottom:2px;">Endereço de entrega</div>
+
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;">
+      <div class="fg">
+        <label>CEP <span class="req-badge">OBRIGATÓRIO</span></label>
+        <input type="text" id="cCep" placeholder="00000-000" maxlength="9" oninput="maskCep(this)"/>
+      </div>
+      <button class="btn-ver" id="btnCalcFrete" style="height:44px;white-space:nowrap;" onclick="calcularFrete()">Calcular frete</button>
+    </div>
+    <div id="cepStatus" style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text3);margin:-6px 0 4px;"></div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;">
+      <div class="fg">
+        <label>Rua <span class="req-badge">OBRIGATÓRIO</span></label>
+        <input type="text" id="cRua" placeholder="Nome da rua"/>
+      </div>
+      <div class="fg">
+        <label>Número <span class="req-badge">OBRIGATÓRIO</span></label>
+        <input type="text" id="cNumero" placeholder="123"/>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="fg">
+        <label>Bairro</label>
+        <input type="text" id="cBairro" placeholder="Bairro"/>
+      </div>
+      <div class="fg">
+        <label>Complemento <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
+        <input type="text" id="cComplemento" placeholder="Apto, bloco..."/>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;">
+      <div class="fg">
+        <label>Cidade</label>
+        <input type="text" id="cCidade" placeholder="Cidade" readonly/>
+      </div>
+      <div class="fg">
+        <label>UF</label>
+        <input type="text" id="cUf" placeholder="UF" maxlength="2" readonly style="text-transform:uppercase;"/>
+      </div>
+    </div>
+
+    <div id="freteOpcoes" style="display:none;margin:6px 0 4px;"></div>
+
+    <div class="d-total-row" style="margin-top:8px;">
+      <span class="d-total-lbl">Total com frete</span>
+      <span class="d-total" id="checkoutTotalFrete">R$ 0,00</span>
+    </div>
+
+    <button class="btn-cfm" id="btnCfm" onclick="confirmarPagamento()" disabled>Calcule o frete para continuar</button>
   </div>
 </div>
 
@@ -360,16 +418,17 @@ const WA = '5511999999999';
 
 // Produtos: tenta carregar do Supabase via /api/bilhetes (config), fallback para dados padrão
 const PRODS_DEFAULT = [
-  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',descricao:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true},
-  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',descricao:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'',sizes:[],ativo:true},
-  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',descricao:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'',sizes:[],ativo:true},
-  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',descricao:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'',sizes:[],ativo:true},
-  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',descricao:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'',sizes:[],ativo:true},
-  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',descricao:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'',badge:'Em breve',sizes:[],ativo:false},
+  {id:'camiseta',nome:'CAMISETA OFICIAL',cat:'Vestuário',descricao:'100% algodão, estampa serigrafia com o logo da banda. Lavagem à mão recomendada.',preco:0,emoji:'👕',img:'/imgs/merch-camiseta.jpg',badge:'Novo',sizes:['P','M','G','GG'],ativo:true,peso_kg:0.25,altura_cm:3,largura_cm:25,comprimento_cm:30},
+  {id:'palheta',nome:'PALHETA EXCLUSIVA',cat:'Acessórios',descricao:'Palheta personalizada com o logo da Nexus. Espessura média. Pack com 3 unidades.',preco:0,emoji:'🎸',img:'',sizes:[],ativo:true,peso_kg:0.05,altura_cm:2,largura_cm:11,comprimento_cm:16},
+  {id:'chaveiro',nome:'CHAVEIRO NEXUS',cat:'Acessórios',descricao:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, gravação a laser.',preco:0,emoji:'🔑',img:'',sizes:[],ativo:true,peso_kg:0.05,altura_cm:2,largura_cm:11,comprimento_cm:16},
+  {id:'pin',nome:'PIN COLECIONÁVEL',cat:'Acessórios',descricao:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.',preco:0,emoji:'📌',img:'',sizes:[],ativo:true,peso_kg:0.03,altura_cm:2,largura_cm:11,comprimento_cm:16},
+  {id:'adesivos',nome:'PACK ADESIVOS',cat:'Colecionáveis',descricao:'6 adesivos em vinil impermeável com artes exclusivas da banda.',preco:0,emoji:'🎨',img:'',sizes:[],ativo:true,peso_kg:0.05,altura_cm:2,largura_cm:11,comprimento_cm:16},
+  {id:'baquetas',nome:'BAQUETAS ASSINADAS',cat:'Colecionáveis',descricao:'Baquetas autografadas pelo baterista. Edição limitada e numerada.',preco:0,emoji:'🥁',img:'',badge:'Em breve',sizes:[],ativo:false,peso_kg:0.2,altura_cm:5,largura_cm:11,comprimento_cm:40},
 ];
 
 let PRODS = [];
 let cart=[], prodAtual=null, tamSel=null, qty=1;
+let freteOpcoesAtuais=[], freteEscolhido=null;
 
 async function loadProdutos(){
   try{
@@ -435,7 +494,8 @@ function addCart(){
   if(!prodAtual||!tamSel)return;
   const key=prodAtual.id+(tamSel!=='único'?`-${tamSel}`:'');
   const ex=cart.find(i=>i.key===key);
-  if(ex)ex.qty+=qty; else cart.push({key,id:prodAtual.id,nome:prodAtual.nome,emoji:prodAtual.emoji||'📦',tam:tamSel,preco:prodAtual.preco,qty});
+  if(ex)ex.qty+=qty; else cart.push({key,id:prodAtual.id,nome:prodAtual.nome,emoji:prodAtual.emoji||'📦',tam:tamSel,preco:prodAtual.preco,qty,
+    peso_kg:prodAtual.peso_kg||0.3,altura_cm:prodAtual.altura_cm||5,largura_cm:prodAtual.largura_cm||20,comprimento_cm:prodAtual.comprimento_cm||25});
   fecharModal();syncCart();toast(`${prodAtual.nome} adicionado!`,'ok');
 }
 function fecharModal(){document.getElementById('mOv').classList.remove('open');}
@@ -476,30 +536,140 @@ function abrirCheckout(){
   const semPreco=cart.some(i=>!i.preco||i.preco<=0);
   if(semPreco){toast('Um ou mais itens ainda não têm preço definido. Use o WhatsApp.','err');return;}
   const tot=cart.reduce((s,i)=>s+i.preco*i.qty,0);
-  document.getElementById('checkoutRes').innerHTML=cart.map(i=>`${i.nome}${i.tam!=='único'?` (${i.tam})`:''} × ${i.qty}`).join('<br/>')+`<br/><br/>Total: <strong>R$ ${tot.toFixed(2).replace('.',',')}</strong>`;
+  document.getElementById('checkoutRes').innerHTML=cart.map(i=>`${i.nome}${i.tam!=='único'?` (${i.tam})`:''} × ${i.qty}`).join('<br/>')+`<br/><br/>Subtotal: <strong>R$ ${tot.toFixed(2).replace('.',',')}</strong>`;
+  // reseta o estado de frete a cada novo checkout — o frete é sempre recalculado
+  freteOpcoesAtuais=[]; freteEscolhido=null;
+  document.getElementById('freteOpcoes').style.display='none';
+  document.getElementById('freteOpcoes').innerHTML='';
+  atualizarTotalCheckout();
   document.getElementById('checkoutOv').classList.add('open');
 }
 function fecharCheckout(){document.getElementById('checkoutOv').classList.remove('open');}
+
+function maskCep(el){
+  let v=el.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5)v=v.slice(0,5)+'-'+v.slice(5);
+  el.value=v;
+  if(v.replace('-','').length===8)calcularFrete(); // calcula automaticamente ao completar o CEP
+}
+
+// Busca o endereço pelo CEP (ViaCEP) só pra preencher rua/bairro/cidade/UF —
+// o valor do frete em si é sempre calculado pelo backend (Melhor Envio).
+async function buscarEnderecoPorCep(cep){
+  const status=document.getElementById('cepStatus');
+  try{
+    const r=await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const d=await r.json();
+    if(d.erro){status.textContent='CEP não encontrado.';status.style.color='var(--red)';return false;}
+    document.getElementById('cRua').value=d.logradouro||'';
+    document.getElementById('cBairro').value=d.bairro||'';
+    document.getElementById('cCidade').value=d.localidade||'';
+    document.getElementById('cUf').value=d.uf||'';
+    status.textContent='';
+    return true;
+  }catch{
+    status.textContent='Não foi possível consultar o CEP agora, preencha o endereço manualmente.';
+    status.style.color='var(--text3)';
+    return false;
+  }
+}
+
+async function calcularFrete(){
+  const cepRaw=document.getElementById('cCep').value.trim();
+  const cep=cepRaw.replace(/\D/g,'');
+  const status=document.getElementById('cepStatus');
+  if(cep.length!==8){status.textContent='Digite um CEP válido (8 dígitos).';status.style.color='var(--red)';return;}
+
+  const btn=document.getElementById('btnCalcFrete');
+  btn.disabled=true;btn.textContent='Calculando...';
+  status.textContent='';status.style.color='var(--text3)';
+
+  await buscarEnderecoPorCep(cep);
+
+  try{
+    const itens=cart.map(i=>({id:i.key,qty:i.qty,preco:i.preco,peso_kg:i.peso_kg,altura_cm:i.altura_cm,largura_cm:i.largura_cm,comprimento_cm:i.comprimento_cm}));
+    const r=await fetch('/api/frete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cep,itens})});
+    const d=await r.json();
+    if(!r.ok){toast(d.erro||'Erro ao calcular frete.','err');btn.disabled=false;btn.textContent='Calcular frete';return;}
+    if(d.modo_demo||!d.opcoes||!d.opcoes.length){
+      status.textContent=d.mensagem||'Nenhuma opção de frete disponível — finalize pelo WhatsApp.';
+      status.style.color='var(--red)';
+      freteOpcoesAtuais=[];freteEscolhido=null;
+      document.getElementById('freteOpcoes').style.display='none';
+      atualizarTotalCheckout();
+      btn.disabled=false;btn.textContent='Calcular frete';
+      return;
+    }
+    freteOpcoesAtuais=d.opcoes;
+    renderFreteOpcoes();
+  }catch{
+    toast('Erro de conexão ao calcular frete.','err');
+  }
+  btn.disabled=false;btn.textContent='Calcular frete';
+}
+
+function renderFreteOpcoes(){
+  const box=document.getElementById('freteOpcoes');
+  if(!freteOpcoesAtuais.length){box.style.display='none';return;}
+  freteEscolhido=freteEscolhido||freteOpcoesAtuais[0];
+  box.style.display='block';
+  box.innerHTML=freteOpcoesAtuais.map(o=>`
+    <div class="frete-op ${freteEscolhido.id===o.id?'on':''}" onclick="selecionarFrete('${o.id}')">
+      <div class="frete-op-info">
+        <span class="frete-op-nome">${o.transportadora} — ${o.servico}</span>
+        <span class="frete-op-prazo">${o.prazo_dias?`Prazo estimado: ${o.prazo_dias} dia(s) úteis`:'Prazo a confirmar'}</span>
+      </div>
+      <span class="frete-op-preco">R$ ${o.preco.toFixed(2).replace('.',',')}</span>
+    </div>`).join('');
+  atualizarTotalCheckout();
+}
+function selecionarFrete(id){
+  freteEscolhido=freteOpcoesAtuais.find(o=>String(o.id)===String(id))||freteEscolhido;
+  renderFreteOpcoes();
+}
+function atualizarTotalCheckout(){
+  const sub=cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  const freteVal=freteEscolhido?freteEscolhido.preco:0;
+  document.getElementById('checkoutTotalFrete').textContent=`R$ ${(sub+freteVal).toFixed(2).replace('.',',')}`;
+  const btn=document.getElementById('btnCfm');
+  btn.disabled=!freteEscolhido;
+  btn.textContent=freteEscolhido?'Ir para o Pagamento →':'Calcule o frete para continuar';
+}
 
 async function confirmarPagamento(){
   const nome=document.getElementById('cNome').value.trim();
   const email=document.getElementById('cEmail').value.trim();
   const tel=document.getElementById('cTel').value.trim();
   const ig=document.getElementById('cInstagram').value.trim();
+  const cep=document.getElementById('cCep').value.replace(/\D/g,'');
+  const rua=document.getElementById('cRua').value.trim();
+  const numero=document.getElementById('cNumero').value.trim();
+  const bairro=document.getElementById('cBairro').value.trim();
+  const complemento=document.getElementById('cComplemento').value.trim();
+  const cidade=document.getElementById('cCidade').value.trim();
+  const uf=document.getElementById('cUf').value.trim();
 
-  document.getElementById('cNome').classList.remove('invalid');
-  document.getElementById('cEmail').classList.remove('invalid');
+  ['cNome','cEmail','cCep','cRua','cNumero'].forEach(id=>document.getElementById(id).classList.remove('invalid'));
 
   let erro=false;
   if(!nome){document.getElementById('cNome').classList.add('invalid');erro=true;}
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('cEmail').classList.add('invalid');erro=true;}
+  if(cep.length!==8){document.getElementById('cCep').classList.add('invalid');erro=true;}
+  if(!rua){document.getElementById('cRua').classList.add('invalid');erro=true;}
+  if(!numero){document.getElementById('cNumero').classList.add('invalid');erro=true;}
+  if(!freteEscolhido){toast('Calcule e escolha uma opção de frete antes de continuar.','err');return;}
   if(erro){toast('Preencha todos os campos obrigatórios.','err');return;}
 
   const btn=document.getElementById('btnCfm');
   btn.disabled=true;btn.textContent='Processando...';
   try{
     const itens=cart.map(i=>({nome:i.nome,tam:i.tam,qty:i.qty,preco:i.preco}));
-    const r=await fetch('/api/criar-pagamento-merch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({itens,nome,email,telefone:tel,instagram:ig})});
+    const body={
+      itens,nome,email,telefone:tel,instagram:ig,
+      cep,uf,cidade,endereco:rua,numero,complemento,bairro,
+      frete_servico_id:freteEscolhido.id
+    };
+    const r=await fetch('/api/criar-pagamento-merch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await r.json();
     if(!r.ok){toast(d.erro||'Erro ao criar pagamento.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';return;}
     if(d.modo_demo){
