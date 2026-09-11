@@ -3,6 +3,26 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
+const UPLOAD_BUCKET_PADRAO = 'membros-fotos';
+const UPLOAD_BUCKETS_PERMITIDOS = ['membros-fotos', 'galeria-fotos'];
+const UPLOAD_TIPOS_PERMITIDOS = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif'
+};
+const UPLOAD_TAMANHO_MAX_BYTES = 5 * 1024 * 1024; // 5MB (o arquivo já deve chegar comprimido pelo navegador)
+
+function uploadSlugify(str) {
+  return String(str || 'foto')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .slice(0, 40) || 'foto';
+}
+
 function autenticar(req) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Bearer ')) return false;
@@ -29,6 +49,53 @@ export default async function handler(req, res) {
   }
 
   if (!autenticar(req)) return res.status(401).json({ erro: 'Não autorizado' });
+
+  // Upload de imagem (fotos de membros e da galeria) — antes era o arquivo api/upload.js,
+  // unificado aqui para não ultrapassar o limite de Serverless Functions do plano Hobby da Vercel.
+  if (acao === 'upload') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+
+    try {
+      const { imagemBase64, tipo, nome, pasta } = req.body || {};
+      if (!imagemBase64 || !tipo) {
+        return res.status(400).json({ erro: 'Dados da imagem incompletos' });
+      }
+
+      const bucket = UPLOAD_BUCKETS_PERMITIDOS.includes(pasta) ? pasta : UPLOAD_BUCKET_PADRAO;
+
+      const extensao = UPLOAD_TIPOS_PERMITIDOS[tipo];
+      if (!extensao) {
+        return res.status(400).json({ erro: 'Formato de imagem não suportado. Use JPG, PNG, WEBP ou GIF.' });
+      }
+
+      const base64Limpo = imagemBase64.includes(',') ? imagemBase64.split(',')[1] : imagemBase64;
+      const buffer = Buffer.from(base64Limpo, 'base64');
+
+      if (buffer.length > UPLOAD_TAMANHO_MAX_BYTES) {
+        return res.status(400).json({ erro: 'Imagem muito grande. O tamanho máximo é 5MB.' });
+      }
+
+      const nomeArquivo = `${uploadSlugify(nome)}-${Date.now()}.${extensao}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(nomeArquivo, buffer, { contentType: tipo, upsert: false });
+
+      if (uploadError) {
+        console.error('Erro upload:', uploadError.message);
+        const dica = /bucket not found/i.test(uploadError.message)
+          ? ` Crie o bucket "${bucket}" no Supabase (veja o bloco de Storage no supabase_schema.sql / supabase_schema_galeria.sql).`
+          : '';
+        return res.status(500).json({ erro: 'Erro ao enviar imagem: ' + uploadError.message + dica });
+      }
+
+      const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(nomeArquivo);
+      return res.status(200).json({ url: publicUrlData.publicUrl });
+    } catch (e) {
+      console.error('Erro upload:', e.message);
+      return res.status(500).json({ erro: 'Erro ao processar upload: ' + e.message });
+    }
+  }
 
   // Resumo
   if (acao === 'resumo') {
