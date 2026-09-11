@@ -125,6 +125,10 @@
     .act-btn:hover{border-color:var(--border-s);color:var(--text);}
     .act-btn.del:hover{border-color:var(--red-dim);color:var(--red);}
     .act-btn.done{border-color:rgba(61,187,128,0.4)!important;color:#3dbb80!important;}
+    tr.show-row-drag{transition:background var(--tr);}
+    tr.show-row-drag.dragging{opacity:0.35;background:rgba(232,34,10,0.08);}
+    tr.show-row-drag .drag-handle:hover{color:var(--red);}
+    tr.show-row-drag .drag-handle:active{cursor:grabbing;}
     .modal-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
     .modal-ov.open{opacity:1;pointer-events:all;}
     .modal-form{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);padding:36px;width:100%;max-width:520px;position:relative;transform:translateY(18px);transition:transform 0.28s;max-height:90vh;overflow-y:auto;}
@@ -239,11 +243,8 @@
     <!-- SIDEBAR DE NAVEGAÇÃO -->
     <aside class="adm-sidebar" id="admSidebar">
       <div class="adm-side-group">
-        <div class="adm-side-label">Visão geral</div>
-        <button class="adm-side-link" data-page="visao-geral"><span class="adm-side-icon">📊</span> Visão geral</button>
-      </div>
-      <div class="adm-side-group">
         <div class="adm-side-label">Rifa</div>
+        <button class="adm-side-link" data-page="visao-geral"><span class="adm-side-icon">📊</span> Visão geral</button>
         <button class="adm-side-link" data-page="rifa-config"><span class="adm-side-icon">⚙️</span> Configurações</button>
         <button class="adm-side-link" data-page="rifa-sorteio"><span class="adm-side-icon">🎲</span> Sorteio</button>
         <button class="adm-side-link" data-page="rifa-bilhetes"><span class="adm-side-icon">🎟</span> Bilhetes</button>
@@ -457,10 +458,11 @@
           </div>
           <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormShow()">+ Adicionar Show</button>
         </div>
+        <p style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);letter-spacing:0.05em;margin-bottom:14px;">⠿ Arraste pela alça para mudar a ordem dos shows na agenda.</p>
         <div class="tabela-wrapper">
           <table>
-            <thead><tr><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody id="tabelaShows"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+            <thead><tr><th style="width:36px;"></th><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="tabelaShows"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
           </table>
         </div>
       </section>
@@ -870,7 +872,7 @@ async function carregarShows(){
       showsData = [];
       if(!res.ok){
         document.getElementById('tabelaShows').innerHTML=
-          '<tr><td colspan="5" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>shows</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
+          '<tr><td colspan="6" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>shows</strong> não encontrada no Supabase.<br/>Execute o bloco de migração no final do arquivo <strong>supabase_schema.sql</strong>.</div></td></tr>';
         return;
       }
     }
@@ -881,14 +883,15 @@ async function carregarShows(){
 function renderTabelaShows(){
   const tbody = document.getElementById('tabelaShows');
   if(!showsData.length){
-    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;">Nenhum show cadastrado</td></tr>';
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;">Nenhum show cadastrado</td></tr>';
     return;
   }
   const statusLabel = {breve:'Em breve',confirmado:'Confirmado',realizado:'Realizado',cancelado:'Cancelado'};
-  tbody.innerHTML = showsData.map(s=>{
+  tbody.innerHTML = showsData.map((s,i)=>{
     const d = s.data ? new Date(s.data+'T12:00:00') : null;
     const dataFmt = d ? d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase() : '—';
-    return `<tr>
+    return `<tr draggable="true" data-id="${s.id}" data-idx="${i}" class="show-row-drag">
+      <td class="drag-handle" title="Arraste para reordenar" style="cursor:grab;text-align:center;color:var(--text3);font-size:1rem;user-select:none;">⠿</td>
       <td style="font-family:'DM Mono',monospace;font-size:0.78rem;">${dataFmt}</td>
       <td><strong>${s.nome}</strong></td>
       <td style="color:var(--text2);font-size:0.84rem;">${s.local||'—'}</td>
@@ -900,6 +903,49 @@ function renderTabelaShows(){
       </td>
     </tr>`;
   }).join('');
+  ativarDragShows();
+}
+
+// ── Arrastar para reordenar shows ──────────────────────────────────────────
+let _dragEl = null;
+function ativarDragShows(){
+  const tbody = document.getElementById('tabelaShows');
+  const linhas = () => Array.from(tbody.querySelectorAll('tr.show-row-drag'));
+
+  linhas().forEach(row=>{
+    row.addEventListener('dragstart', ()=>{
+      _dragEl = row;
+      row.classList.add('dragging');
+    });
+    row.addEventListener('dragend', ()=>{
+      row.classList.remove('dragging');
+      _dragEl = null;
+      persistirOrdemShows();
+    });
+    row.addEventListener('dragover', (e)=>{
+      e.preventDefault();
+      if(!_dragEl || _dragEl===row) return;
+      const rect = row.getBoundingClientRect();
+      const depois = (e.clientY - rect.top) > (rect.height/2);
+      tbody.insertBefore(_dragEl, depois ? row.nextSibling : row);
+    });
+  });
+}
+
+async function persistirOrdemShows(){
+  const tbody = document.getElementById('tabelaShows');
+  const ids = Array.from(tbody.querySelectorAll('tr.show-row-drag')).map(r=>r.dataset.id);
+  // Reordena o array local imediatamente para refletir a nova ordem
+  showsData = ids.map(id => showsData.find(s=>s.id===id)).filter(Boolean);
+  try{
+    const res = await fetch('/api/shows', {
+      method:'PUT',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify({ reordenar: ids })
+    });
+    if(res.ok){ toast('Ordem da agenda atualizada!','ok'); }
+    else{ toast('Erro ao salvar a nova ordem','err'); carregarShows(); }
+  }catch{ toast('Erro de conexão ao reordenar','err'); carregarShows(); }
 }
 
 function abrirFormShow(id){
