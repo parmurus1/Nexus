@@ -325,12 +325,15 @@
     <div style="height:1px;background:var(--border);margin:18px 0;"></div>
     <div class="modal-ey" style="margin-bottom:2px;">Endereço de entrega</div>
 
-    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
       <div class="fg">
         <label>CEP <span class="req-badge">OBRIGATÓRIO</span></label>
         <input type="text" id="cCep" placeholder="00000-000" maxlength="9" oninput="maskCep(this)"/>
       </div>
-      <button class="btn-ver" id="btnCalcFrete" style="height:44px;white-space:nowrap;" onclick="calcularFrete()">Calcular frete</button>
+      <div class="fg" style="display:flex;flex-direction:column;">
+        <label style="visibility:hidden;">Frete</label>
+        <button class="btn-ver" id="btnCalcFrete" style="flex:1;width:100%;white-space:nowrap;" onclick="calcularFrete()">Calcular frete</button>
+      </div>
     </div>
     <div id="cepStatus" style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text3);margin:-6px 0 4px;"></div>
 
