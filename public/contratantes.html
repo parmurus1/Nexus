@@ -7,7 +7,7 @@
   <meta property="og:description" content="Rider técnico, mapa de palco e contato para contratar a Nexus Band."/>
   <meta property="og:image" content="/imgs/og-image.png"/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://nexus-rifa.vercel.app/contratantes.html"/>
+  <meta property="og:url" content="https://nexus-rifa.vercel.app/contratantes"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="/imgs/og-image.png"/>
   <link rel="icon" type="image/png" href="/imgs/nexusicon.png"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -172,6 +172,32 @@
 
     .mapa-obs{margin-top:16px;padding:14px 16px;background:var(--bg4);border-radius:var(--radius-sm);font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);line-height:1.8;}
     .mapa-obs strong{color:var(--text);}
+    /* ── VISUALIZADOR DE PDF (Rider da banda) ── */
+    .pdf-viewer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:64px;}
+    .pdf-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .pdf-titulo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);display:flex;align-items:center;gap:10px;}
+    .pdf-titulo::before{content:'📄';font-size:1.1rem;}
+    .pdf-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    .pdf-btn{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:8px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+    .pdf-btn:hover{border-color:var(--red);color:var(--red);}
+    .pdf-body{padding:24px;}
+    .pdf-frame-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;height:560px;position:relative;}
+    .pdf-frame-wrap iframe{width:100%;height:100%;border:0;display:block;background:#525659;}
+    .pdf-fallback{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;color:var(--text2);}
+    .pdf-fallback.show{display:flex;}
+    .pdf-fallback svg{width:44px;height:44px;opacity:0.3;}
+    .pdf-fallback p{font-size:0.84rem;max-width:360px;line-height:1.7;}
+
+    /* ── PDF em tela cheia (maximizado) ── */
+    .pdf-lb{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.94);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.22s;}
+    .pdf-lb.open{opacity:1;pointer-events:all;}
+    .pdf-lb-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--border-s);flex-shrink:0;}
+    .pdf-lb-bar span{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
+    .pdf-lb-close{width:34px;height:34px;background:var(--bg4);border:1px solid var(--border-s);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;color:var(--text2);cursor:pointer;transition:all var(--tr);}
+    .pdf-lb-close:hover{border-color:var(--red);color:var(--red);}
+    .pdf-lb iframe{flex:1;width:100%;border:0;background:#525659;}
+    @media(max-width:700px){.pdf-frame-wrap{height:420px;}}
+
     .rider-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:64px;}
     @media(max-width:600px){.rider-grid{grid-template-columns:1fr;}}
     .rider-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;}
@@ -189,11 +215,11 @@
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="/sobre.html" class="nav-link">Sobre</a>
-    <a href="/agenda.html" class="nav-link">Agenda</a>
-    <a href="/merch.html" class="nav-link">Merch</a>
-    <a href="/contratantes.html" class="nav-link active">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/sobre" class="nav-link">Sobre</a>
+    <a href="/agenda" class="nav-link">Agenda</a>
+    <a href="/merch" class="nav-link">Merch</a>
+    <a href="/contratantes" class="nav-link active">Contratantes</a>
+    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -249,6 +275,37 @@
           </div>
         </div>
 
+  <!-- RIDER EM PDF -->
+  <p class="sec-eyebrow">Documento técnico</p>
+  <h2 class="sec-title">RIDER EM PDF</h2>
+  <div class="pdf-viewer">
+    <div class="pdf-header">
+      <span class="pdf-titulo">Rider técnico — Nexus Band</span>
+      <div class="pdf-actions">
+        <button class="pdf-btn" onclick="pdfMaximizar()">⤢ Maximizar</button>
+        <a href="/docs/rider-nexus.pdf" download="rider-tecnico-nexus.pdf" class="pdf-btn">⬇ Baixar PDF</a>
+      </div>
+    </div>
+    <div class="pdf-body">
+      <div class="pdf-frame-wrap">
+        <iframe id="pdfFrame" src="/docs/rider-nexus.pdf#toolbar=0&view=FitH" title="Rider técnico da Nexus Band" onerror="document.getElementById('pdfFallback').classList.add('show')"></iframe>
+        <div class="pdf-fallback" id="pdfFallback">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"/></svg>
+          <p>Não foi possível carregar a prévia do PDF. Use o botão “Baixar PDF” acima para acessar o documento completo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF MAXIMIZADO -->
+  <div class="pdf-lb" id="pdfLb">
+    <div class="pdf-lb-bar">
+      <span>Rider técnico — Nexus Band</span>
+      <div class="pdf-lb-close" onclick="pdfFechar()">✕</div>
+    </div>
+    <iframe id="pdfFrameLb" src="" title="Rider técnico da Nexus Band (tela cheia)"></iframe>
+  </div>
+
   <!-- MAPA DE PALCO -->
   <p class="sec-eyebrow">Setup técnico</p>
   <h2 class="sec-title">MAPA DE PALCO</h2>
@@ -266,7 +323,7 @@
   </div>
 
   <!-- LIGHTBOX MAPA -->
-  <div class="mapa-lb" id="mapaLb" onclick="if(event.target===this)mapaLbClose()">
+  <div class="mapa-lb" id="mapaLb">
     <div class="mapa-lb-inner">
       <img src="/imgs/mapa-palco.jpeg" alt="Mapa de palco — Nexus Band"/>
     </div>
@@ -321,7 +378,7 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span id="devTrigger" title="" style="cursor:pointer;text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 
@@ -331,7 +388,20 @@
 
   function mapaLbOpen(){document.getElementById('mapaLb').classList.add('open');}
   function mapaLbClose(){document.getElementById('mapaLb').classList.remove('open');}
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')mapaLbClose();});
+
+  const PDF_URL = '/docs/rider-nexus.pdf';
+  function pdfMaximizar(){
+    document.getElementById('pdfFrameLb').src = PDF_URL + '#toolbar=1&view=FitH';
+    document.getElementById('pdfLb').classList.add('open');
+  }
+  function pdfFechar(){
+    document.getElementById('pdfLb').classList.remove('open');
+    document.getElementById('pdfFrameLb').src = '';
+  }
+  // Confere se o PDF existe; se não, mostra o aviso de fallback em vez do iframe vazio/erro do navegador.
+  fetch(PDF_URL, { method: 'HEAD' }).then(r=>{ if(!r.ok) document.getElementById('pdfFallback').classList.add('show'); }).catch(()=>document.getElementById('pdfFallback').classList.add('show'));
+
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){mapaLbClose();pdfFechar();}});
 </script>
 <script>
 (async()=>{
@@ -347,10 +417,10 @@
   }catch(e){}
 })();
 </script>
-<script>
-  var _dt = document.getElementById('devTrigger');
-  if (_dt) { _dt.addEventListener('click', function(){ window.location.href = '/admin.html'; }); }
-</script>
 <script src="/venom.js" defer></script>
+<script src="/js/common.js"></script>
+<script>
+  NexusSafeOverlay(document.getElementById('mapaLb'), mapaLbClose);
+</script>
 </body>
 </html>
