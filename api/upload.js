@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
-const BUCKET = 'membros-fotos';
+const BUCKET_PADRAO = 'membros-fotos';
+const BUCKETS_PERMITIDOS = ['membros-fotos', 'galeria-fotos'];
 const TIPOS_PERMITIDOS = {
   'image/jpeg': 'jpg',
   'image/jpg': 'jpg',
@@ -38,10 +39,12 @@ export default async function handler(req, res) {
   if (!autenticar(req)) return res.status(401).json({ erro: 'Não autorizado' });
 
   try {
-    const { imagemBase64, tipo, nome } = req.body || {};
+    const { imagemBase64, tipo, nome, pasta } = req.body || {};
     if (!imagemBase64 || !tipo) {
       return res.status(400).json({ erro: 'Dados da imagem incompletos' });
     }
+
+    const BUCKET = BUCKETS_PERMITIDOS.includes(pasta) ? pasta : BUCKET_PADRAO;
 
     const extensao = TIPOS_PERMITIDOS[tipo];
     if (!extensao) {
@@ -65,7 +68,7 @@ export default async function handler(req, res) {
     if (uploadError) {
       console.error('Erro upload:', uploadError.message);
       const dica = /bucket not found/i.test(uploadError.message)
-        ? ' Crie o bucket "membros-fotos" no Supabase (veja o bloco de Storage no supabase_schema.sql).'
+        ? ` Crie o bucket "${BUCKET}" no Supabase (veja o bloco de Storage no supabase_schema.sql / supabase_schema_galeria.sql).`
         : '';
       return res.status(500).json({ erro: 'Erro ao enviar imagem: ' + uploadError.message + dica });
     }

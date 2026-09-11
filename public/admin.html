@@ -258,6 +258,7 @@
         <div class="adm-side-label">Conteúdo</div>
         <button class="adm-side-link" data-page="shows"><span class="adm-side-icon">🎤</span> Agenda de Shows</button>
         <button class="adm-side-link" data-page="membros"><span class="adm-side-icon">🎸</span> Membros</button>
+        <button class="adm-side-link" data-page="galeria"><span class="adm-side-icon">🖼️</span> Galeria</button>
       </div>
     </aside>
 
@@ -484,6 +485,23 @@
         </div>
       </section>
 
+      <!-- PÁGINA: GALERIA -->
+      <section class="adm-page" id="page-galeria">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Galeria</div>
+            <div class="adm-page-sub">Fotos e vídeos exibidos na página Galeria</div>
+          </div>
+          <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormGaleria()">+ Adicionar item</button>
+        </div>
+        <div class="tabela-wrapper">
+          <table>
+            <thead><tr><th>Prévia</th><th>Tipo</th><th>Título</th><th>Ordem</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="tabelaGaleria"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
     </main>
   </div>
 </div>
@@ -602,6 +620,80 @@
   </div>
 </div>
 
+<!-- ── MODAL ITEM DA GALERIA ── -->
+<div class="modal-ov" id="galeriaOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharFormGaleria)">
+  <div class="modal-form">
+    <button class="modal-x" onclick="fecharFormGaleria()">✕</button>
+    <div class="modal-ey" id="galeriaFormEy">Novo item</div>
+
+    <div class="fg">
+      <label>Tipo *</label>
+      <select id="gTipo" class="config-input" onchange="atualizarCamposGaleria()">
+        <option value="foto">Foto</option>
+        <option value="video">Vídeo</option>
+      </select>
+    </div>
+
+    <div class="fg"><label>Título (opcional)</label><input type="text" id="gTitulo" placeholder="Ex: Show no Espaço das Américas"/></div>
+
+    <!-- CAMPOS DE FOTO -->
+    <div id="camposFoto">
+      <div class="fg">
+        <label>Foto *</label>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:9px;">
+          <div id="gFotoPreviewWrap" style="width:56px;height:56px;border-radius:var(--radius-sm);overflow:hidden;background:var(--bg3);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <img id="gFotoPreview" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none;"/>
+            <span id="gFotoPreviewPh" style="color:var(--text3);font-size:1.1rem;">?</span>
+          </div>
+          <div style="flex:1;">
+            <input type="file" id="gFotoArquivo" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;" onchange="enviarFotoGaleria(this)"/>
+            <button type="button" class="act-btn" id="btnEnviarFotoGaleria" style="width:100%;justify-content:center;" onclick="document.getElementById('gFotoArquivo').click()">📤 Enviar foto</button>
+          </div>
+        </div>
+        <input type="url" id="gUrlFoto" placeholder="/imgs/shows/show-01.jpeg" oninput="atualizarPreviewFotoGaleria()"/>
+        <p style="font-size:0.62rem;color:var(--text3);margin-top:5px;font-family:'DM Mono',monospace;letter-spacing:0.02em;">Envie um arquivo (JPG/PNG/WEBP/GIF, até 5MB) ou cole a URL de uma imagem já hospedada.</p>
+      </div>
+    </div>
+
+    <!-- CAMPOS DE VÍDEO -->
+    <div id="camposVideo" style="display:none;">
+      <div class="fg">
+        <label>Link do vídeo *</label>
+        <input type="url" id="gUrlVideo" placeholder="Link do YouTube, Vimeo, Instagram, TikTok ou arquivo .mp4"/>
+        <p style="font-size:0.62rem;color:var(--text3);margin-top:5px;font-family:'DM Mono',monospace;letter-spacing:0.02em;">YouTube e Vimeo tocam direto na página. Instagram/TikTok/outros abrem em uma nova aba.</p>
+      </div>
+      <div class="fg">
+        <label>Capa do vídeo (opcional)</label>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:9px;">
+          <div id="gCapaPreviewWrap" style="width:56px;height:56px;border-radius:var(--radius-sm);overflow:hidden;background:var(--bg3);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <img id="gCapaPreview" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none;"/>
+            <span id="gCapaPreviewPh" style="color:var(--text3);font-size:1.1rem;">?</span>
+          </div>
+          <div style="flex:1;">
+            <input type="file" id="gCapaArquivo" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;" onchange="enviarCapaGaleria(this)"/>
+            <button type="button" class="act-btn" id="btnEnviarCapaGaleria" style="width:100%;justify-content:center;" onclick="document.getElementById('gCapaArquivo').click()">📤 Enviar capa</button>
+          </div>
+        </div>
+        <input type="url" id="gThumb" placeholder="URL da imagem de capa" oninput="atualizarPreviewCapaGaleria()"/>
+        <p style="font-size:0.62rem;color:var(--text3);margin-top:5px;font-family:'DM Mono',monospace;letter-spacing:0.02em;">Para vídeos do YouTube, se deixar em branco a capa é gerada automaticamente.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="fg"><label>Ordem de exibição</label><input type="number" id="gOrdem" placeholder="1" min="0" step="1"/></div>
+      <div class="fg">
+        <label>Status</label>
+        <select id="gAtivo" class="config-input">
+          <option value="true">Ativo (visível)</option>
+          <option value="false">Inativo (oculto)</option>
+        </select>
+      </div>
+    </div>
+    <input type="hidden" id="gId"/>
+    <button class="btn-cfm" id="btnSalvarGaleria" onclick="salvarGaleria()">Salvar item</button>
+  </div>
+</div>
+
 <footer>
   <div class="footer-logo"><img src="/imgs/marca/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
   <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
@@ -639,10 +731,11 @@ function mostrarPainel(){
   carregarShows();
   carregarProdutos();
   carregarMembros();
+  carregarGaleria();
 }
 
 // ══════════════ ROTEAMENTO DE PÁGINAS (SIDEBAR) ══════════════
-const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros'];
+const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros','galeria'];
 
 function initAdminRouter(){
   document.querySelectorAll('.adm-side-link').forEach(btn=>{
@@ -1322,6 +1415,203 @@ async function excluirMembro(id){
 }
 
 function editarMembro(id){ abrirFormMembro(id); }
+
+// ══════════════ GALERIA (fotos e vídeos) ══════════════
+let galeriaData = [];
+
+async function carregarGaleria(){
+  try{
+    const res = await fetch('/api/galeria?publico=nao', {headers:{'Authorization':`Bearer ${token}`}});
+    if(res.ok){
+      const d = await res.json();
+      galeriaData = d.itens||[];
+      if(d.aviso){
+        document.getElementById('tabelaGaleria').innerHTML=
+          '<tr><td colspan="6" style="text-align:center;padding:20px;"><div style="background:rgba(232,34,10,0.08);border:1px solid rgba(232,34,10,0.25);border-radius:8px;padding:16px 20px;font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--red);line-height:1.8;">⚠️ Tabela <strong>galeria</strong> não encontrada no Supabase.<br/>Execute o arquivo <strong>supabase_schema_galeria.sql</strong>.</div></td></tr>';
+        return;
+      }
+    }
+    else galeriaData = [];
+  }catch{ galeriaData = []; }
+  renderTabelaGaleria();
+}
+
+function renderTabelaGaleria(){
+  const tbody = document.getElementById('tabelaGaleria');
+  if(!galeriaData.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);font-family:\'DM Mono\',monospace;font-size:0.7rem;">Nenhum item cadastrado</td></tr>';
+    return;
+  }
+  tbody.innerHTML = galeriaData.map(g=>{
+    const preview = g.tipo==='foto' ? g.url : (g.thumbnail_url || '');
+    return `<tr>
+    <td>${preview?`<img src="${preview}" alt="" style="width:44px;height:44px;border-radius:6px;object-fit:cover;display:inline-block;"/>`:(g.tipo==='video'?'🎬':'—')}</td>
+    <td>${g.tipo==='foto'?'Foto':'Vídeo'}</td>
+    <td><strong>${g.titulo||'—'}</strong></td>
+    <td style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--text2);">${g.ordem??'—'}</td>
+    <td><span class="badge ${g.ativo?'badge-confirmado':'badge-breve'}">${g.ativo?'Ativo':'Inativo'}</span></td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="act-btn" onclick="editarGaleria('${g.id}')">✏ Editar</button>
+      <button class="act-btn del" onclick="excluirGaleria('${g.id}')">✕ Excluir</button>
+    </td>
+  </tr>`;
+  }).join('');
+}
+
+function atualizarCamposGaleria(){
+  const tipo = document.getElementById('gTipo').value;
+  document.getElementById('camposFoto').style.display = tipo==='foto' ? '' : 'none';
+  document.getElementById('camposVideo').style.display = tipo==='video' ? '' : 'none';
+}
+
+function abrirFormGaleria(id){
+  const g = id ? galeriaData.find(x=>x.id===id) : null;
+  document.getElementById('galeriaFormEy').textContent = g ? 'Editar item' : 'Novo item';
+  document.getElementById('gTipo').value = g?.tipo || 'foto';
+  document.getElementById('gTitulo').value = g?.titulo || '';
+  document.getElementById('gUrlFoto').value = g?.tipo!=='video' ? (g?.url||'') : '';
+  document.getElementById('gUrlVideo').value = g?.tipo==='video' ? (g?.url||'') : '';
+  document.getElementById('gThumb').value = g?.thumbnail_url || '';
+  document.getElementById('gOrdem').value = g?.ordem ?? (galeriaData.length+1);
+  document.getElementById('gAtivo').value = String(g?.ativo!==false);
+  document.getElementById('gId').value = g?.id || '';
+  document.getElementById('gFotoArquivo').value = '';
+  document.getElementById('gCapaArquivo').value = '';
+  atualizarCamposGaleria();
+  atualizarPreviewFotoGaleria();
+  atualizarPreviewCapaGaleria();
+  document.getElementById('galeriaOv').classList.add('open');
+  nexusMarkClean('galeria');
+  nexusWatchForm('galeriaOv','galeria');
+}
+function fecharFormGaleria(){
+  if(!nexusConfirmClose('galeria')) return;
+  nexusMarkClean('galeria');
+  document.getElementById('galeriaOv').classList.remove('open');
+}
+
+function atualizarPreviewFotoGaleria(){
+  const url = document.getElementById('gUrlFoto').value.trim();
+  const img = document.getElementById('gFotoPreview');
+  const ph = document.getElementById('gFotoPreviewPh');
+  if(url){
+    img.src = url; img.style.display=''; ph.style.display='none';
+    img.onerror = () => { img.style.display='none'; ph.style.display=''; };
+  } else { img.style.display='none'; ph.style.display=''; }
+}
+function atualizarPreviewCapaGaleria(){
+  const url = document.getElementById('gThumb').value.trim();
+  const img = document.getElementById('gCapaPreview');
+  const ph = document.getElementById('gCapaPreviewPh');
+  if(url){
+    img.src = url; img.style.display=''; ph.style.display='none';
+    img.onerror = () => { img.style.display='none'; ph.style.display=''; };
+  } else { img.style.display='none'; ph.style.display=''; }
+}
+
+async function enviarFotoGaleria(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  if(!/^image\/(jpeg|png|webp|gif)$/.test(file.type)){
+    toast('Formato não suportado. Use JPG, PNG, WEBP ou GIF.','err'); input.value=''; return;
+  }
+  if(file.size > 10 * 1024 * 1024){
+    toast('Arquivo muito grande (máx. 10MB antes da compressão).','err'); input.value=''; return;
+  }
+  const btn = document.getElementById('btnEnviarFotoGaleria');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try{
+    const { dataUrl, tipo } = await redimensionarImagem(file, 1600, 0.85);
+    const nome = document.getElementById('gTitulo').value.trim() || 'galeria';
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ imagemBase64: dataUrl, tipo, nome, pasta: 'galeria-fotos' })
+    });
+    const d = await res.json();
+    if(res.ok){
+      document.getElementById('gUrlFoto').value = d.url;
+      atualizarPreviewFotoGaleria();
+      toast('Foto enviada!','ok');
+    } else {
+      toast(d.erro || 'Erro ao enviar foto','err');
+    }
+  }catch(e){
+    toast('Erro ao processar a imagem','err');
+  }
+  btn.disabled = false; btn.textContent = '📤 Enviar foto';
+  input.value = '';
+}
+
+async function enviarCapaGaleria(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  if(!/^image\/(jpeg|png|webp|gif)$/.test(file.type)){
+    toast('Formato não suportado. Use JPG, PNG, WEBP ou GIF.','err'); input.value=''; return;
+  }
+  if(file.size > 10 * 1024 * 1024){
+    toast('Arquivo muito grande (máx. 10MB antes da compressão).','err'); input.value=''; return;
+  }
+  const btn = document.getElementById('btnEnviarCapaGaleria');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try{
+    const { dataUrl, tipo } = await redimensionarImagem(file, 1000, 0.85);
+    const nome = document.getElementById('gTitulo').value.trim() || 'capa-video';
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ imagemBase64: dataUrl, tipo, nome, pasta: 'galeria-fotos' })
+    });
+    const d = await res.json();
+    if(res.ok){
+      document.getElementById('gThumb').value = d.url;
+      atualizarPreviewCapaGaleria();
+      toast('Capa enviada!','ok');
+    } else {
+      toast(d.erro || 'Erro ao enviar capa','err');
+    }
+  }catch(e){
+    toast('Erro ao processar a imagem','err');
+  }
+  btn.disabled = false; btn.textContent = '📤 Enviar capa';
+  input.value = '';
+}
+
+async function salvarGaleria(){
+  const tipo = document.getElementById('gTipo').value;
+  const url = tipo==='foto' ? document.getElementById('gUrlFoto').value.trim() : document.getElementById('gUrlVideo').value.trim();
+  if(!url){ toast(tipo==='foto' ? 'Envie ou cole a URL da foto' : 'Cole o link do vídeo','err'); return; }
+  const btn = document.getElementById('btnSalvarGaleria');
+  btn.disabled=true; btn.textContent='Salvando...';
+  const id = document.getElementById('gId').value;
+  const payload = {
+    tipo,
+    titulo: document.getElementById('gTitulo').value.trim(),
+    url,
+    thumbnail_url: tipo==='video' ? document.getElementById('gThumb').value.trim() : '',
+    ordem: parseInt(document.getElementById('gOrdem').value,10)||0,
+    ativo: document.getElementById('gAtivo').value === 'true'
+  };
+  try{
+    const res = await fetch('/api/galeria'+(id?`/${id}`:''), {
+      method: id?'PUT':'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body: JSON.stringify(payload)
+    });
+    if(res.ok){ toast(id?'Item atualizado!':'Item criado!','ok'); nexusMarkClean('galeria'); fecharFormGaleria(); carregarGaleria(); }
+    else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
+  }catch{ toast('Erro de conexão','err'); }
+  btn.disabled=false; btn.textContent='Salvar item';
+}
+
+async function excluirGaleria(id){
+  if(!confirm('Excluir este item da galeria?')) return;
+  const res = await fetch(`/api/galeria/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+  if(res.ok){ toast('Item excluído','ok'); carregarGaleria(); }
+  else toast('Erro ao excluir','err');
+}
+
+function editarGaleria(id){ abrirFormGaleria(id); }
 </script>
 <script>
   const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
