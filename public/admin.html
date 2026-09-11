@@ -68,11 +68,7 @@
     .btn-red{width:100%;background:var(--red);border:none;color:#fff;padding:14px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;cursor:pointer;transition:all var(--tr);}
     .btn-red:hover{background:#ff2a10;box-shadow:0 8px 24px var(--red-glow);}
     /* PAINEL */
-    #adminPanel{display:none;max-width:1020px;margin:0 auto;padding:96px 24px 60px;}
-    .adm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
-    .adm-titulo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.04em;color:var(--text);}
-    .adm-sub{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--text3);margin-top:5px;}
-    .adm-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    #adminPanel{display:none;}
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:36px;}
     @media(max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
     .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;}
@@ -123,7 +119,7 @@
     .toggle-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform 0.2s;}
     .toggle-track.on .toggle-thumb{transform:translateX(20px);}
     .demo-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(232,34,10,0.15);color:var(--red);border:1px solid rgba(232,34,10,0.3);}
-    @media(max-width:768px){#adminPanel{padding:80px 16px 60px;}.adm-header{flex-direction:column;}.adm-actions{width:100%;}.config-grid{grid-template-columns:1fr;}}
+    @media(max-width:768px){.config-grid{grid-template-columns:1fr;}}
     .crud-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
     .act-btn{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;background:none;border:1px solid var(--border-s);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--tr);}
     .act-btn:hover{border-color:var(--border-s);color:var(--text);}
@@ -149,26 +145,61 @@
     .badge-confirmado{background:rgba(61,187,128,0.05);color:#3dbb80;border:1px solid rgba(61,187,128,0.3);}
     .badge-breve{background:var(--bg3);color:var(--text3);}
     .badge-cancelado{background:rgba(160,26,7,0.1);color:var(--red);}
+
+    /* ══════════════ NOVO LAYOUT DO ADMIN ══════════════ */
+    body.admin-logged .site-nav{display:none;}
+
+    .adm-header{
+      position:fixed;top:0;left:0;right:0;z-index:150;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 28px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+      border-bottom:1px solid var(--border);
+    }
+    .adm-header-left{display:flex;align-items:center;gap:14px;}
+    .adm-header-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+    .adm-header-logo img{height:26px;width:auto;object-fit:contain;}
+    .adm-header-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.06em;color:var(--text);line-height:1;}
+    .adm-header-badge{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);border:1px solid rgba(232,34,10,0.3);padding:3px 9px;border-radius:999px;margin-left:2px;}
+    .adm-header-right{display:flex;align-items:center;gap:8px;}
+    .adm-menu-toggle{display:none;background:none;border:1px solid var(--border-s);color:var(--text2);width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;align-items:center;justify-content:center;font-size:1rem;}
+
+    .adm-shell{display:flex;min-height:100vh;padding-top:60px;}
+    .adm-sidebar{
+      width:236px;flex-shrink:0;position:fixed;top:60px;left:0;bottom:0;z-index:120;
+      background:var(--bg2);border-right:1px solid var(--border);
+      padding:20px 12px;overflow-y:auto;
+    }
+    .adm-side-group{margin-bottom:22px;}
+    .adm-side-label{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);padding:0 10px;margin-bottom:8px;}
+    .adm-side-link{
+      display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+      background:none;border:none;color:var(--text2);padding:10px 10px;border-radius:var(--radius-sm);
+      font-family:'Barlow',sans-serif;font-size:0.86rem;cursor:pointer;transition:all var(--tr);margin-bottom:2px;
+    }
+    .adm-side-link:hover{background:var(--bg3);color:var(--text);}
+    .adm-side-link.active{background:var(--red-mid);color:var(--red);}
+    .adm-side-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+
+    .adm-main{flex:1;min-width:0;margin-left:236px;padding:32px 32px 60px;max-width:1020px;}
+    .adm-page{display:none;}
+    .adm-page.active{display:block;animation:admFade 0.25s ease;}
+    @keyframes admFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .adm-page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+    .adm-page-titulo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--text);}
+    .adm-page-sub{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--text3);margin-top:5px;}
+
+    @media(max-width:900px){
+      .adm-sidebar{transform:translateX(-100%);transition:transform var(--tr);box-shadow:0 0 40px rgba(0,0,0,0.5);}
+      .adm-sidebar.open{transform:translateX(0);}
+      .adm-main{margin-left:0;padding:24px 18px 60px;}
+      .adm-menu-toggle{display:flex;}
+      .adm-sidebar-ov{display:none;position:fixed;inset:0;top:60px;background:rgba(0,0,0,0.5);z-index:110;}
+      .adm-sidebar-ov.open{display:block;}
+    }
   </style>
+  <script src="/nexus-core.js"></script>
 </head>
 <body>
-
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/nexusicon.png" alt="Nexus"/>
-  </a>
-  <div class="nav-links" id="navLinks">
-    <a href="/sobre.html" class="nav-link">Sobre</a>
-    <a href="/agenda.html" class="nav-link">Agenda</a>
-    <a href="/merch.html" class="nav-link">Merch</a>
-    <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa">Rifa 🎟</a>
-  </div>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
 
 <!-- LOGIN -->
 <div id="loginScreen">
@@ -177,213 +208,286 @@
   <div class="login-box">
     <div class="login-ey">Acesso restrito</div>
     <div class="login-ti">ADMIN</div>
-    <p class="login-sub">Painel de gerenciamento da rifa</p>
+    <p class="login-sub">Painel de gerenciamento Nexus</p>
     <input type="password" id="inputSenha" placeholder="Senha" onkeydown="if(event.key==='Enter')login()"/>
     <button class="btn-red" onclick="login()">Entrar</button>
   </div>
 </div>
 
 <!-- PAINEL -->
-<div id="adminPanel">
-  <div class="adm-header">
-    <div>
-      <div class="adm-titulo">PAINEL ADMIN</div>
-      <div class="adm-sub" id="ultimaAtualizacao">Carregando...</div>
+<div id="adminPanel" style="display:none;">
+
+  <!-- HEADER PRÓPRIO DO ADMIN -->
+  <header class="adm-header">
+    <div class="adm-header-left">
+      <button class="adm-menu-toggle" id="admMenuToggle" aria-label="Menu">☰</button>
+      <a href="/" class="adm-header-logo" title="Ver site">
+        <img src="/imgs/nexusicon.png" alt="Nexus"/>
+      </a>
+      <span class="adm-header-title">PAINEL ADMIN</span>
+      <span class="adm-header-badge">Nexus</span>
     </div>
-    <div class="adm-actions">
+    <div class="adm-header-right">
       <button class="btn-ghost" onclick="carregarDados()">↻ Atualizar</button>
+      <a href="/" class="btn-ghost" target="_blank">👁 Ver site</a>
       <button class="btn-ghost" onclick="sair()">Sair</button>
     </div>
-  </div>
+  </header>
 
-  <!-- STATS -->
-  <div class="stats-grid">
-    <div class="stat-card sn-white"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">Total</div></div>
-    <div class="stat-card sn-green"><div class="stat-num" id="statDisponiveis">—</div><div class="stat-lbl">Disponíveis</div></div>
-    <div class="stat-card sn-yellow"><div class="stat-num" id="statReservados">—</div><div class="stat-lbl">Reservados</div></div>
-    <div class="stat-card sn-red"><div class="stat-num" id="statPagos">—</div><div class="stat-lbl">Pagos</div></div>
-  </div>
-
-  <!-- AÇÕES -->
-  <div class="adm-section">
-    <p class="sec-ey">Ações</p>
-    <div class="acoes">
-      <button class="btn-ghost" onclick="liberarExpirados()">🧹 Liberar expirados</button>
-      <a href="/" class="btn-ghost" target="_blank">👁 Ver site</a>
-    </div>
-  </div>
-
-  <!-- CONFIGURAÇÕES -->
-  <div class="adm-section">
-    <p class="sec-ey">Configurações da Rifa</p>
-    <div class="config-grid">
-
-      <div class="config-card">
-        <div class="config-label">Valor do bilhete <span>R$</span></div>
-        <div class="config-input-row">
-          <input type="number" class="config-input" id="cfgValor" placeholder="10.00" step="0.50" min="1"/>
-          <button class="btn-save" onclick="salvarConfig('valor_bilhete', document.getElementById('cfgValor').value, this)">Salvar</button>
-        </div>
-        <p class="config-hint">Valor em reais (ex: 10.00 → R$ 10,00)</p>
+  <div class="adm-shell">
+    <div class="adm-sidebar-ov" id="admSidebarOv"></div>
+    <!-- SIDEBAR DE NAVEGAÇÃO -->
+    <aside class="adm-sidebar" id="admSidebar">
+      <div class="adm-side-group">
+        <div class="adm-side-label">Visão geral</div>
+        <button class="adm-side-link" data-page="visao-geral"><span class="adm-side-icon">📊</span> Visão geral</button>
       </div>
-
-      <div class="config-card">
-        <div class="config-label">Data do sorteio</div>
-        <div class="config-input-row">
-          <input type="date" class="config-input" id="cfgData"/>
-          <button class="btn-save" onclick="salvarConfig('data_sorteio', document.getElementById('cfgData').value, this)">Salvar</button>
-        </div>
-        <p class="config-hint">A data aparece no contador do site</p>
+      <div class="adm-side-group">
+        <div class="adm-side-label">Rifa</div>
+        <button class="adm-side-link" data-page="rifa-config"><span class="adm-side-icon">⚙️</span> Configurações</button>
+        <button class="adm-side-link" data-page="rifa-sorteio"><span class="adm-side-icon">🎲</span> Sorteio</button>
+        <button class="adm-side-link" data-page="rifa-bilhetes"><span class="adm-side-icon">🎟</span> Bilhetes</button>
       </div>
-
-      <div class="config-card" style="grid-column:1/-1;">
-        <div class="config-label">Quantidade de bilhetes <span>⚠️ requer SQL no Supabase</span></div>
-        <div class="config-input-row">
-          <input type="number" class="config-input" id="cfgTotal" placeholder="100" min="1" max="10000"/>
-          <button class="btn-save" onclick="salvarConfig('total_bilhetes', document.getElementById('cfgTotal').value, this)">Salvar config</button>
-        </div>
-        <p class="config-hint">
-          Atualiza o contador no site. Para gerar bilhetes físicos no banco, execute no SQL Editor do Supabase:<br/>
-          <code style="background:var(--bg3);padding:2px 6px;border-radius:3px;font-size:0.7rem;color:var(--text2);">INSERT INTO bilhetes (numero) SELECT generate_series(101, [NOVO_TOTAL]) ON CONFLICT DO NOTHING;</code>
-        </p>
+      <div class="adm-side-group">
+        <div class="adm-side-label">Loja</div>
+        <button class="adm-side-link" data-page="merch-pedidos"><span class="adm-side-icon">📦</span> Pedidos</button>
+        <button class="adm-side-link" data-page="merch-produtos"><span class="adm-side-icon">🛒</span> Produtos</button>
       </div>
+      <div class="adm-side-group">
+        <div class="adm-side-label">Conteúdo</div>
+        <button class="adm-side-link" data-page="shows"><span class="adm-side-icon">🎤</span> Agenda de Shows</button>
+        <button class="adm-side-link" data-page="membros"><span class="adm-side-icon">🎸</span> Membros</button>
+      </div>
+    </aside>
 
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="adm-main">
 
-      <div class="config-card" style="grid-column:1/-1;">
-        <div class="config-label">
-          Modo Demonstração
-          <span id="demoBadge" style="display:none" class="demo-badge">ATIVO</span>
-        </div>
-        <div class="toggle-row">
-          <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
-            Quando ativo, os bilhetes podem ser reservados mas o pagamento Pix não é processado — ideal para testes antes de configurar o Mercado Pago.
-          </p>
-          <div class="toggle-track" id="demoToggle" onclick="toggleDemo()">
-            <div class="toggle-thumb"></div>
+      <!-- PÁGINA: VISÃO GERAL -->
+      <section class="adm-page" id="page-visao-geral">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Visão Geral</div>
+            <div class="adm-page-sub" id="ultimaAtualizacao">Carregando...</div>
           </div>
         </div>
-        <p class="config-hint">O modo demo é ativado automaticamente quando <code>MP_ACCESS_TOKEN</code> não está configurado. Use esse toggle para forçá-lo mesmo com token ativo.</p>
-      </div>
 
-      <div class="config-card" style="grid-column:1/-1;">
-        <div class="config-label">
-          Aba Rifa no Menu
-          <span id="rifaNavBadge" style="display:none" class="demo-badge" style="background:rgba(61,187,128,0.12);color:#3dbb80;border-color:rgba(61,187,128,0.3);">ATIVO</span>
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card sn-white"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">Total</div></div>
+          <div class="stat-card sn-green"><div class="stat-num" id="statDisponiveis">—</div><div class="stat-lbl">Disponíveis</div></div>
+          <div class="stat-card sn-yellow"><div class="stat-num" id="statReservados">—</div><div class="stat-lbl">Reservados</div></div>
+          <div class="stat-card sn-red"><div class="stat-num" id="statPagos">—</div><div class="stat-lbl">Pagos</div></div>
         </div>
-        <div class="toggle-row">
-          <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
-            Quando ativo, o link da <strong>Rifa 🎟</strong> aparece no menu de navegação de todas as páginas. Desative para ocultá-lo temporariamente sem remover a página.
-          </p>
-          <div class="toggle-track" id="rifaNavToggle" onclick="toggleRifaNav()">
-            <div class="toggle-thumb"></div>
+
+        <!-- AÇÕES -->
+        <div class="adm-section">
+          <p class="sec-ey">Ações rápidas</p>
+          <div class="acoes">
+            <button class="btn-ghost" onclick="liberarExpirados()">🧹 Liberar bilhetes expirados</button>
           </div>
         </div>
-        <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
-      </div>
+      </section>
 
-      <div class="config-card" style="grid-column:1/-1;">
-        <div class="config-label">
-          Modo Venom 🖤
-          <span id="venomBadge" style="display:none" class="demo-badge" style="background:rgba(255,255,255,0.1);color:#f2f2f2;border-color:rgba(255,255,255,0.3);">ATIVO</span>
-        </div>
-        <div class="toggle-row">
-          <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
-            Ativa um tema alternativo preto e branco em todo o site, com tentáculos animados. Afeta todas as páginas públicas assim que forem recarregadas.
-          </p>
-          <div class="toggle-track" id="venomToggle" onclick="toggleVenomMode()">
-            <div class="toggle-thumb"></div>
+      <!-- PÁGINA: CONFIGURAÇÕES DA RIFA -->
+      <section class="adm-page" id="page-rifa-config">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Configurações da Rifa</div>
+            <div class="adm-page-sub">Valor do bilhete, data do sorteio e modos do site</div>
           </div>
         </div>
-        <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
-      </div>
+        <div class="config-grid">
 
-    </div>
-  </div>
+          <div class="config-card">
+            <div class="config-label">Valor do bilhete <span>R$</span></div>
+            <div class="config-input-row">
+              <input type="number" class="config-input" id="cfgValor" placeholder="10.00" step="0.50" min="1"/>
+              <button class="btn-save" onclick="salvarConfig('valor_bilhete', document.getElementById('cfgValor').value, this)">Salvar</button>
+            </div>
+            <p class="config-hint">Valor em reais (ex: 10.00 → R$ 10,00)</p>
+          </div>
 
-  <!-- SORTEIO -->
-  <div class="adm-section">
-    <p class="sec-ey">Sorteio</p>
-    <div class="sorteio-box">
-      <p>O sorteio é aleatório entre todos os bilhetes com pagamento confirmado. Essa ação não pode ser desfeita.</p>
-      <button class="btn-red" style="width:auto;padding:12px 28px;" onclick="realizarSorteio()">🎲 Realizar Sorteio</button>
-      <div class="sorteio-resultado" id="sorteioResultado">
-        <div class="sorteio-numero" id="sorteioNumero"></div>
-        <div class="sorteio-nome" id="sorteioNome"></div>
-        <div class="sorteio-insta" id="sorteioInsta"></div>
-      </div>
-    </div>
-  </div>
+          <div class="config-card">
+            <div class="config-label">Data do sorteio</div>
+            <div class="config-input-row">
+              <input type="date" class="config-input" id="cfgData"/>
+              <button class="btn-save" onclick="salvarConfig('data_sorteio', document.getElementById('cfgData').value, this)">Salvar</button>
+            </div>
+            <p class="config-hint">A data aparece no contador do site</p>
+          </div>
 
-  <!-- TABELA BILHETES -->
-  <div class="adm-section">
-    <p class="sec-ey">Bilhetes vendidos e reservados</p>
-    <div class="tabela-wrapper">
-      <table>
-        <thead><tr><th>Número</th><th>Status</th><th>Nome</th><th>E-mail</th><th>Instagram</th><th>Pago em</th></tr></thead>
-        <tbody id="tabelaBilhetes"><tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text3);">Carregando...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
+          <div class="config-card" style="grid-column:1/-1;">
+            <div class="config-label">Quantidade de bilhetes <span>⚠️ requer SQL no Supabase</span></div>
+            <div class="config-input-row">
+              <input type="number" class="config-input" id="cfgTotal" placeholder="100" min="1" max="10000"/>
+              <button class="btn-save" onclick="salvarConfig('total_bilhetes', document.getElementById('cfgTotal').value, this)">Salvar config</button>
+            </div>
+            <p class="config-hint">
+              Atualiza o contador no site. Para gerar bilhetes físicos no banco, execute no SQL Editor do Supabase:<br/>
+              <code style="background:var(--bg3);padding:2px 6px;border-radius:3px;font-size:0.7rem;color:var(--text2);">INSERT INTO bilhetes (numero) SELECT generate_series(101, [NOVO_TOTAL]) ON CONFLICT DO NOTHING;</code>
+            </p>
+          </div>
 
-  <!-- ══ PEDIDOS MERCH ══ -->
-  <div class="adm-section">
-    <p class="sec-ey">Pedidos Merch</p>
-    <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;margin-bottom:16px;">Quem comprou, quando pagou e o status da etiqueta gerada automaticamente no Melhor Envio.</p>
-    <div class="tabela-wrapper">
-      <table>
-        <thead><tr><th>Data</th><th>Nome</th><th>E-mail</th><th>Valor</th><th>Pagamento</th><th>Pago em</th><th>Melhor Envio</th><th>Rastreio</th></tr></thead>
-        <tbody id="tabelaPedidosMerch"><tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
+          <div class="config-card" style="grid-column:1/-1;">
+            <div class="config-label">
+              Modo Demonstração
+              <span id="demoBadge" style="display:none" class="demo-badge">ATIVO</span>
+            </div>
+            <div class="toggle-row">
+              <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
+                Quando ativo, os bilhetes podem ser reservados mas o pagamento Pix não é processado — ideal para testes antes de configurar o Mercado Pago.
+              </p>
+              <div class="toggle-track" id="demoToggle" onclick="toggleDemo()">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+            <p class="config-hint">O modo demo é ativado automaticamente quando <code>MP_ACCESS_TOKEN</code> não está configurado. Use esse toggle para forçá-lo mesmo com token ativo.</p>
+          </div>
 
-  <!-- ══ SHOWS ══ -->
-  <div class="adm-section">
-    <p class="sec-ey">Agenda de Shows</p>
-    <div class="crud-header">
-      <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;">Gerencie os shows que aparecem na página Agenda.</p>
-      <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormShow()">+ Adicionar Show</button>
-    </div>
-    <div class="tabela-wrapper" style="margin-top:16px;">
-      <table>
-        <thead><tr><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="tabelaShows"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
+          <div class="config-card" style="grid-column:1/-1;">
+            <div class="config-label">
+              Aba Rifa no Menu
+              <span id="rifaNavBadge" style="display:none" class="demo-badge" style="background:rgba(61,187,128,0.12);color:#3dbb80;border-color:rgba(61,187,128,0.3);">ATIVO</span>
+            </div>
+            <div class="toggle-row">
+              <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
+                Quando ativo, o link da <strong>Rifa 🎟</strong> aparece no menu de navegação de todas as páginas. Desative para ocultá-lo temporariamente sem remover a página.
+              </p>
+              <div class="toggle-track" id="rifaNavToggle" onclick="toggleRifaNav()">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+            <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
+          </div>
 
-  <!-- ══ PRODUTOS MERCH ══ -->
-  <div class="adm-section">
-    <p class="sec-ey">Produtos (Merch)</p>
-    <div class="crud-header">
-      <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;">Gerencie os produtos exibidos na página Merch.</p>
-      <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormProduto()">+ Adicionar Produto</button>
-    </div>
-    <div class="tabela-wrapper" style="margin-top:16px;">
-      <table>
-        <thead><tr><th>Emoji</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="tabelaProdutos"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
+          <div class="config-card" style="grid-column:1/-1;">
+            <div class="config-label">
+              Modo Venom 🖤
+              <span id="venomBadge" style="display:none" class="demo-badge" style="background:rgba(255,255,255,0.1);color:#f2f2f2;border-color:rgba(255,255,255,0.3);">ATIVO</span>
+            </div>
+            <div class="toggle-row">
+              <p style="font-size:0.82rem;color:var(--text2);line-height:1.7;margin:0;">
+                Ativa um tema alternativo preto e branco em todo o site, com tentáculos animados. Afeta todas as páginas públicas assim que forem recarregadas.
+              </p>
+              <div class="toggle-track" id="venomToggle" onclick="toggleVenomMode()">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+            <p class="config-hint">A configuração é salva no banco e lida por todas as páginas ao carregar.</p>
+          </div>
 
-  <div class="adm-section">
-    <p class="sec-ey">Membros (Sobre)</p>
-    <div class="crud-header">
-      <p style="font-size:0.86rem;color:var(--text2);line-height:1.7;">Gerencie os cards de membros e o painel de detalhes exibido ao clicar em cada um, na página Sobre.</p>
-      <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormMembro()">+ Adicionar Membro</button>
-    </div>
-    <div class="tabela-wrapper" style="margin-top:16px;">
-      <table>
-        <thead><tr><th>Foto</th><th>Nome</th><th>Função</th><th>Ordem</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="tabelaMembros"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
-      </table>
-    </div>
+        </div>
+      </section>
+
+      <!-- PÁGINA: SORTEIO -->
+      <section class="adm-page" id="page-rifa-sorteio">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Sorteio</div>
+            <div class="adm-page-sub">Sorteio aleatório entre bilhetes pagos</div>
+          </div>
+        </div>
+        <div class="sorteio-box">
+          <p>O sorteio é aleatório entre todos os bilhetes com pagamento confirmado. Essa ação não pode ser desfeita.</p>
+          <button class="btn-red" style="width:auto;padding:12px 28px;" onclick="realizarSorteio()">🎲 Realizar Sorteio</button>
+          <div class="sorteio-resultado" id="sorteioResultado">
+            <div class="sorteio-numero" id="sorteioNumero"></div>
+            <div class="sorteio-nome" id="sorteioNome"></div>
+            <div class="sorteio-insta" id="sorteioInsta"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PÁGINA: BILHETES -->
+      <section class="adm-page" id="page-rifa-bilhetes">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Bilhetes</div>
+            <div class="adm-page-sub">Vendidos e reservados</div>
+          </div>
+        </div>
+        <div class="tabela-wrapper">
+          <table>
+            <thead><tr><th>Número</th><th>Status</th><th>Nome</th><th>E-mail</th><th>Instagram</th><th>Pago em</th></tr></thead>
+            <tbody id="tabelaBilhetes"><tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text3);">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PÁGINA: PEDIDOS MERCH -->
+      <section class="adm-page" id="page-merch-pedidos">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Pedidos da Loja</div>
+            <div class="adm-page-sub">Nome, telefone, itens e status de pagamento de cada pedido</div>
+          </div>
+        </div>
+        <div class="tabela-wrapper">
+          <table>
+            <thead><tr><th>Data</th><th>Nome</th><th>Telefone</th><th>Pedido</th><th>Valor</th><th>Pagamento</th></tr></thead>
+            <tbody id="tabelaPedidosMerch"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PÁGINA: PRODUTOS MERCH -->
+      <section class="adm-page" id="page-merch-produtos">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Produtos</div>
+            <div class="adm-page-sub">Itens exibidos na página Merch</div>
+          </div>
+          <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormProduto()">+ Adicionar Produto</button>
+        </div>
+        <div class="tabela-wrapper">
+          <table>
+            <thead><tr><th>Emoji</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="tabelaProdutos"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PÁGINA: SHOWS -->
+      <section class="adm-page" id="page-shows">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Agenda de Shows</div>
+            <div class="adm-page-sub">Shows exibidos na página Agenda</div>
+          </div>
+          <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormShow()">+ Adicionar Show</button>
+        </div>
+        <div class="tabela-wrapper">
+          <table>
+            <thead><tr><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="tabelaShows"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PÁGINA: MEMBROS -->
+      <section class="adm-page" id="page-membros">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Membros</div>
+            <div class="adm-page-sub">Cards de membros exibidos na página Sobre</div>
+          </div>
+          <button class="btn-red" style="width:auto;padding:10px 22px;" onclick="abrirFormMembro()">+ Adicionar Membro</button>
+        </div>
+        <div class="tabela-wrapper">
+          <table>
+            <thead><tr><th>Foto</th><th>Nome</th><th>Função</th><th>Ordem</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="tabelaMembros"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
   </div>
 </div>
 
 <!-- ── MODAL SHOW ── -->
-<div class="modal-ov" id="showOv" onclick="if(event.target===this)fecharFormShow()">
+<div class="modal-ov" id="showOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharFormShow)">
   <div class="modal-form">
     <button class="modal-x" onclick="fecharFormShow()">✕</button>
     <div class="modal-ey" id="showFormEy">Novo Show</div>
@@ -416,7 +520,7 @@
 </div>
 
 <!-- ── MODAL PRODUTO ── -->
-<div class="modal-ov" id="prodOv" onclick="if(event.target===this)fecharFormProduto()">
+<div class="modal-ov" id="prodOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharFormProduto)">
   <div class="modal-form">
     <button class="modal-x" onclick="fecharFormProduto()">✕</button>
     <div class="modal-ey" id="prodFormEy">Novo Produto</div>
@@ -455,7 +559,7 @@
 </div>
 
 <!-- ── MODAL MEMBRO ── -->
-<div class="modal-ov" id="membroOv" onclick="if(event.target===this)fecharFormMembro()">
+<div class="modal-ov" id="membroOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharFormMembro)">
   <div class="modal-form">
     <button class="modal-x" onclick="fecharFormMembro()">✕</button>
     <div class="modal-ey" id="membroFormEy">Novo Membro</div>
@@ -526,6 +630,8 @@ async function verificarToken(){
 function mostrarPainel(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('adminPanel').style.display='block';
+  document.body.classList.add('admin-logged');
+  initAdminRouter();
   carregarDados();
   carregarPedidosMerch();
   carregarShows();
@@ -533,35 +639,68 @@ function mostrarPainel(){
   carregarMembros();
 }
 
+// ══════════════ ROTEAMENTO DE PÁGINAS (SIDEBAR) ══════════════
+const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros'];
+
+function initAdminRouter(){
+  document.querySelectorAll('.adm-side-link').forEach(btn=>{
+    btn.addEventListener('click', ()=> irParaPagina(btn.dataset.page));
+  });
+  const menuToggle = document.getElementById('admMenuToggle');
+  const sidebar = document.getElementById('admSidebar');
+  const sidebarOv = document.getElementById('admSidebarOv');
+  if(menuToggle && sidebar && sidebarOv){
+    menuToggle.addEventListener('click', ()=>{ sidebar.classList.toggle('open'); sidebarOv.classList.toggle('open'); });
+    sidebarOv.addEventListener('click', ()=>{ sidebar.classList.remove('open'); sidebarOv.classList.remove('open'); });
+  }
+  const inicial = ADM_PAGES.includes((location.hash||'').replace('#','')) ? location.hash.replace('#','') : 'visao-geral';
+  irParaPagina(inicial);
+  window.addEventListener('hashchange', ()=>{
+    const p = (location.hash||'').replace('#','');
+    if(ADM_PAGES.includes(p)) irParaPagina(p, true);
+  });
+}
+
+function irParaPagina(pagina, semHash){
+  if(!ADM_PAGES.includes(pagina)) pagina='visao-geral';
+  document.querySelectorAll('.adm-page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.adm-side-link').forEach(el=>el.classList.remove('active'));
+  const pageEl = document.getElementById('page-'+pagina);
+  const linkEl = document.querySelector(`.adm-side-link[data-page="${pagina}"]`);
+  if(pageEl) pageEl.classList.add('active');
+  if(linkEl) linkEl.classList.add('active');
+  if(!semHash) location.hash = pagina;
+  // fecha o menu mobile ao navegar
+  const sidebar = document.getElementById('admSidebar');
+  const sidebarOv = document.getElementById('admSidebarOv');
+  if(sidebar) sidebar.classList.remove('open');
+  if(sidebarOv) sidebarOv.classList.remove('open');
+  window.scrollTo(0,0);
+}
+
 async function carregarPedidosMerch(){
   const tbody=document.getElementById('tabelaPedidosMerch');
   try{
     const res=await fetch('/api/admin?acao=pedidos-merch',{headers:{'Authorization':`Bearer ${token}`}});
     const data=await res.json();
-    if(!res.ok){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">${data.erro||'Erro ao carregar pedidos'}</td></tr>`;return;}
+    if(!res.ok){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">${data.erro||'Erro ao carregar pedidos'}</td></tr>`;return;}
     const pedidos=data.pedidos||[];
-    if(!pedidos.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">Nenhum pedido ainda</td></tr>';return;}
+    if(!pedidos.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Nenhum pedido ainda</td></tr>';return;}
 
     const badgePagamento={pago:'badge-confirmado',pendente:'badge-breve',cancelado:'badge-cancelado'};
-    const badgeME={gerada:'badge-confirmado',nao_gerada:'badge-breve',falha_saldo:'badge-cancelado',falha:'badge-cancelado'};
-    const labelME={gerada:'Gerada',nao_gerada:'Não gerada',falha_saldo:'Falha (saldo)',falha:'Falha'};
 
     tbody.innerHTML=pedidos.map(p=>{
-      const meStatus=p.me_status||'nao_gerada';
-      const meTitulo=p.me_erro?` title="${String(p.me_erro).replace(/"/g,'&quot;')}"`:'';
-      const rastreio=p.me_link_etiqueta?`<a href="${p.me_link_etiqueta}" target="_blank" style="color:var(--red);">${p.me_rastreio||'ver etiqueta'}</a>`:(p.me_rastreio||'—');
+      const itensResumo=(p.itens||[]).map(i=>`${i.nome}${i.tam&&i.tam!=='único'?` (${i.tam})`:''} × ${i.qty}`).join(', ')||'—';
       return `<tr>
         <td>${p.criado_em?new Date(p.criado_em).toLocaleString('pt-BR'):'—'}</td>
         <td>${p.nome_comprador||'—'}</td>
-        <td>${p.email_comprador||'—'}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:0.78rem;">${p.telefone_comprador||'—'}</td>
+        <td style="max-width:280px;">${itensResumo}</td>
         <td>R$ ${Number(p.valor_total||0).toFixed(2)}</td>
         <td><span class="badge ${badgePagamento[p.status]||'badge-breve'}">${p.status}</span></td>
-        <td>${p.pago_em?new Date(p.pago_em).toLocaleString('pt-BR'):'—'}</td>
-        <td${meTitulo}><span class="badge ${badgeME[meStatus]||'badge-breve'}">${labelME[meStatus]||meStatus}</span></td>
-        <td style="font-family:'DM Mono',monospace;font-size:0.78rem;">${rastreio}</td>
       </tr>`;
     }).join('');
-  }catch{tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3);">Erro de conexão</td></tr>';}
+  }catch{tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text3);">Erro de conexão</td></tr>';}
 }
 function sair(){localStorage.removeItem('nexus_admin_token');location.reload();}
 
@@ -777,8 +916,14 @@ function abrirFormShow(id){
   toggleGratuito();
   document.getElementById('sId').value = s?.id||'';
   document.getElementById('showOv').classList.add('open');
+  nexusMarkClean('show');
+  nexusWatchForm('showOv','show');
 }
-function fecharFormShow(){ document.getElementById('showOv').classList.remove('open'); }
+function fecharFormShow(){
+  if(!nexusConfirmClose('show')) return;
+  nexusMarkClean('show');
+  document.getElementById('showOv').classList.remove('open');
+}
 
 async function salvarShow(){
   const nome = document.getElementById('sNome').value.trim();
@@ -801,7 +946,7 @@ async function salvarShow(){
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
       body: JSON.stringify(payload)
     });
-    if(res.ok){ toast(id?'Show atualizado!':'Show criado!','ok'); fecharFormShow(); carregarShows(); }
+    if(res.ok){ toast(id?'Show atualizado!':'Show criado!','ok'); nexusMarkClean('show'); fecharFormShow(); carregarShows(); }
     else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
   }catch{ toast('Erro de conexão','err'); }
   btn.disabled=false; btn.textContent='Salvar Show';
@@ -905,8 +1050,14 @@ function abrirFormProduto(id){
   document.getElementById('pAtivo').value = String(p?.ativo!==false);
   document.getElementById('pId').value = p?.id||'';
   document.getElementById('prodOv').classList.add('open');
+  nexusMarkClean('produto');
+  nexusWatchForm('prodOv','produto');
 }
-function fecharFormProduto(){ document.getElementById('prodOv').classList.remove('open'); }
+function fecharFormProduto(){
+  if(!nexusConfirmClose('produto')) return;
+  nexusMarkClean('produto');
+  document.getElementById('prodOv').classList.remove('open');
+}
 
 async function salvarProduto(){
   const nome = document.getElementById('pNome').value.trim();
@@ -935,7 +1086,7 @@ async function salvarProduto(){
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
       body: JSON.stringify(payload)
     });
-    if(res.ok){ toast(id?'Produto atualizado!':'Produto criado!','ok'); fecharFormProduto(); carregarProdutos(); }
+    if(res.ok){ toast(id?'Produto atualizado!':'Produto criado!','ok'); nexusMarkClean('produto'); fecharFormProduto(); carregarProdutos(); }
     else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
   }catch{ toast('Erro de conexão','err'); }
   btn.disabled=false; btn.textContent='Salvar Produto';
@@ -1003,8 +1154,14 @@ function abrirFormMembro(id){
   document.getElementById('mFotoArquivo').value = '';
   atualizarPreviewFoto();
   document.getElementById('membroOv').classList.add('open');
+  nexusMarkClean('membro');
+  nexusWatchForm('membroOv','membro');
 }
-function fecharFormMembro(){ document.getElementById('membroOv').classList.remove('open'); }
+function fecharFormMembro(){
+  if(!nexusConfirmClose('membro')) return;
+  nexusMarkClean('membro');
+  document.getElementById('membroOv').classList.remove('open');
+}
 
 function atualizarPreviewFoto(){
   const url = document.getElementById('mFoto').value.trim();
@@ -1105,7 +1262,7 @@ async function salvarMembro(){
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
       body: JSON.stringify(payload)
     });
-    if(res.ok){ toast(id?'Membro atualizado!':'Membro criado!','ok'); fecharFormMembro(); carregarMembros(); }
+    if(res.ok){ toast(id?'Membro atualizado!':'Membro criado!','ok'); nexusMarkClean('membro'); fecharFormMembro(); carregarMembros(); }
     else{ const d=await res.json(); toast(d.erro||'Erro ao salvar','err'); }
   }catch{ toast('Erro de conexão','err'); }
   btn.disabled=false; btn.textContent='Salvar Membro';

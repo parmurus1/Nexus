@@ -229,6 +229,7 @@
     @media(max-width:680px){nav{padding:12px 18px;}.co-bar{padding:12px 18px;}.stats-row{flex-wrap:wrap;}.stat{flex:1 1 40%;}.modal{padding:28px 20px;}}
   
   </style>
+  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
@@ -238,11 +239,11 @@
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="/sobre.html" class="nav-link">Sobre</a>
-    <a href="/agenda.html" class="nav-link">Agenda</a>
-    <a href="/merch.html" class="nav-link">Merch</a>
-    <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa active" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/sobre" class="nav-link">Sobre</a>
+    <a href="/agenda" class="nav-link">Agenda</a>
+    <a href="/merch" class="nav-link">Merch</a>
+    <a href="/contratantes" class="nav-link">Contratantes</a>
+    <a href="/rifa" class="nav-link nav-rifa active" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -345,7 +346,7 @@
 </div>
 
 <!-- MODAL DEMO -->
-<div class="modal-ov" id="demoOv" onclick="if(event.target===this)fecharDemo()">
+<div class="modal-ov" id="demoOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharDemo)">
   <div class="modal" style="text-align:center;">
     <button class="modal-x" onclick="fecharDemo()">✕</button>
     <div style="font-size:2.2rem;margin-bottom:14px;">🎵</div>
@@ -360,7 +361,7 @@
 </div>
 
 <!-- MODAL PAGAMENTO -->
-<div class="modal-ov" id="pagamentoOv" onclick="if(event.target===this)fecharPagamento()">
+<div class="modal-ov" id="pagamentoOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharPagamento)">
   <div class="modal" style="text-align:center;max-width:500px;">
     <div style="font-size:2.2rem;margin-bottom:14px;">💳</div>
     <div class="modal-ey">Redirecionar para Pagamento</div>
@@ -380,7 +381,7 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span id="devTrigger" title="" style="cursor:pointer;text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>
@@ -526,7 +527,7 @@ document.querySelectorAll('.carr-visual').forEach(v=>{
   }
 </script>
 
-<div class="lb-ov" id="lbOv" onclick="if(event.target===this)lbClose()">
+<div class="lb-ov" id="lbOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,lbClose)">
   <span class="lb-close" onclick="lbClose()">✕</span>
   <img id="lbImg" src="" alt=""/>
 </div>
@@ -545,8 +546,6 @@ document.querySelectorAll('.carr-visual').forEach(v=>{
 })();
 </script>
 <script>
-  var _dt = document.getElementById('devTrigger');
-  if (_dt) { _dt.addEventListener('click', function(){ window.location.href = '/admin.html'; }); }
 </script>
 <script src="/venom.js" defer></script>
 </body>

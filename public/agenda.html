@@ -87,6 +87,7 @@
       footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
     }
   </style>
+  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
@@ -96,11 +97,11 @@
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="/sobre.html" class="nav-link">Sobre</a>
-    <a href="/agenda.html" class="nav-link active">Agenda</a>
-    <a href="/merch.html" class="nav-link">Merch</a>
-    <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/sobre" class="nav-link">Sobre</a>
+    <a href="/agenda" class="nav-link active">Agenda</a>
+    <a href="/merch" class="nav-link">Merch</a>
+    <a href="/contratantes" class="nav-link">Contratantes</a>
+    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -131,7 +132,7 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span id="devTrigger" title="" style="cursor:pointer;text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>
@@ -207,8 +208,6 @@ carregarAgenda();
 })();
 </script>
 <script>
-  var _dt = document.getElementById('devTrigger');
-  if (_dt) { _dt.addEventListener('click', function(){ window.location.href = '/admin.html'; }); }
 </script>
 <script src="/venom.js" defer></script>
 </body>

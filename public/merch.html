@@ -206,6 +206,7 @@
     }
     @media(max-width:900px){.merch-card{grid-template-columns:1fr;}}
   </style>
+  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
@@ -215,11 +216,11 @@
     <img src="/imgs/nexusicon.png" alt="Nexus"/>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="/sobre.html" class="nav-link">Sobre</a>
-    <a href="/agenda.html" class="nav-link">Agenda</a>
-    <a href="/merch.html" class="nav-link active">Merch</a>
-    <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/sobre" class="nav-link">Sobre</a>
+    <a href="/agenda" class="nav-link">Agenda</a>
+    <a href="/merch" class="nav-link active">Merch</a>
+    <a href="/contratantes" class="nav-link">Contratantes</a>
+    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -251,7 +252,7 @@
 </div>
 
 <!-- MODAL PRODUTO -->
-<div class="modal-ov" id="mOv" onclick="if(event.target===this)fecharModal()">
+<div class="modal-ov" id="mOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharModal)">
   <div class="modal">
     <button class="modal-x" onclick="fecharModal()">✕</button>
     <div class="modal-img-side" id="mImg"></div>
@@ -298,7 +299,7 @@
 </div>
 
 <!-- MODAL CHECKOUT (dados do comprador) -->
-<div class="modal-ov" id="checkoutOv" onclick="if(event.target===this)fecharCheckout()">
+<div class="modal-ov" id="checkoutOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharCheckout)">
   <div class="modal" style="grid-template-columns:1fr;max-width:640px;padding:32px;">
     <button class="modal-x" onclick="fecharCheckout()">✕</button>
     <div class="modal-ey">Finalizar compra</div>
@@ -318,12 +319,8 @@
       <input type="text" id="cCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpf(this)"/>
     </div>
     <div class="fg">
-      <label>Telefone <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
+      <label>Telefone <span class="req-badge">OBRIGATÓRIO</span></label>
       <input type="tel" id="cTel" placeholder="(00) 00000-0000"/>
-    </div>
-    <div class="fg">
-      <label>Instagram <span style="font-size:0.52rem;color:var(--text3);font-weight:300">(opcional)</span></label>
-      <input type="text" id="cInstagram" placeholder="@seuusuario"/>
     </div>
 
     <div style="height:1px;background:var(--border);margin:18px 0;"></div>
@@ -381,7 +378,7 @@
 </div>
 
 <!-- MODAL DEMO -->
-<div class="modal-ov" id="demoOv" onclick="if(event.target===this)fecharDemo()">
+<div class="modal-ov" id="demoOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharDemo)">
   <div class="modal" style="grid-template-columns:1fr;max-width:420px;text-align:center;padding:32px;">
     <button class="modal-x" onclick="fecharDemo()">✕</button>
     <div style="font-size:2.2rem;margin-bottom:14px;">🎸</div>
@@ -412,7 +409,7 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span id="devTrigger" title="" style="cursor:pointer;text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
@@ -548,8 +545,14 @@ function abrirCheckout(){
   document.getElementById('freteOpcoes').innerHTML='';
   atualizarTotalCheckout();
   document.getElementById('checkoutOv').classList.add('open');
+  nexusMarkClean('checkout');
+  nexusWatchForm('checkoutOv','checkout');
 }
-function fecharCheckout(){document.getElementById('checkoutOv').classList.remove('open');}
+function fecharCheckout(){
+  if(!nexusConfirmClose('checkout')) return;
+  nexusMarkClean('checkout');
+  document.getElementById('checkoutOv').classList.remove('open');
+}
 
 function maskCep(el){
   let v=el.value.replace(/\D/g,'').slice(0,8);
@@ -668,7 +671,6 @@ async function confirmarPagamento(){
   const email=document.getElementById('cEmail').value.trim();
   const cpf=document.getElementById('cCpf').value.replace(/\D/g,'');
   const tel=document.getElementById('cTel').value.trim();
-  const ig=document.getElementById('cInstagram').value.trim();
   const cep=document.getElementById('cCep').value.replace(/\D/g,'');
   const rua=document.getElementById('cRua').value.trim();
   const numero=document.getElementById('cNumero').value.trim();
@@ -677,24 +679,25 @@ async function confirmarPagamento(){
   const cidade=document.getElementById('cCidade').value.trim();
   const uf=document.getElementById('cUf').value.trim();
 
-  ['cNome','cEmail','cCpf','cCep','cRua','cNumero'].forEach(id=>document.getElementById(id).classList.remove('invalid'));
+  ['cNome','cEmail','cCpf','cTel','cCep','cRua','cNumero'].forEach(id=>document.getElementById(id).classList.remove('invalid'));
 
   let erro=false;
   if(!nome){document.getElementById('cNome').classList.add('invalid');erro=true;}
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('cEmail').classList.add('invalid');erro=true;}
   if(!cpfValido(cpf)){document.getElementById('cCpf').classList.add('invalid');erro=true;}
+  if(!tel||tel.replace(/\D/g,'').length<10){document.getElementById('cTel').classList.add('invalid');erro=true;}
   if(cep.length!==8){document.getElementById('cCep').classList.add('invalid');erro=true;}
   if(!rua){document.getElementById('cRua').classList.add('invalid');erro=true;}
   if(!numero){document.getElementById('cNumero').classList.add('invalid');erro=true;}
   if(!freteEscolhido){toast('Calcule e escolha uma opção de frete antes de continuar.','err');return;}
-  if(erro){toast('Preencha todos os campos obrigatórios (confira o CPF).','err');return;}
+  if(erro){toast('Preencha todos os campos obrigatórios (confira o CPF e telefone).','err');return;}
 
   const btn=document.getElementById('btnCfm');
   btn.disabled=true;btn.textContent='Processando...';
   try{
     const itens=cart.map(i=>({nome:i.nome,tam:i.tam,qty:i.qty,preco:i.preco}));
     const body={
-      itens,nome,email,cpf,telefone:tel,instagram:ig,
+      itens,nome,email,cpf,telefone:tel,
       cep,uf,cidade,endereco:rua,numero,complemento,bairro,
       frete_servico_id:freteEscolhido.id
     };
@@ -702,13 +705,14 @@ async function confirmarPagamento(){
     const d=await r.json();
     if(!r.ok){toast(d.erro||'Erro ao criar pagamento.','err');btn.disabled=false;btn.textContent='Ir para o Pagamento →';return;}
     if(d.modo_demo){
-      fecharCheckout();cart=[];syncCart();fecharDrawer();
+      nexusMarkClean('checkout');fecharCheckout();cart=[];syncCart();fecharDrawer();
       document.getElementById('demoMsg').textContent=d.mensagem;
       document.getElementById('demoOv').classList.add('open');
       btn.disabled=false;btn.textContent='Ir para o Pagamento →';
       return;
     }
     window.linkPagamentoMP=d.init_point;
+    nexusMarkClean('checkout');
     fecharCheckout();
     document.getElementById('pagamentoOv').classList.add('open');
     setTimeout(()=>abrirLinkPagamento(),500);
@@ -752,8 +756,6 @@ syncCart();
 })();
 </script>
 <script>
-  var _dt = document.getElementById('devTrigger');
-  if (_dt) { _dt.addEventListener('click', function(){ window.location.href = '/admin.html'; }); }
 </script>
 <script src="/venom.js" defer></script>
 </body>

@@ -825,6 +825,7 @@
       .mb-socials{margin-top:14px;}
     }
   </style>
+  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
@@ -835,11 +836,11 @@
   </a>
 
   <div class="nav-links" id="navLinks">
-    <a href="/sobre.html" class="nav-link active">Sobre</a>
-    <a href="/agenda.html" class="nav-link">Agenda</a>
-    <a href="/merch.html" class="nav-link">Merch</a>
-    <a href="/contratantes.html" class="nav-link">Contratantes</a>
-    <a href="/rifa.html" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/sobre" class="nav-link active">Sobre</a>
+    <a href="/agenda" class="nav-link">Agenda</a>
+    <a href="/merch" class="nav-link">Merch</a>
+    <a href="/contratantes" class="nav-link">Contratantes</a>
+    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
   </div>
 
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
@@ -1027,7 +1028,7 @@
 
 <footer>
   <div class="footer-logo"><img src="/imgs/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span id="devTrigger" title="" style="cursor:pointer;text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <script>
@@ -1047,7 +1048,7 @@
   }
 </script>
 
-<div class="lb-ov" id="lbOv" onclick="if(event.target===this||event.target.classList.contains('lb-close'))lbClose()">
+<div class="lb-ov" id="lbOv" onmousedown="nexusOverlayDown(event)" onclick="if(event.target.classList.contains('lb-close')){lbClose();}else{nexusOverlayClick(event,lbClose)}">
   <span class="lb-close">✕</span>
   <img id="lbImg" src="" alt=""/>
   <div class="lb-dots" id="lbDots"></div>
@@ -1055,7 +1056,7 @@
 </div>
 
 <!-- PAINEL DE DETALHES DO MEMBRO -->
-<div class="mb-ov" id="mbOv" onclick="if(event.target===this)mbClose()">
+<div class="mb-ov" id="mbOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,mbClose)">
   <div class="mb-panel">
     <span class="mb-close" onclick="mbClose()">✕</span>
     <div class="mb-foto">
@@ -1291,8 +1292,6 @@
 })();
 </script>
 <script>
-  var _dt = document.getElementById('devTrigger');
-  if (_dt) { _dt.addEventListener('click', function(){ window.location.href = '/admin.html'; }); }
 </script>
 <script src="/venom.js" defer></script>
 </body>

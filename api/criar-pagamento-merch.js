@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
   const {
-    itens, nome, email, cpf, telefone, instagram,
+    itens, nome, email, cpf, telefone,
     cep, uf, cidade, endereco, numero, complemento, bairro,
     frete_servico_id // id da opção de frete escolhida pelo usuário (veio de /api/frete)
   } = req.body;
@@ -25,6 +25,9 @@ export default async function handler(req, res) {
   const cpfLimpo = String(cpf || '').replace(/\D/g, '');
   if (cpfLimpo.length !== 11)
     return res.status(400).json({ erro: 'CPF inválido — é exigido pela transportadora para gerar a etiqueta de envio.' });
+  const telLimpo = String(telefone || '').replace(/\D/g, '');
+  if (telLimpo.length < 10)
+    return res.status(400).json({ erro: 'Telefone é obrigatório.' });
   if (!cep || !endereco || !numero)
     return res.status(400).json({ erro: 'Endereço de entrega incompleto' });
 
@@ -73,7 +76,6 @@ export default async function handler(req, res) {
       email_comprador: email,
       cpf_comprador: cpfLimpo,
       telefone_comprador: telefone || null,
-      instagram_comprador: instagram || null,
       cep, uf: uf || null, cidade: cidade || null,
       endereco, numero, complemento: complemento || null, bairro: bairro || null,
       frete_servico: frete.servico,
@@ -146,7 +148,7 @@ export default async function handler(req, res) {
         statement_descriptor: 'NEXUS MERCH',
         external_reference: `merch-${pedido.id}`,
         notification_url: process.env.SITE_URL ? `${process.env.SITE_URL}/api/webhook` : undefined,
-        metadata: { tipo: 'merch', pedido_id: pedido.id, nome, email, telefone, instagram, frete_valor: frete.preco }
+        metadata: { tipo: 'merch', pedido_id: pedido.id, nome, email, telefone, frete_valor: frete.preco }
       }
     });
 
