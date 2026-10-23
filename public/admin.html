@@ -124,6 +124,44 @@
     .dims-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
     @media(max-width:480px){.dims-grid{grid-template-columns:repeat(2,1fr);}}
 
+    /* PEDIDOS / ENVIO */
+    .envio-cel{display:flex;flex-direction:column;gap:6px;align-items:flex-start;}
+    .envio-cel .mono{font-size:0.7rem;color:var(--text);}
+    .envio-erro{font-size:0.62rem;color:var(--red);max-width:220px;line-height:1.4;}
+    .side-badge{margin-left:auto;background:var(--red);color:var(--on-red);font-family:var(--f-mono);font-size:0.56rem;min-width:18px;height:18px;padding:0 5px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;}
+
+    /* ORÇAMENTOS */
+    .orc-lista{display:flex;flex-direction:column;gap:10px;}
+    .orc-card{padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:14px;}
+    .orc-card.novo{border-color:var(--red-line);}
+    .orc-card.arquivado{opacity:0.6;}
+    .orc-nome{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0.03em;color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .orc-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-mono);font-size:0.62rem;color:var(--text2);margin:6px 0 10px;}
+    .orc-meta span{display:inline-flex;align-items:center;gap:6px;}
+    .orc-msg{font-size:0.88rem;color:var(--text2);line-height:1.7;white-space:pre-line;border-left:2px solid var(--border-s);padding-left:12px;}
+    .orc-lado{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+    .orc-lado select{width:auto;}
+    @media(max-width:640px){.orc-card{grid-template-columns:1fr;}.orc-lado{align-items:stretch;flex-direction:row;flex-wrap:wrap;}}
+
+    /* CONTEÚDO DO SITE */
+    .cont-card{padding:24px;margin-bottom:14px;}
+    .cont-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+    .cont-titulo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:1.4rem;letter-spacing:0.04em;color:var(--text);}
+    .cont-titulo .ic{color:var(--red);font-size:1.1rem;}
+    .lista-ed{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+    .bloco-ed{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:start;}
+    .bloco-ed .input,.bloco-ed select,.bloco-ed textarea{background:var(--bg2);}
+    .bloco-ed textarea{width:100%;resize:vertical;min-height:70px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:var(--f-body);font-size:0.88rem;outline:none;}
+    .bloco-ed textarea:focus{border-color:var(--red);}
+    .bloco-ed .campos{display:flex;flex-direction:column;gap:8px;min-width:0;}
+    .bloco-ed .linha{display:grid;grid-template-columns:1fr 140px;gap:8px;}
+    @media(max-width:640px){.bloco-ed{grid-template-columns:1fr;}.bloco-ed .linha{grid-template-columns:1fr;}}
+    select.input{appearance:auto;}
+    .estoque-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;}
+    .estoque-grid label{display:flex;flex-direction:column;gap:4px;font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;}
+    .alerta-cfg{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;margin-bottom:12px;font-size:0.84rem;color:var(--text2);line-height:1.6;}
+    .alerta-cfg .ic{color:var(--warn);margin-top:3px;font-size:1rem;}
+
     /* GALERIA */
     .gal-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
     .chips{display:flex;gap:6px;flex-wrap:wrap;}
@@ -179,6 +217,8 @@
     <div class="page-eyebrow" style="opacity:1;animation:none;margin-bottom:0;">Acesso restrito</div>
     <div class="login-ti">PAINEL ADMIN</div>
     <p class="login-sub">Gerenciamento do site da Nexus</p>
+    <label class="sr-only" for="inputUsuario">Usuário</label>
+    <input class="input" type="text" id="inputUsuario" placeholder="Usuário" autocomplete="username" autocapitalize="off" hidden/>
     <label class="sr-only" for="inputSenha">Senha</label>
     <input class="input" type="password" id="inputSenha" placeholder="Senha" autocomplete="current-password" required/>
     <button class="btn btn-primary btn-block" id="btnLogin" type="submit"><i data-icon="lock"></i>Entrar</button>
@@ -221,6 +261,11 @@
         <button class="adm-side-link" data-page="shows" type="button"><i data-icon="calendar"></i>Agenda de shows</button>
         <button class="adm-side-link" data-page="membros" type="button"><i data-icon="users"></i>Membros</button>
         <button class="adm-side-link" data-page="galeria" type="button"><i data-icon="images"></i>Galeria</button>
+        <button class="adm-side-link" data-page="conteudo" type="button"><i data-icon="file-edit"></i>Conteúdo do site</button>
+      </div>
+      <div class="adm-side-group">
+        <div class="adm-side-label">Contratantes</div>
+        <button class="adm-side-link" data-page="orcamentos" type="button"><i data-icon="inbox"></i>Orçamentos <span class="side-badge" id="badgeOrcamentos" hidden></span></button>
       </div>
     </aside>
 
@@ -234,6 +279,7 @@
             <div class="adm-page-sub" id="ultimaAtualizacao">Carregando...</div>
           </div>
         </div>
+        <div id="avisosConfig"></div>
         <div class="stats-grid">
           <div class="card stat-card"><div class="stat-top"><span class="stat-lbl">Total</span><i data-icon="ticket"></i></div><div class="stat-num" id="statTotal">—</div></div>
           <div class="card stat-card sn-green"><div class="stat-top"><span class="stat-lbl">Disponíveis</span><i data-icon="check-circle"></i></div><div class="stat-num" id="statDisponiveis">—</div></div>
@@ -348,12 +394,12 @@
         <div class="adm-page-header">
           <div>
             <div class="adm-page-titulo">Pedidos da loja</div>
-            <div class="adm-page-sub">Nome, telefone, itens e status de pagamento de cada pedido</div>
+            <div class="adm-page-sub">Pagamento e envio de cada pedido (o endereço completo vai impresso na etiqueta)</div>
           </div>
         </div>
         <div class="tabela-wrap">
           <table>
-            <thead><tr><th>Data</th><th>Nome</th><th>Telefone</th><th>Pedido</th><th>Valor</th><th>Pagamento</th></tr></thead>
+            <thead><tr><th>Data</th><th>Cliente</th><th>Pedido</th><th>Valor</th><th>Pagamento</th><th>Envio</th></tr></thead>
             <tbody id="tabelaPedidosMerch"><tr><td colspan="6" class="vazio">Carregando...</td></tr></tbody>
           </table>
         </div>
@@ -408,6 +454,93 @@
             <thead><tr><th></th><th>Nome</th><th>Função</th><th>Ordem</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody id="tabelaMembros"><tr><td colspan="6" class="vazio">Carregando...</td></tr></tbody>
           </table>
+        </div>
+      </section>
+
+      <!-- ORÇAMENTOS -->
+      <section class="adm-page" id="page-orcamentos">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Orçamentos</div>
+            <div class="adm-page-sub">Pedidos enviados pelo formulário da página Contratantes</div>
+          </div>
+          <div class="chips" role="group" aria-label="Filtrar orçamentos">
+            <button class="chip" type="button" data-forc="abertos" aria-pressed="true" onclick="filtrarOrcamentos('abertos')">Em aberto</button>
+            <button class="chip" type="button" data-forc="todos" aria-pressed="false" onclick="filtrarOrcamentos('todos')">Todos</button>
+          </div>
+        </div>
+        <div class="orc-lista" id="listaOrcamentos"><div class="state plain"><span class="spinner"></span>Carregando...</div></div>
+      </section>
+
+      <!-- CONTEÚDO DO SITE -->
+      <section class="adm-page" id="page-conteudo">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Conteúdo do site</div>
+            <div class="adm-page-sub">Textos, links e listas que antes só mudavam editando o código</div>
+          </div>
+        </div>
+
+        <div class="card cont-card" id="contLinks">
+          <div class="cont-head">
+            <span class="cont-titulo"><i data-icon="link"></i>Redes sociais e contato</span>
+            <button class="btn btn-primary btn-sm" type="button" onclick="salvarConteudo('links', this)">Salvar</button>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label for="cfInstagram">Instagram (URL)</label><input type="url" id="cfInstagram" placeholder="https://instagram.com/nexus.bandbr"/></div>
+            <div class="fg"><label for="cfTiktok">TikTok (URL)</label><input type="url" id="cfTiktok" placeholder="https://tiktok.com/@nexus.bandbr"/></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label for="cfYoutube">Canal do YouTube (URL)</label><input type="url" id="cfYoutube" placeholder="https://youtube.com/@..."/></div>
+            <div class="fg"><label for="cfSpotify">Perfil no Spotify (URL)</label><input type="url" id="cfSpotify" placeholder="https://open.spotify.com/artist/..."/></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label for="cfEmail">E-mail de contato</label><input type="email" id="cfEmail" placeholder="bandanexus01@gmail.com"/></div>
+            <div class="fg"><label for="cfWhatsapp">WhatsApp (com DDD)</label><input type="tel" id="cfWhatsapp" placeholder="(11) 94247-7432"/></div>
+          </div>
+          <p class="field-hint">Campos vazios usam os valores atuais do site. YouTube e Spotify só aparecem quando preenchidos.</p>
+        </div>
+
+        <div class="card cont-card" id="contMusica">
+          <div class="cont-head">
+            <span class="cont-titulo"><i data-icon="headphones"></i>Música na página inicial</span>
+            <button class="btn btn-primary btn-sm" type="button" onclick="salvarConteudo('musica', this)">Salvar</button>
+          </div>
+          <div class="fg"><label for="cfMusica">Link do Spotify para o player</label><input type="url" id="cfMusica" placeholder="https://open.spotify.com/album/... (artista, álbum, música ou playlist)"/></div>
+          <p class="field-hint">Mostra a seção "Ouça" na página inicial com o player. Sem link, a seção aparece só se houver Spotify ou YouTube configurado acima.</p>
+        </div>
+
+        <div class="card cont-card" id="contBio">
+          <div class="cont-head">
+            <span class="cont-titulo"><i data-icon="file-text"></i>Biografia (página Contratantes)</span>
+            <button class="btn btn-primary btn-sm" type="button" onclick="salvarConteudo('bio', this)">Salvar</button>
+          </div>
+          <div class="fg"><textarea id="cfBio" rows="8" placeholder="Deixe uma linha em branco entre os parágrafos."></textarea></div>
+          <p class="field-hint">Deixe uma linha em branco entre os parágrafos. Vazio = usa o texto atual do site.</p>
+        </div>
+
+        <div class="card cont-card" id="contRider">
+          <div class="cont-head">
+            <span class="cont-titulo"><i data-icon="sliders"></i>Rider técnico</span>
+            <div class="adm-page-acoes">
+              <button class="btn btn-outline btn-sm" type="button" onclick="adicionarBloco('rider')"><i data-icon="plus"></i>Categoria</button>
+              <button class="btn btn-primary btn-sm" type="button" onclick="salvarConteudo('rider', this)">Salvar</button>
+            </div>
+          </div>
+          <div class="lista-ed" id="edRider"></div>
+          <p class="field-hint">Um item por linha. Para voltar ao rider original, remova todas as categorias e salve.</p>
+        </div>
+
+        <div class="card cont-card" id="contPremios">
+          <div class="cont-head">
+            <span class="cont-titulo"><i data-icon="gift"></i>Prêmios da rifa</span>
+            <div class="adm-page-acoes">
+              <button class="btn btn-outline btn-sm" type="button" onclick="adicionarBloco('premios')"><i data-icon="plus"></i>Prêmio</button>
+              <button class="btn btn-primary btn-sm" type="button" onclick="salvarConteudo('premios', this)">Salvar</button>
+            </div>
+          </div>
+          <div class="lista-ed" id="edPremios"></div>
+          <p class="field-hint">Para voltar aos prêmios originais, remova todos e salve.</p>
         </div>
       </section>
 
@@ -511,7 +644,7 @@
       <div class="icon-picker" id="pIconePicker" role="radiogroup" aria-label="Ícone do produto"></div>
     </div>
     <div class="form-row">
-      <div class="fg"><label for="pSizes">Tamanhos <span class="opt">separados por vírgula</span></label><input type="text" id="pSizes" placeholder="P, M, G, GG"/></div>
+      <div class="fg"><label for="pSizes">Tamanhos <span class="opt">separados por vírgula</span></label><input type="text" id="pSizes" placeholder="P, M, G, GG" oninput="montarCamposEstoque()"/></div>
       <div class="fg"><label for="pBadge">Selo <span class="opt">opcional</span></label><input type="text" id="pBadge" placeholder="Ex.: Novo, Em breve"/></div>
     </div>
     <div class="fg">
@@ -523,6 +656,11 @@
         <input type="number" id="pComprimento" placeholder="Compr. (cm)" min="16" step="0.5" aria-label="Comprimento em cm"/>
       </div>
       <p class="field-hint">Peso (kg) · altura · largura · comprimento (cm). Os Correios exigem no mínimo 2×11×16 cm.</p>
+    </div>
+    <div class="fg">
+      <span class="fg-label">Estoque <span class="opt">opcional — deixe vazio para não controlar</span></span>
+      <div class="estoque-grid" id="pEstoque"></div>
+      <p class="field-hint">Quando um tamanho chega a 0 ele aparece como esgotado na loja. O estoque baixa sozinho quando um pedido é pago.</p>
     </div>
     <div class="fg">
       <label for="pAtivo">Status</label>
@@ -617,7 +755,15 @@
 
 <script>
 // ══════════════ BASE: sessão, requisições e utilitários ══════════════
+// Sessão assinada pelo servidor (expira em 12h). Nunca guardamos a senha.
 let token = localStorage.getItem('nexus_admin_token');
+(function(){
+  const expira = parseInt(localStorage.getItem('nexus_admin_expira') || '0', 10);
+  // Tokens antigos (que eram a própria senha) não têm "." — descarta
+  if(token && (!token.includes('.') || (expira && Date.now() > expira))){
+    localStorage.removeItem('nexus_admin_token'); localStorage.removeItem('nexus_admin_expira'); token = null;
+  }
+})();
 const esc = nexusEsc;
 
 // Requisição autenticada. Retorna { ok, status, data } e trata sessão expirada.
@@ -652,25 +798,43 @@ const fmtData = d => d ? new Date(d).toLocaleString('pt-BR', { dateStyle: 'short
 // ══════════════ LOGIN ══════════════
 async function login(){
   const senha = document.getElementById('inputSenha').value;
+  const usuario = document.getElementById('inputUsuario').value.trim();
   if(!senha) return;
   const pronto = carregandoBtn(document.getElementById('btnLogin'), 'Entrando...');
   try{
-    const res = await fetch('/api/admin?acao=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ senha }) });
-    const data = await res.json();
-    if(res.ok){ token = data.token; localStorage.setItem('nexus_admin_token', token); mostrarPainel(); }
-    else toast('Senha incorreta', 'err');
+    const res = await fetch('/api/admin?acao=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario, senha }) });
+    const data = await res.json().catch(() => ({}));
+    if(res.ok){
+      token = data.token;
+      localStorage.setItem('nexus_admin_token', token);
+      localStorage.setItem('nexus_admin_expira', String(data.expira_em || ''));
+      document.getElementById('inputSenha').value = '';
+      mostrarPainel();
+    } else toast(data.erro || 'Senha incorreta', 'err');
   }catch{ toast('Erro de conexão', 'err'); }
   pronto();
+}
+
+// Mostra o campo "Usuário" quando o painel tem uma senha por pessoa (ADMIN_USERS)
+async function prepararLogin(){
+  try{
+    const r = await fetch('/api/admin?acao=login-info');
+    const d = await r.json();
+    const campo = document.getElementById('inputUsuario');
+    if(d.multiusuario){ campo.hidden = false; campo.required = true; campo.focus(); }
+    else document.getElementById('inputSenha').focus();
+  }catch{ document.getElementById('inputSenha').focus(); }
 }
 
 async function verificarToken(){
   const r = await api('/api/admin?acao=resumo');
   if(r.ok) mostrarPainel(r.data);
-  else { localStorage.removeItem('nexus_admin_token'); token = null; }
+  else { localStorage.removeItem('nexus_admin_token'); localStorage.removeItem('nexus_admin_expira'); token = null; prepararLogin(); }
 }
 
 function sessaoExpirada(){
   localStorage.removeItem('nexus_admin_token');
+  localStorage.removeItem('nexus_admin_expira');
   token = null;
   toast('Sessão expirada. Entre novamente.', 'err');
   setTimeout(() => location.reload(), 1200);
@@ -680,6 +844,7 @@ function sair(){
   if(nexusIsDirty() && !confirm('Você tem alterações não salvas. Sair mesmo assim?')) return;
   nexusClearAllDirty();
   localStorage.removeItem('nexus_admin_token');
+  localStorage.removeItem('nexus_admin_expira');
   location.reload();
 }
 
@@ -698,10 +863,11 @@ function recarregarTudo(resumo){
   carregarProdutos();
   carregarMembros();
   carregarGaleria();
+  carregarOrcamentos();
 }
 
 // ══════════════ ROTEAMENTO (SIDEBAR) ══════════════
-const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros','galeria'];
+const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros','galeria','conteudo','orcamentos'];
 
 function initAdminRouter(){
   document.querySelectorAll('.adm-side-link').forEach(btn => btn.addEventListener('click', () => irParaPagina(btn.dataset.page)));
@@ -755,6 +921,10 @@ async function carregarDados(resumo){
   if(cfg.total_bilhetes) document.getElementById('cfgTotal').value = cfg.total_bilhetes;
 
   if(data.ultimo_sorteio) mostrarSorteio(data.ultimo_sorteio);
+  preencherConteudo(cfg);
+  document.getElementById('avisosConfig').innerHTML = data.email_configurado === false
+    ? `<div class="card alerta-cfg">${nexusIcon('alert')}<span>E-mails automáticos desligados: configure <code>RESEND_API_KEY</code>, <code>EMAIL_REMETENTE</code> e <code>EMAIL_BANDA</code> na Vercel para enviar confirmações de compra e avisos de orçamento (veja o README).</span></div>`
+    : '';
 
   const tbody = document.getElementById('tabelaBilhetes');
   const relevantes = (data.bilhetes || []).filter(b => b.status !== 'disponivel').sort((a, b) => a.numero - b.numero);
@@ -817,24 +987,230 @@ async function realizarSorteio(btn){
 }
 
 // ══════════════ PEDIDOS DA LOJA ══════════════
+let pedidosData = [];
 async function carregarPedidosMerch(){
   const tbody = document.getElementById('tabelaPedidosMerch');
   const r = await api('/api/admin?acao=pedidos-merch');
   if(!r.ok){ tbody.innerHTML = linhaVazia(esc(r.data.erro || 'Erro ao carregar pedidos')); return; }
-  const pedidos = r.data.pedidos || [];
-  if(!pedidos.length){ tbody.innerHTML = linhaVazia('Nenhum pedido ainda'); return; }
+  pedidosData = r.data.pedidos || [];
+  if(!pedidosData.length){ tbody.innerHTML = linhaVazia('Nenhum pedido ainda'); return; }
   const TAG = { pago: 'tag-ok', pendente: 'tag-warn', cancelado: 'tag-accent' };
-  tbody.innerHTML = pedidos.map(p => {
-    const itens = (p.itens || []).map(i => `${esc(i.nome)}${i.tam && i.tam !== 'único' ? ` (${esc(i.tam)})` : ''} × ${esc(i.qty)}`).join(', ') || '—';
+  tbody.innerHTML = pedidosData.map(p => {
+    const itens = (p.itens || []).map(i => `${esc(i.nome)}${i.tam && i.tam !== 'único' ? ` (${esc(i.tam)})` : ''} × ${esc(i.qty)}`).join('<br/>') || '—';
     return `<tr>
       <td class="mono">${fmtData(p.criado_em)}</td>
-      <td><strong>${esc(p.nome_comprador || '—')}</strong></td>
-      <td class="mono">${esc(p.telefone_comprador || '—')}</td>
-      <td style="max-width:280px;">${itens}</td>
+      <td><strong>${esc(p.nome_comprador || '—')}</strong><div class="mono" style="font-size:0.7rem;margin-top:2px;">${esc(p.telefone_comprador || '')}</div>${p.cidade ? `<div style="font-size:0.74rem;color:var(--text3);">${esc(p.cidade)}/${esc(p.uf || '')}</div>` : ''}</td>
+      <td style="max-width:260px;">${itens}</td>
       <td class="mono">${nexusMoeda(p.valor_total)}</td>
       <td><span class="tag ${TAG[p.status] || 'tag-muted'}">${esc(p.status)}</span></td>
+      <td>${celulaEnvio(p)}</td>
     </tr>`;
   }).join('');
+}
+
+function celulaEnvio(p){
+  if(p.status !== 'pago') return '<span style="color:var(--text3);">—</span>';
+  const frete = p.frete_servico ? `<span style="font-size:0.74rem;color:var(--text3);">${esc(p.frete_transportadora || '')} ${esc(p.frete_servico)}</span>` : '';
+  if(p.me_status === 'gerada'){
+    return `<div class="envio-cel"><span class="tag tag-ok">${nexusIcon('truck')}Etiqueta gerada</span>${frete}
+      ${p.me_rastreio ? `<a class="mono" href="https://www.melhorrastreio.com.br/rastreio/${encodeURIComponent(p.me_rastreio)}" target="_blank" rel="noopener">${esc(p.me_rastreio)}</a>` : ''}
+      ${p.me_link_etiqueta ? `<a class="btn btn-outline btn-sm" href="${esc(p.me_link_etiqueta)}" target="_blank" rel="noopener">${nexusIcon('download')}Etiqueta</a>` : ''}</div>`;
+  }
+  const rotulo = p.me_status === 'falha_saldo' ? 'Sem saldo no Melhor Envio' : (p.me_status === 'falha' ? 'Falha na etiqueta' : 'Etiqueta pendente');
+  return `<div class="envio-cel"><span class="tag tag-warn">${esc(rotulo)}</span>${frete}
+    ${p.me_erro ? `<span class="envio-erro">${esc(p.me_erro)}</span>` : ''}
+    <button class="btn btn-outline btn-sm" type="button" onclick="gerarEtiqueta('${esc(p.id)}', this)">${nexusIcon('refresh')}Gerar etiqueta</button></div>`;
+}
+
+async function gerarEtiqueta(id, btn){
+  if(!confirm('Gerar a etiqueta agora? O valor do frete será debitado da carteira do Melhor Envio.')) return;
+  const pronto = carregandoBtn(btn, 'Gerando...');
+  const r = await api('/api/admin?acao=gerar-etiqueta', { method: 'POST', body: { id } });
+  pronto();
+  if(r.ok) toast('Etiqueta gerada', 'ok'); else toast(r.data.erro || 'Erro ao gerar etiqueta', 'err');
+  carregarPedidosMerch();
+}
+
+// ══════════════ ORÇAMENTOS ══════════════
+let orcamentosData = [], orcFiltro = 'abertos';
+const ORC_STATUS = { novo: ['tag-solid', 'Novo'], respondido: ['tag-warn', 'Respondido'], fechado: ['tag-ok', 'Fechado'], arquivado: ['tag-muted', 'Arquivado'] };
+
+async function carregarOrcamentos(){
+  const r = await api('/api/admin?acao=orcamentos');
+  const lista = document.getElementById('listaOrcamentos');
+  if(r.ok && r.data.aviso){ lista.innerHTML = avisoSetup(esc(r.data.aviso)); orcamentosData = []; atualizarBadgeOrc(); return; }
+  orcamentosData = r.ok ? (r.data.orcamentos || []) : [];
+  atualizarBadgeOrc();
+  renderOrcamentos();
+}
+function atualizarBadgeOrc(){
+  const novos = orcamentosData.filter(o => o.status === 'novo').length;
+  const b = document.getElementById('badgeOrcamentos');
+  b.textContent = novos; b.hidden = !novos;
+}
+function filtrarOrcamentos(f){
+  orcFiltro = f;
+  document.querySelectorAll('[data-forc]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.forc === f)));
+  renderOrcamentos();
+}
+function renderOrcamentos(){
+  const lista = document.getElementById('listaOrcamentos');
+  const itens = orcamentosData.filter(o => orcFiltro === 'todos' || ['novo', 'respondido'].includes(o.status));
+  if(!itens.length){
+    lista.innerHTML = `<div class="state">${nexusIcon('inbox')}<span class="state-title">Nenhum orçamento ${orcFiltro === 'todos' ? 'ainda' : 'em aberto'}</span><span>Os pedidos feitos na página Contratantes aparecem aqui.</span></div>`;
+    return;
+  }
+  lista.innerHTML = itens.map(o => {
+    const [cls, label] = ORC_STATUS[o.status] || ['tag-muted', o.status];
+    const tel = String(o.telefone || '').replace(/\D/g, '');
+    const whats = tel ? `https://wa.me/${tel.length <= 11 ? '55' + tel : tel}?text=${encodeURIComponent(`Olá, ${o.nome}! Aqui é da banda Nexus, sobre o seu pedido de orçamento${o.data_evento ? ' para ' + new Date(o.data_evento + 'T12:00:00').toLocaleDateString('pt-BR') : ''}.`)}` : '';
+    const mail = o.email ? `mailto:${encodeURIComponent(o.email)}?subject=${encodeURIComponent('Orçamento — Nexus Band')}` : '';
+    const id = esc(o.id);
+    return `
+    <div class="card orc-card ${esc(o.status)}">
+      <div>
+        <div class="orc-nome">${esc(o.nome)} <span class="tag ${cls}">${esc(label)}</span></div>
+        <div class="orc-meta">
+          ${o.tipo_evento ? `<span>${nexusIcon('music')}${esc(o.tipo_evento)}</span>` : ''}
+          ${o.data_evento ? `<span>${nexusIcon('calendar')}${new Date(o.data_evento + 'T12:00:00').toLocaleDateString('pt-BR')}</span>` : ''}
+          ${o.cidade ? `<span>${nexusIcon('map-pin')}${esc(o.cidade)}</span>` : ''}
+          ${o.email ? `<span>${nexusIcon('mail')}${esc(o.email)}</span>` : ''}
+          ${o.telefone ? `<span>${nexusIcon('phone')}${esc(o.telefone)}</span>` : ''}
+          <span>${nexusIcon('clock')}recebido ${fmtData(o.criado_em)}</span>
+        </div>
+        ${o.mensagem ? `<div class="orc-msg">${esc(o.mensagem)}</div>` : ''}
+      </div>
+      <div class="orc-lado">
+        ${whats ? `<a class="btn btn-primary btn-sm" href="${whats}" target="_blank" rel="noopener" onclick="marcarRespondido('${id}')">${nexusIcon('message')}WhatsApp</a>` : ''}
+        ${mail ? `<a class="btn btn-outline btn-sm" href="${mail}" onclick="marcarRespondido('${id}')">${nexusIcon('mail')}E-mail</a>` : ''}
+        <select class="input" aria-label="Status" onchange="mudarStatusOrc('${id}', this.value)">
+          ${Object.entries(ORC_STATUS).map(([k, [, l]]) => `<option value="${k}" ${k === o.status ? 'selected' : ''}>${l}</option>`).join('')}
+        </select>
+        <button class="btn btn-outline btn-sm is-danger" type="button" onclick="excluirOrcamento('${id}')">${nexusIcon('trash')}Excluir</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function mudarStatusOrc(id, status){
+  const r = await api('/api/admin?acao=orcamento-status', { method: 'POST', body: { id, status } });
+  if(!r.ok){ toast(r.data.erro || 'Erro ao atualizar', 'err'); return; }
+  const o = orcamentosData.find(x => x.id === id); if(o) o.status = status;
+  atualizarBadgeOrc(); renderOrcamentos();
+}
+function marcarRespondido(id){
+  const o = orcamentosData.find(x => x.id === id);
+  if(o && o.status === 'novo') mudarStatusOrc(id, 'respondido');
+}
+async function excluirOrcamento(id){
+  if(!confirm('Excluir este pedido de orçamento?')) return;
+  const r = await api('/api/admin?acao=orcamento-excluir', { method: 'POST', body: { id } });
+  if(!r.ok){ toast(r.data.erro || 'Erro ao excluir', 'err'); return; }
+  orcamentosData = orcamentosData.filter(o => o.id !== id);
+  atualizarBadgeOrc(); renderOrcamentos();
+  toast('Orçamento excluído', 'ok');
+}
+
+// ══════════════ CONTEÚDO DO SITE ══════════════
+const RIDER_PADRAO = [
+  { icone: 'sliders', titulo: 'Som e PA', itens: ['Sistema PA adequado ao espaço', 'Mesa de som com mínimo 16 canais', '10 tomadas de 110v', '3 monitores de retorno (wedge)', 'Técnico de som no PA durante o show', 'DI box para 2 guitarras, 1 baixo e 1 teclado'] },
+  { icone: 'drum', titulo: 'Bateria', itens: ['Bumbo 22"', 'Caixa 14"', 'Tom 12", 13" e 16"', 'Chimbal, ride e crash', 'Estante para caixa e chimbal', 'Estante para ride e crash'] },
+  { icone: 'mic', titulo: 'Microfonação', itens: ['4 pedestais para microfone', '1 microfone para vocal principal', '3 microfones para backing vocal', 'Cabos XLR para conexão dos microfones'] },
+  { icone: 'users', titulo: 'Estrutura e Hospitality', itens: ['Água de acesso rápido', 'Soundcheck de pelo menos 1h', 'Contrato e cachê combinados previamente'] }
+];
+const PREMIOS_PADRAO = [
+  { icone: 'guitar', nome: 'PALHETAS EXCLUSIVAS', qtd: '2 unidades', desc: 'Palhetas oficiais da Nexus Band, personalizadas com o logo da banda. Perfeitas para colecionadores e músicos.' },
+  { icone: 'drum', nome: 'BAQUETAS ASSINADAS', qtd: '2 unidades', desc: 'Baquetas autografadas pelo baterista da Nexus. Um item raro para quem curte a banda de perto.' },
+  { icone: 'shirt', nome: 'CAMISETA OFICIAL', qtd: '1 unidade', desc: 'Camiseta estampada com o logo da banda. Edição limitada, disponível apenas para apoiadores da campanha.' },
+  { icone: 'key', nome: 'CHAVEIRO NEXUS', qtd: '1 unidade', desc: 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, carregue a banda com você.' },
+  { icone: 'pin', nome: 'PIN COLECIONÁVEL', qtd: '1 unidade', desc: 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas, mochilas e coleções.' },
+  { icone: 'sticker', nome: 'PACK DE ADESIVOS', qtd: '1 unidade', desc: 'Set de adesivos vinil com artes exclusivas da banda. Impermeáveis e de alta durabilidade.' }
+];
+const ICONES_CONTEUDO = { sliders: 'Mesa / som', drum: 'Bateria', mic: 'Microfone', guitar: 'Guitarra', music: 'Música', headphones: 'Fones', users: 'Equipe', zap: 'Energia', clock: 'Horário', shirt: 'Camiseta', key: 'Chaveiro', pin: 'Pin', sticker: 'Adesivo', ticket: 'Ingresso', gift: 'Presente', package: 'Outro' };
+const BIO_PADRAO = 'A Nexus é uma banda formada em São Paulo, com uma sonoridade que mistura rock com elementos de outros gêneros. O grupo é composto por Davi (guitarra e voz), João (guitarra), Atila (teclados), Victor (bateria) e Pedro (baixo).\n\nDesde 2025, a banda vem construindo uma identidade visual e sonora marcante, com shows energéticos e músicas autorais que conectam o público de forma intensa.\n\nCom diversos shows realizados e um álbum sendo produzido, a Nexus está pronta para levar sua música para novos palcos.';
+
+function lerJson(v, padrao){ try{ const o = JSON.parse(v); return Array.isArray(o) && o.length ? o : padrao; }catch{ return padrao; } }
+const selectIcone = (atual) => `<select class="input" data-campo="icone" aria-label="Ícone">${Object.entries(ICONES_CONTEUDO).map(([k, l]) => `<option value="${k}" ${k === atual ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+
+function blocoRider(b){
+  return `<div class="bloco-ed" data-tipo="rider">
+    ${selectIcone(b.icone || 'sliders')}
+    <div class="campos">
+      <input class="input" data-campo="titulo" placeholder="Categoria (ex.: Bateria)" value="${esc(b.titulo || '')}"/>
+      <textarea data-campo="itens" rows="${Math.max(3, (b.itens || []).length + 1)}" placeholder="Um item por linha">${esc((b.itens || []).join('\n'))}</textarea>
+    </div>
+    <button class="btn btn-icon sm" type="button" aria-label="Remover" onclick="this.closest('.bloco-ed').remove()">${nexusIcon('trash')}</button>
+  </div>`;
+}
+function blocoPremio(p){
+  return `<div class="bloco-ed" data-tipo="premios">
+    ${selectIcone(p.icone || 'gift')}
+    <div class="campos">
+      <div class="linha">
+        <input class="input" data-campo="nome" placeholder="Nome do prêmio" value="${esc(p.nome || '')}"/>
+        <input class="input" data-campo="qtd" placeholder="Ex.: 2 unidades" value="${esc(p.qtd || '')}"/>
+      </div>
+      <textarea data-campo="desc" rows="2" placeholder="Descrição">${esc(p.desc || '')}</textarea>
+    </div>
+    <button class="btn btn-icon sm" type="button" aria-label="Remover" onclick="this.closest('.bloco-ed').remove()">${nexusIcon('trash')}</button>
+  </div>`;
+}
+function adicionarBloco(tipo){
+  const alvo = document.getElementById(tipo === 'rider' ? 'edRider' : 'edPremios');
+  alvo.insertAdjacentHTML('beforeend', tipo === 'rider' ? blocoRider({}) : blocoPremio({}));
+  alvo.lastElementChild.querySelector('input').focus();
+}
+
+function preencherConteudo(cfg){
+  const set = (id, v) => { document.getElementById(id).value = v || ''; };
+  set('cfInstagram', cfg.link_instagram); set('cfTiktok', cfg.link_tiktok);
+  set('cfYoutube', cfg.link_youtube); set('cfSpotify', cfg.link_spotify);
+  set('cfEmail', cfg.contato_email); set('cfWhatsapp', cfg.contato_whatsapp);
+  set('cfMusica', cfg.musica_spotify);
+  set('cfBio', cfg.conteudo_bio || BIO_PADRAO);
+  document.getElementById('edRider').innerHTML = lerJson(cfg.conteudo_rider, RIDER_PADRAO).map(blocoRider).join('');
+  document.getElementById('edPremios').innerHTML = lerJson(cfg.conteudo_premios, PREMIOS_PADRAO).map(blocoPremio).join('');
+}
+
+function lerBlocos(containerId, campos){
+  return Array.from(document.querySelectorAll(`#${containerId} .bloco-ed`)).map(b => {
+    const o = {};
+    campos.forEach(c => { o[c] = b.querySelector(`[data-campo="${c}"]`).value.trim(); });
+    return o;
+  });
+}
+
+async function salvarConteudo(secao, btn){
+  const v = id => document.getElementById(id).value.trim();
+  let itens;
+  if(secao === 'links'){
+    const urlOk = u => !u || /^https?:\/\//i.test(u);
+    const urls = { link_instagram: v('cfInstagram'), link_tiktok: v('cfTiktok'), link_youtube: v('cfYoutube'), link_spotify: v('cfSpotify') };
+    if(Object.values(urls).some(u => !urlOk(u))){ toast('Os links precisam começar com https://', 'err'); return; }
+    if(v('cfEmail') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('cfEmail'))){ toast('E-mail de contato inválido', 'err'); return; }
+    itens = { ...urls, contato_email: v('cfEmail'), contato_whatsapp: v('cfWhatsapp').replace(/\D/g, '') };
+  } else if(secao === 'musica'){
+    if(v('cfMusica') && !/open\.spotify\.com\/(?:intl-[a-z]+\/)?(artist|album|track|playlist)\//.test(v('cfMusica'))){ toast('Use um link do Spotify (artista, álbum, música ou playlist)', 'err'); return; }
+    itens = { musica_spotify: v('cfMusica') };
+  } else if(secao === 'bio'){
+    const bio = v('cfBio');
+    itens = { conteudo_bio: bio === BIO_PADRAO.trim() ? '' : bio };
+  } else if(secao === 'rider'){
+    const blocos = lerBlocos('edRider', ['icone', 'titulo', 'itens'])
+      .map(b => ({ icone: b.icone, titulo: b.titulo, itens: b.itens.split('\n').map(i => i.trim()).filter(Boolean) }))
+      .filter(b => b.titulo || b.itens.length);
+    itens = { conteudo_rider: blocos.length ? JSON.stringify(blocos) : '' };
+  } else if(secao === 'premios'){
+    const premios = lerBlocos('edPremios', ['icone', 'nome', 'qtd', 'desc']).filter(p => p.nome);
+    itens = { conteudo_premios: premios.length ? JSON.stringify(premios) : '' };
+  }
+  const pronto = carregandoBtn(btn, 'Salvando...');
+  const r = await api('/api/admin?acao=config', { method: 'POST', body: { itens } });
+  pronto();
+  if(r.ok){
+    toast('Conteúdo salvo — aparece no site em até 1 minuto', 'ok');
+    if(secao === 'rider' && itens.conteudo_rider === '') document.getElementById('edRider').innerHTML = RIDER_PADRAO.map(blocoRider).join('');
+    if(secao === 'premios' && itens.conteudo_premios === '') document.getElementById('edPremios').innerHTML = PREMIOS_PADRAO.map(blocoPremio).join('');
+  } else toast(r.data.erro || 'Erro ao salvar', 'err');
 }
 
 // ══════════════ UPLOAD DE IMAGENS (compartilhado) ══════════════
@@ -1099,6 +1475,25 @@ function renderTabelaProdutos(){
   }).join('');
 }
 
+// Campos de estoque: um por tamanho (ou "único" quando o produto não tem tamanhos)
+let estoqueEmEdicao = null;
+function montarCamposEstoque(){
+  const box = document.getElementById('pEstoque');
+  const atuais = {};
+  box.querySelectorAll('input').forEach(i => { atuais[i.dataset.tam] = i.value; });
+  const raw = document.getElementById('pSizes').value.trim();
+  const tamanhos = raw ? raw.split(',').map(t => t.trim()).filter(Boolean) : ['único'];
+  box.innerHTML = tamanhos.map(t => {
+    const valor = atuais[t] ?? (estoqueEmEdicao && t in estoqueEmEdicao ? estoqueEmEdicao[t] : '');
+    return `<label>${esc(t)}<input class="input" type="number" min="0" step="1" data-tam="${esc(t)}" value="${esc(valor)}" placeholder="—"/></label>`;
+  }).join('');
+}
+function lerEstoque(){
+  const out = {};
+  document.querySelectorAll('#pEstoque input').forEach(i => { if(i.value !== '') out[i.dataset.tam] = parseInt(i.value, 10) || 0; });
+  return Object.keys(out).length ? out : null;
+}
+
 function abrirFormProduto(id){
   const p = id ? produtosData.find(x => x.id === id) : null;
   document.getElementById('prodFormTi').textContent = p ? 'Editar produto' : 'Novo produto';
@@ -1115,6 +1510,9 @@ function abrirFormProduto(id){
   document.getElementById('pComprimento').value = p?.comprimento_cm ?? 25;
   document.getElementById('pAtivo').value = String(p?.ativo !== false);
   document.getElementById('pId').value = p?.id || '';
+  estoqueEmEdicao = p?.estoque || null;
+  document.getElementById('pEstoque').innerHTML = '';
+  montarCamposEstoque();
   selecionarIcone(p ? nexusIconeProduto(p) : 'package');
   atualizarPreview('pImg', 'pImgPreview', iconeSelecionado());
   document.getElementById('prodOv').classList.add('open');
@@ -1146,7 +1544,9 @@ async function salvarProduto(){
       img: document.getElementById('pImg').value.trim(),
       badge: document.getElementById('pBadge').value.trim(),
       peso_kg: num('pPeso', 0.3), altura_cm: num('pAltura', 5), largura_cm: num('pLargura', 20), comprimento_cm: num('pComprimento', 25),
-      ativo: document.getElementById('pAtivo').value === 'true'
+      ativo: document.getElementById('pAtivo').value === 'true',
+      // Só envia estoque se houver controle (ou se havia e foi removido)
+      ...((lerEstoque() || estoqueEmEdicao) ? { estoque: lerEstoque() } : {})
     }
   });
   pronto();
@@ -1546,7 +1946,7 @@ document.addEventListener('keydown', e => {
 });
 
 if(token) verificarToken();
-else document.getElementById('inputSenha').focus();
+else prepararLogin();
 </script>
 </body>
 </html>

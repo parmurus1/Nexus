@@ -46,6 +46,9 @@ SITE_URL              = https://seu-projeto.vercel.app
 ADMIN_PASSWORD        = uma_senha_forte_aqui
 ```
 
+Opcionais (veja o `.env.example`): `ADMIN_USERS` (uma senha por pessoa), `ADMIN_SESSION_SECRET`,
+`RESEND_API_KEY` + `EMAIL_REMETENTE` + `EMAIL_BANDA` (e-mails automáticos) e as variáveis do Melhor Envio.
+
 5. Clique em **Deploy**
 
 ### 4. Configurar Webhook no Mercado Pago
@@ -85,12 +88,41 @@ Acesse: `https://seu-site.vercel.app/admin`
 
 Funcionalidades:
 - Ver stats em tempo real (total, disponíveis, reservados, pagos)
-- Liberar bilhetes reservados que expiraram (>30 min sem pagamento)
+- Liberar bilhetes reservados que expiraram (também acontece automaticamente)
 - Realizar sorteio aleatório entre bilhetes pagos
 - Visualizar tabela de compradores e pedidos da loja
 - Gerenciar produtos, agenda de shows, membros e a galeria
 
 ---
+
+## Atualizando um banco que já existe
+
+Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.sql` que ainda não foram executados (todos podem ser rodados de novo sem problema):
+
+1. **GALERIA** e **STORAGE: buckets das fotos da galeria e dos produtos**
+2. A migração de `shows.ordem` e a de ícones dos produtos
+3. **ATUALIZAÇÃO 2** — estoque, orçamentos, limite de tentativas de login e o membro Pedro
+4. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
+
+## Loja: estoque e envio
+
+- **Preço**: o servidor sempre busca preço, nome e medidas no banco; o navegador só informa produto, tamanho e quantidade.
+- **Estoque (opcional)**: no admin, em Produtos, preencha a quantidade de cada tamanho. Vazio = sem controle. Tamanhos zerados aparecem como esgotados e o estoque baixa sozinho quando o pagamento é aprovado.
+- **Etiquetas**: geradas automaticamente no Melhor Envio quando o pagamento é aprovado. Se falhar (ex.: sem saldo na carteira), recarregue e use o botão **Gerar etiqueta** em Pedidos.
+- **E-mails**: com o Resend configurado, o cliente recebe a confirmação do pedido e o código de rastreio, e a banda recebe um aviso de cada pedido pago.
+
+## Rifa: reservas
+
+Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém paga por um número que já foi liberado. Reservas vencidas são liberadas automaticamente. Se duas pessoas tentarem o mesmo número ao mesmo tempo, só uma consegue e a outra é avisada para escolher outro.
+
+## Conteúdo do site e orçamentos
+
+- **Conteúdo do site** (admin): links de redes sociais e contato, player do Spotify na página inicial, biografia e rider técnico da página Contratantes e os prêmios da rifa.
+- **Orçamentos** (admin): pedidos enviados pelo formulário da página Contratantes, com atalhos para responder por WhatsApp ou e-mail.
+
+## Domínio e SEO
+
+O site gera `sitemap.xml`, `robots.txt` e dados estruturados (banda e shows) para o Google. As URLs absolutas usam `https://nexus-rifa.vercel.app`; ao conectar um domínio próprio na Vercel, troque esse endereço em `public/*.html`, `public/sitemap.xml` e `public/robots.txt` (busca e substituição) e atualize `SITE_URL`.
 
 ## Galeria (fotos e vídeos)
 
@@ -111,6 +143,11 @@ Como a galeria fica leve para o banco:
 - `public/css/nexus.css` — design system compartilhado (cores, tipografia, navegação, rodapé, botões, formulários, modais, toast, lightbox). Cada página só tem o CSS específico dela.
 - `public/nexus-core.js` — ícones SVG (`<i data-icon="calendar"></i>` ou `nexusIcon('calendar')`), menu, config do site, toast, lightbox e utilitários.
 - `public/venom.js` — tema alternativo preto e branco (Modo Venom), ligado pelo admin.
+- `api/_lib/` — código compartilhado do backend (login, e-mails, regras da rifa e dos pedidos). Pastas com `_` não contam no limite de 12 funções do plano Hobby da Vercel.
+- `api/site.js` — reúne `/api/config`, `/api/bilhetes`, `/api/pedido-status` e `/api/orcamento` numa única função (via rewrites no `vercel.json`), deixando espaço para novas rotas.
+
+### Analytics
+Cliques em ingressos, carrinho, checkout, orçamentos e vídeos são enviados como eventos ao Vercel Web Analytics (`nexusTrack` em `nexus-core.js`). Eventos personalizados só aparecem no painel da Vercel nos planos pagos; no plano grátis eles são simplesmente ignorados.
 
 ---
 
@@ -119,7 +156,9 @@ Como a galeria fica leve para o banco:
 - As credenciais do Supabase e MP ficam APENAS nas variáveis de ambiente da Vercel
 - O banco de dados usa Row Level Security (RLS): leitura pública OK, escrita só via service_role
 - Bilhetes reservados expiram automaticamente (libere via admin ou implemente um cron)
-- A senha do admin é comparada diretamente — suficiente para este caso de uso
+- Login do admin gera uma sessão assinada que expira em 12h (a senha nunca fica salva no navegador), com limite de 5 tentativas erradas a cada 15 minutos por IP
+- Preços da loja e da rifa são sempre calculados no servidor
+- O webhook do Mercado Pago é idempotente: avisos repetidos não geram etiqueta, baixa de estoque ou e-mail em dobro
 
 ---
 

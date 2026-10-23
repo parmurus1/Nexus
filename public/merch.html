@@ -298,9 +298,11 @@
     <span>&copy; 2026 Nexus Band</span>
   </div>
   <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
   </div>
   <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
@@ -314,6 +316,15 @@ let cart = [], prodAtual = null, tamSel = null, qty = 1;
 let freteOpcoesAtuais = [], freteEscolhido = null;
 
 const temPreco = p => Number(p.preco) > 0;
+// Estoque opcional por tamanho (definido no painel). Sem controle = Infinity.
+function estoqueDe(p, tam){
+  const e = p && p.estoque;
+  if(!e || typeof e !== 'object' || !(tam in e)) return Infinity;
+  return Math.max(0, parseInt(e[tam], 10) || 0);
+}
+const tamanhosDe = p => (p.sizes && p.sizes.length) ? p.sizes : ['único'];
+const esgotado = p => tamanhosDe(p).every(t => estoqueDe(p, t) === 0);
+const noCarrinho = (id, tam) => cart.filter(i => i.id === id && i.tam === tam).reduce((s, i) => s + i.qty, 0);
 
 function visualProduto(p, interativo){
   const icone = `<span class="prod-icon">${nexusIcon(nexusIconeProduto(p))}</span>`;
@@ -331,7 +342,9 @@ function restaurarCarrinho(){
   cart = (Array.isArray(salvo) ? salvo : []).map(i => {
     const p = PRODS.find(x => x.id === i.id);
     if(!p || !p.ativo || !temPreco(p)) return null;
-    return { ...i, nome: p.nome, preco: Number(p.preco), img: p.img || '', icone: nexusIconeProduto(p),
+    const max = Math.min(20, estoqueDe(p, i.tam));
+    if(max <= 0) return null;
+    return { ...i, qty: Math.min(i.qty, max), nome: p.nome, preco: Number(p.preco), img: p.img || '', icone: nexusIconeProduto(p),
       peso_kg: p.peso_kg, altura_cm: p.altura_cm, largura_cm: p.largura_cm, comprimento_cm: p.comprimento_cm };
   }).filter(Boolean);
 }
@@ -354,9 +367,11 @@ function renderGrid(erro){
     return;
   }
   g.innerHTML = PRODS.map(p => {
-    const disponivel = p.ativo && temPreco(p);
+    const semEstoque = p.ativo && temPreco(p) && esgotado(p);
+    const disponivel = p.ativo && temPreco(p) && !semEstoque;
     const badge = p.badge ? `<span class="tag ${p.ativo ? 'tag-solid' : 'tag-muted'} prod-badge">${nexusEsc(p.badge)}</span>` : '';
     const preco = !p.ativo ? '<div class="merch-preco muted">Em breve</div>'
+      : semEstoque ? '<div class="merch-preco muted">Esgotado</div>'
       : temPreco(p) ? `<div class="merch-preco">${nexusMoeda(p.preco)}</div>`
       : '<div class="merch-preco muted">Preço em breve</div>';
     const id = nexusEsc(p.id);
@@ -374,7 +389,7 @@ function renderGrid(erro){
           ${disponivel
             ? `<button class="btn btn-outline btn-sm" type="button" onclick="abrirProd('${id}')">Ver detalhes</button>
                <button class="btn btn-primary btn-sm" type="button" onclick="abrirProd('${id}')">${nexusIcon('plus')}Adicionar</button>`
-            : `<button class="btn btn-outline btn-sm" type="button" disabled>Indisponível</button>`}
+            : `<button class="btn btn-outline btn-sm" type="button" disabled>${semEstoque ? 'Esgotado' : 'Indisponível'}</button>`}
         </div>
       </div>
     </article>`;
@@ -383,7 +398,7 @@ function renderGrid(erro){
 
 function abrirProd(id){
   prodAtual = PRODS.find(p => p.id === id);
-  if(!prodAtual || !prodAtual.ativo || !temPreco(prodAtual)) return;
+  if(!prodAtual || !prodAtual.ativo || !temPreco(prodAtual) || esgotado(prodAtual)) return;
   tamSel = null; qty = 1;
   document.getElementById('mCat').textContent = prodAtual.cat || '';
   document.getElementById('mNome').textContent = prodAtual.nome;
@@ -395,7 +410,10 @@ function abrirProd(id){
   const btnAdd = document.getElementById('btnAdd');
   if(prodAtual.sizes && prodAtual.sizes.length){
     ss.hidden = false;
-    sr.innerHTML = prodAtual.sizes.map(s => `<button class="sz" type="button" data-tam="${nexusEsc(s)}">${nexusEsc(s)}</button>`).join('');
+    sr.innerHTML = prodAtual.sizes.map(s => {
+      const acabou = estoqueDe(prodAtual, s) === 0;
+      return `<button class="sz" type="button" data-tam="${nexusEsc(s)}" ${acabou ? 'disabled title="Esgotado" style="opacity:0.35;text-decoration:line-through;cursor:not-allowed;"' : ''}>${nexusEsc(s)}</button>`;
+    }).join('');
     sr.querySelectorAll('.sz').forEach(b => b.addEventListener('click', () => selTam(b)));
     btnAdd.disabled = true;
   } else {
@@ -407,11 +425,25 @@ function selTam(el){
   tamSel = el.dataset.tam;
   document.querySelectorAll('.sz').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
+  qty = Math.min(qty, maxQty());
+  document.getElementById('qn').textContent = qty;
   document.getElementById('btnAdd').disabled = false;
 }
-function dQty(d){ qty = Math.min(20, Math.max(1, qty + d)); document.getElementById('qn').textContent = qty; }
+function maxQty(){
+  if(!prodAtual || !tamSel) return 20;
+  return Math.max(1, Math.min(20, estoqueDe(prodAtual, tamSel) - noCarrinho(prodAtual.id, tamSel)));
+}
+function dQty(d){
+  qty = Math.min(maxQty(), Math.max(1, qty + d));
+  document.getElementById('qn').textContent = qty;
+}
 function addCart(){
   if(!prodAtual || !tamSel) return;
+  const restante = estoqueDe(prodAtual, tamSel) - noCarrinho(prodAtual.id, tamSel);
+  if(qty > restante){
+    toast(restante > 0 ? `Só restam ${restante} unidade(s) disponíveis.` : 'Você já tem todo o estoque deste item no carrinho.', 'err');
+    return;
+  }
   const key = prodAtual.id + (tamSel !== 'único' ? `-${tamSel}` : '');
   const ex = cart.find(i => i.key === key);
   if(ex) ex.qty += qty;
@@ -422,6 +454,7 @@ function addCart(){
   const f = document.getElementById('cartFloat');
   f.classList.remove('pulse'); void f.offsetWidth; f.classList.add('pulse');
   toast(`${prodAtual.nome} adicionado ao carrinho`, 'ok');
+  nexusTrack('add_carrinho', { produto: prodAtual.nome });
 }
 function fecharModal(){ document.getElementById('mOv').classList.remove('open'); }
 
@@ -460,6 +493,8 @@ function syncCart(){
 function dItemQty(key, d){
   const it = cart.find(i => i.key === key);
   if(!it) return;
+  const p = PRODS.find(x => x.id === it.id);
+  if(d > 0 && p && it.qty + d > Math.min(20, estoqueDe(p, it.tam))){ toast('Quantidade máxima disponível atingida.', 'err'); return; }
   it.qty += d;
   if(it.qty <= 0) cart = cart.filter(i => i.key !== key);
   syncCart();
@@ -479,6 +514,7 @@ function abrirCheckout(){
   fo.hidden = true; fo.innerHTML = '';
   atualizarTotalCheckout();
   document.getElementById('checkoutOv').classList.add('open');
+  nexusTrack('checkout_iniciado', { itens: cart.length });
   nexusMarkClean('checkout');
   nexusWatchForm('checkoutOv', 'checkout');
 }
@@ -623,7 +659,8 @@ async function confirmarPagamento(){
   btn.disabled = true; btn.textContent = 'Processando...';
   try{
     const body = {
-      itens: cart.map(i => ({ nome: i.nome, tam: i.tam, qty: i.qty, preco: i.preco })),
+      // O servidor busca preço e nome no banco: o navegador só informa o que foi escolhido
+      itens: cart.map(i => ({ id: i.id, tam: i.tam, qty: i.qty })),
       nome, email, cpf, telefone: tel,
       cep, uf, cidade, endereco: rua, numero, complemento, bairro,
       frete_servico_id: freteEscolhido.id
@@ -631,6 +668,7 @@ async function confirmarPagamento(){
     const r = await fetch('/api/criar-pagamento-merch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const d = await r.json();
     if(!r.ok){ toast(d.erro || 'Erro ao criar pagamento.', 'err'); restaurarBtn(); return; }
+    nexusTrack('checkout_pagamento', { valor: Math.round(subtotal()) });
     nexusMarkClean('checkout');
     fecharCheckout();
     cart = []; syncCart(); fecharDrawer();

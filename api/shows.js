@@ -1,13 +1,8 @@
 // api/shows.js — CRUD de shows para a agenda
 import { createClient } from '@supabase/supabase-js';
+import { autenticar } from './_lib/auth.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
-function autenticar(req) {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
-}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

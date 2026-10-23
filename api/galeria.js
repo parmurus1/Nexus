@@ -9,18 +9,13 @@
 //  - a reordenação é um único UPDATE (função SQL galeria_reordenar);
 //  - ao excluir/trocar uma foto, os arquivos antigos são apagados do Storage.
 import { createClient } from '@supabase/supabase-js';
+import { autenticar } from './_lib/auth.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 const BUCKET = 'galeria-fotos';
 const CAMPOS_PUBLICOS = 'id, tipo, titulo, descricao, url, thumbnail_url, ordem';
 const AVISO_TABELA = 'Tabela galeria não encontrada. Execute o bloco "GALERIA" do supabase_schema.sql no Supabase.';
-
-function autenticar(req) {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
-}
 
 // Aceita youtube.com/watch?v=, youtu.be/, /shorts/, /embed/, /live/ e music.youtube.com.
 // Retorna a URL normalizada (shorts continuam como shorts para a página saber

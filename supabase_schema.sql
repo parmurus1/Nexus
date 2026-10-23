@@ -336,3 +336,75 @@ CREATE POLICY "Service role gerencia fotos galeria e produtos"
 ON storage.objects FOR ALL
 USING (bucket_id IN ('galeria-fotos', 'produtos-fotos') AND auth.role() = 'service_role')
 WITH CHECK (bucket_id IN ('galeria-fotos', 'produtos-fotos') AND auth.role() = 'service_role');
+
+-- =====================================================
+-- ATUALIZAÇÃO 2 — estoque, orçamentos, login seguro do admin
+-- Execute este bloco inteiro no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Estoque opcional por tamanho na loja: {"P": 3, "M": 5} ou {"único": 10}.
+-- NULL = sem controle de estoque (comportamento antigo).
+ALTER TABLE produtos ADD COLUMN IF NOT EXISTS estoque JSONB;
+
+-- Baixa o estoque quando um pedido é pago (chamado pelo webhook)
+CREATE OR REPLACE FUNCTION baixar_estoque(p_id UUID, p_tam TEXT, p_qtd INT)
+RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE produtos
+  SET estoque = jsonb_set(estoque, ARRAY[p_tam], to_jsonb(GREATEST(0, COALESCE((estoque->>p_tam)::int, 0) - p_qtd)))
+  WHERE id = p_id AND estoque IS NOT NULL AND estoque ? p_tam;
+$$;
+REVOKE ALL ON FUNCTION baixar_estoque(UUID, TEXT, INT) FROM PUBLIC, anon, authenticated;
+
+-- Pedidos de orçamento enviados pela página Contratantes
+CREATE TABLE IF NOT EXISTS orcamentos (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nome TEXT NOT NULL,
+  email TEXT,
+  telefone TEXT,
+  data_evento DATE,
+  cidade TEXT,
+  tipo_evento TEXT,
+  mensagem TEXT,
+  status TEXT NOT NULL DEFAULT 'novo', -- 'novo' | 'respondido' | 'fechado' | 'arquivado'
+  ip TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS orcamentos_ip_idx ON orcamentos (ip, criado_em);
+ALTER TABLE orcamentos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia orcamentos" ON orcamentos;
+CREATE POLICY "Service role gerencia orcamentos" ON orcamentos FOR ALL USING (auth.role() = 'service_role');
+
+-- Tentativas de login erradas no painel (limite de 5 a cada 15 min por IP)
+CREATE TABLE IF NOT EXISTS admin_tentativas (
+  id BIGSERIAL PRIMARY KEY,
+  ip TEXT NOT NULL,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS admin_tentativas_ip_idx ON admin_tentativas (ip, criado_em);
+ALTER TABLE admin_tentativas ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia tentativas" ON admin_tentativas;
+CREATE POLICY "Service role gerencia tentativas" ON admin_tentativas FOR ALL USING (auth.role() = 'service_role');
+
+-- Pedro (baixo) aparece na biografia mas não estava entre os membros.
+-- Depois, adicione a foto e a bio dele pelo painel (Membros).
+INSERT INTO membros (nome, funcao, foto, bio, ativo, ordem)
+SELECT 'PEDRO', 'Baixo', '', '', true, 5
+WHERE NOT EXISTS (SELECT 1 FROM membros WHERE upper(nome) = 'PEDRO');
+
+-- =====================================================
+-- OPCIONAL — liberação automática de bilhetes a cada 10 minutos (pg_cron)
+-- O site já libera reservas vencidas sozinho sempre que alguém abre a rifa
+-- ou tenta comprar; isto só garante a limpeza mesmo sem visitas.
+-- Se der erro de permissão, ative "pg_cron" em Database > Extensions e rode de novo.
+-- =====================================================
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+SELECT cron.schedule(
+  'liberar-bilhetes-expirados',
+  '*/10 * * * *',
+  $$UPDATE bilhetes
+    SET status = 'disponivel', nome_comprador = NULL, email_comprador = NULL, instagram_comprador = NULL,
+        telefone_comprador = NULL, preference_id = NULL, reservado_em = NULL
+    WHERE status = 'reservado' AND reservado_em < NOW() - INTERVAL '30 minutes'$$
+);
+-- Limpa tentativas de login antigas uma vez por dia
+SELECT cron.schedule('limpar-tentativas-admin', '0 4 * * *', $$DELETE FROM admin_tentativas WHERE criado_em < NOW() - INTERVAL '1 day'$$);

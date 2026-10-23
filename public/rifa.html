@@ -254,9 +254,11 @@
     <span>&copy; 2026 Nexus Band</span>
   </div>
   <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
   </div>
   <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
@@ -275,35 +277,41 @@ const PREMIOS = [
 ];
 const track = document.getElementById('track');
 const dotsEl = document.getElementById('dots');
-const total = PREMIOS.length;
-const slideHtml = (p, i) => `
-  <div class="carr-slide" role="group" aria-label="Prêmio ${i + 1} de ${total}">
-    <div class="carr-visual"><div class="carr-icon" style="animation-delay:${(i * 0.4) % 2}s">${nexusIcon(p.icone)}</div></div>
-    <div class="carr-info">
-      <div class="carr-idx">${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</div>
-      <div class="carr-nome">${p.nome}</div>
-      <span class="tag tag-solid">${p.qtd}</span>
-      <p class="carr-desc">${p.desc}</p>
-    </div>
-  </div>`;
-// Clones nas pontas para o loop infinito suave
-track.innerHTML = slideHtml(PREMIOS[total - 1], total - 1) + PREMIOS.map(slideHtml).join('') + slideHtml(PREMIOS[0], 0);
-let ci = 1, transitioning = false;
-track.style.transition = 'none';
-track.style.transform = `translateX(-${ci * 100}%)`;
-PREMIOS.forEach((_, i) => {
-  const d = document.createElement('button');
-  d.type = 'button'; d.className = 'cdot' + (i === 0 ? ' on' : '');
-  d.setAttribute('aria-label', `Ir para o prêmio ${i + 1}`);
-  d.onclick = () => { if(!transitioning) go(i + 1); };
-  dotsEl.appendChild(d);
-});
+let total = 0, ci = 1, transitioning = false;
+
+// Monta o carrossel (com clones nas pontas para o loop infinito suave).
+// Os prêmios podem ser editados no painel admin (Conteúdo do site).
+function montarCarrossel(premios){
+  total = premios.length;
+  const slideHtml = (p, i) => `
+    <div class="carr-slide" role="group" aria-label="Prêmio ${i + 1} de ${total}">
+      <div class="carr-visual"><div class="carr-icon" style="animation-delay:${(i * 0.4) % 2}s">${nexusIcon(p.icone || 'gift')}</div></div>
+      <div class="carr-info">
+        <div class="carr-idx">${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</div>
+        <div class="carr-nome">${nexusEsc(p.nome)}</div>
+        ${p.qtd ? `<span class="tag tag-solid">${nexusEsc(p.qtd)}</span>` : ''}
+        <p class="carr-desc">${nexusEsc(p.desc || '')}</p>
+      </div>
+    </div>`;
+  track.innerHTML = slideHtml(premios[total - 1], total - 1) + premios.map(slideHtml).join('') + slideHtml(premios[0], 0);
+  ci = 1; transitioning = false;
+  track.style.transition = 'none';
+  track.style.transform = `translateX(-${ci * 100}%)`;
+  dotsEl.innerHTML = '';
+  premios.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.type = 'button'; d.className = 'cdot' + (i === 0 ? ' on' : '');
+    d.setAttribute('aria-label', `Ir para o prêmio ${i + 1}`);
+    d.onclick = () => { if(!transitioning) go(i + 1); };
+    dotsEl.appendChild(d);
+  });
+}
 function updateDots(){
   let real = ci - 1; if(ci === 0) real = total - 1; if(ci === total + 1) real = 0;
   dotsEl.querySelectorAll('.cdot').forEach((d, i) => d.classList.toggle('on', i === real));
 }
 function go(n){
-  if(transitioning) return;
+  if(transitioning || total < 2) return;
   transitioning = true; ci = n;
   track.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
   track.style.transform = `translateX(-${ci * 100}%)`;
@@ -323,6 +331,12 @@ track.parentElement.addEventListener('mouseleave', () => { if(!reduzMovimento) a
 let tx = 0;
 track.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
 track.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if(Math.abs(dx) > 40) go(ci + (dx < 0 ? 1 : -1)); });
+
+montarCarrossel(PREMIOS);
+nexusGetConfig().then(cfg => {
+  const premios = nexusConteudo(cfg, 'conteudo_premios', null);
+  if(Array.isArray(premios) && premios.filter(p => p && p.nome).length) montarCarrossel(premios.filter(p => p && p.nome));
+});
 
 // BILHETES
 let bData = [], sel = new Set(), vUnit = 10;
@@ -378,6 +392,7 @@ function abrirModal(){
   const arr = [...sel].sort((a, b) => a - b);
   document.getElementById('modalRes').innerHTML = `Bilhetes: <strong>${arr.map(fmtNum).join(', ')}</strong><br/>Total: <strong>${nexusMoeda(arr.length * vUnit)}</strong>`;
   document.getElementById('modalOv').classList.add('open');
+  nexusTrack('rifa_abrir_compra', { bilhetes: arr.length });
   nexusMarkClean('rifa');
   nexusWatchForm('modalOv', 'rifa');
 }
@@ -404,7 +419,15 @@ async function finalizar(){
     const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: '@' + ig, telefone: tel }) });
     const d = await r.json();
     restaurar();
-    if(!r.ok){ toast(d.erro || 'Erro ao criar pagamento.', 'err'); load(); return; }
+    if(!r.ok){
+      if(r.status === 409 && Array.isArray(d.numeros)){
+        // Outra pessoa reservou esses números ao mesmo tempo: tira da seleção
+        d.numeros.forEach(n => sel.delete(Number(n)));
+        fecharModal(); updateBar();
+      }
+      toast(d.erro || 'Erro ao criar pagamento.', 'err'); load(); return;
+    }
+    nexusTrack('rifa_checkout', { bilhetes: sel.size });
     fecharModal();
     if(d.modo_demo){
       sel.clear(); updateBar();

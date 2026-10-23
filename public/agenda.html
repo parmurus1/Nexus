@@ -100,9 +100,11 @@
     <span>&copy; 2026 Nexus Band</span>
   </div>
   <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
   </div>
   <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
@@ -137,7 +139,7 @@ function renderShow(s){
   if(futuro){
     acao = (s.gratuito || !s.link)
       ? `<span class="show-gratis">${nexusIcon('check-circle')}Entrada gratuita</span>`
-      : `<a href="${nexusEsc(s.link)}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">${nexusIcon('ticket')}Ingressos</a>`;
+      : `<a href="${nexusEsc(s.link)}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" data-track="clique_ingresso">${nexusIcon('ticket')}Ingressos</a>`;
   }
   return `
   <article class="show-item${futuro ? '' : ' passado'}">
@@ -187,6 +189,32 @@ async function carregarAgenda(){
     lista(proximos, 'calendar', 'Nenhum show agendado', 'Siga a Nexus no Instagram para saber das próximas datas.');
   document.getElementById('passadosWrap').innerHTML =
     lista(passados, 'clock', 'Sem histórico ainda', 'Os shows realizados aparecem aqui.');
+
+  publicarDadosEstruturados(proximos);
+}
+
+// Dados estruturados (schema.org) para o Google mostrar os shows como eventos
+function publicarDadosEstruturados(shows){
+  if(!shows.length) return;
+  const eventos = shows.filter(s => s.data).map(s => ({
+    '@context': 'https://schema.org',
+    '@type': 'MusicEvent',
+    name: `Nexus — ${s.nome}`,
+    startDate: s.hora ? `${s.data}T${s.hora}:00-03:00` : s.data,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: { '@type': 'Place', name: s.local || 'Local a confirmar', address: s.local || 'São Paulo, SP' },
+    performer: { '@type': 'MusicGroup', name: 'Nexus' },
+    image: [location.origin + '/imgs/marca/og-image.png'],
+    url: location.origin + '/agenda',
+    ...(s.link && !s.gratuito
+      ? { offers: { '@type': 'Offer', url: s.link, availability: 'https://schema.org/InStock' } }
+      : { isAccessibleForFree: true })
+  }));
+  const tag = document.createElement('script');
+  tag.type = 'application/ld+json';
+  tag.textContent = JSON.stringify(eventos);
+  document.head.appendChild(tag);
 }
 
 carregarAgenda();

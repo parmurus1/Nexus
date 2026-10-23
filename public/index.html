@@ -88,6 +88,17 @@
     .social-strip .link-arrow{color:var(--text2);}
     .social-strip:hover .link-arrow{color:var(--red);gap:10px;}
 
+    /* OUÇA */
+    .musica{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:60px;}
+    @media(max-width:800px){.musica{grid-template-columns:1fr;}}
+    .musica-player{overflow:hidden;min-height:152px;}
+    .musica-player iframe{display:block;width:100%;height:352px;border:0;}
+    .musica-info{padding:28px;display:flex;flex-direction:column;justify-content:center;gap:14px;}
+    .musica-titulo{font-family:var(--f-display);font-size:2rem;letter-spacing:0.04em;line-height:1;color:var(--text);}
+    .musica-desc{font-size:0.9rem;color:var(--text2);line-height:1.7;}
+    .musica-links{display:flex;gap:8px;flex-wrap:wrap;}
+    .musica.sem-player{grid-template-columns:1fr;}
+
     /* ATALHOS */
     .nav-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:60px;}
     @media(max-width:900px){.nav-cards{grid-template-columns:repeat(3,1fr);}}
@@ -189,7 +200,7 @@
 
   <!-- REDES SOCIAIS -->
   <div class="social-grid">
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" class="card card-hover social-strip">
+    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" class="card card-hover social-strip">
       <span class="social-info">
         <span class="social-icon insta-icon"><i data-icon="instagram"></i></span>
         <span>
@@ -199,7 +210,7 @@
       </span>
       <span class="link-arrow">Instagram <i data-icon="arrow-up-right"></i></span>
     </a>
-    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" class="card card-hover social-strip">
+    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" class="card card-hover social-strip">
       <span class="social-info">
         <span class="social-icon tiktok-icon"><i data-icon="tiktok"></i></span>
         <span>
@@ -210,6 +221,25 @@
       <span class="link-arrow">TikTok <i data-icon="arrow-up-right"></i></span>
     </a>
   </div>
+
+  <!-- OUÇA (aparece quando há Spotify/YouTube configurado no painel) -->
+  <section id="secMusica" hidden>
+    <p class="sec-eyebrow">Ouça</p>
+    <h2 class="sec-title">A NEXUS NOS FONES</h2>
+    <div class="musica" id="musica">
+      <div class="card musica-player" id="musicaPlayer" hidden></div>
+      <div class="card musica-info">
+        <span class="tag tag-accent" style="width:fit-content;"><i data-icon="headphones"></i>Música</span>
+        <div class="musica-titulo">Escute onde preferir</div>
+        <p class="musica-desc">Siga a Nexus nas plataformas para receber os lançamentos assim que saírem.</p>
+        <div class="musica-links">
+          <a class="btn btn-primary btn-sm" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" data-track="ouvir_spotify"><i data-icon="spotify"></i>Spotify</a>
+          <a class="btn btn-outline btn-sm" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" data-track="ouvir_youtube"><i data-icon="youtube"></i>YouTube</a>
+          <a class="btn btn-outline btn-sm" data-link="instagram" target="_blank" rel="noopener"><i data-icon="instagram"></i>Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <p class="sec-eyebrow">Explore</p>
   <h2 class="sec-title">O QUE TEMOS</h2>
@@ -254,7 +284,7 @@
       <div class="rifa-title">RIFA NEXUS 2026</div>
       <p class="rifa-desc">Apoie nossa música e concorra a prêmios exclusivos — palhetas, baquetas assinadas, camiseta oficial e muito mais.</p>
     </div>
-    <a href="/rifa" class="btn btn-primary btn-lg">Ver bilhetes <i data-icon="arrow-right"></i></a>
+    <a href="/rifa" class="btn btn-primary btn-lg" data-track="home_rifa">Ver bilhetes <i data-icon="arrow-right"></i></a>
   </div>
 </div>
 </main>
@@ -265,9 +295,11 @@
     <span>&copy; 2026 Nexus Band</span>
   </div>
   <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
   </div>
   <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
@@ -303,6 +335,38 @@
     el.hidden = false;
   } catch (e) {}
 })();
+</script>
+<script>
+// Seção "Ouça": player do Spotify (álbum, faixa, playlist ou artista) configurado no painel
+nexusGetConfig().then(cfg => {
+  const links = nexusLinks(cfg);
+  const m = String(cfg.musica_spotify || '').match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(artist|album|track|playlist)\/([A-Za-z0-9]+)/);
+  if(!m && !links.spotify && !links.youtube) return;
+  if(m){
+    const player = document.getElementById('musicaPlayer');
+    player.innerHTML = `<iframe src="https://open.spotify.com/embed/${m[1]}/${m[2]}?theme=0" title="Nexus no Spotify" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
+    player.hidden = false;
+  } else {
+    document.getElementById('musica').classList.add('sem-player');
+  }
+  document.getElementById('secMusica').hidden = false;
+});
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "Nexus",
+  "alternateName": "Nexus Band",
+  "url": "https://nexus-rifa.vercel.app/",
+  "logo": "https://nexus-rifa.vercel.app/imgs/marca/nexusicon-sm.png",
+  "image": "https://nexus-rifa.vercel.app/imgs/marca/og-image.png",
+  "genre": "Rock",
+  "foundingDate": "2025",
+  "foundingLocation": { "@type": "Place", "name": "São Paulo, SP, Brasil" },
+  "email": "bandanexus01@gmail.com",
+  "sameAs": ["https://instagram.com/nexus.bandbr", "https://tiktok.com/@nexus.bandbr"]
+}
 </script>
 <script src="/venom.js" defer></script>
 </body>

@@ -35,6 +35,21 @@
     .contato-label{font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
     .contato-valor{font-size:0.95rem;color:var(--text);font-weight:400;word-break:break-word;}
 
+    /* ORÇAMENTO */
+    .orc{display:grid;grid-template-columns:0.8fr 1.2fr;gap:0;overflow:hidden;}
+    @media(max-width:800px){.orc{grid-template-columns:1fr;}}
+    .orc-lado{padding:32px;background:radial-gradient(ellipse at 0% 0%,var(--red-mid) 0%,transparent 70%);border-right:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
+    @media(max-width:800px){.orc-lado{border-right:none;border-bottom:1px solid var(--border);}}
+    .orc-titulo{font-family:var(--f-display);font-size:2rem;letter-spacing:0.04em;line-height:1;color:var(--text);}
+    .orc-desc{font-size:0.9rem;color:var(--text2);line-height:1.7;}
+    .orc-passos{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+    .orc-passos li{display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text2);}
+    .orc-passos .ic{color:var(--red);margin-top:4px;}
+    .orc-form{padding:32px;}
+    .orc-ok{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 20px;}
+    .orc-ok .modal-icon{margin:0;}
+    .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
     /* BANDA */
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
     @media(max-width:700px){.grid-2{grid-template-columns:1fr;}}
@@ -118,18 +133,62 @@
     <p class="sec-eyebrow">Contato</p>
     <h2 class="sec-title">FALE CONOSCO</h2>
     <div class="contato-grid">
-      <a class="card card-hover contato-card" href="https://wa.me/5511942477432" target="_blank" rel="noopener">
+      <a class="card card-hover contato-card" href="https://wa.me/5511942477432" data-link="whatsapp" data-track="contato_whatsapp" target="_blank" rel="noopener">
         <span class="contato-icon"><i data-icon="message"></i></span>
-        <span><span class="contato-label" style="display:block;">WhatsApp</span><span class="contato-valor">(11) 94247-7432</span></span>
+        <span><span class="contato-label" style="display:block;">WhatsApp</span><span class="contato-valor" id="valorWhatsapp">(11) 94247-7432</span></span>
       </a>
-      <a class="card card-hover contato-card" href="mailto:bandanexus01@gmail.com">
+      <a class="card card-hover contato-card" href="mailto:bandanexus01@gmail.com" data-link="email" data-track="contato_email">
         <span class="contato-icon"><i data-icon="mail"></i></span>
-        <span><span class="contato-label" style="display:block;">E-mail</span><span class="contato-valor">bandanexus01@gmail.com</span></span>
+        <span><span class="contato-label" style="display:block;">E-mail</span><span class="contato-valor" id="valorEmail">bandanexus01@gmail.com</span></span>
       </a>
-      <a class="card card-hover contato-card" href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener">
+      <a class="card card-hover contato-card" href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener">
         <span class="contato-icon"><i data-icon="instagram"></i></span>
         <span><span class="contato-label" style="display:block;">Instagram</span><span class="contato-valor">@nexus.bandbr</span></span>
       </a>
+    </div>
+  </section>
+
+  <section class="section" id="orcamento">
+    <p class="sec-eyebrow">Orçamento</p>
+    <h2 class="sec-title">LEVE A NEXUS PRO SEU EVENTO</h2>
+    <div class="card orc">
+      <div class="orc-lado">
+        <div class="orc-titulo">Peça um orçamento</div>
+        <p class="orc-desc">Conte um pouco sobre o evento e a gente responde com disponibilidade, formato do show e valores.</p>
+        <ul class="orc-passos">
+          <li><i data-icon="send"></i>Preencha o formulário ao lado</li>
+          <li><i data-icon="message"></i>A banda responde por e-mail ou WhatsApp</li>
+          <li><i data-icon="file-text"></i>Rider e mapa de palco já estão logo abaixo</li>
+        </ul>
+      </div>
+      <form class="orc-form" id="orcForm" novalidate>
+        <div class="form-row">
+          <div class="fg"><label for="oNome">Nome <span class="req">*</span></label><input type="text" id="oNome" autocomplete="name" maxlength="120" required/></div>
+          <div class="fg"><label for="oTipo">Tipo de evento</label>
+            <select id="oTipo">
+              <option value="">Selecione</option>
+              <option>Festa / aniversário</option>
+              <option>Bar / casa de show</option>
+              <option>Festival</option>
+              <option>Evento corporativo</option>
+              <option>Escola / faculdade</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label for="oEmail">E-mail</label><input type="email" id="oEmail" autocomplete="email" maxlength="160"/></div>
+          <div class="fg"><label for="oTel">WhatsApp</label><input type="tel" id="oTel" autocomplete="tel" maxlength="30" placeholder="(00) 00000-0000"/></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label for="oData">Data do evento</label><input type="date" id="oData"/></div>
+          <div class="fg"><label for="oCidade">Cidade</label><input type="text" id="oCidade" maxlength="120" placeholder="Ex.: São Paulo, SP"/></div>
+        </div>
+        <div class="fg"><label for="oMsg">Detalhes <span class="opt">opcional</span></label><textarea id="oMsg" rows="3" maxlength="2000" placeholder="Duração do show, público esperado, estrutura de som disponível..."></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="oSite">Site</label><input type="text" id="oSite" tabindex="-1" autocomplete="off"/></div>
+        <p class="field-hint" style="margin:-4px 0 14px;">Informe pelo menos um contato (e-mail ou WhatsApp).</p>
+        <button class="btn btn-primary btn-block" id="btnOrc" type="submit"><i data-icon="send"></i>Enviar pedido de orçamento</button>
+      </form>
     </div>
   </section>
 
@@ -142,7 +201,7 @@
       </div>
       <div class="card bio-box">
         <div class="bio-titulo">BIOGRAFIA</div>
-        <div class="bio-texto">
+        <div class="bio-texto" id="bioTexto">
           <p>A Nexus é uma banda formada em São Paulo, com uma sonoridade que mistura rock com elementos de outros gêneros. O grupo é composto por Davi (guitarra e voz), João (guitarra), Atila (teclados), Victor (bateria) e Pedro (baixo).</p>
           <p>Desde 2025, a banda vem construindo uma identidade visual e sonora marcante, com shows energéticos e músicas autorais que conectam o público de forma intensa.</p>
           <p>Com diversos shows realizados e um álbum sendo produzido, a Nexus está pronta para levar sua música para novos palcos.</p>
@@ -194,7 +253,7 @@
   <section class="section">
     <p class="sec-eyebrow">Necessidades</p>
     <h2 class="sec-title">RIDER TÉCNICO</h2>
-    <div class="rider-grid">
+    <div class="rider-grid" id="riderGrid">
       <div class="card rider-card">
         <div class="rider-titulo"><i data-icon="sliders"></i>Som e PA</div>
         <ul class="rider-list">
@@ -254,9 +313,11 @@
     <span>&copy; 2026 Nexus Band</span>
   </div>
   <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
   </div>
   <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
@@ -281,6 +342,53 @@
     .catch(() => document.getElementById('pdfFallback').classList.add('show'));
 
   document.addEventListener('keydown', e => { if(e.key === 'Escape') pdfFechar(); });
+
+  // ── Orçamento ──
+  document.getElementById('orcForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const v = id => document.getElementById(id).value.trim();
+    const dados = { nome: v('oNome'), email: v('oEmail'), telefone: v('oTel'), data_evento: v('oData'), cidade: v('oCidade'), tipo_evento: v('oTipo'), mensagem: v('oMsg'), site: v('oSite') };
+    ['oNome', 'oEmail', 'oTel'].forEach(id => document.getElementById(id).classList.remove('invalid'));
+    if(!dados.nome){ document.getElementById('oNome').classList.add('invalid'); document.getElementById('oNome').focus(); toast('Informe seu nome.', 'err'); return; }
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email);
+    const telOk = dados.telefone.replace(/\D/g, '').length >= 10;
+    if(!emailOk && !telOk){
+      document.getElementById('oEmail').classList.add('invalid'); document.getElementById('oTel').classList.add('invalid');
+      toast('Informe um e-mail ou WhatsApp válido para retornarmos.', 'err'); return;
+    }
+    const btn = document.getElementById('btnOrc');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try{
+      const r = await fetch('/api/orcamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dados) });
+      const d = await r.json().catch(() => ({}));
+      if(!r.ok) throw new Error(d.erro || 'Não foi possível enviar agora.');
+      nexusTrack('orcamento_enviado', { tipo: dados.tipo_evento || 'nao_informado' });
+      document.getElementById('orcForm').innerHTML = `<div class="orc-ok"><div class="modal-icon ok">${nexusIcon('check-circle')}</div><div class="orc-titulo">Pedido enviado</div><p class="orc-desc">Obrigado, ${nexusEsc(dados.nome.split(' ')[0])}! A banda vai responder em breve${emailOk ? ' no seu e-mail' : ' pelo WhatsApp'}.</p></div>`;
+    }catch(err){
+      toast(err.message, 'err');
+      btn.disabled = false; btn.innerHTML = `${nexusIcon('send')}Enviar pedido de orçamento`;
+    }
+  });
+
+  // ── Conteúdo editável pelo painel (biografia, rider e contatos) ──
+  nexusGetConfig().then(cfg => {
+    if(cfg.contato_email) document.getElementById('valorEmail').textContent = cfg.contato_email;
+    const w = String(cfg.contato_whatsapp || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
+    if(w.length >= 10) document.getElementById('valorWhatsapp').textContent = `(${w.slice(0, 2)}) ${w.slice(2, -4)}-${w.slice(-4)}`;
+
+    if(cfg.conteudo_bio){
+      const paragrafos = String(cfg.conteudo_bio).split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      if(paragrafos.length) document.getElementById('bioTexto').innerHTML = paragrafos.map(p => `<p>${nexusEsc(p).replace(/\n/g, '<br/>')}</p>`).join('');
+    }
+    const rider = nexusConteudo(cfg, 'conteudo_rider', null);
+    if(Array.isArray(rider) && rider.length){
+      document.getElementById('riderGrid').innerHTML = rider.map(b => `
+        <div class="card rider-card">
+          <div class="rider-titulo">${nexusIcon(b.icone || 'sliders')}${nexusEsc(b.titulo || '')}</div>
+          <ul class="rider-list">${(b.itens || []).map(i => `<li>${nexusEsc(i)}</li>`).join('')}</ul>
+        </div>`).join('');
+    }
+  });
 </script>
 <script src="/venom.js" defer></script>
 </body>

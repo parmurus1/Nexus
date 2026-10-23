@@ -91,6 +91,11 @@
     'timer-reset': '<path d="M10 2h4M12 14v-4M4 13a8 8 0 0 1 8-7 8 8 0 1 1-5.3 14L4 17.6"/><path d="M9 17H4v5"/>',
     'instagram': '<rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z"/><path d="M17.5 6.5h.01"/>',
     'tiktok': '<path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48Z" fill="currentColor" stroke="none"/>',
+    'spotify': '<circle cx="12" cy="12" r="10"/><path d="M7.5 9c3.2-1 6.9-.7 9.8 1M8 12c2.7-.8 5.6-.6 8 .8M8.5 15c2.1-.6 4.3-.4 6.2.6"/>',
+    'headphones': '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+    'inbox': '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>',
+    'send': '<path d="M14.54 21.69a.5.5 0 0 0 .94-.03l6.5-19a.5.5 0 0 0-.64-.64l-19 6.5a.5.5 0 0 0-.03.94l7.93 3.18a2 2 0 0 1 1.11 1.11Z"/><path d="m21.85 2.15-10.94 10.94"/>',
+    'file-edit': '<path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z"/>',
     'youtube': '<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/>'
   };
 
@@ -146,15 +151,67 @@
       if (href === atual) { a.classList.add('active'); a.setAttribute('aria-current', 'page'); }
     });
 
-    // Elementos marcados com data-rifa só aparecem se a rifa estiver ativa no admin
-    var rifaEls = document.querySelectorAll('[data-rifa]');
-    if (rifaEls.length) {
-      window.nexusGetConfig().then(function (cfg) {
-        if (!window.nexusFlag(cfg.rifa_nav_visivel)) return;
-        rifaEls.forEach(function (el) { el.hidden = false; });
-      });
-    }
+    window.nexusGetConfig().then(function (cfg) {
+      // Elementos marcados com data-rifa só aparecem se a rifa estiver ativa no admin
+      if (window.nexusFlag(cfg.rifa_nav_visivel)) {
+        document.querySelectorAll('[data-rifa]').forEach(function (el) { el.hidden = false; });
+      }
+      aplicarLinks(cfg);
+    });
+
+    // Cliques em links/botões marcados com data-track viram eventos no Analytics
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest && e.target.closest('[data-track]');
+      if (el) window.nexusTrack(el.getAttribute('data-track'));
+    });
   }
+
+  // ── Links e contatos editáveis pelo painel (Conteúdo do site) ──────
+  // <a data-link="instagram"> recebe o href configurado; se a rede não tiver
+  // link configurado e o elemento tiver data-link-opcional, ele fica oculto.
+  var LINKS_PADRAO = {
+    instagram: 'https://instagram.com/nexus.bandbr',
+    tiktok: 'https://tiktok.com/@nexus.bandbr',
+    youtube: '',
+    spotify: '',
+    email: 'mailto:bandanexus01@gmail.com',
+    whatsapp: 'https://wa.me/5511942477432'
+  };
+  window.nexusLinks = function (cfg) {
+    cfg = cfg || {};
+    var whats = String(cfg.contato_whatsapp || '').replace(/\D/g, '');
+    return {
+      instagram: cfg.link_instagram || LINKS_PADRAO.instagram,
+      tiktok: cfg.link_tiktok || LINKS_PADRAO.tiktok,
+      youtube: cfg.link_youtube || LINKS_PADRAO.youtube,
+      spotify: cfg.link_spotify || LINKS_PADRAO.spotify,
+      email: cfg.contato_email ? 'mailto:' + cfg.contato_email : LINKS_PADRAO.email,
+      whatsapp: whats ? 'https://wa.me/' + (whats.length <= 11 ? '55' + whats : whats) : LINKS_PADRAO.whatsapp
+    };
+  };
+  function aplicarLinks(cfg) {
+    var links = window.nexusLinks(cfg);
+    document.querySelectorAll('[data-link]').forEach(function (el) {
+      var url = links[el.getAttribute('data-link')];
+      if (url) { el.href = url; el.hidden = false; }
+      else if (el.hasAttribute('data-link-opcional')) el.hidden = true;
+    });
+  }
+
+  // Lê um JSON guardado na config (conteúdo editável); devolve o padrão se vazio/inválido.
+  window.nexusConteudo = function (cfg, chave, padrao) {
+    var v = cfg && cfg[chave];
+    if (!v) return padrao;
+    try { var obj = JSON.parse(v); return obj == null ? padrao : obj; } catch (e) { return padrao; }
+  };
+
+  // ── Analytics: eventos personalizados (Vercel Web Analytics) ───────
+  // Os eventos ficam numa fila até o script do Vercel carregar. Observação:
+  // eventos personalizados só aparecem no painel da Vercel nos planos pagos.
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  window.nexusTrack = function (nome, dados) {
+    try { window.va('event', { name: nome, data: dados }); } catch (e) {}
+  };
 
   document.addEventListener('DOMContentLoaded', function () {
     window.nexusHydrateIcons();
