@@ -19,6 +19,10 @@
       "destination": "/api/site?r=orcamento"
     },
     {
+      "source": "/api/avisos",
+      "destination": "/api/site?r=avisos"
+    },
+    {
       "source": "/api/shows/:id",
       "destination": "/api/shows?id=:id"
     },

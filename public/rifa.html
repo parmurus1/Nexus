@@ -28,16 +28,16 @@
   <style>
     /* HERO */
     .hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 72px;position:relative;overflow:hidden;}
-    .hero .hero-orb{width:640px;height:640px;opacity:0.09;top:-280px;left:-160px;animation:drift1 16s ease-in-out infinite alternate;}
-    .hero .hero-orb.right{width:480px;height:480px;opacity:0.07;top:auto;bottom:-160px;left:auto;right:-80px;animation:drift2 20s ease-in-out infinite alternate;}
     @keyframes drift1{to{transform:translate(60px,40px);}}
     @keyframes drift2{to{transform:translate(-40px,-60px);}}
     .hero-title{font-family:var(--f-display);font-weight:400;font-size:clamp(5rem,16vw,13rem);line-height:0.86;letter-spacing:0.01em;color:var(--text);position:relative;z-index:1;margin-bottom:6px;opacity:0;animation:rise 0.7s 0.2s forwards;}
     .hero-title img{width:min(400px,78vw);height:auto;display:block;margin:0 auto;}
-    .hero .page-sub{margin:10px 0 48px;}
+    .hero .page-sub{margin:10px 0 48px;color:rgba(255,255,255,0.82);}
+    .hero .page-eyebrow{color:rgba(255,255,255,0.82);}
     .stats-row{display:flex;gap:1px;background:var(--border);border:1px solid var(--border-s);border-radius:var(--radius);overflow:hidden;margin-bottom:48px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.45s forwards;width:min(680px,100%);}
-    .stat{flex:1;background:var(--bg2);padding:20px 22px;text-align:center;}
-    .stat-lbl{font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+    .stat{flex:1;background:var(--bg2);padding:20px 14px;text-align:center;}
+    .stat-lbl{white-space:nowrap;}
+    .stat-lbl{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
     .stat-val{font-family:var(--f-display);font-size:1.85rem;letter-spacing:0.04em;color:var(--text);}
     .stat-val.r{color:var(--red);}
     @media(max-width:600px){.stats-row{flex-wrap:wrap;}.stat{flex:1 1 45%;}}
@@ -46,7 +46,7 @@
     .scroll-mouse:hover .mouse-body{border-color:var(--red);}
     .mouse-wheel{width:3px;height:7px;background:var(--red);border-radius:2px;animation:scroll-wheel 1.8s ease-in-out infinite;}
     @keyframes scroll-wheel{0%{transform:translateY(0);opacity:1;}60%{transform:translateY(10px);opacity:0;}61%{transform:translateY(0);opacity:0;}100%{transform:translateY(0);opacity:1;}}
-    .scroll-mouse-label{font-family:var(--f-mono);font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--text3);}
+    .scroll-mouse-label{font-family:var(--f-mono);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);}
 
     /* PRÊMIOS */
     .carr-wrap{overflow:hidden;}
@@ -62,7 +62,7 @@
     @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
     .carr-info{padding:44px 36px;display:flex;flex-direction:column;justify-content:center;}
     @media(max-width:660px){.carr-info{padding:26px 20px;}}
-    .carr-idx{font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+    .carr-idx{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
     .carr-nome{font-family:var(--f-display);font-size:clamp(2rem,3.5vw,3rem);letter-spacing:0.04em;line-height:0.95;color:var(--text);margin-bottom:14px;}
     .carr-info .tag{width:fit-content;margin-bottom:18px;}
     .carr-desc{font-size:0.9rem;color:var(--text2);line-height:1.8;}
@@ -74,25 +74,33 @@
 
     /* BILHETES */
     .legenda{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px;}
-    .leg-item{display:flex;align-items:center;gap:7px;font-size:0.7rem;color:var(--text2);font-family:var(--f-mono);}
+    .leg-item{display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text2);font-family:var(--f-mono);}
     .leg-dot{width:12px;height:12px;border-radius:3px;}
     .ld-l{background:var(--bg3);border:1px solid var(--border-s);}
     .ld-s{background:var(--red);}
     .ld-r{background:var(--warn-soft);border:1px solid var(--warn-line);}
-    .ld-p{background:var(--bg4);border:1px solid var(--border);position:relative;}
+    .ld-p{background:repeating-linear-gradient(135deg,var(--bg4) 0 3px,var(--bg2) 3px 6px);border:1px solid var(--border-s);}
+
+    /* Progresso da campanha e contagem regressiva */
+    .rifa-progresso{width:min(680px,100%);position:relative;z-index:1;margin:-28px 0 44px;opacity:0;animation:rise 0.7s 0.6s forwards;text-align:left;}
+    .rp-topo{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.06em;color:rgba(255,255,255,0.85);margin-bottom:8px;}
+    .rp-topo strong{color:#fff;font-weight:500;}
+    .rp-contagem{display:inline-flex;align-items:center;gap:6px;}
+    .rp-barra{height:6px;border-radius:999px;background:rgba(255,255,255,0.1);overflow:hidden;}
+    .rp-barra span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red-dim),var(--red));border-radius:999px;transition:width 1.2s cubic-bezier(0.2,0.7,0.2,1);}
     .bil-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;}
     @media(max-width:580px){.bil-grid{grid-template-columns:repeat(5,1fr);}}
-    .bilhete{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:0.62rem;font-weight:500;border-radius:var(--radius-xs);cursor:pointer;transition:all 0.12s ease;border:1px solid var(--border);background:var(--bg3);color:var(--text2);user-select:none;padding:0;}
+    .bilhete{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:0.75rem;font-weight:500;border-radius:var(--radius-xs);cursor:pointer;transition:all 0.12s ease;border:1px solid var(--border);background:var(--bg3);color:var(--text2);user-select:none;padding:0;}
     .bilhete:hover:not(:disabled){background:var(--bg4);border-color:var(--red);color:var(--text);transform:scale(1.1);position:relative;z-index:2;}
     .bilhete.sl{background:var(--red);border-color:var(--red);color:var(--on-red);transform:scale(1.06);box-shadow:0 0 12px var(--red-glow);position:relative;z-index:2;}
     .bilhete.rv{background:var(--warn-soft);border-color:var(--warn-line);color:rgba(245,197,66,0.45);cursor:not-allowed;}
-    .bilhete.pg{background:var(--bg4);border-color:var(--border);color:var(--text3);opacity:0.45;cursor:not-allowed;text-decoration:line-through;}
+    .bilhete.pg{background:repeating-linear-gradient(135deg,var(--bg4) 0 5px,var(--bg2) 5px 10px);border-color:var(--border-s);color:var(--text3);cursor:not-allowed;text-decoration:line-through;}
 
     /* BARRA DE COMPRA */
     .co-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border-s);padding:14px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;transform:translateY(110%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);}
     .co-bar.show{transform:translateY(0);}
     .co-info{flex:1;min-width:160px;}
-    .co-nums{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.06em;color:var(--text2);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .co-nums{font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.06em;color:var(--text2);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .co-total{font-family:var(--f-display);font-size:1.55rem;letter-spacing:0.04em;color:var(--text);}
     .co-total em{color:var(--red);font-style:normal;}
     @media(max-width:680px){.co-bar{padding:12px 18px;}}
@@ -126,9 +134,8 @@
 </nav>
 
 <main id="conteudo">
-<header class="hero">
-  <div class="hero-orb"></div>
-  <div class="hero-orb right"></div>
+<header class="hero torn" style="--hero-sm:url(/imgs/hero/show-03-sm.webp);--hero-lg:url(/imgs/hero/show-03-lg.webp)">
+  <div class="hero-photo" aria-hidden="true"></div>
   <p class="page-eyebrow">Nexus · Campanha 2026</p>
   <h1 class="hero-title">RIFA
     <picture>
@@ -141,7 +148,11 @@
     <div class="stat"><div class="stat-lbl">Valor do bilhete</div><div class="stat-val r" id="sValor">R$ —</div></div>
     <div class="stat"><div class="stat-lbl">Disponíveis</div><div class="stat-val" id="sDisp">—</div></div>
     <div class="stat"><div class="stat-lbl">Sorteio em</div><div class="stat-val" id="sData">—</div></div>
-    <div class="stat"><div class="stat-lbl">Vendidos</div><div class="stat-val r" id="sVend">—</div></div>
+    <div class="stat"><div class="stat-lbl">Vendidos</div><div class="stat-val" id="sVend">—</div></div>
+  </div>
+  <div class="rifa-progresso" id="rifaProgresso" hidden>
+    <div class="rp-topo"><span id="rpTexto"></span><span class="rp-contagem" id="rpContagem"></span></div>
+    <div class="rp-barra" role="progressbar" aria-label="Bilhetes vendidos" aria-valuemin="0" aria-valuemax="100" id="rpBarraWrap"><span id="rpBarra"></span></div>
   </div>
   <button class="scroll-mouse" type="button" aria-label="Rolar para os prêmios" onclick="document.getElementById('premios').scrollIntoView({behavior:'smooth'})">
     <span class="mouse-body"><span class="mouse-wheel"></span></span>
@@ -249,18 +260,43 @@
 </div>
 
 <footer class="site-footer">
-  <div class="footer-logo">
-    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="15" height="22"/>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/imgs/marca/nexusicon-sm.png" alt="Nexus" width="30" height="44"/>
+      <p>Rock autoral de São Paulo. Onde tudo se encontra.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+        <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+        <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+        <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+        <a href="https://wa.me/5511942477432" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp da Nexus"><i data-icon="message"></i></a>
+        <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="Rodapé">
+      <div class="footer-titulo">Site</div>
+      <a href="/sobre">Sobre</a>
+      <a href="/agenda">Agenda</a>
+      <a href="/galeria">Galeria</a>
+      <a href="/merch">Merch</a>
+      <a href="/contratantes">Contratantes</a>
+      <a href="/rifa" data-rifa hidden>Rifa</a>
+    </nav>
+    <form class="footer-avisos" id="formAvisos" novalidate>
+      <div class="footer-titulo">Avisos de shows</div>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <div class="linha">
+        <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
+        <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
+        <button class="btn btn-primary btn-sm" type="submit"><i data-icon="send"></i>Quero</button>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off"/></div>
+    </form>
+  </div>
+  <div class="footer-bottom">
     <span>&copy; 2026 Nexus Band</span>
+    <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
-  <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
-    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
-  </div>
-  <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -355,6 +391,7 @@ async function load(){
       const d = new Date(j.config.data_sorteio + 'T12:00:00');
       document.getElementById('sData').textContent = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }).replace('.', '').toUpperCase();
     }
+    atualizarProgresso(j.config?.data_sorteio);
     // Remove da seleção números que outra pessoa reservou nesse meio-tempo
     sel.forEach(n => { const b = bData.find(x => x.numero === n); if(!b || b.status !== 'disponivel') sel.delete(n); });
     render(); updateBar();
@@ -362,6 +399,32 @@ async function load(){
     document.getElementById('bilWrap').innerHTML = `<div class="state">${nexusIcon('alert')}<span>Erro ao carregar os bilhetes. Recarregue a página.</span></div>`;
   }
 }
+// Barra "X de Y vendidos" e contagem regressiva até o sorteio
+let dataSorteio = null;
+function atualizarProgresso(data){
+  if(data) dataSorteio = data;
+  const total = bData.length;
+  if(!total) return;
+  const vendidos = bData.filter(b => b.status === 'pago').length;
+  const pct = Math.round(vendidos / total * 100);
+  document.getElementById('rpTexto').innerHTML = `<strong>${vendidos}</strong> de ${total} bilhetes vendidos · ${pct}%`;
+  document.getElementById('rpBarra').style.width = Math.max(pct, vendidos ? 2 : 0) + '%';
+  document.getElementById('rpBarraWrap').setAttribute('aria-valuenow', pct);
+  document.getElementById('rpContagem').innerHTML = textoContagem();
+  document.getElementById('rifaProgresso').hidden = false;
+}
+function textoContagem(){
+  if(!dataSorteio) return '';
+  const alvo = new Date(dataSorteio + 'T00:00:00');
+  const ms = alvo - Date.now();
+  const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+  if(alvo.getTime() === hoje.getTime()) return `${nexusIcon('zap')}O sorteio é hoje`;
+  if(ms < 0) return `${nexusIcon('check-circle')}Sorteio encerrado`;
+  const dias = Math.floor(ms / 86400000), horas = Math.floor(ms % 86400000 / 3600000), min = Math.floor(ms % 3600000 / 60000);
+  return `${nexusIcon('clock')}Faltam ${dias ? `${dias}d ` : ''}${String(horas).padStart(2, '0')}h ${String(min).padStart(2, '0')}min`;
+}
+setInterval(() => { if(dataSorteio && !document.hidden) document.getElementById('rpContagem').innerHTML = textoContagem(); }, 30000);
+
 function render(){
   const w = document.getElementById('bilWrap');
   w.className = 'bil-grid';

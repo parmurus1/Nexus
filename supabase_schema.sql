@@ -408,3 +408,25 @@ SELECT cron.schedule(
 );
 -- Limpa tentativas de login antigas uma vez por dia
 SELECT cron.schedule('limpar-tentativas-admin', '0 4 * * *', $$DELETE FROM admin_tentativas WHERE criado_em < NOW() - INTERVAL '1 day'$$);
+
+-- =====================================================
+-- ATUALIZAÇÃO 3 — cartaz dos shows e lista de fãs
+-- Execute este bloco no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Cartaz (flyer) opcional de cada show, exibido na Agenda
+ALTER TABLE shows ADD COLUMN IF NOT EXISTS cartaz TEXT;
+
+-- Fãs que pediram aviso de shows no rodapé do site (e-mail ou WhatsApp)
+CREATE TABLE IF NOT EXISTS fas (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  contato TEXT NOT NULL UNIQUE,   -- e-mail em minúsculas ou WhatsApp só com números (DDD + número)
+  tipo TEXT NOT NULL,             -- 'email' | 'whatsapp'
+  origem TEXT,                    -- página onde se cadastrou
+  ip TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS fas_ip_idx ON fas (ip, criado_em);
+ALTER TABLE fas ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia fas" ON fas;
+CREATE POLICY "Service role gerencia fas" ON fas FOR ALL USING (auth.role() = 'service_role');

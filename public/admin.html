@@ -31,7 +31,7 @@
     .adm-shell{display:flex;min-height:100vh;padding-top:60px;}
     .adm-sidebar{width:236px;flex-shrink:0;position:fixed;top:60px;left:0;bottom:0;z-index:120;background:var(--bg2);border-right:1px solid var(--border);padding:20px 12px;overflow-y:auto;}
     .adm-side-group{margin-bottom:22px;}
-    .adm-side-label{font-family:var(--f-mono);font-size:0.54rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);padding:0 10px;margin-bottom:8px;}
+    .adm-side-label{font-family:var(--f-mono);font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);padding:0 10px;margin-bottom:8px;}
     .adm-side-link{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:none;color:var(--text2);padding:10px;border-radius:var(--radius-sm);font-family:var(--f-body);font-size:0.88rem;cursor:pointer;transition:all var(--tr);margin-bottom:2px;}
     .adm-side-link .ic{font-size:1.05rem;}
     .adm-side-link:hover{background:var(--bg3);color:var(--text);}
@@ -42,10 +42,10 @@
     @keyframes admFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
     .adm-page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:16px;}
     .adm-page-titulo{font-family:var(--f-display);font-size:2.1rem;letter-spacing:0.04em;color:var(--text);line-height:1;}
-    .adm-page-sub{font-family:var(--f-mono);font-size:0.6rem;letter-spacing:0.08em;color:var(--text3);margin-top:7px;}
+    .adm-page-sub{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.08em;color:var(--text3);margin-top:7px;}
     .adm-page-acoes{display:flex;gap:8px;flex-wrap:wrap;}
     .adm-section{margin-bottom:32px;}
-    .adm-hint{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.62rem;color:var(--text3);letter-spacing:0.04em;margin-bottom:14px;}
+    .adm-hint{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.75rem;color:var(--text3);letter-spacing:0.04em;margin-bottom:14px;}
     @media(max-width:900px){
       .adm-sidebar{transform:translateX(-100%);transition:transform var(--tr);box-shadow:0 0 40px rgba(0,0,0,0.5);}
       .adm-sidebar.open{transform:none;}
@@ -67,19 +67,19 @@
     .stat-card{padding:20px;}
     .stat-top{display:flex;align-items:center;justify-content:space-between;color:var(--text3);}
     .stat-num{font-family:var(--f-display);font-size:2.4rem;letter-spacing:0.04em;line-height:1;margin-top:10px;}
-    .stat-lbl{font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase;}
+    .stat-lbl{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase;}
     .sn-green .stat-num{color:var(--ok);}.sn-yellow .stat-num{color:var(--warn);}.sn-red .stat-num{color:var(--red);}
     .config-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     @media(max-width:700px){.config-grid{grid-template-columns:1fr;}}
     .config-card{padding:20px;}
     .config-card.full{grid-column:1/-1;}
-    .config-label{font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .config-label{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
     .config-label .lbl{display:flex;align-items:center;gap:8px;}
     .config-label .ic{color:var(--text3);font-size:0.95rem;}
     .config-row{display:flex;gap:8px;align-items:center;}
     .config-row .input{flex:1;}
     .config-desc{font-size:0.84rem;color:var(--text2);line-height:1.7;}
-    code{background:var(--bg3);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-family:var(--f-mono);font-size:0.66rem;color:var(--text2);word-break:break-all;}
+    code{background:var(--bg3);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-family:var(--f-mono);font-size:0.75rem;color:var(--text2);word-break:break-all;}
     .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:18px;}
     .toggle{position:relative;width:46px;height:26px;background:var(--bg4);border:1px solid var(--border-s);border-radius:999px;cursor:pointer;flex-shrink:0;padding:0;transition:background 0.2s,border-color 0.2s;}
     .toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform 0.2s;}
@@ -94,13 +94,13 @@
     /* TABELAS */
     .tabela-wrap{overflow-x:auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);}
     table{width:100%;border-collapse:collapse;font-size:0.86rem;}
-    th{text-align:left;padding:12px 14px;font-family:var(--f-mono);font-weight:400;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;}
+    th{text-align:left;padding:12px 14px;font-family:var(--f-mono);font-weight:400;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;}
     td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
     tbody tr:last-child td{border-bottom:none;}
     tbody tr:hover td{background:rgba(255,255,255,0.015);}
     td strong{color:var(--text);font-weight:500;}
     td.mono{font-family:var(--f-mono);font-size:0.76rem;}
-    td.vazio{text-align:center;padding:36px;color:var(--text3);font-family:var(--f-mono);font-size:0.68rem;}
+    td.vazio{text-align:center;padding:36px;color:var(--text3);font-family:var(--f-mono);font-size:0.78rem;}
     .acoes-cel{display:flex;gap:6px;flex-wrap:wrap;}
     .thumb-cel{width:40px;height:40px;border-radius:8px;object-fit:cover;display:flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--text2);font-size:1.15rem;overflow:hidden;}
     .thumb-cel.round{border-radius:50%;}
@@ -108,7 +108,7 @@
     .drag-handle{cursor:grab;color:var(--text3);width:36px;text-align:center;font-size:1.05rem;}
     .drag-handle:hover{color:var(--red);}
     tr.dragging,.gal-card.dragging{opacity:0.35;}
-    .aviso-setup{display:flex;gap:12px;align-items:flex-start;background:var(--red-mid);border:1px solid var(--red-line);border-radius:var(--radius-sm);padding:16px 18px;font-family:var(--f-mono);font-size:0.68rem;color:var(--text);line-height:1.8;text-align:left;}
+    .aviso-setup{display:flex;gap:12px;align-items:flex-start;background:var(--red-mid);border:1px solid var(--red-line);border-radius:var(--radius-sm);padding:16px 18px;font-family:var(--f-mono);font-size:0.78rem;color:var(--text);line-height:1.8;text-align:left;}
     .aviso-setup .ic{color:var(--red);font-size:1.1rem;margin-top:3px;}
 
     /* FORMULÁRIOS DOS MODAIS */
@@ -126,9 +126,9 @@
 
     /* PEDIDOS / ENVIO */
     .envio-cel{display:flex;flex-direction:column;gap:6px;align-items:flex-start;}
-    .envio-cel .mono{font-size:0.7rem;color:var(--text);}
-    .envio-erro{font-size:0.62rem;color:var(--red);max-width:220px;line-height:1.4;}
-    .side-badge{margin-left:auto;background:var(--red);color:var(--on-red);font-family:var(--f-mono);font-size:0.56rem;min-width:18px;height:18px;padding:0 5px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;}
+    .envio-cel .mono{font-size:0.78rem;color:var(--text);}
+    .envio-erro{font-size:0.75rem;color:var(--red);max-width:220px;line-height:1.4;}
+    .side-badge{margin-left:auto;background:var(--red);color:var(--on-red);font-family:var(--f-mono);font-size:0.72rem;min-width:18px;height:18px;padding:0 5px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;}
 
     /* ORÇAMENTOS */
     .orc-lista{display:flex;flex-direction:column;gap:10px;}
@@ -136,7 +136,7 @@
     .orc-card.novo{border-color:var(--red-line);}
     .orc-card.arquivado{opacity:0.6;}
     .orc-nome{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0.03em;color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-    .orc-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-mono);font-size:0.62rem;color:var(--text2);margin:6px 0 10px;}
+    .orc-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-mono);font-size:0.75rem;color:var(--text2);margin:6px 0 10px;}
     .orc-meta span{display:inline-flex;align-items:center;gap:6px;}
     .orc-msg{font-size:0.88rem;color:var(--text2);line-height:1.7;white-space:pre-line;border-left:2px solid var(--border-s);padding-left:12px;}
     .orc-lado{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
@@ -158,26 +158,26 @@
     @media(max-width:640px){.bloco-ed{grid-template-columns:1fr;}.bloco-ed .linha{grid-template-columns:1fr;}}
     select.input{appearance:auto;}
     .estoque-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;}
-    .estoque-grid label{display:flex;flex-direction:column;gap:4px;font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;}
+    .estoque-grid label{display:flex;flex-direction:column;gap:4px;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;}
     .alerta-cfg{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;margin-bottom:12px;font-size:0.84rem;color:var(--text2);line-height:1.6;}
     .alerta-cfg .ic{color:var(--warn);margin-top:3px;font-size:1rem;}
 
     /* GALERIA */
     .gal-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
     .chips{display:flex;gap:6px;flex-wrap:wrap;}
-    .chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px;border:1px solid var(--border-s);background:none;color:var(--text2);cursor:pointer;transition:all var(--tr);}
+    .chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px;border:1px solid var(--border-s);background:none;color:var(--text2);cursor:pointer;transition:all var(--tr);}
     .chip:hover{color:var(--text);}
     .chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:var(--on-red);}
     .chip .n{opacity:0.7;}
-    .dropzone{border:1.5px dashed var(--border-s);border-radius:var(--radius);padding:22px;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--text3);font-family:var(--f-mono);font-size:0.66rem;letter-spacing:0.05em;margin-bottom:18px;transition:all var(--tr);text-align:center;flex-wrap:wrap;}
+    .dropzone{border:1.5px dashed var(--border-s);border-radius:var(--radius);padding:22px;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--text3);font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.05em;margin-bottom:18px;transition:all var(--tr);text-align:center;flex-wrap:wrap;}
     .dropzone .ic{font-size:1.3rem;}
     .dropzone.over{border-color:var(--red);background:var(--red-mid);color:var(--text);}
     .fila{padding:16px 18px;margin-bottom:18px;}
-    .fila-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:0.64rem;letter-spacing:0.08em;color:var(--text);margin-bottom:10px;}
+    .fila-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.08em;color:var(--text);margin-bottom:10px;}
     .fila-barra{height:3px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:10px;}
     .fila-barra span{display:block;height:100%;width:0;background:var(--red);transition:width 0.3s;}
     .fila-lista{list-style:none;display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;}
-    .fila-lista li{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.62rem;color:var(--text2);}
+    .fila-lista li{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.75rem;color:var(--text2);}
     .fila-lista li .nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .fila-lista li.ok .ic{color:var(--ok);}
     .fila-lista li.err{color:var(--red);}
@@ -188,21 +188,21 @@
     .gal-thumb{position:relative;aspect-ratio:4/3;background:var(--bg3);overflow:hidden;}
     .gal-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity var(--tr);}
     .gal-thumb .tags{position:absolute;top:8px;left:8px;display:flex;gap:5px;flex-wrap:wrap;}
-    .gal-thumb .tag{background:rgba(0,0,0,0.65);border-color:rgba(255,255,255,0.15);color:#fff;font-size:0.52rem;padding:4px 8px;}
+    .gal-thumb .tag{background:rgba(0,0,0,0.65);border-color:rgba(255,255,255,0.15);color:#fff;font-size:0.7rem;padding:4px 8px;}
     .gal-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;pointer-events:none;}
     .gal-play span{width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;}
     .gal-drag{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:6px;background:rgba(0,0,0,0.6);color:#fff;display:flex;align-items:center;justify-content:center;cursor:grab;font-size:0.95rem;}
     .gal-info{padding:10px 12px 4px;min-height:48px;}
     .gal-titulo{font-size:0.86rem;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .gal-titulo.vazio{color:var(--text3);font-style:italic;font-weight:300;}
-    .gal-desc{font-family:var(--f-mono);font-size:0.56rem;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .gal-desc{font-family:var(--f-mono);font-size:0.72rem;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .gal-acoes{display:flex;gap:4px;padding:8px 10px 10px;margin-top:auto;}
     .gal-acoes .sep{flex:1;}
     .gal-acoes .btn-icon{border-radius:var(--radius-sm);width:30px;height:30px;font-size:0.85rem;}
     .gal-acoes .btn-icon.del:hover{border-color:var(--red-dim);color:var(--red);}
     .gal-preview{border-radius:var(--radius-sm);overflow:hidden;background:var(--bg3);border:1px solid var(--border);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:2rem;margin-bottom:14px;position:relative;}
     .gal-preview img{width:100%;height:100%;object-fit:contain;}
-    .yt-status{font-family:var(--f-mono);font-size:0.6rem;margin-top:6px;display:flex;align-items:center;gap:6px;color:var(--text3);}
+    .yt-status{font-family:var(--f-mono);font-size:0.72rem;margin-top:6px;display:flex;align-items:center;gap:6px;color:var(--text3);}
     .yt-status.ok{color:var(--ok);}
     .yt-status.err{color:var(--red);}
   </style>
@@ -266,6 +266,10 @@
       <div class="adm-side-group">
         <div class="adm-side-label">Contratantes</div>
         <button class="adm-side-link" data-page="orcamentos" type="button"><i data-icon="inbox"></i>Orçamentos <span class="side-badge" id="badgeOrcamentos" hidden></span></button>
+      </div>
+      <div class="adm-side-group">
+        <div class="adm-side-label">Público</div>
+        <button class="adm-side-link" data-page="fas" type="button"><i data-icon="users"></i>Fãs (avisos de shows)</button>
       </div>
     </aside>
 
@@ -472,6 +476,34 @@
         <div class="orc-lista" id="listaOrcamentos"><div class="state plain"><span class="spinner"></span>Carregando...</div></div>
       </section>
 
+      <!-- FÃS -->
+      <section class="adm-page" id="page-fas">
+        <div class="adm-page-header">
+          <div>
+            <div class="adm-page-titulo">Fãs</div>
+            <div class="adm-page-sub" id="fasResumo">Quem pediu aviso de shows no rodapé do site</div>
+          </div>
+          <div class="adm-page-acoes">
+            <button class="btn btn-outline btn-sm" type="button" onclick="exportarFas('whatsapp')"><i data-icon="download"></i>WhatsApp (CSV)</button>
+            <button class="btn btn-primary btn-sm" type="button" onclick="exportarFas('email')"><i data-icon="download"></i>E-mails (CSV)</button>
+          </div>
+        </div>
+        <div class="gal-toolbar">
+          <div class="chips" role="group" aria-label="Filtrar fãs">
+            <button class="chip" type="button" data-ffa="todos" aria-pressed="true" onclick="filtrarFas('todos')">Todos <span class="n" id="fCountTodos"></span></button>
+            <button class="chip" type="button" data-ffa="email" aria-pressed="false" onclick="filtrarFas('email')"><i data-icon="mail"></i>E-mail <span class="n" id="fCountEmail"></span></button>
+            <button class="chip" type="button" data-ffa="whatsapp" aria-pressed="false" onclick="filtrarFas('whatsapp')"><i data-icon="message"></i>WhatsApp <span class="n" id="fCountWhats"></span></button>
+          </div>
+          <input class="input" type="search" id="fasBusca" placeholder="Buscar..." style="max-width:220px;" oninput="renderFas()"/>
+        </div>
+        <div class="tabela-wrap">
+          <table>
+            <thead><tr><th>Contato</th><th>Tipo</th><th>Cadastrado em</th><th>Página</th><th></th></tr></thead>
+            <tbody id="tabelaFas"><tr><td colspan="5" class="vazio">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- CONTEÚDO DO SITE -->
       <section class="adm-page" id="page-conteudo">
         <div class="adm-page-header">
@@ -610,6 +642,17 @@
       <label for="sLink" id="labelLink">Link de ingressos <span class="opt">opcional</span></label>
       <input type="url" id="sLink" placeholder="https://..." style="margin-bottom:10px;"/>
       <label class="check"><input type="checkbox" id="sGratuito" onchange="toggleGratuito()"/>Entrada gratuita</label>
+    </div>
+    <div class="fg">
+      <span class="fg-label">Cartaz do show <span class="opt">opcional</span></span>
+      <div class="img-field">
+        <div class="img-preview" id="sCartazPreview" style="width:64px;height:80px;"></div>
+        <div class="img-field-body">
+          <input type="file" id="sCartazArquivo" accept="image/jpeg,image/png,image/webp,image/gif" hidden onchange="uploadCampo(this, {campo:'sCartaz', preview:'sCartazPreview', pasta:'galeria-fotos', nomeDe:'sNome', form:'show', maxDim:1400})"/>
+          <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('sCartazArquivo').click()"><i data-icon="upload"></i>Enviar cartaz</button>
+          <input type="url" class="input" id="sCartaz" placeholder="ou cole a URL da imagem" oninput="atualizarPreview('sCartaz','sCartazPreview','image')"/>
+        </div>
+      </div>
     </div>
     <input type="hidden" id="sId"/>
     <button class="btn btn-primary btn-block" id="btnSalvarShow" type="button" onclick="salvarShow()">Salvar show</button>
@@ -864,10 +907,11 @@ function recarregarTudo(resumo){
   carregarMembros();
   carregarGaleria();
   carregarOrcamentos();
+  carregarFas();
 }
 
 // ══════════════ ROTEAMENTO (SIDEBAR) ══════════════
-const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros','galeria','conteudo','orcamentos'];
+const ADM_PAGES = ['visao-geral','rifa-config','rifa-sorteio','rifa-bilhetes','merch-pedidos','merch-produtos','shows','membros','galeria','conteudo','orcamentos','fas'];
 
 function initAdminRouter(){
   document.querySelectorAll('.adm-side-link').forEach(btn => btn.addEventListener('click', () => irParaPagina(btn.dataset.page)));
@@ -999,7 +1043,7 @@ async function carregarPedidosMerch(){
     const itens = (p.itens || []).map(i => `${esc(i.nome)}${i.tam && i.tam !== 'único' ? ` (${esc(i.tam)})` : ''} × ${esc(i.qty)}`).join('<br/>') || '—';
     return `<tr>
       <td class="mono">${fmtData(p.criado_em)}</td>
-      <td><strong>${esc(p.nome_comprador || '—')}</strong><div class="mono" style="font-size:0.7rem;margin-top:2px;">${esc(p.telefone_comprador || '')}</div>${p.cidade ? `<div style="font-size:0.74rem;color:var(--text3);">${esc(p.cidade)}/${esc(p.uf || '')}</div>` : ''}</td>
+      <td><strong>${esc(p.nome_comprador || '—')}</strong><div class="mono" style="font-size:0.78rem;margin-top:2px;">${esc(p.telefone_comprador || '')}</div>${p.cidade ? `<div style="font-size:0.74rem;color:var(--text3);">${esc(p.cidade)}/${esc(p.uf || '')}</div>` : ''}</td>
       <td style="max-width:260px;">${itens}</td>
       <td class="mono">${nexusMoeda(p.valor_total)}</td>
       <td><span class="tag ${TAG[p.status] || 'tag-muted'}">${esc(p.status)}</span></td>
@@ -1108,6 +1152,60 @@ async function excluirOrcamento(id){
   orcamentosData = orcamentosData.filter(o => o.id !== id);
   atualizarBadgeOrc(); renderOrcamentos();
   toast('Orçamento excluído', 'ok');
+}
+
+// ══════════════ FÃS ══════════════
+let fasData = [], fasFiltro = 'todos';
+async function carregarFas(){
+  const r = await api('/api/admin?acao=fas');
+  const tbody = document.getElementById('tabelaFas');
+  if(r.ok && r.data.aviso){ tbody.innerHTML = `<tr><td colspan="5">${avisoSetup(esc(r.data.aviso))}</td></tr>`; fasData = []; return; }
+  fasData = r.ok ? (r.data.fas || []) : [];
+  renderFas();
+}
+function filtrarFas(f){
+  fasFiltro = f;
+  document.querySelectorAll('[data-ffa]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.ffa === f)));
+  renderFas();
+}
+const fmtWhats = n => n.length >= 10 ? `(${n.slice(0, 2)}) ${n.slice(2, -4)}-${n.slice(-4)}` : n;
+function renderFas(){
+  const emails = fasData.filter(f => f.tipo === 'email').length;
+  document.getElementById('fCountTodos').textContent = fasData.length;
+  document.getElementById('fCountEmail').textContent = emails;
+  document.getElementById('fCountWhats').textContent = fasData.length - emails;
+  document.getElementById('fasResumo').textContent = `${fasData.length} pessoa(s) pediram aviso de shows no rodapé do site`;
+  const busca = document.getElementById('fasBusca').value.trim().toLowerCase();
+  const lista = fasData.filter(f => (fasFiltro === 'todos' || f.tipo === fasFiltro) && (!busca || f.contato.includes(busca.replace(/[^a-z0-9@._+-]/g, ''))));
+  const tbody = document.getElementById('tabelaFas');
+  if(!lista.length){ tbody.innerHTML = linhaVazia(fasData.length ? 'Nenhum resultado' : 'Ninguém se cadastrou ainda', 5); return; }
+  tbody.innerHTML = lista.slice(0, 500).map(f => `<tr>
+    <td class="mono"><strong>${f.tipo === 'whatsapp' ? `<a href="https://wa.me/55${esc(f.contato)}" target="_blank" rel="noopener">${esc(fmtWhats(f.contato))}</a>` : `<a href="mailto:${esc(f.contato)}">${esc(f.contato)}</a>`}</strong></td>
+    <td><span class="tag ${f.tipo === 'email' ? 'tag-muted' : 'tag-ok'}">${f.tipo === 'email' ? 'E-mail' : 'WhatsApp'}</span></td>
+    <td class="mono">${fmtData(f.criado_em)}</td>
+    <td class="mono">${esc(f.origem || '—')}</td>
+    <td><button class="btn btn-icon sm" type="button" aria-label="Remover" title="Remover" onclick="excluirFa('${esc(f.id)}')">${nexusIcon('trash')}</button></td>
+  </tr>`).join('');
+}
+async function excluirFa(id){
+  if(!confirm('Remover este contato da lista?')) return;
+  const r = await api('/api/admin?acao=fa-excluir', { method: 'POST', body: { id } });
+  if(!r.ok){ toast(r.data.erro || 'Erro ao remover', 'err'); return; }
+  fasData = fasData.filter(f => f.id !== id);
+  renderFas();
+}
+// CSV pronto para importar em ferramentas de e-mail ou lista de transmissão do WhatsApp
+function exportarFas(tipo){
+  const lista = fasData.filter(f => f.tipo === tipo);
+  if(!lista.length){ toast('Nenhum contato desse tipo ainda', 'err'); return; }
+  const linhas = [tipo === 'email' ? 'email,cadastrado_em' : 'whatsapp,cadastrado_em']
+    .concat(lista.map(f => `${tipo === 'whatsapp' ? '55' + f.contato : f.contato},${(f.criado_em || '').slice(0, 10)}`));
+  const blob = new Blob(['\ufeff' + linhas.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `fas-nexus-${tipo}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 // ══════════════ CONTEÚDO DO SITE ══════════════
@@ -1376,6 +1474,8 @@ function abrirFormShow(id){
   document.getElementById('sGratuito').checked = !!s?.gratuito;
   toggleGratuito();
   document.getElementById('sId').value = s?.id || '';
+  document.getElementById('sCartaz').value = s?.cartaz || '';
+  atualizarPreview('sCartaz', 'sCartazPreview', 'image');
   document.getElementById('showOv').classList.add('open');
   document.getElementById('sNome').focus();
   nexusMarkClean('show');
@@ -1384,6 +1484,7 @@ function abrirFormShow(id){
 function fecharFormShow(){
   if(!nexusConfirmClose('show')) return;
   nexusMarkClean('show');
+  descartarUploads('show');
   document.getElementById('showOv').classList.remove('open');
 }
 function toggleGratuito(){
@@ -1405,10 +1506,12 @@ async function salvarShow(){
   const r = await api('/api/shows' + (id ? `/${encodeURIComponent(id)}` : ''), {
     method: id ? 'PUT' : 'POST',
     body: { nome, data, hora: document.getElementById('sHora').value, local, status: document.getElementById('sStatus').value,
-      link: gratuito ? '' : document.getElementById('sLink').value.trim(), gratuito }
+      link: gratuito ? '' : document.getElementById('sLink').value.trim(), gratuito,
+      // só envia o campo se houver cartaz (ou se havia e foi removido) — funciona antes do SQL novo
+      ...((document.getElementById('sCartaz').value.trim() || showsData.find(x => x.id === id)?.cartaz) ? { cartaz: document.getElementById('sCartaz').value.trim() } : {}) }
   });
   pronto();
-  if(r.ok){ toast(id ? 'Show atualizado' : 'Show criado', 'ok'); nexusMarkClean('show'); fecharFormShow(); carregarShows(); }
+  if(r.ok){ toast(id ? 'Show atualizado' : 'Show criado', 'ok'); confirmarUploads('show'); nexusMarkClean('show'); fecharFormShow(); carregarShows(); }
   else toast(r.data.erro || 'Erro ao salvar', 'err');
 }
 

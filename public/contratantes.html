@@ -22,6 +22,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/nexus.css"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-01-sm.webp" media="(max-width: 768px)"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-01-lg.webp" media="(min-width: 769px)"/>
 
   <script defer src="/_vercel/insights/script.js"></script>
   <script src="/nexus-core.js"></script>
@@ -32,7 +34,7 @@
     .contato-card{padding:24px;display:flex;align-items:center;gap:16px;text-decoration:none;}
     .contato-icon{width:46px;height:46px;border-radius:12px;border:1px solid var(--border-s);display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:var(--text2);flex-shrink:0;transition:all var(--tr);}
     .contato-card:hover .contato-icon{color:var(--red);border-color:var(--red-line);}
-    .contato-label{font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
+    .contato-label{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
     .contato-valor{font-size:0.95rem;color:var(--text);font-weight:400;word-break:break-word;}
 
     /* ORÇAMENTO */
@@ -44,7 +46,7 @@
     .orc-desc{font-size:0.9rem;color:var(--text2);line-height:1.7;}
     .orc-passos{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:6px;}
     .orc-passos li{display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text2);}
-    .orc-passos .ic{color:var(--red);margin-top:4px;}
+    .orc-passos .ic{color:var(--text3);margin-top:4px;}
     .orc-form{padding:32px;}
     .orc-ok{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:40px 20px;}
     .orc-ok .modal-icon{margin:0;}
@@ -64,7 +66,7 @@
     .painel{overflow:hidden;}
     .painel-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
     .painel-titulo{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0.04em;color:var(--text);display:flex;align-items:center;gap:10px;}
-    .painel-titulo .ic{color:var(--red);font-size:1.1rem;}
+    .painel-titulo .ic{color:var(--text3);font-size:1.1rem;}
     .painel-acoes{display:flex;gap:8px;flex-wrap:wrap;}
     .painel-body{padding:22px;}
 
@@ -79,20 +81,20 @@
     .pdf-lb{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.95);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.22s;}
     .pdf-lb.open{opacity:1;pointer-events:all;}
     .pdf-lb-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border-s);flex-shrink:0;}
-    .pdf-lb-bar span{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
+    .pdf-lb-bar span{font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
     .pdf-lb iframe{flex:1;width:100%;border:0;background:#525659;}
 
     .mapa-visual{display:block;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;position:relative;cursor:zoom-in;padding:0;}
     .mapa-visual img{display:block;width:100%;height:auto;transition:opacity var(--tr);}
     .mapa-visual:hover img{opacity:0.9;}
-    .mapa-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(8,8,8,0.85);border:1px solid var(--border-s);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;padding:6px 14px;font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.1em;color:var(--text2);white-space:nowrap;pointer-events:none;display:flex;align-items:center;gap:6px;}
+    .mapa-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(8,8,8,0.85);border:1px solid var(--border-s);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;padding:6px 14px;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--text2);white-space:nowrap;pointer-events:none;display:flex;align-items:center;gap:6px;}
 
     /* RIDER */
     .rider-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
     @media(max-width:600px){.rider-grid{grid-template-columns:1fr;}}
     .rider-card{padding:22px 24px;}
-    .rider-titulo{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
-    .rider-titulo .ic{font-size:0.95rem;}
+    .rider-titulo{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);margin-bottom:16px;}
+    .rider-titulo .ic{font-size:0.95rem;color:var(--red);}
     .rider-list{list-style:none;display:flex;flex-direction:column;gap:9px;}
     .rider-list li{display:flex;align-items:baseline;gap:10px;font-size:0.9rem;color:var(--text2);}
     .rider-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;transform:translateY(-2px);opacity:0.7;}
@@ -120,8 +122,8 @@
 </nav>
 
 <main id="conteudo">
-<header class="page-hero">
-  <div class="hero-orb right"></div>
+<header class="page-hero has-photo" style="--hero-sm:url(/imgs/hero/show-01-sm.webp);--hero-lg:url(/imgs/hero/show-01-lg.webp)">
+  <div class="hero-photo" aria-hidden="true"></div>
   <p class="page-eyebrow">Informações técnicas</p>
   <h1 class="page-title">CONTRATANTES</h1>
   <p class="page-sub">Tudo que você precisa para contratar a Nexus</p>
@@ -308,18 +310,43 @@
 </div>
 
 <footer class="site-footer">
-  <div class="footer-logo">
-    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="15" height="22"/>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/imgs/marca/nexusicon-sm.png" alt="Nexus" width="30" height="44"/>
+      <p>Rock autoral de São Paulo. Onde tudo se encontra.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+        <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+        <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+        <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+        <a href="https://wa.me/5511942477432" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp da Nexus"><i data-icon="message"></i></a>
+        <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="Rodapé">
+      <div class="footer-titulo">Site</div>
+      <a href="/sobre">Sobre</a>
+      <a href="/agenda">Agenda</a>
+      <a href="/galeria">Galeria</a>
+      <a href="/merch">Merch</a>
+      <a href="/contratantes">Contratantes</a>
+      <a href="/rifa" data-rifa hidden>Rifa</a>
+    </nav>
+    <form class="footer-avisos" id="formAvisos" novalidate>
+      <div class="footer-titulo">Avisos de shows</div>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <div class="linha">
+        <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
+        <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
+        <button class="btn btn-primary btn-sm" type="submit"><i data-icon="send"></i>Quero</button>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off"/></div>
+    </form>
+  </div>
+  <div class="footer-bottom">
     <span>&copy; 2026 Nexus Band</span>
+    <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
-  <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
-    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
-  </div>
-  <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

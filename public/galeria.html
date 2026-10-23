@@ -22,6 +22,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/nexus.css"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-05-sm.webp" media="(max-width: 768px)"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-05-lg.webp" media="(min-width: 769px)"/>
 
   <script defer src="/_vercel/insights/script.js"></script>
   <script src="/nexus-core.js"></script>
@@ -29,11 +31,11 @@
   <style>
     /* ABAS */
     .tabs{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:999px;padding:5px;width:fit-content;margin:0 auto 40px;}
-    .tab-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:var(--text2);font-family:var(--f-mono);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border-radius:999px;cursor:pointer;transition:all var(--tr);}
+    .tab-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:var(--text2);font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border-radius:999px;cursor:pointer;transition:all var(--tr);}
     .tab-btn .ic{font-size:0.95rem;}
     .tab-btn:not(.on):hover{color:var(--text);}
     .tab-btn.on{background:var(--red);color:var(--on-red);}
-    .tab-count{font-size:0.56rem;opacity:0.75;min-width:1.4em;}
+    .tab-count{font-size:0.72rem;opacity:0.75;min-width:1.4em;}
     .tab-panel[hidden]{display:none;}
 
     /* FOTOS */
@@ -69,7 +71,7 @@
     .video-formato{position:absolute;z-index:2;top:10px;left:10px;}
     .video-body{padding:16px 18px 18px;}
     .video-titulo{font-family:var(--f-display);font-size:1.25rem;letter-spacing:0.03em;color:var(--text);line-height:1.15;}
-    .video-desc{font-family:var(--f-mono);font-size:0.6rem;letter-spacing:0.06em;color:var(--text3);margin-top:6px;}
+    .video-desc{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--text3);margin-top:6px;}
 
     /* MODAL DE VÍDEO */
     .video-ov{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:64px 20px 24px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
@@ -82,7 +84,7 @@
     .video-modal-info{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;margin-top:16px;flex-wrap:wrap;}
     .video-frame.vertical + .video-modal-info{max-width:min(440px,100%);}
     .video-modal-titulo{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0.03em;color:var(--text);}
-    .video-modal-desc{font-family:var(--f-mono);font-size:0.6rem;letter-spacing:0.06em;color:var(--text3);margin-top:2px;}
+    .video-modal-desc{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--text3);margin-top:2px;}
   </style>
 </head>
 <body>
@@ -107,8 +109,8 @@
 </nav>
 
 <main id="conteudo">
-<header class="page-hero">
-  <div class="hero-orb"></div>
+<header class="page-hero has-photo" style="--hero-sm:url(/imgs/hero/show-05-sm.webp);--hero-lg:url(/imgs/hero/show-05-lg.webp)">
+  <div class="hero-photo" aria-hidden="true"></div>
   <p class="page-eyebrow">Registros da banda</p>
   <h1 class="page-title">GALERIA</h1>
   <p class="page-sub">Fotos e vídeos da Nexus</p>
@@ -156,18 +158,43 @@
 </div>
 
 <footer class="site-footer">
-  <div class="footer-logo">
-    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="15" height="22"/>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/imgs/marca/nexusicon-sm.png" alt="Nexus" width="30" height="44"/>
+      <p>Rock autoral de São Paulo. Onde tudo se encontra.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+        <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+        <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+        <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+        <a href="https://wa.me/5511942477432" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp da Nexus"><i data-icon="message"></i></a>
+        <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="Rodapé">
+      <div class="footer-titulo">Site</div>
+      <a href="/sobre">Sobre</a>
+      <a href="/agenda">Agenda</a>
+      <a href="/galeria">Galeria</a>
+      <a href="/merch">Merch</a>
+      <a href="/contratantes">Contratantes</a>
+      <a href="/rifa" data-rifa hidden>Rifa</a>
+    </nav>
+    <form class="footer-avisos" id="formAvisos" novalidate>
+      <div class="footer-titulo">Avisos de shows</div>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <div class="linha">
+        <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
+        <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
+        <button class="btn btn-primary btn-sm" type="submit"><i data-icon="send"></i>Quero</button>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off"/></div>
+    </form>
+  </div>
+  <div class="footer-bottom">
     <span>&copy; 2026 Nexus Band</span>
+    <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
-  <div class="footer-social">
-    <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
-    <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
-    <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
-    <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
-    <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
-  </div>
-  <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

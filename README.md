@@ -102,7 +102,8 @@ Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.s
 1. **GALERIA** e **STORAGE: buckets das fotos da galeria e dos produtos**
 2. A migração de `shows.ordem` e a de ícones dos produtos
 3. **ATUALIZAÇÃO 2** — estoque, orçamentos, limite de tentativas de login e o membro Pedro
-4. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
+4. **ATUALIZAÇÃO 3** — cartaz dos shows e lista de fãs (avisos de shows)
+5. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
 
 ## Loja: estoque e envio
 
@@ -114,6 +115,12 @@ Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.s
 ## Rifa: reservas
 
 Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém paga por um número que já foi liberado. Reservas vencidas são liberadas automaticamente. Se duas pessoas tentarem o mesmo número ao mesmo tempo, só uma consegue e a outra é avisada para escolher outro.
+
+## Agenda, fãs e fotos do site
+
+- **Cartaz do show**: no admin, em Agenda de shows, envie o flyer de cada show. Ele aparece ao lado do show na página Agenda (clicar amplia).
+- **Fãs**: o rodapé de todas as páginas tem um campo "Avisos de shows" (e-mail ou WhatsApp). A lista fica no admin em **Fãs**, com exportação em CSV para importar numa ferramenta de e-mail ou lista de transmissão do WhatsApp.
+- **Fotos no topo das páginas**: ficam em `public/imgs/hero/` (versões `-sm` para celular e `-lg` para computador, em WebP). Para trocar a foto de uma página, substitua o arquivo mantendo o nome ou altere o `--hero-sm`/`--hero-lg` no `<header class="page-hero has-photo">` da página. A página inicial alterna três fotos (`.home-slide` em `index.html`).
 
 ## Conteúdo do site e orçamentos
 

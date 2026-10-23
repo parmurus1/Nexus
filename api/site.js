@@ -5,6 +5,7 @@
 //   GET  /api/bilhetes        -> números da rifa e status
 //   GET  /api/pedido-status   -> status (não sensível) de um pedido da loja
 //   POST /api/orcamento       -> formulário de orçamento da página Contratantes
+//   POST /api/avisos          -> cadastro de fãs no rodapé ("avisos de shows")
 import { createClient } from '@supabase/supabase-js';
 import { liberarExpirados } from './_lib/rifa.js';
 import { ipDaRequisicao } from './_lib/auth.js';
@@ -100,6 +101,37 @@ async function rotaOrcamento(req, res) {
   return res.status(201).json({ ok: true, id: data.id });
 }
 
+async function rotaAvisos(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+  const b = req.body || {};
+  if (b.site) return res.status(200).json({ ok: true }); // campo-isca: robô
+
+  const bruto = limpar(b.contato, 160);
+  let contato, tipo;
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bruto)) { contato = bruto.toLowerCase(); tipo = 'email'; }
+  else {
+    const digitos = bruto.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
+    if (digitos.length < 10 || digitos.length > 11) return res.status(400).json({ erro: 'Digite um e-mail ou WhatsApp com DDD.' });
+    contato = digitos; tipo = 'whatsapp';
+  }
+
+  const ip = ipDaRequisicao(req);
+  const umaHora = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count } = await supabase.from('fas').select('id', { count: 'exact', head: true }).eq('ip', ip).gte('criado_em', umaHora);
+  if ((count || 0) >= 5) return res.status(429).json({ erro: 'Muitos cadastros seguidos. Tente de novo mais tarde.' });
+
+  // Já cadastrado conta como sucesso (não revela se o contato existe)
+  const { error } = await supabase.from('fas').upsert(
+    { contato, tipo, origem: limpar(b.origem, 60) || null, ip },
+    { onConflict: 'contato', ignoreDuplicates: true }
+  );
+  if (error) {
+    console.error('Erro ao cadastrar fã:', error.message);
+    return res.status(500).json({ erro: 'Não foi possível cadastrar agora. Tente mais tarde.' });
+  }
+  return res.status(201).json({ ok: true });
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -109,6 +141,7 @@ export default async function handler(req, res) {
   const rota = req.query.r;
   try {
     if (rota === 'orcamento') return await rotaOrcamento(req, res);
+    if (rota === 'avisos') return await rotaAvisos(req, res);
     if (req.method !== 'GET') return res.status(405).json({ erro: 'Método não permitido' });
     if (rota === 'config') return await rotaConfig(req, res);
     if (rota === 'bilhetes') return await rotaBilhetes(req, res);

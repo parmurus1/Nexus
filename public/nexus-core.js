@@ -213,9 +213,67 @@
     try { window.va('event', { name: nome, data: dados }); } catch (e) {}
   };
 
+  // Imagens com loading="lazy" ficam invisíveis até carregar e então surgem
+  // suavemente (CSS em nexus.css). Captura no document pega todas as imagens,
+  // inclusive as inseridas depois via JS.
+  function marcarCarregada(e) {
+    if (e.target && e.target.tagName === 'IMG') e.target.classList.add('is-loaded');
+  }
+  document.addEventListener('load', marcarCarregada, true);
+  document.addEventListener('error', marcarCarregada, true);
+
+  // Blocos de conteúdo surgem ao entrar na tela.
+  function initReveal() {
+    var alvos = document.querySelectorAll('main .section, main .container > .card, [data-reveal]');
+    if (!alvos.length) return;
+    if (!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); obs.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    alvos.forEach(function (el) {
+      // O que já está visível ao abrir a página não anima (evita "piscar")
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.92) return;
+      el.classList.add('reveal');
+      obs.observe(el);
+    });
+  }
+
+  // Cadastro de fãs no rodapé ("receba aviso dos próximos shows")
+  function initAvisos() {
+    var form = document.getElementById('formAvisos');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var campo = form.querySelector('input[name="contato"]');
+      var contato = campo.value.trim();
+      var email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contato);
+      var tel = contato.replace(/\D/g, '').length >= 10;
+      if (!email && !tel) { window.toast('Digite um e-mail ou WhatsApp com DDD.', 'err'); campo.focus(); return; }
+      var btn = form.querySelector('button');
+      btn.disabled = true;
+      fetch('/api/avisos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contato: contato, site: (form.querySelector('input[name="site"]') || {}).value || '', origem: location.pathname })
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error(res.d.erro || 'Não foi possível cadastrar agora.');
+          window.nexusTrack('cadastro_fa');
+          form.querySelector('.linha').outerHTML = '<p class="ok">' + window.nexusIcon('check-circle') + 'Pronto! Você vai receber os avisos de shows.</p>';
+        })
+        .catch(function (err) { window.toast(err.message, 'err'); btn.disabled = false; });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     window.nexusHydrateIcons();
     initNav();
+    initAvisos();
+    // Depois que os scripts da página montaram o conteúdo
+    window.requestAnimationFrame(initReveal);
   });
 
   // ── 4) Overlay click guard ─────────────────────────────────────────

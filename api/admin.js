@@ -227,6 +227,20 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
+  // Fãs cadastrados no rodapé do site (lista de avisos de shows)
+  if (acao === 'fas') {
+    const { data, error } = await supabase.from('fas').select('id, contato, tipo, origem, criado_em').order('criado_em', { ascending: false }).limit(5000);
+    if (error) return res.status(200).json({ fas: [], aviso: 'Tabela fas não encontrada. Execute o bloco ATUALIZAÇÃO 3 do supabase_schema.sql.' });
+    return res.status(200).json({ fas: data || [] });
+  }
+
+  if (acao === 'fa-excluir') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+    const { error } = await supabase.from('fas').delete().eq('id', (req.body || {}).id);
+    if (error) return res.status(500).json({ erro: 'Erro ao excluir' });
+    return res.status(200).json({ ok: true });
+  }
+
   // Liberar expirados (também acontece sozinho ao listar/reservar bilhetes)
   if (acao === 'liberar-expirados') {
     const liberados = await liberarExpirados(supabase);
