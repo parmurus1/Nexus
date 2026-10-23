@@ -17,5 +17,8 @@ export default async function handler(req, res) {
   const configObj = {};
   data?.forEach(c => { configObj[c.chave] = c.valor; });
 
+  // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+  // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
   return res.status(200).json(configObj);
 }

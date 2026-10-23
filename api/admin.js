@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 const UPLOAD_BUCKET_PADRAO = 'membros-fotos';
-const UPLOAD_BUCKETS_PERMITIDOS = ['membros-fotos', 'galeria-fotos'];
+const UPLOAD_BUCKETS_PERMITIDOS = ['membros-fotos', 'galeria-fotos', 'produtos-fotos'];
 const UPLOAD_TIPOS_PERMITIDOS = {
   'image/jpeg': 'jpg',
   'image/jpg': 'jpg',
@@ -12,7 +12,10 @@ const UPLOAD_TIPOS_PERMITIDOS = {
   'image/webp': 'webp',
   'image/gif': 'gif'
 };
-const UPLOAD_TAMANHO_MAX_BYTES = 5 * 1024 * 1024; // 5MB (o arquivo já deve chegar comprimido pelo navegador)
+// O navegador já redimensiona e converte para WebP antes de enviar (ver admin.html),
+// então uma foto chega com ~150–500KB. O limite abaixo também respeita o teto de
+// 4,5MB de corpo de requisição das funções da Vercel (base64 aumenta ~33%).
+const UPLOAD_TAMANHO_MAX_BYTES = 3 * 1024 * 1024;
 
 function uploadSlugify(str) {
   return String(str || 'foto')
@@ -21,6 +24,13 @@ function uploadSlugify(str) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
     .slice(0, 40) || 'foto';
+}
+
+// Extrai {bucket, caminho} de uma URL pública do nosso Storage (só buckets permitidos).
+function arquivoDoStorage(url) {
+  const m = String(url || '').match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+?)(?:\?.*)?$/);
+  if (!m || !UPLOAD_BUCKETS_PERMITIDOS.includes(m[1])) return null;
+  return { bucket: m[1], caminho: decodeURIComponent(m[2]) };
 }
 
 function autenticar(req) {
@@ -56,7 +66,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
     try {
-      const { imagemBase64, tipo, nome, pasta } = req.body || {};
+      const { imagemBase64, tipo, nome, pasta, sufixo } = req.body || {};
       if (!imagemBase64 || !tipo) {
         return res.status(400).json({ erro: 'Dados da imagem incompletos' });
       }
@@ -72,19 +82,22 @@ export default async function handler(req, res) {
       const buffer = Buffer.from(base64Limpo, 'base64');
 
       if (buffer.length > UPLOAD_TAMANHO_MAX_BYTES) {
-        return res.status(400).json({ erro: 'Imagem muito grande. O tamanho máximo é 5MB.' });
+        return res.status(400).json({ erro: 'Imagem muito grande. O tamanho máximo é 3MB.' });
       }
 
-      const nomeArquivo = `${uploadSlugify(nome)}-${Date.now()}.${extensao}`;
+      const sufixoLimpo = sufixo ? '-' + uploadSlugify(sufixo).slice(0, 12) : '';
+      const nomeArquivo = `${uploadSlugify(nome)}-${Date.now()}${Math.random().toString(36).slice(2, 6)}${sufixoLimpo}.${extensao}`;
 
+      // Nome de arquivo é único, então pode ser cacheado "para sempre" pela CDN do
+      // Supabase — reduz bastante o tráfego (egress) do plano gratuito.
       const { error: uploadError } = await supabase.storage
         .from(bucket)
-        .upload(nomeArquivo, buffer, { contentType: tipo, upsert: false });
+        .upload(nomeArquivo, buffer, { contentType: tipo, upsert: false, cacheControl: '31536000' });
 
       if (uploadError) {
         console.error('Erro upload:', uploadError.message);
         const dica = /bucket not found/i.test(uploadError.message)
-          ? ` Crie o bucket "${bucket}" no Supabase (veja o bloco de Storage no supabase_schema.sql / supabase_schema_galeria.sql).`
+          ? ` Crie o bucket "${bucket}" no Supabase (veja os blocos de Storage no supabase_schema.sql).`
           : '';
         return res.status(500).json({ erro: 'Erro ao enviar imagem: ' + uploadError.message + dica });
       }
@@ -95,6 +108,20 @@ export default async function handler(req, res) {
       console.error('Erro upload:', e.message);
       return res.status(500).json({ erro: 'Erro ao processar upload: ' + e.message });
     }
+  }
+
+  // Remove arquivos enviados que acabaram não sendo usados (ex.: admin enviou uma
+  // foto e fechou o formulário sem salvar). Body: { urls: [...] }
+  if (acao === 'remover-arquivo') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+    const arquivos = (Array.isArray(req.body?.urls) ? req.body.urls : []).map(arquivoDoStorage).filter(Boolean).slice(0, 50);
+    const porBucket = {};
+    arquivos.forEach(a => { (porBucket[a.bucket] = porBucket[a.bucket] || []).push(a.caminho); });
+    for (const [bucket, caminhos] of Object.entries(porBucket)) {
+      const { error } = await supabase.storage.from(bucket).remove(caminhos);
+      if (error) console.error('Erro ao remover arquivos:', error.message);
+    }
+    return res.status(200).json({ ok: true, removidos: arquivos.length });
   }
 
   // Resumo

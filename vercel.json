@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/api/shows/:id", "destination": "/api/shows?id=:id" },
     { "source": "/api/produtos/:id", "destination": "/api/produtos?id=:id" },
-    { "source": "/api/membros/:id", "destination": "/api/membros?id=:id" }
+    { "source": "/api/membros/:id", "destination": "/api/membros?id=:id" },
+    { "source": "/api/galeria/:id", "destination": "/api/galeria?id=:id" }
   ]
 }

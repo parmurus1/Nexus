@@ -137,12 +137,12 @@ export default async function handler(req, res) {
           default_payment_method_id: 'pix'
         },
         back_urls: {
-          success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso.html`,
-          failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/merch.html`,
+          success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso?origem=merch`,
+          failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/falha?origem=merch`,
           // Pix aprova de forma assíncrona (o Mercado Pago não redireciona
           // sozinho nesse caso) — manda pra uma tela nossa que fica
           // consultando /api/pedido-status e redireciona assim que aprovar.
-          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/pendente.html?pedido=${pedido.id}`
+          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/pendente?origem=merch&pedido=${pedido.id}`
         },
         auto_return: 'approved',
         statement_descriptor: 'NEXUS MERCH',

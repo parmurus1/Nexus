@@ -18,34 +18,18 @@
     var css =
       /* Sem filtro grayscale na <html> inteira: aplicar filter em toda a
          árvore (com orbs animados e blur por baixo) é pesado e travava a
-         página enquanto renderizava. O tema P&B vem das variáveis abaixo;
-         só as fotos (que têm cor real) recebem grayscale, que é barato. */
+         página enquanto renderizava. O tema P&B vem dos tokens abaixo;
+         só as fotos (que têm cor real) recebem grayscale, que é barato.
+         --on-red garante texto preto em tudo que tem fundo "vermelho"
+         (que no modo venom vira quase-branco). */
       'body.venom-mode{' +
-        '--red:#f2f2f2;--red-dim:#c9c9c9;--red-glow:rgba(255,255,255,0.22);--red-mid:rgba(255,255,255,0.08);' +
+        '--red:#f2f2f2;--red-hover:#ffffff;--red-dim:#c9c9c9;--red-glow:rgba(255,255,255,0.22);--red-mid:rgba(255,255,255,0.08);' +
+        '--red-soft:rgba(255,255,255,0.1);--red-line:rgba(255,255,255,0.3);--on-red:#000;' +
         '--bg:#000000;--bg2:#0a0a0a;--bg3:#131313;--bg4:#1c1c1c;' +
         '--border:rgba(255,255,255,0.10);--border-s:rgba(255,255,255,0.2);' +
         '--text:#f5f5f5;--text2:#b4b4b4;--text3:#8a8a8a;--glass:rgba(0,0,0,0.94);' +
       '}' +
       'body.venom-mode img{filter:grayscale(1) contrast(1.05);}' +
-      /* botões/badges com fundo claro (var(--red) vira quase-branco no modo venom)
-         tinham texto branco fixo no CSS de cada página, ficando ilegível — força preto. */
-      'body.venom-mode .btn-primary,' +
-      'body.venom-mode .btn-red,' +
-      'body.venom-mode .btn-save,' +
-      'body.venom-mode .btn-cfm,' +
-      'body.venom-mode .btn,' +
-      'body.venom-mode .cart-float,' +
-      'body.venom-mode .badge-novo,' +
-      'body.venom-mode .btn-add-cart,' +
-      'body.venom-mode .sz.on,' +
-      'body.venom-mode .btn-add,' +
-      'body.venom-mode .btn-finalizar,' +
-      'body.venom-mode .carr-qtd,' +
-      'body.venom-mode .arr-btn:hover,' +
-      'body.venom-mode .bilhete.sl,' +
-      'body.venom-mode .req-badge,' +
-      'body.venom-mode .btn-buy' +
-      '{color:#000!important;}' +
       '.venom-overlay{position:fixed;inset:0;z-index:40;overflow:hidden;pointer-events:none;}' +
       '.venom-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.6) 100%);animation:venomPulse 6s ease-in-out infinite;}' +
       '@keyframes venomPulse{0%,100%{opacity:0.55;}50%{opacity:0.9;}}' +
@@ -58,7 +42,7 @@
   }
 
   function activateVenomMode() {
-    if (document.documentElement.classList.contains('venom-mode')) return;
+    if (document.body.classList.contains('venom-mode')) return;
     injectStyle();
     document.documentElement.classList.add('venom-mode');
     document.body.classList.add('venom-mode');
@@ -86,15 +70,15 @@
      algo mudou. */
   if (readCache() === '1') activateVenomMode();
 
-  (async function init() {
-    try {
-      var res = await fetch('/api/config');
-      if (!res.ok) return;
-      var d = await res.json();
-      var on = d.venom_mode === 'true' || d.venom_mode === true;
-      writeCache(on);
-      if (on) activateVenomMode();
-      else deactivateVenomMode();
-    } catch (e) {}
-  })();
+  var getConfig = window.nexusGetConfig || function () {
+    return fetch('/api/config').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
+  };
+
+  getConfig().then(function (d) {
+    if (!d || d.venom_mode === undefined) return;
+    var on = d.venom_mode === 'true' || d.venom_mode === true;
+    writeCache(on);
+    if (on) activateVenomMode();
+    else deactivateVenomMode();
+  });
 })();

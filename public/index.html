@@ -4,161 +4,121 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nexus — Banda</title>
-
-  <meta name="description" content="Nexus é uma banda de São Paulo. Acompanhe nossa agenda, merch e a rifa oficial."/>
+  <meta name="description" content="Nexus é uma banda de rock de São Paulo. Agenda de shows, fotos, vídeos, merch oficial e informações para contratantes."/>
+  <meta name="theme-color" content="#080808"/>
   <meta property="og:title" content="Nexus — Banda"/>
-  <meta property="og:description" content="Shows, merch e rifa oficial da Nexus. Apoie nossa música."/>
-  <meta property="og:image" content="/imgs/marca/og-image.png"/>
+  <meta property="og:description" content="Nexus é uma banda de rock de São Paulo. Agenda de shows, fotos, vídeos, merch oficial e informações para contratantes."/>
+  <meta property="og:image" content="https://nexus-rifa.vercel.app/imgs/marca/og-image.png"/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://nexus-rifa.vercel.app"/>
+  <meta property="og:url" content="https://nexus-rifa.vercel.app/"/>
+  <meta property="og:locale" content="pt_BR"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="/imgs/marca/og-image.png"/>
-  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon.png"/>
+  <meta name="twitter:image" content="https://nexus-rifa.vercel.app/imgs/marca/og-image.png"/>
+  <link rel="canonical" href="https://nexus-rifa.vercel.app/"/>
+  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon-sm.png"/>
+  <link rel="apple-touch-icon" href="/imgs/marca/nexusicon-sm.png"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/nexus.css"/>
 
   <script defer src="/_vercel/insights/script.js"></script>
-
+  <script src="/nexus-core.js"></script>
+  <link rel="preload" as="image" href="/imgs/marca/nexustitle.webp" type="image/webp"/>
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#8c8883;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
-    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
-    .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:24px;}
-    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
-    .nav-link:hover{color:var(--red);}
-    .nav-link.active{color:var(--text);}
-    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
-    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
-    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
-    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
-    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-    /* FOOTER */
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-    .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-    .footer-link{color:var(--text3);text-decoration:none;transition:color var(--tr);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
-    .footer-link:hover{color:var(--text2);}
-    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
-    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
-
-    /* RESPONSIVE */
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
-      .nav-links.open{display:flex;}
-      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
-      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
-      .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
-    }
-
     /* HERO */
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden;}
-    .hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
+    .hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 24px 72px;position:relative;overflow:hidden;}
     .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
     .orb1{width:700px;height:700px;background:var(--red);opacity:0.09;top:-300px;left:-200px;animation:drift1 18s ease-in-out infinite alternate;}
-    .orb2{width:500px;height:500px;background:#c01800;opacity:0.06;bottom:-200px;right:-100px;animation:drift2 22s ease-in-out infinite alternate;}
+    .orb2{width:500px;height:500px;background:var(--red-dim);opacity:0.07;bottom:-200px;right:-100px;animation:drift2 22s ease-in-out infinite alternate;}
     @keyframes drift1{to{transform:translate(80px,60px);}}
     @keyframes drift2{to{transform:translate(-60px,-80px);}}
-
-    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--red);margin-bottom:28px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
-    .hero-logo{position:relative;z-index:1;opacity:0;animation:rise 0.8s 0.2s forwards;margin-bottom:32px;}
-    .hero-logo img{width:min(420px, 80vw);height:auto;filter:drop-shadow(0 0 40px rgba(232,34,10,0.25));}
-    .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.9rem,2.2vw,1.05rem);color:var(--text2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:56px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.4s forwards;}
-    @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .hero-eyebrow{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--red);margin-bottom:28px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
+    .hero-logo{position:relative;z-index:1;opacity:0;animation:rise 0.8s 0.2s forwards;margin-bottom:28px;}
+    .hero-logo img{width:min(420px,80vw);height:auto;filter:drop-shadow(0 0 40px var(--red-glow));}
+    .hero-sub{font-family:var(--f-cond);font-size:clamp(0.9rem,2.2vw,1.05rem);color:var(--text2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:52px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.4s forwards;}
 
     .cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.55s forwards;margin-bottom:52px;}
-    .scroll-mouse{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.85s forwards;cursor:pointer;}
-    .scroll-mouse:hover .mouse-body{border-color:var(--red);box-shadow:0 0 18px rgba(232,34,10,0.35);}
+    .cta-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:108px;height:108px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:all var(--tr);}
+    .cta-card:hover{border-color:var(--red);box-shadow:0 0 22px var(--red-glow);transform:translateY(-3px);}
+    .cta-icon{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,var(--red-soft) 0%,transparent 70%);display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:var(--text2);transition:color var(--tr);}
+    .cta-card:hover .cta-icon{color:var(--red);}
+    .cta-label{font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text2);transition:color var(--tr);}
+    .cta-card:hover .cta-label{color:var(--text);}
+    .cta-card.is-rifa{border-color:var(--red-line);}
+    .cta-card.is-rifa .cta-icon,.cta-card.is-rifa .cta-label{color:var(--red);}
+    @media(max-width:600px){
+      .cta-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px;}
+      .cta-card{width:auto;height:auto;aspect-ratio:1/1;}
+    }
+
+    .scroll-mouse{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.85s forwards;cursor:pointer;background:none;border:none;}
+    .scroll-mouse:hover .mouse-body{border-color:var(--red);box-shadow:0 0 18px var(--red-glow);}
     .mouse-body{width:24px;height:38px;border:2px solid rgba(255,255,255,0.35);border-radius:12px;display:flex;justify-content:center;padding-top:6px;transition:border-color 0.3s,box-shadow 0.3s;}
     .mouse-wheel{width:3px;height:7px;background:var(--red);border-radius:2px;animation:scroll-wheel 1.8s ease-in-out infinite;}
     @keyframes scroll-wheel{0%{transform:translateY(0);opacity:1;}60%{transform:translateY(10px);opacity:0;}61%{transform:translateY(0);opacity:0;}100%{transform:translateY(0);opacity:1;}}
-    .scroll-mouse-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
-    .btn-primary{background:var(--red);color:#fff;padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;transition:all var(--tr);}
-    .btn-primary:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 10px 28px var(--red-glow);}
-    .btn-secondary{background:none;color:var(--text2);padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;border:1px solid var(--border-s);transition:all var(--tr);}
-    .btn-secondary:hover{border-color:var(--text);color:var(--text);}
+    .scroll-mouse-label{font-family:var(--f-mono);font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--text3);}
 
-    /* CTA CARDS (estilo ícone quadrado) */
-    .cta-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:104px;height:104px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:all var(--tr);}
-    .cta-card:hover{border-color:var(--red);box-shadow:0 0 22px rgba(232,34,10,0.25);transform:translateY(-3px);}
-    .cta-icon-wrap{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle,rgba(232,34,10,0.22) 0%,rgba(232,34,10,0.05) 65%,transparent 100%);display:flex;align-items:center;justify-content:center;font-size:1.15rem;transition:all var(--tr);}
-    .cta-card:hover .cta-icon-wrap{background:radial-gradient(circle,rgba(232,34,10,0.35) 0%,rgba(232,34,10,0.08) 65%,transparent 100%);}
-    .cta-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text2);transition:color var(--tr);}
-    .cta-card:hover .cta-label{color:var(--red);}
-    .cta-icon-wrap svg{width:18px;height:18px;fill:var(--text2);transition:fill var(--tr);}
-    .cta-card:hover .cta-icon-wrap svg{fill:var(--red);}
-    @media(max-width:600px){
-      .cta-card{width:auto;height:auto;aspect-ratio:1/1;}
-      .cta-group{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:280px;margin-left:auto;margin-right:auto;justify-content:center;}
-    }
+    /* PRÓXIMO SHOW */
+    .next-show{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;padding:28px 32px;margin-bottom:60px;text-decoration:none;position:relative;overflow:hidden;}
+    .next-show::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,var(--red-mid) 0%,transparent 60%);pointer-events:none;}
+    .next-date{text-align:center;border-right:1px solid var(--border-s);padding-right:28px;position:relative;}
+    .next-dia{font-family:var(--f-display);font-size:3.4rem;line-height:0.9;color:var(--text);}
+    .next-mes{font-family:var(--f-display);font-size:1.05rem;letter-spacing:0.15em;color:var(--red);}
+    .next-info{position:relative;min-width:0;}
+    .next-label{font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+    .next-nome{font-family:var(--f-display);font-size:clamp(1.6rem,3.4vw,2.3rem);letter-spacing:0.03em;line-height:1;color:var(--text);margin-bottom:8px;}
+    .next-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-cond);font-size:0.98rem;color:var(--text2);}
+    .next-meta span{display:inline-flex;align-items:center;gap:6px;}
+    .next-meta .ic{color:var(--text3);}
+    .next-show .link-arrow{position:relative;}
+    @media(max-width:640px){.next-show{grid-template-columns:auto 1fr;padding:22px 20px;gap:18px;}.next-date{padding-right:18px;}.next-show .link-arrow{grid-column:1/-1;}}
 
-    /* CARDS SEÇÃO */
-    .section{max-width:1080px;margin:0 auto;padding:0 24px 120px;}
-    .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-    .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
-    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:36px;color:var(--text);}
+    /* REDES SOCIAIS */
+    .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:60px;}
+    @media(max-width:700px){.social-grid{grid-template-columns:1fr;}}
+    .social-strip{padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;text-decoration:none;}
+    .social-info{display:flex;align-items:center;gap:16px;}
+    .social-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;color:#fff;}
+    .insta-icon{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+    .tiktok-icon{background:#000;border:1px solid var(--border-s);}
+    .social-handle{font-family:var(--f-mono);font-size:0.9rem;letter-spacing:0.04em;color:var(--text);}
+    .social-desc{font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
+    .social-strip .link-arrow{color:var(--text2);}
+    .social-strip:hover .link-arrow{color:var(--red);gap:10px;}
 
-    .nav-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:60px;}
-    @media(max-width:700px){.nav-cards{grid-template-columns:repeat(2,1fr);}}
-    .nav-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;text-decoration:none;display:flex;flex-direction:column;gap:14px;transition:all var(--tr);position:relative;overflow:hidden;}
+    /* ATALHOS */
+    .nav-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:60px;}
+    @media(max-width:900px){.nav-cards{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:560px){.nav-cards{grid-template-columns:repeat(2,1fr);}}
+    .nav-card{padding:26px 22px;text-decoration:none;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
     .nav-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 100%,var(--red-mid) 0%,transparent 60%);opacity:0;transition:opacity var(--tr);}
     .nav-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
     .nav-card:hover::before{opacity:1;}
-    .nav-card-icon{font-size:1.8rem;}
-    .nav-card-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);}
-    .nav-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;color:var(--text);}
-    .nav-card-arrow{margin-top:auto;font-size:0.8rem;color:var(--text3);transition:color var(--tr);}
-    .nav-card:hover .nav-card-arrow{color:var(--red);}
+    .nav-card-icon{width:42px;height:42px;border-radius:10px;border:1px solid var(--border-s);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text2);transition:all var(--tr);position:relative;}
+    .nav-card:hover .nav-card-icon{color:var(--red);border-color:var(--red-line);}
+    .nav-card-label{font-family:var(--f-mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);position:relative;}
+    .nav-card-title{font-family:var(--f-display);font-size:1.45rem;letter-spacing:0.04em;color:var(--text);position:relative;}
+    .nav-card-arrow{margin-top:auto;color:var(--text3);transition:color var(--tr),transform var(--tr);position:relative;}
+    .nav-card:hover .nav-card-arrow{color:var(--red);transform:translateX(4px);}
 
-    /* RIFA DESTAQUE */
-    .rifa-banner{background:var(--bg2);border:1px solid rgba(232,34,10,0.2);border-radius:var(--radius);padding:40px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;position:relative;overflow:hidden;margin-bottom:60px;}
-    .rifa-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(232,34,10,0.06) 0%,transparent 60%);}
-    @media(max-width:600px){.rifa-banner{grid-template-columns:1fr;text-align:center;}}
-    .rifa-tag{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);background:rgba(232,34,10,0.1);border:1px solid rgba(232,34,10,0.2);padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:12px;}
-    .rifa-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:0.04em;color:var(--text);margin-bottom:8px;}
-    .rifa-desc{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:0;max-width:480px;}
-    .rifa-btn{position:relative;z-index:1;white-space:nowrap;}
-    @media(max-width:600px){.rifa-btn{width:100%;text-align:center;}}
-
-    /* SOCIAL MEDIA */
-    .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:60px;}
-    @media(max-width:700px){.social-grid{grid-template-columns:1fr;}}
-    .social-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-    .social-info{display:flex;align-items:center;gap:16px;}
-    .social-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
-    .insta-icon{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
-    .insta-icon svg{width:22px;height:22px;fill:#fff;}
-    .tiktok-icon{background:#000;position:relative;}
-    .tiktok-icon svg{width:20px;height:20px;fill:#fff;position:relative;z-index:1;}
-    .social-handle{font-family:'DM Mono',monospace;font-size:0.9rem;letter-spacing:0.04em;color:var(--text);}
-    .social-desc{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
-    .social-link{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);text-decoration:none;border:1px solid var(--border-s);padding:9px 18px;border-radius:var(--radius-sm);transition:all var(--tr);white-space:nowrap;}
-    .social-link:hover{border-color:var(--red);color:var(--red);}
+    /* RIFA */
+    .rifa-banner{border-color:var(--red-line);padding:40px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;position:relative;overflow:hidden;}
+    .rifa-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,var(--red-mid) 0%,transparent 60%);pointer-events:none;}
+    .rifa-banner>*{position:relative;}
+    .rifa-title{font-family:var(--f-display);font-size:clamp(2rem,4vw,3rem);letter-spacing:0.04em;color:var(--text);margin:12px 0 8px;}
+    .rifa-desc{font-size:0.92rem;color:var(--text2);line-height:1.75;max-width:480px;}
+    @media(max-width:600px){.rifa-banner{grid-template-columns:1fr;padding:28px 22px;}.rifa-banner .btn{width:100%;}}
   </style>
-  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/marca/nexusicon.png" alt="Nexus"/>
+<a class="sr-only" href="#conteudo">Pular para o conteúdo</a>
+<nav class="site-nav" aria-label="Principal">
+  <a href="/" class="nav-logo" aria-label="Nexus, página inicial">
+    <span class="nav-pulse" aria-hidden="true"></span>
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="22" height="32"/>
   </a>
   <div class="nav-links" id="navLinks">
     <a href="/sobre" class="nav-link">Sobre</a>
@@ -166,159 +126,184 @@
     <a href="/galeria" class="nav-link">Galeria</a>
     <a href="/merch" class="nav-link">Merch</a>
     <a href="/contratantes" class="nav-link">Contratantes</a>
-    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/rifa" class="nav-link nav-rifa" data-rifa hidden><i data-icon="ticket"></i>Rifa</a>
   </div>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+  <button class="nav-hamburger" id="navToggle" type="button" aria-label="Abrir menu" aria-controls="navLinks" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="hero">
+<main id="conteudo">
+<header class="hero">
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
 
   <p class="hero-eyebrow">São Paulo · Brasil</p>
 
-  <div class="hero-logo">
-    <img src="/imgs/marca/nexustitle.png" alt="Nexus"/>
-  </div>
+  <h1 class="hero-logo">
+    <picture>
+      <source srcset="/imgs/marca/nexustitle.webp" type="image/webp"/>
+      <img src="/imgs/marca/nexustitle.png" alt="Nexus" width="420" height="254"/>
+    </picture>
+  </h1>
 
   <p class="hero-sub">Onde tudo se encontra</p>
 
-  <div class="cta-group">
-    <a href="/rifa" class="cta-card" id="heroRifaBtn" style="display:none">
-      <span class="cta-icon-wrap">🎟</span>
+  <nav class="cta-group" aria-label="Atalhos">
+    <a href="/rifa" class="cta-card is-rifa" data-rifa hidden>
+      <span class="cta-icon"><i data-icon="ticket"></i></span>
       <span class="cta-label">Rifa</span>
     </a>
     <a href="/sobre" class="cta-card">
-      <span class="cta-icon-wrap">🎸</span>
+      <span class="cta-icon"><i data-icon="users"></i></span>
       <span class="cta-label">Sobre</span>
     </a>
     <a href="/agenda" class="cta-card">
-      <span class="cta-icon-wrap">📅</span>
+      <span class="cta-icon"><i data-icon="calendar"></i></span>
       <span class="cta-label">Agenda</span>
     </a>
+    <a href="/galeria" class="cta-card">
+      <span class="cta-icon"><i data-icon="images"></i></span>
+      <span class="cta-label">Galeria</span>
+    </a>
     <a href="/merch" class="cta-card">
-      <span class="cta-icon-wrap">👕</span>
+      <span class="cta-icon"><i data-icon="shopping-bag"></i></span>
       <span class="cta-label">Merch</span>
     </a>
     <a href="/contratantes" class="cta-card">
-      <span class="cta-icon-wrap">🎤</span>
+      <span class="cta-icon"><i data-icon="mic"></i></span>
       <span class="cta-label">Contratantes</span>
     </a>
-  </div>
+  </nav>
 
-  <div class="scroll-mouse" onclick="window.scrollBy({top:window.innerHeight,behavior:'smooth'})">
-    <div class="mouse-body"><div class="mouse-wheel"></div></div>
+  <button class="scroll-mouse" type="button" aria-label="Rolar para o conteúdo" onclick="document.getElementById('inicio').scrollIntoView({behavior:'smooth'})">
+    <span class="mouse-body"><span class="mouse-wheel"></span></span>
     <span class="scroll-mouse-label">scroll</span>
-  </div>
-</div>
+  </button>
+</header>
 
-<div class="section">
+<div class="container" id="inicio">
+
+  <!-- PRÓXIMO SHOW (preenchido via /api/shows) -->
+  <a href="/agenda" class="card next-show" id="proximoShow" hidden></a>
+
   <!-- REDES SOCIAIS -->
   <div class="social-grid">
-    <div class="social-strip">
-      <div class="social-info">
-        <div class="social-icon insta-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c-2.72 0-3.06.01-4.12.06-1.06.05-1.79.22-2.43.47-.66.26-1.22.6-1.77 1.16-.56.55-.9 1.11-1.16 1.77-.25.64-.42 1.37-.47 2.43C2 8.94 2 9.28 2 12s.01 3.06.06 4.12c.05 1.06.22 1.79.47 2.43.26.66.6 1.22 1.16 1.77.55.56 1.11.9 1.77 1.16.64.25 1.37.42 2.43.47C8.94 22 9.28 22 12 22s3.06-.01 4.12-.06c1.06-.05 1.79-.22 2.43-.47.66-.26 1.22-.6 1.77-1.16.56-.55.9-1.11 1.16-1.77.25-.64.42-1.37.47-2.43.05-1.06.06-1.4.06-4.12s-.01-3.06-.06-4.12c-.05-1.06-.22-1.79-.47-2.43-.26-.66-.6-1.22-1.16-1.77-.55-.56-1.11-.9-1.77-1.16-.64-.25-1.37-.42-2.43-.47C15.06 2.01 14.72 2 12 2zm0 1.8c2.67 0 2.99.01 4.04.06.98.04 1.5.21 1.85.34.47.18.8.4 1.15.75.35.35.57.68.75 1.15.13.36.29.87.34 1.85.05 1.05.06 1.37.06 4.04s-.01 2.99-.06 4.04c-.04.98-.21 1.5-.34 1.85-.18.47-.4.8-.75 1.15-.35.35-.68.57-1.15.75-.36.13-.87.29-1.85.34-1.05.05-1.37.06-4.04.06s-2.99-.01-4.04-.06c-.98-.04-1.5-.21-1.85-.34-.47-.18-.8-.4-1.15-.75-.35-.35-.57-.68-.75-1.15-.13-.36-.29-.87-.34-1.85C3.81 14.99 3.8 14.67 3.8 12s.01-2.99.06-4.04c.04-.98.21-1.5.34-1.85.18-.47.4-.8.75-1.15.35-.35.68-.57 1.15-.75.36-.13.87-.29 1.85-.34C9.01 3.81 9.33 3.8 12 3.8zm0 3.06A5.14 5.14 0 1 0 12 17.06 5.14 5.14 0 0 0 12 6.86zm0 8.48a3.34 3.34 0 1 1 0-6.68 3.34 3.34 0 0 1 0 6.68zm5.35-8.68a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z"/></svg></div>
-        <div>
-          <div class="social-handle">@nexus.bandbr</div>
-          <div class="social-desc">Siga para acompanhar tudo</div>
-        </div>
-      </div>
-      <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" class="social-link">Instagram →</a>
-    </div>
-
-    <div class="social-strip">
-      <div class="social-info">
-        <div class="social-icon tiktok-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.6 5.82c-1-1.02-1.55-2.34-1.6-3.82h-3.5v13.68c0 1.7-1.38 3.08-3.08 3.08a3.08 3.08 0 0 1 0-6.16c.34 0 .67.06.98.15V9.24a6.68 6.68 0 0 0-.98-.07A6.58 6.58 0 0 0 2 15.75 6.58 6.58 0 0 0 8.42 22.3a6.58 6.58 0 0 0 6.58-6.58V9.6a8.16 8.16 0 0 0 4.77 1.53V7.63a4.85 4.85 0 0 1-3.17-1.81z"/></svg></div>
-        <div>
-          <div class="social-handle">@nexus.bandbr</div>
-          <div class="social-desc">Vídeos e bastidores</div>
-        </div>
-      </div>
-      <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" class="social-link">TikTok →</a>
-    </div>
+    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" class="card card-hover social-strip">
+      <span class="social-info">
+        <span class="social-icon insta-icon"><i data-icon="instagram"></i></span>
+        <span>
+          <span class="social-handle">@nexus.bandbr</span>
+          <span class="social-desc" style="display:block;">Siga para acompanhar tudo</span>
+        </span>
+      </span>
+      <span class="link-arrow">Instagram <i data-icon="arrow-up-right"></i></span>
+    </a>
+    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" class="card card-hover social-strip">
+      <span class="social-info">
+        <span class="social-icon tiktok-icon"><i data-icon="tiktok"></i></span>
+        <span>
+          <span class="social-handle">@nexus.bandbr</span>
+          <span class="social-desc" style="display:block;">Vídeos e bastidores</span>
+        </span>
+      </span>
+      <span class="link-arrow">TikTok <i data-icon="arrow-up-right"></i></span>
+    </a>
   </div>
 
   <p class="sec-eyebrow">Explore</p>
   <h2 class="sec-title">O QUE TEMOS</h2>
 
   <div class="nav-cards">
-    <a href="/sobre" class="nav-card">
-      <span class="nav-card-icon">🎸</span>
+    <a href="/sobre" class="card nav-card">
+      <span class="nav-card-icon"><i data-icon="users"></i></span>
       <span class="nav-card-label">Conheça</span>
       <span class="nav-card-title">SOBRE</span>
-      <span class="nav-card-arrow">→</span>
+      <span class="nav-card-arrow"><i data-icon="arrow-right"></i></span>
     </a>
-    <a href="/agenda" class="nav-card">
-      <span class="nav-card-icon">📅</span>
+    <a href="/agenda" class="card nav-card">
+      <span class="nav-card-icon"><i data-icon="calendar"></i></span>
       <span class="nav-card-label">Próximos shows</span>
       <span class="nav-card-title">AGENDA</span>
-      <span class="nav-card-arrow">→</span>
+      <span class="nav-card-arrow"><i data-icon="arrow-right"></i></span>
     </a>
-    <a href="/merch" class="nav-card">
-      <span class="nav-card-icon">👕</span>
+    <a href="/galeria" class="card nav-card">
+      <span class="nav-card-icon"><i data-icon="images"></i></span>
+      <span class="nav-card-label">Fotos e vídeos</span>
+      <span class="nav-card-title">GALERIA</span>
+      <span class="nav-card-arrow"><i data-icon="arrow-right"></i></span>
+    </a>
+    <a href="/merch" class="card nav-card">
+      <span class="nav-card-icon"><i data-icon="shopping-bag"></i></span>
       <span class="nav-card-label">Loja oficial</span>
       <span class="nav-card-title">MERCH</span>
-      <span class="nav-card-arrow">→</span>
+      <span class="nav-card-arrow"><i data-icon="arrow-right"></i></span>
     </a>
-    <a href="/contratantes" class="nav-card">
-      <span class="nav-card-icon">🎤</span>
-      <span class="nav-card-label">Informações técnicas</span>
+    <a href="/contratantes" class="card nav-card">
+      <span class="nav-card-icon"><i data-icon="mic"></i></span>
+      <span class="nav-card-label">Rider e contato</span>
       <span class="nav-card-title">CONTRATANTES</span>
-      <span class="nav-card-arrow">→</span>
+      <span class="nav-card-arrow"><i data-icon="arrow-right"></i></span>
     </a>
   </div>
 
-  <!-- RIFA DESTAQUE -->
-  <div class="rifa-banner" id="rifaBanner" style="display:none">
+  <!-- RIFA EM DESTAQUE -->
+  <div class="card rifa-banner" data-rifa hidden>
     <div>
-      <span class="rifa-tag">Campanha ativa</span>
+      <span class="tag tag-accent"><i data-icon="ticket"></i>Campanha ativa</span>
       <div class="rifa-title">RIFA NEXUS 2026</div>
       <p class="rifa-desc">Apoie nossa música e concorra a prêmios exclusivos — palhetas, baquetas assinadas, camiseta oficial e muito mais.</p>
     </div>
-    <a href="/rifa" class="btn-primary rifa-btn">Ver bilhetes →</a>
+    <a href="/rifa" class="btn btn-primary btn-lg">Ver bilhetes <i data-icon="arrow-right"></i></a>
   </div>
 </div>
+</main>
 
-<footer>
-  <div class="footer-logo"><img src="/imgs/marca/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+<footer class="site-footer">
+  <div class="footer-logo">
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="15" height="22"/>
+    <span>&copy; 2026 Nexus Band</span>
+  </div>
+  <div class="footer-social">
+    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+  </div>
+  <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-  const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
-  if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
-</script>
-<script>
-(async()=>{
-  try{
-    const res=await fetch("/api/config");
-    if(res.ok){
-      const d=await res.json();
-      const rifaVisivel = d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true;
-      
-      // Aba de navegação
-      const navRifa = document.getElementById("navRifa");
-      if(navRifa && rifaVisivel){
-        navRifa.style.display="";
-      }
-      
-      // Elementos da página inicial
-      if(rifaVisivel){
-        const heroRifaBtn = document.getElementById("heroRifaBtn");
-        const heroRifaText = document.getElementById("heroRifaText");
-        const rifaBanner = document.getElementById("rifaBanner");
-        
-        if(heroRifaBtn) heroRifaBtn.style.display="";
-        if(heroRifaText) heroRifaText.style.display="";
-        if(rifaBanner) rifaBanner.style.display="";
-      }
-    }
-  }catch(e){}
+// Destaque do próximo show (primeiro show futuro e não cancelado da agenda)
+(async () => {
+  try {
+    const r = await fetch('/api/shows');
+    if (!r.ok) return;
+    const { shows = [] } = await r.json();
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    const proximo = shows
+      .filter(s => s.data && !['realizado', 'cancelado'].includes(s.status) && new Date(s.data + 'T12:00:00') >= hoje)
+      .sort((a, b) => a.data.localeCompare(b.data))[0];
+    if (!proximo) return;
+    const d = new Date(proximo.data + 'T12:00:00');
+    const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    const el = document.getElementById('proximoShow');
+    el.innerHTML = `
+      <div class="next-date"><div class="next-dia">${String(d.getDate()).padStart(2, '0')}</div><div class="next-mes">${MESES[d.getMonth()]}</div></div>
+      <div class="next-info">
+        <div class="next-label">Próximo show</div>
+        <div class="next-nome">${nexusEsc(proximo.nome)}</div>
+        <div class="next-meta">
+          <span>${nexusIcon('map-pin')}${nexusEsc(proximo.local || 'Local a confirmar')}</span>
+          ${proximo.hora ? `<span>${nexusIcon('clock')}${nexusEsc(proximo.hora)}</span>` : ''}
+        </div>
+      </div>
+      <span class="link-arrow">Ver agenda ${nexusIcon('arrow-right')}</span>`;
+    el.hidden = false;
+  } catch (e) {}
 })();
 </script>
 <script src="/venom.js" defer></script>
-<script src="/js/common.js"></script>
 </body>
 </html>

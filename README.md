@@ -1,6 +1,6 @@
-# 🎸 Rifa Nexus Band
+# Nexus Band — site oficial
 
-Site completo de rifa online com pagamento automático via Mercado Pago (Pix) e painel admin.
+Site da banda Nexus: páginas institucionais, agenda de shows, galeria de fotos e vídeos, loja (merch) e rifa online com pagamento automático via Mercado Pago (Pix), tudo gerenciado por um painel admin.
 
 ## Stack
 - **Frontend:** HTML/CSS/JS puro
@@ -11,7 +11,7 @@ Site completo de rifa online com pagamento automático via Mercado Pago (Pix) e 
 
 ---
 
-## 🚀 GUIA DE DEPLOY (passo a passo)
+## Guia de deploy (passo a passo)
 
 ### 1. Criar conta no Supabase
 
@@ -20,7 +20,7 @@ Site completo de rifa online com pagamento automático via Mercado Pago (Pix) e 
 3. Vá em **SQL Editor** e execute o conteúdo do arquivo `supabase_schema.sql`
 4. Vá em **Settings > API** e copie:
    - `Project URL` → vai para `SUPABASE_URL`
-   - `service_role secret` → vai para `SUPABASE_SERVICE_KEY` ⚠️ NUNCA exponha essa chave no frontend
+   - `service_role secret` → vai para `SUPABASE_SERVICE_KEY` (**nunca** exponha essa chave no frontend)
 
 ### 2. Criar conta no Mercado Pago
 
@@ -57,7 +57,7 @@ ADMIN_PASSWORD        = uma_senha_forte_aqui
 
 ---
 
-## ⚙️ Customização
+## Customização
 
 ### Ajustar quantidade de bilhetes
 No arquivo `supabase_schema.sql`, mude o valor `100` na linha:
@@ -74,24 +74,47 @@ No Supabase, vá em **Table Editor > config** e edite a linha `valor_bilhete`.
 
 Ou via admin panel: Em breve (em desenvolvimento).
 
-### Substituir ícones dos prêmios por modelos 3D
-No `public/index.html`, localize a seção `.premios-grid` e substitua os emojis por `<img>` apontando para suas imagens/renders 3D.
+### Prêmios da rifa
+Os prêmios ficam na lista `PREMIOS` no início do script de `public/rifa.html` (nome, quantidade, descrição e ícone).
 
 ---
 
-## 🔑 Painel Admin
+## Painel admin
 
-Acesse: `https://seu-site.vercel.app/admin.html`
+Acesse: `https://seu-site.vercel.app/admin`
 
 Funcionalidades:
 - Ver stats em tempo real (total, disponíveis, reservados, pagos)
 - Liberar bilhetes reservados que expiraram (>30 min sem pagamento)
 - Realizar sorteio aleatório entre bilhetes pagos
-- Visualizar tabela de compradores
+- Visualizar tabela de compradores e pedidos da loja
+- Gerenciar produtos, agenda de shows, membros e a galeria
 
 ---
 
-## 🔒 Segurança
+## Galeria (fotos e vídeos)
+
+1. No Supabase, abra o **SQL Editor** e execute os blocos **GALERIA** e **STORAGE: buckets das fotos da galeria e dos produtos** do `supabase_schema.sql` (podem ser executados mais de uma vez sem problema).
+2. No painel admin, abra **Galeria**:
+   - **Enviar fotos**: selecione (ou arraste) várias fotos de uma vez. O navegador redimensiona e converte para WebP antes de enviar e gera uma miniatura leve para a grade.
+   - **Adicionar vídeo**: cole o link de um vídeo ou Shorts do YouTube. A capa vem do próprio YouTube.
+   - Arraste os cards para reordenar, use o olho para ocultar/mostrar e a lixeira para excluir (o arquivo da foto também é apagado do Storage).
+
+Como a galeria fica leve para o banco:
+- o banco guarda só texto (tipo, título, URL); as fotos ficam no Storage e os vídeos no YouTube;
+- a lista pública é cacheada na CDN da Vercel (5 min), então a maioria das visitas nem chega ao Supabase;
+- reordenar é um único `UPDATE` (função `galeria_reordenar`);
+- fotos substituídas/excluídas e uploads abandonados são apagados do Storage.
+
+## Estrutura do front-end
+
+- `public/css/nexus.css` — design system compartilhado (cores, tipografia, navegação, rodapé, botões, formulários, modais, toast, lightbox). Cada página só tem o CSS específico dela.
+- `public/nexus-core.js` — ícones SVG (`<i data-icon="calendar"></i>` ou `nexusIcon('calendar')`), menu, config do site, toast, lightbox e utilitários.
+- `public/venom.js` — tema alternativo preto e branco (Modo Venom), ligado pelo admin.
+
+---
+
+## Segurança
 
 - As credenciais do Supabase e MP ficam APENAS nas variáveis de ambiente da Vercel
 - O banco de dados usa Row Level Security (RLS): leitura pública OK, escrita só via service_role
@@ -100,7 +123,7 @@ Funcionalidades:
 
 ---
 
-## ❓ Problemas comuns
+## Problemas comuns
 
 **"Bilhetes não carregam"**
 → Verifique as variáveis `SUPABASE_URL` e `SUPABASE_SERVICE_KEY` na Vercel

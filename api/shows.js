@@ -23,6 +23,9 @@ export default async function handler(req, res) {
       .order('ordem', { ascending: true, nullsFirst: false })
       .order('data', { ascending: true });
     if (error) return res.status(500).json({ erro: 'Erro ao buscar shows' });
+    // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+    // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
     return res.status(200).json({ shows: data || [] });
   }
 

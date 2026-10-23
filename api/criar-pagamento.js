@@ -106,9 +106,9 @@ export default async function handler(req, res) {
           default_payment_method_id: 'pix'
         },
         back_urls: {
-          success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso.html`,
-          failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/rifa.html`,
-          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/rifa.html`
+          success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso?origem=rifa`,
+          failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/falha?origem=rifa`,
+          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/pendente?origem=rifa`
         },
         auto_return: 'approved',
         statement_descriptor: 'RIFA NEXUS',

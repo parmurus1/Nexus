@@ -1,215 +1,195 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agenda — Nexus</title>
-  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon.png"/>
+  <meta name="description" content="Próximos shows e histórico de apresentações da Nexus."/>
+  <meta name="theme-color" content="#080808"/>
+  <meta property="og:title" content="Agenda — Nexus"/>
+  <meta property="og:description" content="Próximos shows e histórico de apresentações da Nexus."/>
+  <meta property="og:image" content="https://nexus-rifa.vercel.app/imgs/marca/og-image.png"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://nexus-rifa.vercel.app/agenda"/>
+  <meta property="og:locale" content="pt_BR"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://nexus-rifa.vercel.app/imgs/marca/og-image.png"/>
+  <link rel="canonical" href="https://nexus-rifa.vercel.app/agenda"/>
+  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon-sm.png"/>
+  <link rel="apple-touch-icon" href="/imgs/marca/nexusicon-sm.png"/>
+
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  
+  <link rel="stylesheet" href="/css/nexus.css"/>
+
   <script defer src="/_vercel/insights/script.js"></script>
-  
+  <script src="/nexus-core.js"></script>
   <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#8c8883;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
-    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
-    .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:24px;}
-    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
-    .nav-link:hover{color:var(--red);}
-    .nav-link.active{color:var(--text);}
-    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
-    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
-    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
-    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
-    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-    .page-hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;position:relative;overflow:hidden;}
-    .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
-    .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
-    .orb1{width:500px;height:500px;background:var(--red);opacity:0.08;top:-180px;right:-100px;}
-    .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
-    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
-    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-    .container{max-width:900px;margin:0 auto;padding:0 24px 100px;}
-    .sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-    .sec-eyebrow::after{content:'';flex:1;height:1px;background:var(--border);}
-    .sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,4.2rem);letter-spacing:0.04em;line-height:0.92;margin-bottom:28px;color:var(--text);}
-
-    .shows-list{display:flex;flex-direction:column;gap:3px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
-    .show-item{background:var(--bg2);padding:32px 36px;display:grid;grid-template-columns:130px 1fr auto;align-items:center;gap:28px;transition:background var(--tr);}
+    .shows-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .show-item{background:var(--bg2);padding:30px 34px;display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:28px;transition:background var(--tr);}
     .show-item:hover{background:var(--bg3);}
-    .show-item.realizado{opacity:0.55;}
-    @media(max-width:600px){.show-item{grid-template-columns:96px 1fr;gap:18px;padding:22px 18px;}.show-tag{display:none;}}
-    .show-data{text-align:center;border-right:2px solid var(--border-s);padding-right:20px;}
-    @media(max-width:600px){.show-data{padding-right:12px;}}
-    .show-dia{font-family:'Bebas Neue',sans-serif;font-size:4.2rem;line-height:0.95;color:var(--text);letter-spacing:0.02em;text-shadow:0 0 30px var(--red-glow);}
-    .show-mes{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-top:2px;}
-    .show-ano{font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--text3);margin-top:4px;}
-    .show-nome{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:0.03em;line-height:1.05;color:var(--text);margin-bottom:10px;}
-    .show-local{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:1.05rem;color:var(--text);letter-spacing:0.02em;}
-    .show-horario{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.95rem;color:var(--text2);margin-top:6px;}
-    .show-link{font-family:'DM Mono',monospace;font-weight:500;font-size:0.85rem;letter-spacing:0.03em;color:var(--red);text-decoration:none;margin-top:12px;display:inline-block;}
-    .show-link:hover{text-decoration:underline;}
-    .show-tag{display:inline-block;font-family:'DM Mono',monospace;font-weight:500;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 18px;border-radius:999px;border:2px solid;white-space:nowrap;}
-    .tag-confirmado{color:#3dbb80;border-color:rgba(61,187,128,0.3);background:rgba(61,187,128,0.06);}
-    .tag-breve{color:#3dbb80!important;border-color:rgba(61,187,128,0.3)!important;background:rgba(61,187,128,0.06)!important;}
-    .tag-breve{color:var(--text3);border-color:var(--border-s);}
-    .tag-realizado{color:var(--text3);border-color:var(--border);background:transparent;}
-    .tag-cancelado{color:var(--red-dim);border-color:rgba(160,26,7,0.3);background:rgba(160,26,7,0.04);}
-
-    .empty-state{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;margin-bottom:20px;}
-    .empty-state p{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;}
-
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);text-align:center;}
-    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
-
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
-      .nav-links.open{display:flex;}
-      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
-      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
-      .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
+    .show-item.passado{opacity:0.6;}
+    .show-item.passado:hover{opacity:0.85;}
+    .show-data{text-align:center;border-right:1px solid var(--border-s);padding-right:24px;}
+    .show-dia{font-family:var(--f-display);font-size:4rem;line-height:0.95;color:var(--text);letter-spacing:0.02em;text-shadow:0 0 30px var(--red-glow);}
+    .show-mes{font-family:var(--f-display);font-size:1.15rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-top:2px;}
+    .show-ano{font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.1em;color:var(--text3);margin-top:4px;}
+    .show-nome{font-family:var(--f-display);font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:0.03em;line-height:1.05;color:var(--text);margin-bottom:10px;}
+    .show-meta{display:flex;flex-direction:column;gap:5px;}
+    .show-meta span{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-cond);font-weight:600;font-size:1.02rem;color:var(--text);letter-spacing:0.02em;}
+    .show-meta span.sec{color:var(--text2);font-size:0.95rem;}
+    .show-meta .ic{color:var(--text3);font-size:0.95rem;}
+    .show-acao{margin-top:14px;}
+    .show-gratis{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-weight:500;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ok);}
+    @media(max-width:640px){
+      .show-item{grid-template-columns:84px 1fr;gap:18px;padding:22px 18px;}
+      .show-data{padding-right:14px;}
+      .show-dia{font-size:3rem;}
+      .show-item>.tag{grid-column:2;justify-self:start;margin-top:-6px;}
     }
   </style>
-  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/marca/nexusicon.png" alt="Nexus"/>
+<a class="sr-only" href="#conteudo">Pular para o conteúdo</a>
+<nav class="site-nav" aria-label="Principal">
+  <a href="/" class="nav-logo" aria-label="Nexus, página inicial">
+    <span class="nav-pulse" aria-hidden="true"></span>
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="22" height="32"/>
   </a>
   <div class="nav-links" id="navLinks">
     <a href="/sobre" class="nav-link">Sobre</a>
-    <a href="/agenda" class="nav-link active">Agenda</a>
+    <a href="/agenda" class="nav-link">Agenda</a>
     <a href="/galeria" class="nav-link">Galeria</a>
     <a href="/merch" class="nav-link">Merch</a>
     <a href="/contratantes" class="nav-link">Contratantes</a>
-    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/rifa" class="nav-link nav-rifa" data-rifa hidden><i data-icon="ticket"></i>Rifa</a>
   </div>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+  <button class="nav-hamburger" id="navToggle" type="button" aria-label="Abrir menu" aria-controls="navLinks" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="page-hero">
-  <div class="hero-orb orb1"></div>
-  <p class="page-eyebrow">Próximos shows</p>
+<main id="conteudo">
+<header class="page-hero">
+  <div class="hero-orb right"></div>
+  <p class="page-eyebrow">Ao vivo</p>
   <h1 class="page-title">AGENDA</h1>
+  <p class="page-sub">Onde a Nexus vai tocar</p>
+</header>
+
+<div class="container container-narrow">
+  <section class="section">
+    <p class="sec-eyebrow">Próximos shows</p>
+    <h2 class="sec-title">EM BREVE</h2>
+    <div id="proximosWrap"><div class="state plain"><span class="spinner"></span>Carregando agenda...</div></div>
+  </section>
+
+  <section class="section">
+    <p class="sec-eyebrow">Histórico</p>
+    <h2 class="sec-title">SHOWS PASSADOS</h2>
+    <div id="passadosWrap"><div class="state plain"><span class="spinner"></span>Carregando...</div></div>
+  </section>
 </div>
+</main>
 
-<div class="container">
-
-  <p class="sec-eyebrow">Próximos shows</p>
-  <h2 class="sec-title">EM BREVE</h2>
-  <div id="proximosWrap">
-    <div class="empty-state"><p>Carregando...</p></div>
+<footer class="site-footer">
+  <div class="footer-logo">
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="15" height="22"/>
+    <span>&copy; 2026 Nexus Band</span>
   </div>
-
-  <p class="sec-eyebrow" style="margin-top:56px;">Histórico</p>
-  <h2 class="sec-title">SHOWS PASSADOS</h2>
-  <div id="passadosWrap">
-    <div class="empty-state"><p>Carregando...</p></div>
+  <div class="footer-social">
+    <a href="https://instagram.com/nexus.bandbr" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+    <a href="https://tiktok.com/@nexus.bandbr" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+    <a href="mailto:bandanexus01@gmail.com" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
   </div>
-
-</div>
-
-<footer>
-  <div class="footer-logo"><img src="/imgs/marca/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+  <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
 </footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
-const TAG_MAP = {
-  breve:     {cls:'tag-breve',     label:'Em breve'},
-  confirmado:{cls:'tag-breve',     label:'Em breve'},
-  realizado: {cls:'tag-realizado', label:'Realizado'},
-  cancelado: {cls:'tag-cancelado', label:'Cancelado'},
+const HOJE = new Date(); HOJE.setHours(0, 0, 0, 0);
+
+const dataShow = s => s.data ? new Date(s.data + 'T12:00:00') : null;
+// Show com data no passado conta como realizado, mesmo que ninguém tenha
+// marcado no painel — evita "Em breve" para um show que já aconteceu.
+function statusEfetivo(s){
+  const d = dataShow(s);
+  if(s.status === 'cancelado') return 'cancelado';
+  if(s.status === 'realizado' || (d && d < HOJE)) return 'realizado';
+  return 'breve';
+}
+
+const TAGS = {
+  breve:     '<span class="tag tag-ok">Em breve</span>',
+  realizado: '<span class="tag tag-muted">Realizado</span>',
+  cancelado: '<span class="tag tag-accent">Cancelado</span>'
 };
 
 function renderShow(s){
-  const d = s.data ? new Date(s.data + 'T12:00:00') : null;
-  const dia  = d ? String(d.getDate()).padStart(2,'0') : '--';
-  const mes  = d ? MESES[d.getMonth()] : '---';
-  const ano  = d ? d.getFullYear()     : '----';
-  const tag  = TAG_MAP[s.status] || {cls:'tag-breve', label: s.status||'Em breve'};
+  const d = dataShow(s);
+  const status = statusEfetivo(s);
+  const futuro = status === 'breve';
+  let acao = '';
+  if(futuro){
+    acao = (s.gratuito || !s.link)
+      ? `<span class="show-gratis">${nexusIcon('check-circle')}Entrada gratuita</span>`
+      : `<a href="${nexusEsc(s.link)}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">${nexusIcon('ticket')}Ingressos</a>`;
+  }
   return `
-  <div class="show-item${s.status==='realizado'?' realizado':''}">
+  <article class="show-item${futuro ? '' : ' passado'}">
     <div class="show-data">
-      <div class="show-dia">${dia}</div>
-      <div class="show-mes">${mes}</div>
-      <div class="show-ano">${ano}</div>
+      <div class="show-dia">${d ? String(d.getDate()).padStart(2, '0') : '--'}</div>
+      <div class="show-mes">${d ? MESES[d.getMonth()] : '---'}</div>
+      <div class="show-ano">${d ? d.getFullYear() : ''}</div>
     </div>
     <div>
-      <div class="show-nome">${s.nome}</div>
-      <div class="show-local">📍 ${s.local||'Local a confirmar'}</div>
-      ${s.hora?`<div class="show-horario">🕐 ${s.hora}</div>`:''}
-      ${(s.gratuito || !s.link)?`<span class="show-link" style="color:#3dbb80;cursor:default;">✓ Entrada gratuita</span>`:`<a href="${s.link}" target="_blank" class="show-link">🎟 Ingressos →</a>`}
+      <h3 class="show-nome">${nexusEsc(s.nome)}</h3>
+      <div class="show-meta">
+        <span>${nexusIcon('map-pin')}${nexusEsc(s.local || 'Local a confirmar')}</span>
+        ${s.hora ? `<span class="sec">${nexusIcon('clock')}${nexusEsc(s.hora)}</span>` : ''}
+      </div>
+      ${acao ? `<div class="show-acao">${acao}</div>` : ''}
     </div>
-    <span class="show-tag ${tag.cls}">${tag.label}</span>
-  </div>`;
+    ${TAGS[status]}
+  </article>`;
+}
+
+function lista(shows, vazioIcone, vazioTitulo, vazioTexto){
+  return shows.length
+    ? '<div class="shows-list">' + shows.map(renderShow).join('') + '</div>'
+    : `<div class="state">${nexusIcon(vazioIcone)}<span class="state-title">${vazioTitulo}</span><span>${vazioTexto}</span></div>`;
 }
 
 async function carregarAgenda(){
-  let shows = [];
+  let shows = [], erro = false;
   try{
     const r = await fetch('/api/shows');
-    if(r.ok){ const d = await r.json(); shows = d.shows||[]; }
-  }catch{}
+    if(r.ok){ const d = await r.json(); shows = d.shows || []; } else erro = true;
+  }catch{ erro = true; }
 
-  const proximos = shows.filter(s => s.status !== 'realizado' && s.status !== 'cancelado');
-  const passados = shows.filter(s => s.status === 'realizado' || s.status === 'cancelado').reverse();
+  if(erro){
+    const msg = `<div class="state">${nexusIcon('alert')}<span>Não foi possível carregar a agenda agora. Tente recarregar a página.</span></div>`;
+    document.getElementById('proximosWrap').innerHTML = msg;
+    document.getElementById('passadosWrap').innerHTML = '';
+    return;
+  }
 
-  const proxWrap = document.getElementById('proximosWrap');
-  proxWrap.innerHTML = proximos.length
-    ? '<div class="shows-list">' + proximos.map(renderShow).join('') + '</div>'
-    : '<div class="empty-state"><p>Nenhum show agendado no momento</p></div>';
+  // Próximos: ordem manual definida no painel admin. Passados: mais recentes primeiro.
+  const proximos = shows.filter(s => statusEfetivo(s) === 'breve');
+  const passados = shows.filter(s => statusEfetivo(s) !== 'breve')
+    .sort((a, b) => String(b.data || '').localeCompare(String(a.data || '')));
 
-  const passWrap = document.getElementById('passadosWrap');
-  passWrap.innerHTML = passados.length
-    ? '<div class="shows-list">' + passados.map(renderShow).join('') + '</div>'
-    : '<div class="empty-state"><p>Nenhum show no histórico ainda</p></div>';
+  document.getElementById('proximosWrap').innerHTML =
+    lista(proximos, 'calendar', 'Nenhum show agendado', 'Siga a Nexus no Instagram para saber das próximas datas.');
+  document.getElementById('passadosWrap').innerHTML =
+    lista(passados, 'clock', 'Sem histórico ainda', 'Os shows realizados aparecem aqui.');
 }
 
-const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
-if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
-
 carregarAgenda();
-</script>
-<script>
-(async()=>{
-  try{
-    const res=await fetch("/api/config");
-    if(res.ok){
-      const d=await res.json();
-      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
-        const el=document.getElementById("navRifa");
-        if(el){el.style.display="";}
-      }
-    }
-  }catch(e){}
-})();
-</script>
-<script>
 </script>
 <script src="/venom.js" defer></script>
 </body>

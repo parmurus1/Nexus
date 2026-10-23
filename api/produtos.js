@@ -43,6 +43,9 @@ export default async function handler(req, res) {
       largura_cm: p.largura_cm ?? 20,
       comprimento_cm: p.comprimento_cm ?? 25
     }));
+    // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+    // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
     return res.status(200).json({ produtos });
   }
 
@@ -72,7 +75,7 @@ export default async function handler(req, res) {
         cat: cat || '',
         descricao,
         preco: preco != null ? parseFloat(preco) : 0,
-        emoji: emoji || '📦',
+        emoji: emoji || 'package',
         img: img || '',
         badge: badge || null,
         sizes: Array.isArray(sizes) ? sizes : [],

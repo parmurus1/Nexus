@@ -33,7 +33,7 @@ export default async function handler(req, res) {
           .from('pedidos_merch')
           .update({ status: 'pago', payment_id: String(pagamento.id), pago_em: new Date().toISOString() })
           .eq('id', pedidoId);
-        console.log(`✅ Pedido merch confirmado: ${pedidoId} - ${pagamento.payer?.email}`);
+        console.log(`[ok] Pedido merch confirmado: ${pedidoId} - ${pagamento.payer?.email}`);
 
         // Gera a etiqueta de envio automaticamente no Melhor Envio.
         // IMPORTANTE: isso nunca deve impedir a confirmação do pagamento acima —
@@ -61,19 +61,19 @@ export default async function handler(req, res) {
                   me_erro: null
                 })
                 .eq('id', pedidoId);
-              console.log(`📦 Etiqueta gerada automaticamente para pedido ${pedidoId}: ${resultado.rastreio || 'sem rastreio ainda'}`);
+              console.log(`[etiqueta] Etiqueta gerada automaticamente para pedido ${pedidoId}: ${resultado.rastreio || 'sem rastreio ainda'}`);
             } else {
               await supabase
                 .from('pedidos_merch')
                 .update({ me_status: resultado.status, me_erro: resultado.erro })
                 .eq('id', pedidoId);
               // falha_saldo é esperada de vez em quando — loga como aviso, não erro grave
-              const nivel = resultado.status === 'falha_saldo' ? '⚠️' : '❌';
+              const nivel = resultado.status === 'falha_saldo' ? '[aviso]' : '[erro]';
               console.error(`${nivel} Etiqueta não gerada automaticamente (pedido ${pedidoId}): ${resultado.erro}`);
             }
           }
         } catch (erroEtiqueta) {
-          console.error(`❌ Erro inesperado ao tentar gerar etiqueta do pedido ${pedidoId}:`, erroEtiqueta.message);
+          console.error(`[erro] Erro inesperado ao tentar gerar etiqueta do pedido ${pedidoId}:`, erroEtiqueta.message);
           await supabase
             .from('pedidos_merch')
             .update({ me_status: 'falha', me_erro: erroEtiqueta.message })
@@ -126,7 +126,7 @@ export default async function handler(req, res) {
       })
       .in('numero', numeros);
 
-    console.log(`✅ Pagamento confirmado: bilhetes ${numeros.join(', ')} - ${pagamento.payer?.email}`);
+    console.log(`[ok] Pagamento confirmado: bilhetes ${numeros.join(', ')} - ${pagamento.payer?.email}`);
 
     return res.status(200).json({ ok: true });
 

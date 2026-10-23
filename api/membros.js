@@ -29,6 +29,9 @@ export default async function handler(req, res) {
     }
 
     const membros = (data || []).map(m => ({ ...m, ativo: m.ativo !== false }));
+    // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+    // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
     return res.status(200).json({ membros });
   }
 
