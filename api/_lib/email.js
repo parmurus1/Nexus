@@ -41,6 +41,9 @@ export async function enviarEmail({ para, assunto, html, responderPara }) {
     console.log(`[email] não configurado (RESEND_API_KEY/EMAIL_REMETENTE) — "${assunto}" para ${para} não enviado`);
     return { ok: false, erro: 'não configurado' };
   }
+  // Sem reply_to explícito, respostas do cliente vão para o e-mail da banda
+  // (o remetente costuma ser um endereço que ninguém lê, tipo contato@).
+  const replyTo = responderPara || process.env.EMAIL_BANDA;
   try {
     const resp = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -50,7 +53,7 @@ export async function enviarEmail({ para, assunto, html, responderPara }) {
         to: Array.isArray(para) ? para : [para],
         subject: assunto,
         html,
-        ...(responderPara ? { reply_to: responderPara } : {})
+        ...(replyTo ? { reply_to: replyTo } : {})
       })
     });
     if (!resp.ok) {
