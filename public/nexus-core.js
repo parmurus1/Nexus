@@ -222,23 +222,73 @@
   document.addEventListener('load', marcarCarregada, true);
   document.addEventListener('error', marcarCarregada, true);
 
-  // Blocos de conteúdo surgem ao entrar na tela.
-  function initReveal() {
-    var alvos = document.querySelectorAll('main .section, main .container > .card, [data-reveal]');
-    if (!alvos.length) return;
-    if (!('IntersectionObserver' in window)) return;
-    var obs = new IntersectionObserver(function (entradas) {
-      entradas.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('in'); obs.unobserve(en.target); }
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-    alvos.forEach(function (el) {
-      // O que já está visível ao abrir a página não anima (evita "piscar")
-      var r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.92) return;
-      el.classList.add('reveal');
-      obs.observe(el);
+  // Cards, títulos e itens de lista surgem em cascata ao entrar na tela.
+  // Vale também para o que é montado depois via JS (produtos, shows, fotos...).
+  var SELETOR_REVEAL = [
+    'main .card', 'main .foto-card', 'main .show-item', 'main .passado',
+    'main .sec-eyebrow', 'main .sec-title', 'main .sec-note', 'main .link-arrow',
+    'main .state', '[data-reveal]'
+  ].join(',');
+  var revealObs = null, cascata = 0, cascataTimer = null;
+
+  // Atraso em cascata para itens que aparecem juntos (máx. 6 degraus)
+  function proximoAtraso() {
+    var atraso = Math.min(cascata, 6) * 0.07;
+    cascata++;
+    clearTimeout(cascataTimer);
+    cascataTimer = setTimeout(function () { cascata = 0; }, 120);
+    return atraso + 's';
+  }
+
+  function candidatos(raiz) {
+    var lista = [];
+    if (raiz.nodeType !== 1) return lista;
+    if (raiz.matches && raiz.matches(SELETOR_REVEAL)) lista.push(raiz);
+    raiz.querySelectorAll && raiz.querySelectorAll(SELETOR_REVEAL).forEach(function (el) { lista.push(el); });
+    // Nada dentro do topo (já tem animação própria), de modais ou de outro item animado
+    return lista.filter(function (el) {
+      return !el.closest('.hero, .page-hero, .modal-ov, .lightbox') && !el.parentElement.closest('.reveal, .reveal-now');
     });
+  }
+
+  function prepararReveal(el, inicial) {
+    if (el.classList.contains('reveal') || el.classList.contains('reveal-now') || el.dataset.semReveal != null) return;
+    var r = el.getBoundingClientRect();
+    var visivel = r.top < window.innerHeight * 0.95 && r.bottom > 0;
+    if (visivel) {
+      // Conteúdo estático já visível ao abrir a página não anima (evita "piscar");
+      // conteúdo que acabou de ser montado via JS entra em cascata.
+      if (inicial) return;
+      el.style.setProperty('--reveal-delay', proximoAtraso());
+      el.classList.add('reveal-now');
+    } else {
+      el.classList.add('reveal');
+      revealObs.observe(el);
+    }
+  }
+
+  function initReveal() {
+    if (!('IntersectionObserver' in window) || !('MutationObserver' in window)) return;
+    revealObs = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.style.setProperty('--reveal-delay', proximoAtraso());
+        en.target.classList.add('in');
+        revealObs.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+
+    var main = document.querySelector('main');
+    // O painel admin re-renderiza tabelas o tempo todo: sem animação de entrada lá
+    if (!main || main.classList.contains('adm-main')) return;
+    candidatos(main).forEach(function (el) { prepararReveal(el, true); });
+    // Conteúdo inserido depois (fetch da API) — o callback roda antes da pintura,
+    // então os itens novos já nascem invisíveis e entram animados, sem piscar.
+    new MutationObserver(function (mudancas) {
+      mudancas.forEach(function (m) {
+        m.addedNodes.forEach(function (n) { candidatos(n).forEach(function (el) { prepararReveal(el, false); }); });
+      });
+    }).observe(main, { childList: true, subtree: true });
   }
 
   // Cadastro de fãs no rodapé ("receba aviso dos próximos shows")
@@ -272,8 +322,7 @@
     window.nexusHydrateIcons();
     initNav();
     initAvisos();
-    // Depois que os scripts da página montaram o conteúdo
-    window.requestAnimationFrame(initReveal);
+    initReveal();
   });
 
   // ── 4) Overlay click guard ─────────────────────────────────────────

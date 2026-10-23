@@ -58,8 +58,16 @@ a{color:inherit;}
 @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse-ring{0%{box-shadow:0 0 0 0 var(--red-line);}50%{box-shadow:0 0 0 6px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+/* Quem pediu "reduzir movimento" no sistema continua vendo esmaecimentos
+   suaves, mas sem deslizar, dar zoom, flutuar ou pulsar. */
 @media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important;}
+  html{scroll-behavior:auto;}
+  @keyframes rise{from{opacity:0}to{opacity:1}}
+  @keyframes fadeUp{from{opacity:0}to{opacity:1}}
+  .nav-pulse,.mouse-wheel,.carr-icon,.skeleton,.hero-photo,.home-slide.on{animation:none!important;}
+  .hero-photo,.home-slide{transform:none!important;}
+  .card-hover:hover,.btn-primary:hover,.foto-card:hover,.cta-card:hover,.nav-card:hover{transform:none!important;}
 }
 
 /* ── ÍCONES ───────────────────────────────────────────────────────── */
@@ -254,13 +262,18 @@ i[data-icon]{display:inline-block;width:1em;height:1em;}
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 
 /* ── MOVIMENTO ────────────────────────────────────────────────────── */
-/* Blocos surgem ao entrar na tela (classe aplicada pelo nexus-core.js) */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.8s cubic-bezier(0.2,0.7,0.2,1),transform 0.8s cubic-bezier(0.2,0.7,0.2,1);transition-delay:var(--reveal-delay,0s);}
-.reveal.in{opacity:1;transform:none;}
+/* Cards, títulos e itens de lista surgem em cascata ao entrar na tela
+   (classes aplicadas pelo nexus-core.js). .reveal = espera rolar até ele;
+   .reveal-now = conteúdo carregado depois que já está visível. */
+.reveal{opacity:0;}
+.reveal.in{opacity:1;}
+/* fill "backwards": invisível só durante o atraso; ao terminar, o elemento volta
+   ao estilo normal (o efeito de passar o mouse continua funcionando) */
+.reveal.in,.reveal-now{animation:fadeUp 0.7s cubic-bezier(0.2,0.7,0.2,1) backwards;animation-delay:var(--reveal-delay,0s);}
 /* Imagens com carregamento preguiçoso aparecem suavemente */
 img[loading="lazy"]{transition:opacity 0.6s ease;}
 img[loading="lazy"]:not(.is-loaded){opacity:0;}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;}.hero-photo{animation:none;transform:none;}}
+
 
 /* ── LIGHTBOX (fotos, mapa de palco, prêmios) ─────────────────────── */
 .lightbox{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:64px 72px;opacity:0;pointer-events:none;transition:opacity 0.22s;}
