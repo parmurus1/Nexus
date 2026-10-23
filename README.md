@@ -42,7 +42,7 @@ Site da banda Nexus: páginas institucionais, agenda de shows, galeria de fotos 
 SUPABASE_URL          = https://xxxx.supabase.co
 SUPABASE_SERVICE_KEY  = eyJ...
 MP_ACCESS_TOKEN       = APP_USR-...
-SITE_URL              = https://seu-projeto.vercel.app
+SITE_URL              = https://nexusband.com.br
 ADMIN_PASSWORD        = uma_senha_forte_aqui
 ```
 
@@ -84,7 +84,7 @@ Os prêmios ficam na lista `PREMIOS` no início do script de `public/rifa.html` 
 
 ## Painel admin
 
-Acesse: `https://seu-site.vercel.app/admin`
+Acesse: `https://nexusband.com.br/admin`
 
 Funcionalidades:
 - Ver stats em tempo real (total, disponíveis, reservados, pagos)
@@ -122,7 +122,12 @@ Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém 
 
 ## Domínio e SEO
 
-O site gera `sitemap.xml`, `robots.txt` e dados estruturados (banda e shows) para o Google. As URLs absolutas usam `https://nexus-rifa.vercel.app`; ao conectar um domínio próprio na Vercel, troque esse endereço em `public/*.html`, `public/sitemap.xml` e `public/robots.txt` (busca e substituição) e atualize `SITE_URL`.
+O site usa o domínio **nexusband.com.br** nas tags de compartilhamento, no endereço canônico, no `sitemap.xml`, no `robots.txt` e nos dados estruturados (banda e shows) para o Google. Para ele funcionar:
+
+1. Na Vercel, abra o projeto > **Settings > Domains**, adicione `nexusband.com.br` (e `www.nexusband.com.br` redirecionando para ele) e configure o DNS no Registro.br como a Vercel indicar.
+2. Atualize a variável `SITE_URL` para `https://nexusband.com.br` (usada nos links de retorno do Mercado Pago, no webhook e nos e-mails).
+3. No painel do Mercado Pago, troque a URL do webhook para `https://nexusband.com.br/api/webhook`.
+4. Opcional: cadastre o site no Google Search Console e envie `https://nexusband.com.br/sitemap.xml`.
 
 ## Galeria (fotos e vídeos)
 

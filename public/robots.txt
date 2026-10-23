@@ -6,4 +6,4 @@ Disallow: /falha
 Disallow: /pendente
 Disallow: /api/
 
-Sitemap: https://nexus-rifa.vercel.app/sitemap.xml
+Sitemap: https://nexusband.com.br/sitemap.xml

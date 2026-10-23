@@ -8,7 +8,7 @@
 //
 // Sem RESEND_API_KEY nada é enviado (e nada quebra): as funções só registram no log.
 
-const SITE = () => process.env.SITE_URL || 'https://nexus-rifa.vercel.app';
+const SITE = () => process.env.SITE_URL || 'https://nexusband.com.br';
 
 function esc(s) {
   return String(s == null ? '' : s)

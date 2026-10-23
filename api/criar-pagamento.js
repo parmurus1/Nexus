@@ -88,7 +88,7 @@ export default async function handler(req, res) {
     });
   }
 
-  const SITE = process.env.SITE_URL || 'https://nexusband.vercel.app';
+  const SITE = process.env.SITE_URL || 'https://nexusband.com.br';
   const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
   const preference = new Preference(mp);
   const expira = new Date(Date.now() + PAGAMENTO_EXPIRA_MINUTOS * 60 * 1000).toISOString();
