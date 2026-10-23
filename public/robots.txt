@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /sucesso
+Disallow: /falha
+Disallow: /pendente
+Disallow: /api/
+
+Sitemap: https://nexusband.com.br/sitemap.xml

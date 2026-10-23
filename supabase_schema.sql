@@ -92,6 +92,9 @@ CREATE POLICY "Escrita via service_role em shows" ON shows FOR ALL USING (auth.r
 -- =====================================================
 ALTER TABLE shows ADD COLUMN IF NOT EXISTS gratuito BOOLEAN DEFAULT false;
 
+-- MIGRAÇÃO: ordem manual dos shows (arrastar no painel admin)
+ALTER TABLE shows ADD COLUMN IF NOT EXISTS ordem INTEGER;
+
 -- =====================================================
 -- TABELA: produtos (para a página Merch)
 -- =====================================================
@@ -101,7 +104,7 @@ CREATE TABLE IF NOT EXISTS produtos (
   cat TEXT DEFAULT '',
   descricao TEXT NOT NULL,
   preco NUMERIC(10,2) DEFAULT 0,
-  emoji TEXT DEFAULT '📦',
+  emoji TEXT DEFAULT 'package', -- nome do ícone exibido quando o produto não tem foto (shirt, guitar, key, pin, sticker, drum, music, package)
   img TEXT DEFAULT '',
   badge TEXT,
   sizes TEXT[] DEFAULT '{}',
@@ -127,12 +130,12 @@ CREATE POLICY "Escrita via service_role em produtos" ON produtos FOR ALL USING (
 
 -- Dados iniciais de exemplo (remova se preferir começar vazio)
 INSERT INTO produtos (nome, cat, descricao, preco, emoji, badge, sizes, ativo, ordem) VALUES
-  ('CAMISETA OFICIAL', 'Vestuário', '100% algodão, estampa serigrafia com o logo da banda.', 0, '👕', 'Novo', ARRAY['P','M','G','GG'], true, 1),
-  ('PALHETA EXCLUSIVA', 'Acessórios', 'Palheta personalizada com o logo da Nexus. Pack com 3 unidades.', 0, '🎸', NULL, '{}', true, 2),
-  ('CHAVEIRO NEXUS', 'Acessórios', 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium.', 0, '🔑', NULL, '{}', true, 3),
-  ('PIN COLECIONÁVEL', 'Acessórios', 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.', 0, '📌', NULL, '{}', true, 4),
-  ('PACK ADESIVOS', 'Colecionáveis', '6 adesivos em vinil impermeável com artes exclusivas da banda.', 0, '🎨', NULL, '{}', true, 5),
-  ('BAQUETAS ASSINADAS', 'Colecionáveis', 'Baquetas autografadas pelo baterista. Edição limitada e numerada.', 0, '🥁', 'Em breve', '{}', false, 6)
+  ('CAMISETA OFICIAL', 'Vestuário', '100% algodão, estampa serigrafia com o logo da banda.', 0, 'shirt', 'Novo', ARRAY['P','M','G','GG'], true, 1),
+  ('PALHETA EXCLUSIVA', 'Acessórios', 'Palheta personalizada com o logo da Nexus. Pack com 3 unidades.', 0, 'guitar', NULL, '{}', true, 2),
+  ('CHAVEIRO NEXUS', 'Acessórios', 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium.', 0, 'key', NULL, '{}', true, 3),
+  ('PIN COLECIONÁVEL', 'Acessórios', 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas e mochilas.', 0, 'pin', NULL, '{}', true, 4),
+  ('PACK ADESIVOS', 'Colecionáveis', '6 adesivos em vinil impermeável com artes exclusivas da banda.', 0, 'sticker', NULL, '{}', true, 5),
+  ('BAQUETAS ASSINADAS', 'Colecionáveis', 'Baquetas autografadas pelo baterista. Edição limitada e numerada.', 0, 'drum', 'Em breve', '{}', false, 6)
 ON CONFLICT DO NOTHING;
 
 -- =====================================================
@@ -160,10 +163,10 @@ CREATE POLICY "Escrita via service_role em membros" ON membros FOR ALL USING (au
 -- Dados iniciais: os membros que já existiam no site (fixos no HTML) + 1 novo, para
 -- você preencher com foto/bio/instagram reais direto pelo painel admin.
 INSERT INTO membros (nome, funcao, foto, bio, instagram, tiktok, ativo, ordem) VALUES
-  ('DAVI', 'Guitarra & Vocal', '/imgs/membro-davi.jpeg', '', '', '', true, 1),
-  ('JOÃO', 'Guitarra', '/imgs/membro-joao.jpeg', '', '', '', true, 2),
-  ('ATILA', 'Teclados', '/imgs/membro-atila.jpeg', '', '', '', true, 3),
-  ('VICTOR', 'Bateria', '/imgs/membro-victor.jpeg', '', '', '', true, 4),
+  ('DAVI', 'Guitarra & Vocal', '/imgs/banda/membro-davi.jpeg', '', '', '', true, 1),
+  ('JOÃO', 'Guitarra', '/imgs/banda/membro-joao.jpeg', '', '', '', true, 2),
+  ('ATILA', 'Teclados', '/imgs/banda/membro-atila.jpeg', '', '', '', true, 3),
+  ('VICTOR', 'Bateria', '/imgs/banda/membro-victor.jpeg', '', '', '', true, 4),
   ('NOVO MEMBRO', 'Instrumento', '', 'Edite este card pelo painel admin: adicione foto, função e uma breve bio.', '', '', true, 5)
 ON CONFLICT DO NOTHING;
 
@@ -246,3 +249,184 @@ ALTER TABLE pedidos_merch ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Escrita via service_role em pedidos_merch" ON pedidos_merch FOR ALL USING (auth.role() = 'service_role');
 -- Sem policy de SELECT pública: pedidos só são lidos pelo backend/admin (service_role).
 
+-- =====================================================
+-- MIGRAÇÃO: produtos antigos cadastrados com emoji passam a usar ícones.
+-- (O site já converte emojis antigos automaticamente; isto só limpa o banco.)
+-- =====================================================
+UPDATE produtos SET emoji = CASE emoji
+  WHEN '👕' THEN 'shirt' WHEN '🎸' THEN 'guitar' WHEN '🔑' THEN 'key'
+  WHEN '📌' THEN 'pin'   WHEN '🎨' THEN 'sticker' WHEN '🥁' THEN 'drum'
+  WHEN '🎵' THEN 'music' WHEN '🎤' THEN 'mic'     ELSE 'package' END
+WHERE emoji IS NULL OR emoji !~ '^[a-z-]+$';
+ALTER TABLE produtos ALTER COLUMN emoji SET DEFAULT 'package';
+
+-- =====================================================
+-- GALERIA (página /galeria e prévia na /sobre)
+-- Execute este bloco inteiro no SQL Editor do Supabase. Pode rodar de novo
+-- sem problemas (é idempotente).
+--
+-- Leve para o banco: cada linha guarda só texto curto (tipo, título, URL).
+-- As fotos ficam no Storage (bucket "galeria-fotos", já otimizadas em WebP
+-- pelo painel) e os vídeos ficam no YouTube — a capa vem do próprio YouTube.
+-- =====================================================
+CREATE TABLE IF NOT EXISTS galeria (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  tipo TEXT NOT NULL CHECK (tipo IN ('foto', 'video')),
+  titulo TEXT DEFAULT '',
+  descricao TEXT DEFAULT '',          -- legenda curta (ex.: "Senac Nações Unidas · 26.03.2026")
+  url TEXT NOT NULL,                  -- foto: URL da imagem grande | vídeo: link do YouTube
+  thumbnail_url TEXT DEFAULT '',      -- foto: miniatura leve usada na grade
+  ordem INTEGER DEFAULT 0,
+  ativo BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE galeria ADD COLUMN IF NOT EXISTS descricao TEXT DEFAULT '';
+
+-- Índice para a consulta pública (ativos, em ordem)
+CREATE INDEX IF NOT EXISTS galeria_ativo_ordem_idx ON galeria (ativo, ordem);
+
+ALTER TABLE galeria ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Leitura pública da galeria" ON galeria;
+CREATE POLICY "Leitura pública da galeria" ON galeria FOR SELECT USING (ativo = true);
+DROP POLICY IF EXISTS "Escrita via service_role na galeria" ON galeria;
+CREATE POLICY "Escrita via service_role na galeria" ON galeria FOR ALL USING (auth.role() = 'service_role');
+
+-- Reordenação em um único UPDATE (em vez de uma query por item)
+CREATE OR REPLACE FUNCTION galeria_reordenar(ids UUID[])
+RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE galeria g SET ordem = t.pos
+  FROM unnest(ids) WITH ORDINALITY AS t(id, pos)
+  WHERE g.id = t.id;
+$$;
+REVOKE ALL ON FUNCTION galeria_reordenar(UUID[]) FROM PUBLIC, anon, authenticated;
+
+-- Conteúdo inicial: as fotos e vídeos que antes estavam fixos na página Sobre.
+-- Só insere se a galeria estiver vazia.
+INSERT INTO galeria (tipo, titulo, descricao, url, thumbnail_url, ordem)
+SELECT * FROM (VALUES
+  ('foto',  'Ao vivo', '', '/imgs/shows/show-03.jpeg', '/imgs/shows/thumb/show-03.webp', 1),
+  ('foto',  'Ao vivo', '', '/imgs/shows/show-04.jpeg', '/imgs/shows/thumb/show-04.webp', 2),
+  ('foto',  'Ao vivo', '', '/imgs/shows/show-01.jpeg', '/imgs/shows/thumb/show-01.webp', 3),
+  ('foto',  'Ao vivo', '', '/imgs/shows/show-02.jpeg', '/imgs/shows/thumb/show-02.webp', 4),
+  ('foto',  'Ao vivo', '', '/imgs/shows/show-05.jpeg', '/imgs/shows/thumb/show-05.webp', 5),
+  ('video', 'Solo de bateria', 'Senac Nações Unidas · 26.03.2026', 'https://www.youtube.com/shorts/JECQqubB5Dc', '', 6),
+  ('video', 'Bodies',          'Senac Nações Unidas · 26.03.2026', 'https://www.youtube.com/shorts/_ElioiT5R8Q', '', 7),
+  ('video', 'Debil Metal',     'Senac Nações Unidas · 30.10.2025', 'https://www.youtube.com/shorts/93pcz_6b-JM', '', 8),
+  ('video', 'Toxicity',        'Senac Nações Unidas · 26.03.2026', 'https://www.youtube.com/shorts/o3ycjRGmkhc', '', 9)
+) AS v(tipo, titulo, descricao, url, thumbnail_url, ordem)
+WHERE NOT EXISTS (SELECT 1 FROM galeria);
+
+-- =====================================================
+-- STORAGE: buckets das fotos da galeria e dos produtos
+-- Limite de 3MB por arquivo e só imagens — o próprio Supabase recusa o resto.
+-- =====================================================
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES
+  ('galeria-fotos',  'galeria-fotos',  true, 3145728, ARRAY['image/webp','image/jpeg','image/png','image/gif']),
+  ('produtos-fotos', 'produtos-fotos', true, 3145728, ARRAY['image/webp','image/jpeg','image/png','image/gif'])
+ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = EXCLUDED.file_size_limit, allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+DROP POLICY IF EXISTS "Leitura pública fotos galeria e produtos" ON storage.objects;
+CREATE POLICY "Leitura pública fotos galeria e produtos"
+ON storage.objects FOR SELECT
+USING (bucket_id IN ('galeria-fotos', 'produtos-fotos'));
+
+DROP POLICY IF EXISTS "Service role gerencia fotos galeria e produtos" ON storage.objects;
+CREATE POLICY "Service role gerencia fotos galeria e produtos"
+ON storage.objects FOR ALL
+USING (bucket_id IN ('galeria-fotos', 'produtos-fotos') AND auth.role() = 'service_role')
+WITH CHECK (bucket_id IN ('galeria-fotos', 'produtos-fotos') AND auth.role() = 'service_role');
+
+-- =====================================================
+-- ATUALIZAÇÃO 2 — estoque, orçamentos, login seguro do admin
+-- Execute este bloco inteiro no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Estoque opcional por tamanho na loja: {"P": 3, "M": 5} ou {"único": 10}.
+-- NULL = sem controle de estoque (comportamento antigo).
+ALTER TABLE produtos ADD COLUMN IF NOT EXISTS estoque JSONB;
+
+-- Baixa o estoque quando um pedido é pago (chamado pelo webhook)
+CREATE OR REPLACE FUNCTION baixar_estoque(p_id UUID, p_tam TEXT, p_qtd INT)
+RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE produtos
+  SET estoque = jsonb_set(estoque, ARRAY[p_tam], to_jsonb(GREATEST(0, COALESCE((estoque->>p_tam)::int, 0) - p_qtd)))
+  WHERE id = p_id AND estoque IS NOT NULL AND estoque ? p_tam;
+$$;
+REVOKE ALL ON FUNCTION baixar_estoque(UUID, TEXT, INT) FROM PUBLIC, anon, authenticated;
+
+-- Pedidos de orçamento enviados pela página Contratantes
+CREATE TABLE IF NOT EXISTS orcamentos (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nome TEXT NOT NULL,
+  email TEXT,
+  telefone TEXT,
+  data_evento DATE,
+  cidade TEXT,
+  tipo_evento TEXT,
+  mensagem TEXT,
+  status TEXT NOT NULL DEFAULT 'novo', -- 'novo' | 'respondido' | 'fechado' | 'arquivado'
+  ip TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS orcamentos_ip_idx ON orcamentos (ip, criado_em);
+ALTER TABLE orcamentos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia orcamentos" ON orcamentos;
+CREATE POLICY "Service role gerencia orcamentos" ON orcamentos FOR ALL USING (auth.role() = 'service_role');
+
+-- Tentativas de login erradas no painel (limite de 5 a cada 15 min por IP)
+CREATE TABLE IF NOT EXISTS admin_tentativas (
+  id BIGSERIAL PRIMARY KEY,
+  ip TEXT NOT NULL,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS admin_tentativas_ip_idx ON admin_tentativas (ip, criado_em);
+ALTER TABLE admin_tentativas ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia tentativas" ON admin_tentativas;
+CREATE POLICY "Service role gerencia tentativas" ON admin_tentativas FOR ALL USING (auth.role() = 'service_role');
+
+-- Pedro (baixo) aparece na biografia mas não estava entre os membros.
+-- Depois, adicione a foto e a bio dele pelo painel (Membros).
+INSERT INTO membros (nome, funcao, foto, bio, ativo, ordem)
+SELECT 'PEDRO', 'Baixo', '', '', true, 5
+WHERE NOT EXISTS (SELECT 1 FROM membros WHERE upper(nome) = 'PEDRO');
+
+-- =====================================================
+-- OPCIONAL — liberação automática de bilhetes a cada 10 minutos (pg_cron)
+-- O site já libera reservas vencidas sozinho sempre que alguém abre a rifa
+-- ou tenta comprar; isto só garante a limpeza mesmo sem visitas.
+-- Se der erro de permissão, ative "pg_cron" em Database > Extensions e rode de novo.
+-- =====================================================
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+SELECT cron.schedule(
+  'liberar-bilhetes-expirados',
+  '*/10 * * * *',
+  $$UPDATE bilhetes
+    SET status = 'disponivel', nome_comprador = NULL, email_comprador = NULL, instagram_comprador = NULL,
+        telefone_comprador = NULL, preference_id = NULL, reservado_em = NULL
+    WHERE status = 'reservado' AND reservado_em < NOW() - INTERVAL '30 minutes'$$
+);
+-- Limpa tentativas de login antigas uma vez por dia
+SELECT cron.schedule('limpar-tentativas-admin', '0 4 * * *', $$DELETE FROM admin_tentativas WHERE criado_em < NOW() - INTERVAL '1 day'$$);
+
+-- =====================================================
+-- ATUALIZAÇÃO 3 — cartaz dos shows e lista de fãs
+-- Execute este bloco no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Cartaz (flyer) opcional de cada show, exibido na Agenda
+ALTER TABLE shows ADD COLUMN IF NOT EXISTS cartaz TEXT;
+
+-- Fãs que pediram aviso de shows no rodapé do site (e-mail ou WhatsApp)
+CREATE TABLE IF NOT EXISTS fas (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  contato TEXT NOT NULL UNIQUE,   -- e-mail em minúsculas ou WhatsApp só com números (DDD + número)
+  tipo TEXT NOT NULL,             -- 'email' | 'whatsapp'
+  origem TEXT,                    -- página onde se cadastrou
+  ip TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS fas_ip_idx ON fas (ip, criado_em);
+ALTER TABLE fas ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia fas" ON fas;
+CREATE POLICY "Service role gerencia fas" ON fas FOR ALL USING (auth.role() = 'service_role');

@@ -1,12 +1,12 @@
 // api/shows.js — CRUD de shows para a agenda
 import { createClient } from '@supabase/supabase-js';
+import { autenticar } from './_lib/auth.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
-function autenticar(req) {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
+// Cartaz do show (flyer) é opcional; a coluna vem do bloco ATUALIZAÇÃO 3 do SQL
+function dicaCartaz(error) {
+  return /cartaz/i.test(error?.message || '') ? '. Para usar cartazes, execute o bloco ATUALIZAÇÃO 3 do supabase_schema.sql.' : '';
 }
 
 export default async function handler(req, res) {
@@ -23,6 +23,9 @@ export default async function handler(req, res) {
       .order('ordem', { ascending: true, nullsFirst: false })
       .order('data', { ascending: true });
     if (error) return res.status(500).json({ erro: 'Erro ao buscar shows' });
+    // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+    // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
     return res.status(200).json({ shows: data || [] });
   }
 
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
 
   // POST — criar show
   if (req.method === 'POST') {
-    const { nome, data, hora, local, status, link, gratuito } = req.body;
+    const { nome, data, hora, local, status, link, gratuito, cartaz } = req.body;
     if (!nome || !data || !local) return res.status(400).json({ erro: 'nome, data e local são obrigatórios' });
 
     // Novo show entra sempre no final da ordem manual
@@ -55,10 +58,10 @@ export default async function handler(req, res) {
 
     const { data: inserted, error } = await supabase
       .from('shows')
-      .insert({ nome, data, hora: hora || null, local, status: status || 'breve', link: link || null, gratuito: gratuito || false, ordem: proximaOrdem })
+      .insert({ nome, data, hora: hora || null, local, status: status || 'breve', link: link || null, gratuito: gratuito || false, ordem: proximaOrdem, ...(cartaz ? { cartaz } : {}) })
       .select()
       .single();
-    if (error) return res.status(500).json({ erro: 'Erro ao criar show' });
+    if (error) return res.status(500).json({ erro: 'Erro ao criar show' + dicaCartaz(error) });
     return res.status(201).json({ show: inserted });
   }
 
@@ -66,7 +69,7 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const id = req.query.id;
     if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
-    const { nome, data, hora, local, status, link, gratuito, ordem } = req.body;
+    const { nome, data, hora, local, status, link, gratuito, ordem, cartaz } = req.body;
     const updates = {};
     if (nome !== undefined) updates.nome = nome;
     if (data !== undefined) updates.data = data;
@@ -76,8 +79,9 @@ export default async function handler(req, res) {
     if (link !== undefined) updates.link = link || null;
     if (gratuito !== undefined) updates.gratuito = gratuito;
     if (ordem !== undefined) updates.ordem = parseInt(ordem, 10) || 0;
+    if (cartaz !== undefined) updates.cartaz = cartaz || null;
     const { error } = await supabase.from('shows').update(updates).eq('id', id);
-    if (error) return res.status(500).json({ erro: 'Erro ao atualizar show' });
+    if (error) return res.status(500).json({ erro: 'Erro ao atualizar show' + dicaCartaz(error) });
     return res.status(200).json({ ok: true });
   }
 

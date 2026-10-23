@@ -2,1073 +2,164 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="description" content="Conheça os membros da Nexus Band, veja fotos e vídeos dos shows."/>
-  <meta property="og:title" content="Sobre Nós — Nexus"/>
-  <meta property="og:description" content="Conheça os membros da Nexus Band, veja fotos e vídeos dos shows."/>
-  <meta property="og:image" content="/imgs/marca/og-image.png"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://nexus-rifa.vercel.app/sobre.html"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:image" content="/imgs/marca/og-image.png"/>
-  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sobre Nós — Nexus</title>
+  <meta name="description" content="Conheça os membros da Nexus Band e veja fotos e vídeos dos shows."/>
+  <meta name="theme-color" content="#080808"/>
+  <meta property="og:title" content="Sobre Nós — Nexus"/>
+  <meta property="og:description" content="Conheça os membros da Nexus Band e veja fotos e vídeos dos shows."/>
+  <meta property="og:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://nexusband.com.br/sobre"/>
+  <meta property="og:locale" content="pt_BR"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
+  <link rel="canonical" href="https://nexusband.com.br/sobre"/>
+  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon-sm.png"/>
+  <link rel="apple-touch-icon" href="/imgs/marca/nexusicon-sm.png"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/nexus.css"/>
+  <link rel="preload" as="image" href="/imgs/hero/banda-sm.webp" media="(max-width: 768px)"/>
+  <link rel="preload" as="image" href="/imgs/hero/banda-lg.webp" media="(min-width: 769px)"/>
 
   <script defer src="/_vercel/insights/script.js"></script>
-  
+  <script src="/nexus-core.js"></script>
+  <link rel="preconnect" href="https://i.ytimg.com"/>
   <style>
-    :root{
-      --red:#e8220a;
-      --red-dim:#a01a07;
-      --red-glow:rgba(232,34,10,0.2);
-      --red-mid:rgba(232,34,10,0.08);
-      --bg:#080808;
-      --bg2:#111;
-      --bg3:#191919;
-      --bg4:#222;
-      --border:rgba(255,255,255,0.07);
-      --border-s:rgba(255,255,255,0.13);
-      --text:#ede9e3;
-      --text2:#7a7672;
-      --text3:#8c8883;
-      --glass:rgba(8,8,8,0.9);
-      --radius:14px;
-      --radius-sm:8px;
-      --radius-xs:5px;
-      --tr:0.28s cubic-bezier(0.4,0,0.2,1);
-    }
+    /* MEMBROS */
+    .membros-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+    @media(max-width:900px){.membros-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:600px){.membros-grid{grid-template-columns:repeat(2,1fr);}}
+    .membro-card{overflow:hidden;cursor:pointer;padding:0;text-align:left;color:inherit;display:flex;flex-direction:column;}
+    .membro-foto{aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;width:100%;}
+    .membro-foto img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform 0.6s cubic-bezier(0.2,0.7,0.2,1);}
+    .membro-card:hover .membro-foto img{transform:scale(1.05);}
+    .foto-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:2.4rem;opacity:0.5;}
+    .membro-info{padding:14px 16px;}
+    .membro-nome{display:block;font-family:var(--f-display);font-size:1.15rem;letter-spacing:0.04em;color:var(--text);margin-bottom:2px;}
+    .membro-role{display:block;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
 
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{
-      background:var(--bg);
-      color:var(--text);
-      font-family:'Barlow',sans-serif;
-      font-weight:300;
-      line-height:1.6;
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-    body::before{
-      content:'';
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:9998;
-      opacity:0.025;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
-    ::-webkit-scrollbar{width:4px;}
-    ::-webkit-scrollbar-track{background:var(--bg);}
-    ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-
-    /* NAV */
-    nav{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:100;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 40px;
-      background:var(--glass);
-      backdrop-filter:blur(24px);
-      -webkit-backdrop-filter:blur(24px);
-      border-bottom:1px solid var(--border);
-    }
-    .nav-logo{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      text-decoration:none;
-      flex-shrink:0;
-    }
-    .nav-pulse{
-      width:7px;
-      height:7px;
-      border-radius:50%;
-      background:var(--red);
-      animation:pulse-ring 2.5s ease-in-out infinite;
-    }
-    @keyframes pulse-ring{
-      0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}
-      50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}
-      100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}
-    }
-    .nav-logo img{
-      height:32px;
-      width:auto;
-      object-fit:contain;
-    }
-    .nav-links{
-      display:flex;
-      align-items:center;
-      gap:24px;
-    }
-    .nav-link{
-      font-family:'DM Mono',monospace;
-      font-size:0.65rem;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-      color:var(--text2);
-      text-decoration:none;
-      transition:color var(--tr);
-    }
-    .nav-link:hover{color:var(--red);}
-    .nav-link.active{color:var(--text);}
-    .nav-rifa{
-      color:var(--red)!important;
-      border:1px solid rgba(232,34,10,0.3);
-      padding:5px 12px;
-      border-radius:999px;
-    }
-    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
-    .nav-hamburger{
-      display:none;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      gap:5px;
-      width:36px;
-      height:36px;
-      background:none;
-      border:1px solid var(--border-s);
-      border-radius:var(--radius-sm);
-      cursor:pointer;
-      padding:8px;
-    }
-    .nav-hamburger span{
-      display:block;
-      width:16px;
-      height:1.5px;
-      background:var(--text2);
-      transition:all var(--tr);
-      transform-origin:center;
-    }
-    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-    /* FOOTER */
-    footer{
-      border-top:1px solid var(--border);
-      padding:32px 40px;
-      color:var(--text3);
-      font-family:'DM Mono',monospace;
-      font-size:0.64rem;
-      letter-spacing:0.1em;
-      display:grid;
-      grid-template-columns:1fr auto;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:16px;
-    }
-    .footer-logo{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .footer-logo img{
-      height:22px;
-      opacity:0.3;
-    }
-    .footer-links{
-      display:flex;
-      align-items:center;
-      gap:20px;
-      flex-wrap:wrap;
-    }
-    .footer-link{
-      color:var(--text3);
-      text-decoration:none;
-      transition:color var(--tr);
-      font-size:0.6rem;
-      letter-spacing:0.1em;
-      text-transform:uppercase;
-    }
-    .footer-link:hover{color:var(--text2);}
-    .footer-admin{
-      color:var(--text3);
-      text-decoration:none;
-      font-size:0.6rem;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-      border:1px solid var(--border);
-      padding:5px 12px;
-      border-radius:999px;
-      transition:all var(--tr);
-    }
-    .footer-admin:hover{
-      color:var(--text2);
-      border-color:var(--border-s);
-    }
-
-    /* RESPONSIVE */
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{
-        display:none;
-        position:fixed;
-        top:57px;
-        left:0;
-        right:0;
-        background:var(--glass);
-        backdrop-filter:blur(24px);
-        -webkit-backdrop-filter:blur(24px);
-        border-bottom:1px solid var(--border);
-        flex-direction:column;
-        align-items:flex-start;
-        padding:16px 20px;
-        gap:0;
-        z-index:99;
-      }
-      .nav-links.open{display:flex;}
-      .nav-link{
-        padding:13px 0;
-        width:100%;
-        border-bottom:1px solid var(--border);
-        font-size:0.75rem;
-      }
-      .nav-rifa{
-        border:none;
-        padding:13px 0;
-        border-radius:0;
-        background:none!important;
-      }
-      .nav-hamburger{display:flex;}
-      footer{
-        padding:24px 20px;
-        grid-template-columns:1fr;
-        gap:14px;
-      }
-      .footer-links{gap:14px;}
-    }
-    @media(max-width:480px){
-      .footer-links{gap:10px;}
-    }
-
-    .page-hero{
-      min-height:60vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:140px 24px 60px;
-      position:relative;
-      overflow:hidden;
-    }
-    .page-hero::after{
-      content:'';
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
-      background-size:60px 60px;
-      mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);
-    }
-    .hero-orb{
-      position:absolute;
-      border-radius:50%;
-      filter:blur(100px);
-      pointer-events:none;
-    }
-    .orb1{
-      width:600px;
-      height:600px;
-      background:var(--red);
-      opacity:0.08;
-      top:-200px;
-      left:-150px;
-    }
-    .orb2{
-      width:400px;
-      height:400px;
-      background:#c01800;
-      opacity:0.06;
-      bottom:-100px;
-      right:-80px;
-    }
-    .page-eyebrow{
-      font-family:'DM Mono',monospace;
-      font-size:0.62rem;
-      letter-spacing:0.35em;
-      text-transform:uppercase;
-      color:var(--red);
-      margin-bottom:16px;
-      position:relative;
-      z-index:1;
-      opacity:0;
-      animation:rise 0.7s 0.1s forwards;
-    }
-    .page-title{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:clamp(4rem,12vw,9rem);
-      line-height:0.88;
-      color:var(--text);
-      position:relative;
-      z-index:1;
-      opacity:0;
-      animation:rise 0.7s 0.2s forwards;
-    }
-    .page-sub{
-      font-family:'Barlow Condensed',sans-serif;
-      font-size:clamp(0.85rem,2vw,1rem);
-      color:var(--text2);
-      letter-spacing:0.15em;
-      text-transform:uppercase;
-      margin-top:14px;
-      position:relative;
-      z-index:1;
-      opacity:0;
-      animation:rise 0.7s 0.3s forwards;
-    }
-    @keyframes rise{
-      from{opacity:0;transform:translateY(20px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    .container{
-      max-width:1080px;
-      margin:0 auto;
-      padding:0 24px 100px;
-    }
-    .sec-eyebrow{
-      font-family:'DM Mono',monospace;
-      font-size:0.6rem;
-      letter-spacing:0.3em;
-      text-transform:uppercase;
-      color:var(--red);
-      margin-bottom:14px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .sec-eyebrow::after{
-      content:'';
-      flex:1;
-      height:1px;
-      background:var(--border);
-    }
-    .sec-note{
-      font-family:'DM Mono',monospace;
-      font-size:0.6rem;
-      letter-spacing:0.3em;
-      text-transform:uppercase;
-      color:var(--red);
-      margin-bottom:14px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .sec-title{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:clamp(2.5rem,5vw,4.5rem);
-      letter-spacing:0.04em;
-      line-height:0.92;
-      margin-bottom:32px;
-      color:var(--text);
-    }
-
-    .membros-grid{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:10px;
-      margin-bottom:80px;
-    }
-    @media(max-width:900px){
-      .membros-grid{grid-template-columns:repeat(3,1fr);}
-    }
-    @media(max-width:700px){
-      .membros-grid{grid-template-columns:repeat(2,1fr);}
-    }
-    @media(max-width:400px){
-      .membros-grid{grid-template-columns:repeat(2,1fr);}
-    }
-    .membro-card{
-      background:var(--bg2);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      overflow:hidden;
-      transition:border-color var(--tr);
-      cursor:pointer;
-    }
-    .membro-card:hover{border-color:var(--border-s);}
-    .membro-foto{
-      aspect-ratio:1;
-      background:var(--bg3);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-    }
-    .membro-foto img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      object-position:top center;
-    }
-    .membro-foto-ph{
-      width:100%;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .membro-foto-ph svg{opacity:0.3;}
-    .membro-info{
-      padding:14px 16px;
-    }
-    .membro-nome{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:1.1rem;
-      letter-spacing:0.04em;
-      color:var(--text);
-      margin-bottom:2px;
-    }
-    .membro-role{
-      font-family:'DM Mono',monospace;
-      font-size:0.6rem;
-      letter-spacing:0.1em;
-      text-transform:uppercase;
-      color:var(--red);
-    }
-
-    .fotos-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      grid-template-rows:auto auto;
-      gap:8px;
-      margin-bottom:80px;
-    }
-    .foto-card{
-      background:var(--bg3);
-      border:1px solid var(--border);
-      border-radius:var(--radius-sm);
-      overflow:hidden;
-      aspect-ratio:4/3;
-      position:relative;
-      cursor:zoom-in;
-      transition:all var(--tr);
-    }
-    .foto-card:hover{
-      border-color:var(--border-s);
-      transform:translateY(-2px);
-    }
-    /* show-01: ocupa colunas 1-2, linha 1 */
-    .foto-card:first-child{
-      grid-column:1 / 3;
-      grid-row:1;
-      aspect-ratio:unset;
-      min-height:240px;
-    }
-    /* show-02: coluna 3, linha 1 — estica para mesma altura do show-01 */
-    .foto-card:nth-child(2){
-      grid-column:3;
-      grid-row:1;
-      aspect-ratio:unset;
-    }
-    /* show-03, 04, 05: linha 2 — aspect-ratio normal */
-    .foto-card:nth-child(n+3){
-      aspect-ratio:4/3;
-    }
-    .foto-card img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      object-position:top center;
-      opacity:0.8;
-      transition:opacity var(--tr);
-    }
+    /* FOTOS (prévia da galeria) */
+    .fotos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .foto-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;aspect-ratio:4/3;position:relative;cursor:zoom-in;padding:0;transition:border-color var(--tr),transform var(--tr);}
+    .foto-card:hover{border-color:var(--border-s);transform:translateY(-2px);}
+    .foto-card:first-child{grid-column:1/3;grid-row:1;aspect-ratio:auto;min-height:260px;}
+    .foto-card:nth-child(2){grid-column:3;grid-row:1;aspect-ratio:auto;}
+    .foto-card img{width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.88;transition:opacity var(--tr);}
     .foto-card:hover img{opacity:1;}
-    .foto-placeholder{
-      width:100%;
-      height:100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      color:var(--text3);
-    }
-    .foto-placeholder span{
-      font-family:'DM Mono',monospace;
-      font-size:0.6rem;
-      letter-spacing:0.15em;
-      text-transform:uppercase;
-    }
-
-    /* MOBILE CAROUSEL */
     @media(max-width:600px){
-      .fotos-section-wrap{
-        /* extend past container padding so cards bleed to screen edge */
-        margin-left:-24px;
-        margin-right:-24px;
-      }
-      .fotos-grid{
-        display:flex;
-        flex-direction:row;
-        overflow-x:auto;
-        scroll-snap-type:x mandatory;
-        -webkit-overflow-scrolling:touch;
-        gap:10px;
-        padding:0 24px 12px;
-        margin-bottom:80px;
-        /* hide scrollbar */
-        scrollbar-width:none;
-      }
+      .fotos-wrap{margin:0 -24px;}
+      .fotos-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 24px 6px;scrollbar-width:none;}
       .fotos-grid::-webkit-scrollbar{display:none;}
-      .foto-card{
-        flex:0 0 78vw;
-        max-width:320px;
-        aspect-ratio:4/3!important;
-        min-height:unset!important;
-        scroll-snap-align:start;
-        transform:none!important;
-      }
-      /* reset desktop grid overrides */
-      .foto-card:first-child,
-      .foto-card:nth-child(2){
-        grid-column:unset;
-        grid-row:unset;
-        aspect-ratio:4/3!important;
-        min-height:unset!important;
-      }
-      /* dots indicator */
-      .fotos-dots{
-        display:flex;
-        justify-content:center;
-        gap:6px;
-        margin-top:-68px;
-        margin-bottom:80px;
-      }
-      .fotos-dot{
-        width:5px;
-        height:5px;
-        border-radius:50%;
-        background:var(--text3);
-        transition:background var(--tr), transform var(--tr);
-      }
-      .fotos-dot.active{
-        background:var(--red);
-        transform:scale(1.3);
-      }
-    }
-    @media(min-width:601px){
-      .fotos-dots{display:none;}
-      .fotos-section-wrap{margin-left:0;margin-right:0;}
+      .foto-card,.foto-card:first-child,.foto-card:nth-child(2){flex:0 0 78vw;max-width:320px;aspect-ratio:4/3;min-height:0;scroll-snap-align:start;transform:none!important;}
     }
 
-    .videos-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:12px;
-      margin-bottom:80px;
-    }
-    @media(max-width:600px){
-      .videos-grid{grid-template-columns:1fr;}
-    }
-    .video-card{
-      background:var(--bg2);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      overflow:hidden;
-    }
-    /* Shorts embed — portrait 9:16 */
-    .video-embed{
-      position:relative;
-      padding-bottom:177.78%;
-      height:0;
-      background:var(--bg3);
-    }
-    .video-embed iframe{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      border:none;
-    }
-    .video-info{padding:16px 18px;}
-    .video-titulo{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:1.2rem;
-      letter-spacing:0.04em;
-      color:var(--text);
-      margin-bottom:4px;
-    }
-    .video-local{
-      font-family:'DM Mono',monospace;
-      font-size:0.62rem;
-      color:var(--text3);
-      letter-spacing:0.08em;
-    }
+    /* VÍDEOS (embed leve: o player do YouTube só carrega ao clicar) */
+    .videos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    @media(max-width:900px){.videos-grid{grid-template-columns:repeat(2,1fr);}}
+    .video-card{overflow:hidden;}
+    .video-embed{position:relative;aspect-ratio:9/16;background:var(--bg3);overflow:hidden;}
+    .video-embed.horizontal{aspect-ratio:16/9;}
+    .video-embed button{position:absolute;inset:0;width:100%;height:100%;border:none;padding:0;cursor:pointer;background:none;display:flex;align-items:center;justify-content:center;}
+    .video-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.34);transition:transform 0.6s;}
+    .video-embed.horizontal img{transform:none;}
+    .video-embed button:hover img{transform:scale(1.4);}
+    .video-embed.horizontal button:hover img{transform:scale(1.05);}
+    .video-play{position:relative;z-index:1;width:52px;height:52px;border-radius:50%;background:var(--red);color:var(--on-red);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 6px 24px rgba(0,0,0,0.45);transition:transform var(--tr);}
+    .video-play .ic{margin-left:3px;}
+    .video-embed button:hover .video-play{transform:scale(1.1);}
+    .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+    .video-info{padding:14px 16px;}
+    .video-titulo{font-family:var(--f-display);font-size:1.15rem;letter-spacing:0.04em;color:var(--text);margin-bottom:2px;}
+    .video-local{font-family:var(--f-mono);font-size:0.72rem;color:var(--text3);letter-spacing:0.06em;}
 
-    /* LIGHTBOX */
-    .lb-ov{
-      position:fixed;
-      inset:0;
-      z-index:9999;
-      background:rgba(0,0,0,0.92);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity 0.22s;
-    }
-    .lb-ov.open{
-      opacity:1;
-      pointer-events:all;
-    }
-    .lb-ov img{
-      max-width:90vw;
-      max-height:88vh;
-      object-fit:contain;
-      border-radius:8px;
-      transform:scale(0.94);
-      transition:transform 0.25s, opacity 0.18s;
-      touch-action:pan-y;
-      user-select:none;
-      -webkit-user-select:none;
-    }
-    .lb-ov.open img{
-      transform:scale(1);
-    }
-    .lb-dots{
-      position:absolute;
-      bottom:44px;
-      left:50%;
-      transform:translateX(-50%);
-      display:flex;
-      gap:6px;
-      z-index:2;
-    }
-    .lb-dot{
-      width:5px;
-      height:5px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.3);
-      transition:background var(--tr), transform var(--tr);
-    }
-    .lb-dot.active{
-      background:var(--red);
-      transform:scale(1.3);
-    }
-    @media(min-width:601px){
-      .lb-dots{display:none;}
-    }
-    .lb-close{
-      position:absolute;
-      top:18px;
-      right:22px;
-      font-size:1.6rem;
-      color:rgba(255,255,255,0.5);
-      cursor:pointer;
-      line-height:1;
-      transition:color 0.2s;
-    }
-    .lb-close:hover{color:#fff;}
-    .lb-caption{
-      position:absolute;
-      bottom:18px;
-      left:50%;
-      transform:translateX(-50%);
-      font-family:'DM Mono',monospace;
-      font-size:0.65rem;
-      letter-spacing:0.1em;
-      color:rgba(255,255,255,0.4);
-      text-align:center;
-      white-space:nowrap;
-    }
-
-    /* MEMBRO — painel de detalhes */
-    .mb-ov{
-      position:fixed;
-      inset:0;
-      z-index:9999;
-      background:rgba(0,0,0,0.8);
-      backdrop-filter:blur(6px);
-      -webkit-backdrop-filter:blur(6px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity 0.22s;
-    }
-    .mb-ov.open{
-      opacity:1;
-      pointer-events:all;
-    }
-    .mb-panel{
-      background:var(--bg2);
-      border:1px solid var(--border-s);
-      border-radius:var(--radius);
-      width:100%;
-      max-width:640px;
-      max-height:88vh;
-      overflow-y:auto;
-      display:flex;
-      flex-direction:row;
-      align-items:stretch;
-      position:relative;
-      transform:translateY(16px) scale(0.97);
-      transition:transform 0.25s;
-    }
-    .mb-ov.open .mb-panel{transform:translateY(0) scale(1);}
-    .mb-close{
-      position:absolute;
-      top:14px;
-      right:16px;
-      font-size:1.3rem;
-      color:rgba(255,255,255,0.5);
-      cursor:pointer;
-      line-height:1;
-      transition:color 0.2s;
-      z-index:2;
-    }
-    .mb-close:hover{color:#fff;}
-    .mb-foto{
-      background:var(--bg3);
-      width:42%;
-      min-width:130px;
-      flex-shrink:0;
-      align-self:stretch;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-    }
+    /* PAINEL DO MEMBRO */
+    .mb-panel{background:var(--bg2);border:1px solid var(--border-s);border-radius:var(--radius);width:100%;max-width:660px;max-height:88vh;overflow:hidden;display:flex;position:relative;transform:translateY(16px) scale(0.98);transition:transform 0.25s;}
+    .modal-ov.open .mb-panel{transform:none;}
+    .mb-foto{background:var(--bg3);width:42%;min-width:150px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
     .mb-foto img{width:100%;height:100%;object-fit:cover;object-position:top center;}
-    .mb-foto-ph svg{opacity:0.3;}
-    .mb-body{
-      flex:1;
-      min-width:0;
-      padding:22px 20px 26px;
-      display:flex;
-      flex-direction:column;
-    }
-    .mb-nome{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:2rem;
-      letter-spacing:0.04em;
-      color:var(--text);
-      line-height:1;
-    }
-    .mb-role{
-      font-family:'DM Mono',monospace;
-      font-size:0.62rem;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-      color:var(--red);
-      margin-top:8px;
-    }
-    .mb-bio{
-      font-size:0.88rem;
-      color:var(--text2);
-      line-height:1.7;
-      margin-top:16px;
-      white-space:pre-line;
-    }
-    .mb-socials{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:20px;
-    }
-    .mb-social{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      font-family:'DM Mono',monospace;
-      font-size:0.64rem;
-      letter-spacing:0.08em;
-      text-transform:uppercase;
-      color:var(--red);
-      border:1px solid rgba(232,34,10,0.3);
-      padding:7px 14px;
-      border-radius:999px;
-      text-decoration:none;
-      transition:all var(--tr);
-    }
-    .mb-social:hover{background:rgba(232,34,10,0.1);}
+    .mb-body{flex:1;min-width:0;padding:30px 26px 28px;display:flex;flex-direction:column;overflow-y:auto;}
+    .mb-nome{font-family:var(--f-display);font-size:2.2rem;letter-spacing:0.04em;color:var(--text);line-height:1;padding-right:36px;}
+    .mb-role{font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);margin-top:8px;}
+    .mb-bio{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-top:18px;white-space:pre-line;}
+    .mb-socials{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:22px;}
     @media(max-width:600px){
-      .mb-panel{
-        flex-direction:column;
-        max-height:92vh;
-      }
-      .mb-foto{
-        width:100%;
-        height:46vw;
-        max-height:280px;
-        min-width:unset;
-        flex-shrink:0;
-      }
-      .mb-foto img{
-        object-fit:contain;
-        object-position:center;
-      }
-    }
-    @media(max-width:480px){
-      .mb-foto{height:52vw;max-height:230px;}
-      .mb-body{padding:16px 14px 20px;}
-      .mb-nome{font-size:1.5rem;}
-      .mb-bio{font-size:0.8rem;margin-top:10px;}
-      .mb-socials{margin-top:14px;}
+      .mb-panel{flex-direction:column;max-height:92vh;overflow-y:auto;}
+      .mb-foto{width:100%;height:56vw;max-height:300px;min-width:0;}
+      .mb-body{padding:20px 18px 22px;overflow:visible;}
+      .mb-nome{font-size:1.7rem;}
     }
   </style>
-  <script src="/nexus-core.js"></script>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/marca/nexusicon.png" alt="Nexus"/>
+<a class="sr-only" href="#conteudo">Pular para o conteúdo</a>
+<nav class="site-nav" aria-label="Principal">
+  <a href="/" class="nav-logo" aria-label="Nexus, página inicial">
+    <span class="nav-pulse" aria-hidden="true"></span>
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="22" height="32"/>
   </a>
-
   <div class="nav-links" id="navLinks">
-    <a href="/sobre" class="nav-link active">Sobre</a>
+    <a href="/sobre" class="nav-link">Sobre</a>
     <a href="/agenda" class="nav-link">Agenda</a>
     <a href="/galeria" class="nav-link">Galeria</a>
     <a href="/merch" class="nav-link">Merch</a>
     <a href="/contratantes" class="nav-link">Contratantes</a>
-    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/rifa" class="nav-link nav-rifa" data-rifa hidden><i data-icon="ticket"></i>Rifa</a>
   </div>
-
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+  <button class="nav-hamburger" id="navToggle" type="button" aria-label="Abrir menu" aria-controls="navLinks" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="page-hero">
-  <div class="hero-orb orb1"></div>
-  <div class="hero-orb orb2"></div>
+<main id="conteudo">
+<header class="page-hero has-photo" style="--hero-sm:url(/imgs/hero/banda-sm.webp);--hero-lg:url(/imgs/hero/banda-lg.webp)">
+  <div class="hero-photo" aria-hidden="true"></div>
   <p class="page-eyebrow">Nexus Band</p>
   <h1 class="page-title">SOBRE NÓS</h1>
   <p class="page-sub">Música, energia e identidade própria</p>
-</div>
+</header>
 
 <div class="container">
-  <div style="margin-bottom:64px;">
+  <section class="section">
     <p class="sec-eyebrow">A banda</p>
     <h2 class="sec-title">MEMBROS</h2>
-    <p class="sec-note">Clique na imagem para ver mais detalhes</p>
-
+    <p class="sec-note"><i data-icon="info"></i>Toque em um membro para ver mais detalhes</p>
     <div class="membros-grid" id="membrosGrid">
-      <!-- Preenchido via JS a partir de /api/membros (editável pelo painel admin) -->
+      <div class="skeleton" style="aspect-ratio:3/4"></div><div class="skeleton" style="aspect-ratio:3/4"></div>
+      <div class="skeleton" style="aspect-ratio:3/4"></div><div class="skeleton" style="aspect-ratio:3/4"></div>
+      <div class="skeleton" style="aspect-ratio:3/4"></div>
     </div>
-  </div>
+  </section>
 
-  <div style="margin-bottom:64px;">
+  <section class="section">
     <p class="sec-eyebrow">Galeria</p>
-    <h2 class="sec-title">FOTOS</h2>
-
-    <div class="fotos-section-wrap">
-    <div class="fotos-grid" id="fotosGrid">
-      <div class="foto-card" style="grid-column:span 2;">
-        <img src="/imgs/shows/show-03.jpeg" alt="Nexus show" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.28s"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"/>
-        <div class="foto-placeholder" style="display:none">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="M21 15l-5-5L5 21"/>
-          </svg>
-          <span>/imgs/shows/show-01.jpeg</span>
-        </div>
-      </div>
-
-      <div class="foto-card">
-        <img src="/imgs/shows/show-04.jpeg" alt="Nexus show" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.28s"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"/>
-        <div class="foto-placeholder" style="display:none">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="M21 15l-5-5L5 21"/>
-          </svg>
-          <span>/imgs/shows/show-02.jpeg</span>
-        </div>
-      </div>
-
-      <div class="foto-card">
-        <img src="/imgs/shows/show-01.jpeg" alt="Nexus show" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.28s"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"/>
-        <div class="foto-placeholder" style="display:none">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="M21 15l-5-5L5 21"/>
-          </svg>
-          <span>/imgs/shows/show-03.jpeg</span>
-        </div>
-      </div>
-
-      <div class="foto-card">
-        <img src="/imgs/shows/show-02.jpeg" alt="Nexus show" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.28s"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"/>
-        <div class="foto-placeholder" style="display:none">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="M21 15l-5-5L5 21"/>
-          </svg>
-          <span>/imgs/shows/show-04.jpeg</span>
-        </div>
-      </div>
-
-      <div class="foto-card">
-        <img src="/imgs/shows/show-05.jpeg" alt="Nexus show" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.28s"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"/>
-        <div class="foto-placeholder" style="display:none">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="M21 15l-5-5L5 21"/>
-          </svg>
-          <span>/imgs/shows/show-05.jpeg</span>
-        </div>
-      </div>
-    </div><!-- /fotos-grid -->
-    </div><!-- /fotos-section-wrap -->
-
-    <div class="fotos-dots" id="fotosDots">
-      <div class="fotos-dot active"></div>
-      <div class="fotos-dot"></div>
-      <div class="fotos-dot"></div>
-      <div class="fotos-dot"></div>
-      <div class="fotos-dot"></div>
+    <div class="sec-head">
+      <h2 class="sec-title">FOTOS</h2>
+      <a href="/galeria#fotos" class="link-arrow">Ver todas as fotos <i data-icon="arrow-right"></i></a>
     </div>
-  </div>
+    <div class="fotos-wrap"><div class="fotos-grid" id="fotosGrid"></div></div>
+  </section>
 
-  <div>
+  <section class="section" id="secVideos">
     <p class="sec-eyebrow">Shows</p>
-    <h2 class="sec-title">VÍDEOS</h2>
-
-    <div class="videos-grid">
-      <div class="video-card">
-        <div class="video-embed">
-          <iframe
-            src="https://www.youtube.com/embed/JECQqubB5Dc"
-            title="Nexus — Show ao vivo"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
-        </div>
-        <div class="video-info">
-          <div class="video-titulo">SOLO DE BATERIA</div>
-          <div class="video-local">Senac Nações Unidas - 26.03.2026</div>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-embed">
-          <iframe
-            src="https://www.youtube.com/embed/_ElioiT5R8Q"
-            title="Nexus — Show ao vivo"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
-        </div>
-        <div class="video-info">
-          <div class="video-titulo">BODIES</div>
-          <div class="video-local">Senac Nações Unidas - 26.03.2026</div>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-embed">
-          <iframe
-            src="https://www.youtube.com/embed/93pcz_6b-JM"
-            title="Nexus — Show ao vivo"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
-        </div>
-        <div class="video-info">
-          <div class="video-titulo">DEBIL METAL</div>
-          <div class="video-local">Senac Nações Unidas - 30.10.2025</div>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <div class="video-embed">
-          <iframe
-            src="https://www.youtube.com/embed/o3ycjRGmkhc"
-            title="Nexus — Show ao vivo"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
-        </div>
-        <div class="video-info">
-          <div class="video-titulo">TOXICITY</div>
-          <div class="video-local">Senac Nações Unidas - 26.03.2026</div>
-        </div>
-      </div>
+    <div class="sec-head">
+      <h2 class="sec-title">VÍDEOS</h2>
+      <a href="/galeria#videos" class="link-arrow">Ver todos os vídeos <i data-icon="arrow-right"></i></a>
     </div>
-  </div>
+    <div class="videos-grid" id="videosGrid"></div>
+  </section>
 </div>
-
-<footer>
-  <div class="footer-logo"><img src="/imgs/marca/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
-</footer>
-
-<script>
-  const _t = document.getElementById('navToggle'),
-        _l = document.getElementById('navLinks');
-
-  if (_t && _l) {
-    _t.addEventListener('click', () => {
-      _l.classList.toggle('open');
-      _t.classList.toggle('open');
-    });
-
-    _l.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      _l.classList.remove('open');
-      _t.classList.remove('open');
-    }));
-  }
-</script>
-
-<div class="lb-ov" id="lbOv" onmousedown="nexusOverlayDown(event)" onclick="if(event.target.classList.contains('lb-close')){lbClose();}else{nexusOverlayClick(event,lbClose)}">
-  <span class="lb-close">✕</span>
-  <img id="lbImg" src="" alt=""/>
-  <div class="lb-dots" id="lbDots"></div>
-  <span class="lb-caption" id="lbCap"></span>
-</div>
+</main>
 
 <!-- PAINEL DE DETALHES DO MEMBRO -->
-<div class="mb-ov" id="mbOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,mbClose)">
+<div class="modal-ov" id="mbOv" role="dialog" aria-modal="true" aria-labelledby="mbNome" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,mbClose)">
   <div class="mb-panel">
-    <span class="mb-close" onclick="mbClose()">✕</span>
-    <div class="mb-foto">
-      <img id="mbFoto" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-      <div class="mb-foto-ph" style="display:none">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-          <circle cx="12" cy="12" r="9.5"/>
-          <text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-size="12" font-family="'DM Mono',monospace" fill="white" stroke="none">?</text>
-        </svg>
-      </div>
-    </div>
+    <button class="btn btn-icon sm modal-x" type="button" aria-label="Fechar" onclick="mbClose()"><i data-icon="x"></i></button>
+    <div class="mb-foto" id="mbFoto"></div>
     <div class="mb-body">
       <div class="mb-nome" id="mbNome"></div>
       <div class="mb-role" id="mbRole"></div>
@@ -1078,221 +169,174 @@
   </div>
 </div>
 
-<script>
-  /* MEMBROS — carrega de /api/membros (editável via painel admin) e
-     preenche a grade + o painel de detalhes ao clicar em cada card. */
-  const FALLBACK_MEMBROS = [
-    { nome:'DAVI',   funcao:'Guitarra & Vocal', foto:'/imgs/banda/membro-davi.jpeg',   bio:'', instagram:'', tiktok:'', ativo:true, ordem:1 },
-    { nome:'JOÃO',   funcao:'Guitarra',         foto:'/imgs/banda/membro-joao.jpeg',   bio:'', instagram:'', tiktok:'', ativo:true, ordem:2 },
-    { nome:'ATILA',  funcao:'Teclados',         foto:'/imgs/banda/membro-atila.jpeg',  bio:'', instagram:'', tiktok:'', ativo:true, ordem:3 },
-    { nome:'VICTOR', funcao:'Bateria',          foto:'/imgs/banda/membro-victor.jpeg', bio:'', instagram:'', tiktok:'', ativo:true, ordem:4 },
-    { nome:'NOVO MEMBRO', funcao:'Instrumento', foto:'', bio:'Edite este card pelo painel admin: adicione foto, função e uma breve bio.', instagram:'', tiktok:'', ativo:true, ordem:5 }
-  ];
-
-  function membroFotoPhSvg(){
-    return '<div class="membro-foto-ph"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><circle cx="12" cy="12" r="9.5"/><text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-size="12" font-family="\'DM Mono\',monospace" fill="white" stroke="none">?</text></svg></div>';
-  }
-
-  function renderMembros(membros){
-    const grid = document.getElementById('membrosGrid');
-    const ativos = (membros||[]).filter(m => m.ativo !== false);
-    if(!ativos.length){ grid.innerHTML = ''; return; }
-
-    grid.innerHTML = ativos.map((m, i) => `
-      <div class="membro-card" data-idx="${i}">
-        <div class="membro-foto">
-          ${m.foto ? `<img src="${m.foto}" alt="${m.nome}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>` : ''}
-          <div class="membro-foto-ph" style="${m.foto ? 'display:none' : ''}">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
-              <circle cx="12" cy="12" r="9.5"/>
-              <text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-size="12" font-family="'DM Mono',monospace" fill="white" stroke="none">?</text>
-            </svg>
-          </div>
-        </div>
-        <div class="membro-info">
-          <div class="membro-nome">${m.nome}</div>
-          <div class="membro-role">${m.funcao||''}</div>
-        </div>
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/imgs/marca/nexusicon-sm.png" alt="Nexus" width="30" height="44"/>
+      <p>Rock autoral de São Paulo. Onde tudo se encontra.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+        <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+        <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+        <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+        <a href="https://wa.me/5511942477432" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp da Nexus"><i data-icon="message"></i></a>
+        <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
       </div>
-    `).join('');
+    </div>
+    <nav class="footer-nav" aria-label="Rodapé">
+      <div class="footer-titulo">Site</div>
+      <a href="/sobre">Sobre</a>
+      <a href="/agenda">Agenda</a>
+      <a href="/galeria">Galeria</a>
+      <a href="/merch">Merch</a>
+      <a href="/contratantes">Contratantes</a>
+      <a href="/rifa" data-rifa hidden>Rifa</a>
+    </nav>
+    <form class="footer-avisos" id="formAvisos" novalidate>
+      <div class="footer-titulo">Avisos de shows</div>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <div class="linha">
+        <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
+        <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
+        <button class="btn btn-primary btn-sm" type="submit"><i data-icon="send"></i>Quero</button>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off"/></div>
+    </form>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Nexus Band</span>
+    <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
+  </div>
+</footer>
 
-    grid.querySelectorAll('.membro-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const m = ativos[parseInt(card.dataset.idx, 10)];
-        if (m) mbOpen(m);
-      });
-    });
-  }
-
-  function mbOpen(m){
-    const foto = document.getElementById('mbFoto');
-    const ph = document.querySelector('#mbOv .mb-foto-ph');
-    if (m.foto) { foto.src = m.foto; foto.style.display=''; ph.style.display='none'; }
-    else { foto.style.display='none'; ph.style.display='flex'; }
-
-    document.getElementById('mbNome').textContent = m.nome || '';
-    document.getElementById('mbRole').textContent = m.funcao || '';
-
-    const bioEl = document.getElementById('mbBio');
-    bioEl.textContent = m.bio || '';
-    bioEl.style.display = m.bio ? '' : 'none';
-
-    const socials = document.getElementById('mbSocials');
-    let html = '';
-    if (m.instagram) html += `<a class="mb-social" href="${m.instagram.startsWith('http') ? m.instagram : 'https://instagram.com/'+m.instagram.replace('@','')}" target="_blank" rel="noopener">Instagram →</a>`;
-    if (m.tiktok) html += `<a class="mb-social" href="${m.tiktok.startsWith('http') ? m.tiktok : 'https://tiktok.com/@'+m.tiktok.replace('@','')}" target="_blank" rel="noopener">TikTok →</a>`;
-    socials.innerHTML = html;
-    socials.style.display = html ? '' : 'none';
-
-    document.getElementById('mbOv').classList.add('open');
-  }
-
-  function mbClose(){
-    document.getElementById('mbOv').classList.remove('open');
-  }
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') mbClose();
-  });
-
-  (async () => {
-    try {
-      const res = await fetch('/api/membros');
-      if (res.ok) {
-        const d = await res.json();
-        renderMembros((d.membros && d.membros.length) ? d.membros : FALLBACK_MEMBROS);
-        return;
-      }
-    } catch (e) {}
-    renderMembros(FALLBACK_MEMBROS);
-  })();
-</script>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-  const lbPhotos = Array.from(document.querySelectorAll('.foto-card img')).map(img => ({
-    img, src: img.src, cap: img.alt
-  }));
-  let lbIndex = 0;
+/* MEMBROS — carrega de /api/membros (editável pelo painel admin). */
+const FALLBACK_MEMBROS = [
+  { nome:'DAVI',   funcao:'Guitarra & Vocal', foto:'/imgs/banda/membro-davi.jpeg' },
+  { nome:'JOÃO',   funcao:'Guitarra',         foto:'/imgs/banda/membro-joao.jpeg' },
+  { nome:'ATILA',  funcao:'Teclados',         foto:'/imgs/banda/membro-atila.jpeg' },
+  { nome:'VICTOR', funcao:'Bateria',          foto:'/imgs/banda/membro-victor.jpeg' },
+  { nome:'PEDRO',  funcao:'Baixo',            foto:'' }
+];
+let membrosAtivos = [];
 
-  (function lbBuildDots(){
-    const dotsEl = document.getElementById('lbDots');
-    dotsEl.innerHTML = lbPhotos.map(() => '<span class="lb-dot"></span>').join('');
-  })();
+function fotoOuPlaceholder(src, alt){
+  const ph = `<span class="foto-ph">${nexusIcon('user')}</span>`;
+  if(!src) return ph;
+  return `<img src="${nexusEsc(src)}" alt="${nexusEsc(alt)}" loading="lazy" decoding="async" onerror="this.outerHTML=this.dataset.ph" data-ph='${ph}'/>`;
+}
 
-  function lbRender() {
-    const p = lbPhotos[lbIndex];
-    if (!p) return;
-    const img = document.getElementById('lbImg');
-    img.style.opacity = '0';
-    setTimeout(() => {
-      img.src = p.src;
-      document.getElementById('lbCap').textContent = p.cap || '';
-      img.style.opacity = '1';
-    }, 90);
-    document.querySelectorAll('#lbDots .lb-dot').forEach((d, i) => d.classList.toggle('active', i === lbIndex));
-  }
+function renderMembros(membros){
+  const grid = document.getElementById('membrosGrid');
+  membrosAtivos = (membros || []).filter(m => m.ativo !== false);
+  if(!membrosAtivos.length){ grid.innerHTML = ''; return; }
+  grid.innerHTML = membrosAtivos.map((m, i) => `
+    <button class="card card-hover membro-card" type="button" onclick="mbOpen(${i})">
+      <span class="membro-foto">${fotoOuPlaceholder(m.foto, m.nome)}</span>
+      <span class="membro-info">
+        <span class="membro-nome">${nexusEsc(m.nome)}</span>
+        <span class="membro-role">${nexusEsc(m.funcao || '')}</span>
+      </span>
+    </button>`).join('');
+}
 
-  function lbOpen(index) {
-    lbIndex = index;
-    const ov = document.getElementById('lbOv');
-    lbRender();
-    ov.classList.add('open');
-  }
+function linkSocial(valor, base){
+  return valor.startsWith('http') ? valor : base + valor.replace('@', '');
+}
 
-  function lbClose() {
-    document.getElementById('lbOv').classList.remove('open');
-  }
+function mbOpen(i){
+  const m = membrosAtivos[i];
+  if(!m) return;
+  document.getElementById('mbFoto').innerHTML = fotoOuPlaceholder(m.foto, m.nome);
+  document.getElementById('mbNome').textContent = m.nome || '';
+  document.getElementById('mbRole').textContent = m.funcao || '';
+  const bio = document.getElementById('mbBio');
+  bio.textContent = m.bio || '';
+  bio.hidden = !m.bio;
+  let html = '';
+  if(m.instagram) html += `<a class="btn btn-outline btn-sm is-accent" href="${nexusEsc(linkSocial(m.instagram, 'https://instagram.com/'))}" target="_blank" rel="noopener">${nexusIcon('instagram')}Instagram</a>`;
+  if(m.tiktok) html += `<a class="btn btn-outline btn-sm is-accent" href="${nexusEsc(linkSocial(m.tiktok, 'https://tiktok.com/@'))}" target="_blank" rel="noopener">${nexusIcon('tiktok')}TikTok</a>`;
+  const socials = document.getElementById('mbSocials');
+  socials.innerHTML = html;
+  socials.hidden = !html;
+  document.getElementById('mbOv').classList.add('open');
+}
+function mbClose(){ document.getElementById('mbOv').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') mbClose(); });
 
-  function lbNext() {
-    lbIndex = (lbIndex + 1) % lbPhotos.length;
-    lbRender();
-  }
-
-  function lbPrev() {
-    lbIndex = (lbIndex - 1 + lbPhotos.length) % lbPhotos.length;
-    lbRender();
-  }
-
-  function isLbMobile() {
-    return window.matchMedia('(max-width:600px)').matches;
-  }
-
-  document.addEventListener('keydown', e => {
-    const ov = document.getElementById('lbOv');
-    if (!ov.classList.contains('open')) return;
-    if (e.key === 'Escape') lbClose();
-    if (!isLbMobile()) return;
-    if (e.key === 'ArrowRight') lbNext();
-    if (e.key === 'ArrowLeft') lbPrev();
-  });
-
-  lbPhotos.forEach(({ img }, i) => {
-    img.closest('.foto-card').addEventListener('click', () => {
-      if (img.style.display !== 'none') lbOpen(i);
-    });
-  });
-
-  /* Swipe (touch) navigation — fullscreen mobile gallery only */
-  (function(){
-    const ov = document.getElementById('lbOv');
-    let startX = 0, startY = 0, tracking = false;
-
-    ov.addEventListener('touchstart', e => {
-      if (!isLbMobile() || e.touches.length !== 1) return;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      tracking = true;
-    }, { passive: true });
-
-    ov.addEventListener('touchend', e => {
-      if (!tracking) return;
-      tracking = false;
-      const dx = e.changedTouches[0].clientX - startX;
-      const dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
-        if (dx < 0) lbNext(); else lbPrev();
-      }
-    }, { passive: true });
-  })();
-</script>
-
-<script>
-  /* Carousel dots — mobile only */
-  (function(){
-    const grid = document.getElementById('fotosGrid');
-    const dots = document.querySelectorAll('#fotosDots .fotos-dot');
-    if(!grid || !dots.length) return;
-    function update(){
-      const cards = grid.querySelectorAll('.foto-card');
-      const sl = grid.scrollLeft;
-      const w  = grid.clientWidth;
-      let closest = 0, minDist = Infinity;
-      cards.forEach((c, i) => {
-        const dist = Math.abs(c.offsetLeft - sl - 24); /* 24 = padding */
-        if(dist < minDist){ minDist = dist; closest = i; }
-      });
-      dots.forEach((d,i) => d.classList.toggle('active', i === closest));
-    }
-    grid.addEventListener('scroll', update, {passive:true});
-    update();
-  })();
-</script>
-
-<script>
-(async()=>{
+(async () => {
   try{
-    const res=await fetch("/api/config");
+    const res = await fetch('/api/membros');
     if(res.ok){
-      const d=await res.json();
-      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
-        const el=document.getElementById("navRifa");
-        if(el){el.style.display="";}
-      }
+      const d = await res.json();
+      renderMembros((d.membros && d.membros.length) ? d.membros : FALLBACK_MEMBROS);
+      return;
     }
   }catch(e){}
+  renderMembros(FALLBACK_MEMBROS);
 })();
-</script>
-<script>
+
+/* GALERIA — prévia das últimas fotos e vídeos cadastrados no painel admin. */
+const FOTOS_PADRAO = ['03','04','01','02','05'].map(n => ({ url:`/imgs/shows/show-${n}.jpeg`, thumbnail_url:`/imgs/shows/thumb/show-${n}.webp`, titulo:'Nexus ao vivo' }));
+const VIDEOS_PADRAO = [
+  { titulo:'Solo de bateria', descricao:'Senac Nações Unidas · 26.03.2026', url:'https://www.youtube.com/shorts/JECQqubB5Dc' },
+  { titulo:'Bodies',          descricao:'Senac Nações Unidas · 26.03.2026', url:'https://www.youtube.com/shorts/_ElioiT5R8Q' },
+  { titulo:'Debil Metal',     descricao:'Senac Nações Unidas · 30.10.2025', url:'https://www.youtube.com/shorts/93pcz_6b-JM' },
+  { titulo:'Toxicity',        descricao:'Senac Nações Unidas · 26.03.2026', url:'https://www.youtube.com/shorts/o3ycjRGmkhc' }
+];
+
+async function buscarGaleria(tipo, limite, padrao){
+  try{
+    const r = await fetch(`/api/galeria?tipo=${tipo}&limite=${limite}`);
+    if(r.ok){ const d = await r.json(); if(!d.aviso) return d.itens || []; }
+  }catch(e){}
+  return padrao;
+}
+
+function idYoutube(url){
+  const m = String(url || '').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+(async () => {
+  const fotos = await buscarGaleria('foto', 5, FOTOS_PADRAO);
+  const grid = document.getElementById('fotosGrid');
+  if(!fotos.length){
+    grid.innerHTML = `<div class="state">${nexusIcon('camera')}<span>Fotos em breve.</span></div>`;
+  } else {
+    grid.innerHTML = fotos.map((f, i) => `
+      <button class="foto-card" type="button" aria-label="Ampliar foto" data-i="${i}">
+        <img src="${nexusEsc(i < 2 ? f.url : (f.thumbnail_url || f.url))}" alt="${nexusEsc(f.titulo || 'Nexus ao vivo')}" loading="lazy" decoding="async"/>
+      </button>`).join('');
+    const itens = fotos.map(f => ({ src: f.url, cap: f.titulo || '' }));
+    grid.querySelectorAll('.foto-card').forEach(b => b.addEventListener('click', () => nexusLightbox(itens, +b.dataset.i)));
+  }
+
+  const videos = (await buscarGaleria('video', 4, VIDEOS_PADRAO)).filter(v => idYoutube(v.url));
+  if(!videos.length){ document.getElementById('secVideos').hidden = true; return; }
+  document.getElementById('videosGrid').innerHTML = videos.map(v => {
+    const id = idYoutube(v.url);
+    const vertical = /\/shorts\//.test(v.url);
+    return `
+    <div class="card video-card">
+      <div class="video-embed${vertical ? '' : ' horizontal'}">
+        <button type="button" data-yt="${id}" data-titulo="${nexusEsc(v.titulo || '')}" aria-label="Assistir: ${nexusEsc(v.titulo || 'vídeo')}">
+          <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" onerror="this.style.visibility='hidden'" loading="lazy" decoding="async"/>
+          <span class="video-play">${nexusIcon('play')}</span>
+        </button>
+      </div>
+      <div class="video-info">
+        <div class="video-titulo">${nexusEsc(v.titulo || 'Vídeo')}</div>
+        ${v.descricao ? `<div class="video-local">${nexusEsc(v.descricao)}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('[data-yt]').forEach(b => b.addEventListener('click', () => {
+    b.parentElement.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0&playsinline=1" title="${nexusEsc(b.dataset.titulo)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  }));
+})();
 </script>
 <script src="/venom.js" defer></script>
 </body>

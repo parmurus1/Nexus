@@ -2,6 +2,7 @@
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 import { calcularFreteMelhorEnvio } from './frete.js';
+import { montarItensSeguros } from './_lib/pedidos.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -13,15 +14,13 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
   const {
-    itens, nome, email, cpf, telefone,
+    itens: itensCliente, nome, email, cpf, telefone,
     cep, uf, cidade, endereco, numero, complemento, bairro,
     frete_servico_id // id da opção de frete escolhida pelo usuário (veio de /api/frete)
-  } = req.body;
+  } = req.body || {};
 
-  if (!itens || !Array.isArray(itens) || itens.length === 0)
-    return res.status(400).json({ erro: 'Carrinho vazio' });
-  if (!nome || !email)
-    return res.status(400).json({ erro: 'Nome e e-mail são obrigatórios' });
+  if (!nome || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email)))
+    return res.status(400).json({ erro: 'Nome e e-mail válidos são obrigatórios' });
   const cpfLimpo = String(cpf || '').replace(/\D/g, '');
   if (cpfLimpo.length !== 11)
     return res.status(400).json({ erro: 'CPF inválido — é exigido pela transportadora para gerar a etiqueta de envio.' });
@@ -31,14 +30,10 @@ export default async function handler(req, res) {
   if (!cep || !endereco || !numero)
     return res.status(400).json({ erro: 'Endereço de entrega incompleto' });
 
-  // Cada item precisa ter preço definido (> 0). Produtos "a confirmar" (preco 0)
-  // não podem ir pro Mercado Pago — o front-end direciona esses pro WhatsApp.
-  const semPreco = itens.some(i => !i.preco || Number(i.preco) <= 0);
-  if (semPreco) {
-    return res.status(400).json({
-      erro: 'Um ou mais itens do carrinho ainda não têm preço definido. Finalize esse pedido via WhatsApp.'
-    });
-  }
+  // ── Itens: NUNCA confiar em preço/nome vindos do navegador. O carrinho só
+  // informa id + tamanho + quantidade; preço, nome, medidas e estoque vêm do banco.
+  const { itens, erro: erroItens, status: statusItens } = await montarItensSeguros(supabase, itensCliente);
+  if (erroItens) return res.status(statusItens || 400).json({ erro: erroItens });
 
   // ── Frete: NUNCA confiar em um valor vindo do front. Recalcula no servidor
   // chamando a API do Melhor Envio de novo e usa a opção escolhida pelo id. ──
@@ -70,7 +65,7 @@ export default async function handler(req, res) {
   const { data: pedido, error: erroPedido } = await supabase
     .from('pedidos_merch')
     .insert({
-      itens,
+      itens, // preço, nome e medidas vindos do banco (as medidas são usadas na etiqueta)
       valor_total: valorTotal,
       nome_comprador: nome,
       email_comprador: email,
@@ -93,8 +88,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ erro: 'Erro ao registrar pedido' });
   }
 
-  // MODO DEMO: sem token do MP configurado
-  const modoDemo = !process.env.MP_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN === 'SEU_TOKEN_AQUI';
+  // MODO DEMO: sem token do MP configurado OU forçado pelo painel admin (igual à rifa)
+  const { data: configDemo } = await supabase.from('config').select('valor').eq('chave', 'modo_demo').maybeSingle();
+  const modoDemo = !process.env.MP_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN === 'SEU_TOKEN_AQUI' || configDemo?.valor === 'true';
   if (modoDemo) {
     return res.status(200).json({
       modo_demo: true,
@@ -137,14 +133,19 @@ export default async function handler(req, res) {
           default_payment_method_id: 'pix'
         },
         back_urls: {
-          success: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/sucesso.html`,
-          failure: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/merch.html`,
+          success: `${process.env.SITE_URL || 'https://nexusband.com.br'}/sucesso?origem=merch`,
+          failure: `${process.env.SITE_URL || 'https://nexusband.com.br'}/falha?origem=merch`,
           // Pix aprova de forma assíncrona (o Mercado Pago não redireciona
           // sozinho nesse caso) — manda pra uma tela nossa que fica
           // consultando /api/pedido-status e redireciona assim que aprovar.
-          pending: `${process.env.SITE_URL || 'https://nexusband.vercel.app'}/pendente.html?pedido=${pedido.id}`
+          pending: `${process.env.SITE_URL || 'https://nexusband.com.br'}/pendente?origem=merch&pedido=${pedido.id}`
         },
         auto_return: 'approved',
+        // Link de pagamento vale 1h; depois disso o pedido fica como pendente/cancelado
+        expires: true,
+        expiration_date_from: new Date().toISOString(),
+        expiration_date_to: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+        date_of_expiration: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
         statement_descriptor: 'NEXUS MERCH',
         external_reference: `merch-${pedido.id}`,
         notification_url: process.env.SITE_URL ? `${process.env.SITE_URL}/api/webhook` : undefined,
@@ -164,9 +165,6 @@ export default async function handler(req, res) {
     await supabase.from('pedidos_merch').update({ status: 'cancelado' }).eq('id', pedido.id);
     console.error('Erro MP (merch):', err);
     console.error('Detalhes:', JSON.stringify(err.response?.data || err.message));
-    return res.status(500).json({
-      erro: 'Erro ao criar pagamento no Mercado Pago',
-      detalhes: err.message
-    });
+    return res.status(500).json({ erro: 'Erro ao criar pagamento no Mercado Pago. Tente novamente em instantes.' });
   }
 }

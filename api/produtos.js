@@ -1,17 +1,23 @@
 // api/produtos.js — CRUD de produtos para a merch
 import { createClient } from '@supabase/supabase-js';
+import { autenticar } from './_lib/auth.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
-function autenticar(req) {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
+// Estoque opcional por tamanho: {"P": 3, "M": 0} ou {"único": 10}. null = sem controle.
+function normalizarEstoque(v) {
+  if (v === null || v === '' ) return null;
+  if (typeof v !== 'object' || Array.isArray(v)) return undefined;
+  const out = {};
+  for (const [tam, qtd] of Object.entries(v)) {
+    const n = parseInt(qtd, 10);
+    if (String(tam).trim() && Number.isInteger(n) && n >= 0) out[String(tam).trim().slice(0, 20)] = Math.min(n, 100000);
+  }
+  return Object.keys(out).length ? out : null;
 }
 
-// Gera um id único simples (sem dependência externa)
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+function erroColuna(msg) {
+  return /estoque/i.test(msg) ? ' Para usar o controle de estoque, execute o bloco ATUALIZAÇÃO 2 do supabase_schema.sql no Supabase.' : '';
 }
 
 export default async function handler(req, res) {
@@ -43,6 +49,9 @@ export default async function handler(req, res) {
       largura_cm: p.largura_cm ?? 20,
       comprimento_cm: p.comprimento_cm ?? 25
     }));
+    // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+    // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=600');
     return res.status(200).json({ produtos });
   }
 
@@ -51,7 +60,7 @@ export default async function handler(req, res) {
 
   // ── POST: criar produto ─────────────────────────────────────────────────
   if (req.method === 'POST') {
-    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo, peso_kg, altura_cm, largura_cm, comprimento_cm } = req.body;
+    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo, peso_kg, altura_cm, largura_cm, comprimento_cm, estoque } = req.body;
     if (!nome || !descricao) return res.status(400).json({ erro: 'nome e descrição são obrigatórios' });
 
     // Verifica se a tabela existe antes de inserir
@@ -72,7 +81,7 @@ export default async function handler(req, res) {
         cat: cat || '',
         descricao,
         preco: preco != null ? parseFloat(preco) : 0,
-        emoji: emoji || '📦',
+        emoji: emoji || 'package',
         img: img || '',
         badge: badge || null,
         sizes: Array.isArray(sizes) ? sizes : [],
@@ -81,14 +90,15 @@ export default async function handler(req, res) {
         peso_kg: peso_kg != null ? parseFloat(peso_kg) : 0.3,
         altura_cm: altura_cm != null ? parseFloat(altura_cm) : 5,
         largura_cm: largura_cm != null ? parseFloat(largura_cm) : 20,
-        comprimento_cm: comprimento_cm != null ? parseFloat(comprimento_cm) : 25
+        comprimento_cm: comprimento_cm != null ? parseFloat(comprimento_cm) : 25,
+        ...(estoque !== undefined && normalizarEstoque(estoque) !== undefined ? { estoque: normalizarEstoque(estoque) } : {})
       })
       .select()
       .single();
 
     if (error) {
       console.error('POST produto error:', error.message);
-      return res.status(500).json({ erro: 'Erro ao criar produto: ' + error.message });
+      return res.status(500).json({ erro: 'Erro ao criar produto: ' + error.message + erroColuna(error.message) });
     }
     return res.status(201).json({ produto: inserted });
   }
@@ -98,7 +108,7 @@ export default async function handler(req, res) {
     const id = req.query.id;
     if (!id) return res.status(400).json({ erro: 'ID obrigatório' });
 
-    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo, peso_kg, altura_cm, largura_cm, comprimento_cm } = req.body;
+    const { nome, cat, descricao, preco, emoji, img, badge, sizes, ativo, peso_kg, altura_cm, largura_cm, comprimento_cm, estoque } = req.body;
     const updates = {};
     if (nome  !== undefined) updates.nome  = nome;
     if (cat   !== undefined) updates.cat   = cat;
@@ -113,11 +123,12 @@ export default async function handler(req, res) {
     if (altura_cm !== undefined) updates.altura_cm = parseFloat(altura_cm) || 5;
     if (largura_cm !== undefined) updates.largura_cm = parseFloat(largura_cm) || 20;
     if (comprimento_cm !== undefined) updates.comprimento_cm = parseFloat(comprimento_cm) || 25;
+    if (estoque !== undefined && normalizarEstoque(estoque) !== undefined) updates.estoque = normalizarEstoque(estoque);
 
     const { error } = await supabase.from('produtos').update(updates).eq('id', id);
     if (error) {
       console.error('PUT produto error:', error.message);
-      return res.status(500).json({ erro: 'Erro ao atualizar produto: ' + error.message });
+      return res.status(500).json({ erro: 'Erro ao atualizar produto: ' + error.message + erroColuna(error.message) });
     }
     return res.status(200).json({ ok: true });
   }

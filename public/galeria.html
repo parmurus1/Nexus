@@ -2,377 +2,346 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Galeria — Nexus</title>
-
-  <meta name="description" content="Fotos e vídeos da Nexus: shows, bastidores e mais."/>
+  <meta name="description" content="Fotos e vídeos da Nexus: shows ao vivo, bastidores e mais."/>
+  <meta name="theme-color" content="#080808"/>
   <meta property="og:title" content="Galeria — Nexus"/>
-  <meta property="og:description" content="Fotos e vídeos da Nexus: shows, bastidores e mais."/>
-  <meta property="og:image" content="/imgs/marca/og-image.png"/>
+  <meta property="og:description" content="Fotos e vídeos da Nexus: shows ao vivo, bastidores e mais."/>
+  <meta property="og:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
   <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://nexusband.com.br/galeria"/>
+  <meta property="og:locale" content="pt_BR"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
+  <link rel="canonical" href="https://nexusband.com.br/galeria"/>
+  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon-sm.png"/>
+  <link rel="apple-touch-icon" href="/imgs/marca/nexusicon-sm.png"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/nexus.css"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-05-sm.webp" media="(max-width: 768px)"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-05-lg.webp" media="(min-width: 769px)"/>
 
   <script defer src="/_vercel/insights/script.js"></script>
-
-  <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#8c8883;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-
-    /* ── NAV ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
-    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
-    .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:24px;}
-    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
-    .nav-link:hover{color:var(--red);}
-    .nav-link.active{color:var(--text);}
-    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
-    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
-    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
-    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
-    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-    /* ── HERO ── */
-    .page-hero{min-height:44vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 40px;position:relative;overflow:hidden;}
-    .page-hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
-    .hero-orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
-    .orb1{width:500px;height:500px;background:var(--red);opacity:0.08;top:-150px;left:-100px;}
-    .page-eyebrow{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
-    .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}
-    .page-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,2vw,1rem);color:var(--text2);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.3s forwards;}
-    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-    .container{max-width:1080px;margin:0 auto;padding:0 24px 120px;}
-
-    /* ── TABS ── */
-    .tabs{display:flex;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:999px;padding:5px;max-width:340px;margin:0 auto 48px;}
-    .tab-btn{flex:1;background:none;border:none;color:var(--text2);font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;padding:11px 18px;border-radius:999px;cursor:pointer;transition:all var(--tr);}
-    .tab-btn.on{background:var(--red);color:#fff;}
-    .tab-btn:not(.on):hover{color:var(--text);}
-
-    .tab-panel{display:none;}
-    .tab-panel.on{display:block;}
-
-    .estado-vazio{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.06em;line-height:1.9;}
-    .estado-vazio .ic{font-size:2.2rem;display:block;margin-bottom:14px;opacity:0.6;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* ── GRID FOTOS ── */
-    .fotos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-    @media(max-width:700px){.fotos-grid{grid-template-columns:repeat(2,1fr);}}
-    .foto-card{position:relative;aspect-ratio:1/1;border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;background:var(--bg2);border:1px solid var(--border);transition:all var(--tr);}
-    .foto-card:hover{border-color:var(--border-s);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.35);}
-    .foto-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--tr);}
-    .foto-card:hover img{transform:scale(1.06);}
-    .foto-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 45%);opacity:0;transition:opacity var(--tr);display:flex;align-items:flex-end;padding:12px;}
-    .foto-card:hover .foto-card-overlay{opacity:1;}
-    .foto-card-titulo{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;color:#fff;letter-spacing:0.02em;}
-
-    /* ── GRID VÍDEOS ── */
-    .videos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
-    @media(max-width:700px){.videos-grid{grid-template-columns:1fr;}}
-    .video-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all var(--tr);}
-    .video-card:hover{border-color:var(--border-s);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.35);}
-    .video-thumb{position:relative;aspect-ratio:16/9;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;}
-    .video-thumb::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--red-mid) 0%,transparent 70%);}
-    .video-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.75;}
-    .video-play{position:relative;z-index:1;width:52px;height:52px;border-radius:50%;background:rgba(232,34,10,0.92);display:flex;align-items:center;justify-content:center;transition:all var(--tr);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
-    .video-card:hover .video-play{transform:scale(1.12);background:#ff2a10;}
-    .video-play svg{width:18px;height:18px;fill:#fff;margin-left:3px;}
-    .video-body{padding:16px 18px;}
-    .video-titulo{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:0.03em;color:var(--text);line-height:1.2;}
-
-    /* ── LIGHTBOX FOTO ── */
-    .lightbox-ov{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
-    .lightbox-ov.open{opacity:1;pointer-events:all;}
-    .lightbox-img-wrap{position:relative;max-width:min(920px,92vw);max-height:88vh;display:flex;flex-direction:column;align-items:center;gap:14px;}
-    .lightbox-img-wrap img{max-width:100%;max-height:78vh;border-radius:var(--radius-sm);object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-    .lightbox-cap{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;color:var(--text2);text-align:center;}
-    .lightbox-x{position:absolute;top:-46px;right:0;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-s);background:var(--bg2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all var(--tr);}
-    .lightbox-x:hover{border-color:var(--red);color:var(--red);}
-    .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid var(--border-s);background:rgba(17,17,17,0.85);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all var(--tr);z-index:2;}
-    .lightbox-nav:hover{border-color:var(--red);color:var(--red);}
-    .lightbox-prev{left:-58px;}
-    .lightbox-next{right:-58px;}
-    @media(max-width:820px){.lightbox-prev{left:6px;}.lightbox-next{right:6px;}.lightbox-x{top:-42px;}}
-
-    /* ── MODAL VÍDEO ── */
-    .video-ov{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
-    .video-ov.open{opacity:1;pointer-events:all;}
-    .video-modal{position:relative;width:100%;max-width:860px;}
-    .video-modal-x{position:absolute;top:-46px;right:0;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-s);background:var(--bg2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all var(--tr);}
-    .video-modal-x:hover{border-color:var(--red);color:var(--red);}
-    .video-frame-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-    .video-frame-wrap iframe,.video-frame-wrap video{position:absolute;inset:0;width:100%;height:100%;border:none;}
-    .video-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;}
-    .video-fallback .ic{font-size:2.4rem;}
-    .video-fallback p{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text2);letter-spacing:0.05em;max-width:320px;}
-    .video-modal-cap{font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--text2);text-align:center;margin-top:16px;letter-spacing:0.02em;}
-
-    .btn-primary{background:var(--red);color:#fff;padding:14px 32px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.14em;text-decoration:none;transition:all var(--tr);display:inline-block;}
-    .btn-primary:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 10px 28px var(--red-glow);}
-
-    /* ── FOOTER ── */
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-
-    /* ── RESPONSIVE ── */
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
-      .nav-links.open{display:flex;}
-      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
-      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
-      .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
-    }
-  </style>
   <script src="/nexus-core.js"></script>
+  <link rel="preconnect" href="https://i.ytimg.com"/>
+  <style>
+    /* ABAS */
+    .tabs{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:999px;padding:5px;width:fit-content;margin:0 auto 40px;}
+    .tab-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:var(--text2);font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border-radius:999px;cursor:pointer;transition:all var(--tr);}
+    .tab-btn .ic{font-size:0.95rem;}
+    .tab-btn:not(.on):hover{color:var(--text);}
+    .tab-btn.on{background:var(--red);color:var(--on-red);}
+    .tab-count{font-size:0.72rem;opacity:0.75;min-width:1.4em;}
+    .tab-panel[hidden]{display:none;}
+
+    /* FOTOS */
+    .fotos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+    @media(max-width:900px){.fotos-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:560px){.fotos-grid{grid-template-columns:repeat(2,1fr);gap:6px;}}
+    .foto-card{position:relative;aspect-ratio:4/5;border-radius:var(--radius-sm);overflow:hidden;cursor:zoom-in;background:var(--bg2);border:1px solid var(--border);padding:0;transition:border-color var(--tr),transform var(--tr),box-shadow var(--tr);}
+    .foto-card:hover{border-color:var(--border-s);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.35);}
+    .foto-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s cubic-bezier(0.2,0.7,0.2,1),opacity 0.4s;opacity:0;}
+    .foto-card img.loaded{opacity:1;}
+    .foto-card:hover img{transform:scale(1.05);}
+    .foto-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 50%);opacity:0;transition:opacity var(--tr);display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:12px;text-align:left;}
+    .foto-card:hover .foto-overlay,.foto-card:focus-visible .foto-overlay{opacity:1;}
+    .foto-titulo{font-family:var(--f-cond);font-weight:600;font-size:0.9rem;color:#fff;letter-spacing:0.02em;line-height:1.2;}
+    .foto-overlay .ic{color:#fff;font-size:1rem;flex-shrink:0;}
+    @media(hover:none){.foto-overlay{opacity:1;background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 40%);}.foto-overlay .ic{display:none;}}
+
+    .mais-wrap{display:flex;justify-content:center;margin-top:28px;}
+
+    /* VÍDEOS */
+    .videos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    @media(max-width:900px){.videos-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:560px){.videos-grid{grid-template-columns:1fr;}}
+    .video-card{overflow:hidden;cursor:pointer;text-align:left;padding:0;color:inherit;display:flex;flex-direction:column;}
+    .video-thumb{position:relative;aspect-ratio:16/9;background:var(--bg3);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+    .vt-bg{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;filter:blur(18px) brightness(0.55);}
+    .vt-fg{position:relative;height:100%;width:100%;object-fit:cover;transition:transform 0.6s cubic-bezier(0.2,0.7,0.2,1);}
+    .vt-fg.vertical{width:auto;aspect-ratio:9/16;}
+    .video-card:hover .vt-fg{transform:scale(1.04);}
+    .video-play{position:absolute;z-index:2;width:54px;height:54px;border-radius:50%;background:var(--red);color:var(--on-red);display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 6px 24px rgba(0,0,0,0.45);transition:transform var(--tr),background var(--tr);}
+    .video-play .ic{margin-left:3px;}
+    .video-card:hover .video-play{transform:scale(1.1);background:var(--red-hover);}
+    .video-formato{position:absolute;z-index:2;top:10px;left:10px;}
+    .video-body{padding:16px 18px 18px;}
+    .video-titulo{font-family:var(--f-display);font-size:1.25rem;letter-spacing:0.03em;color:var(--text);line-height:1.15;}
+    .video-desc{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--text3);margin-top:6px;}
+
+    /* MODAL DE VÍDEO */
+    .video-ov{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:64px 20px 24px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    .video-ov.open{opacity:1;pointer-events:all;}
+    .video-modal{position:relative;width:100%;max-width:960px;display:flex;flex-direction:column;align-items:center;}
+    .video-modal-x{position:fixed;top:16px;right:18px;}
+    .video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+    .video-frame.vertical{width:auto;height:min(78vh,720px);aspect-ratio:9/16;max-width:100%;}
+    .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+    .video-modal-info{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;margin-top:16px;flex-wrap:wrap;}
+    .video-frame.vertical + .video-modal-info{max-width:min(440px,100%);}
+    .video-modal-titulo{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0.03em;color:var(--text);}
+    .video-modal-desc{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--text3);margin-top:2px;}
+  </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/marca/nexusicon.png" alt="Nexus"/>
+<a class="sr-only" href="#conteudo">Pular para o conteúdo</a>
+<nav class="site-nav" aria-label="Principal">
+  <a href="/" class="nav-logo" aria-label="Nexus, página inicial">
+    <span class="nav-pulse" aria-hidden="true"></span>
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="22" height="32"/>
   </a>
   <div class="nav-links" id="navLinks">
     <a href="/sobre" class="nav-link">Sobre</a>
     <a href="/agenda" class="nav-link">Agenda</a>
-    <a href="/galeria" class="nav-link active">Galeria</a>
+    <a href="/galeria" class="nav-link">Galeria</a>
     <a href="/merch" class="nav-link">Merch</a>
     <a href="/contratantes" class="nav-link">Contratantes</a>
-    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/rifa" class="nav-link nav-rifa" data-rifa hidden><i data-icon="ticket"></i>Rifa</a>
   </div>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+  <button class="nav-hamburger" id="navToggle" type="button" aria-label="Abrir menu" aria-controls="navLinks" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="page-hero">
-  <div class="hero-orb orb1"></div>
+<main id="conteudo">
+<header class="page-hero has-photo" style="--hero-sm:url(/imgs/hero/show-05-sm.webp);--hero-lg:url(/imgs/hero/show-05-lg.webp)">
+  <div class="hero-photo" aria-hidden="true"></div>
   <p class="page-eyebrow">Registros da banda</p>
   <h1 class="page-title">GALERIA</h1>
   <p class="page-sub">Fotos e vídeos da Nexus</p>
-</div>
+</header>
 
 <div class="container">
-
-  <div class="tabs">
-    <button class="tab-btn on" id="tabBtnVideos" onclick="mudarAba('videos')">Vídeos</button>
-    <button class="tab-btn" id="tabBtnFotos" onclick="mudarAba('fotos')">Fotos</button>
+  <div class="tabs" role="tablist" aria-label="Tipo de mídia">
+    <button class="tab-btn on" id="tabFotos" role="tab" aria-selected="true" aria-controls="painelFotos" type="button" onclick="mudarAba('fotos')">
+      <i data-icon="camera"></i>Fotos <span class="tab-count" id="countFotos"></span>
+    </button>
+    <button class="tab-btn" id="tabVideos" role="tab" aria-selected="false" aria-controls="painelVideos" type="button" onclick="mudarAba('videos')">
+      <i data-icon="video"></i>Vídeos <span class="tab-count" id="countVideos"></span>
+    </button>
   </div>
 
-  <!-- ABA VÍDEOS -->
-  <div class="tab-panel on" id="painelVideos">
-    <div class="videos-grid" id="gridVideos">
-      <div class="estado-vazio" style="grid-column:1/-1;">
-        <span class="ic" style="display:inline-block;width:20px;height:20px;border:1.5px solid var(--border-s);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:16px;"></span>
-        Carregando vídeos...
-      </div>
-    </div>
-  </div>
-
-  <!-- ABA FOTOS -->
-  <div class="tab-panel" id="painelFotos">
+  <section class="tab-panel" id="painelFotos" role="tabpanel" aria-labelledby="tabFotos">
     <div class="fotos-grid" id="gridFotos">
-      <div class="estado-vazio" style="grid-column:1/-1;">
-        <span class="ic" style="display:inline-block;width:20px;height:20px;border:1.5px solid var(--border-s);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:16px;"></span>
-        Carregando fotos...
-      </div>
+      <div class="skeleton" style="aspect-ratio:4/5"></div><div class="skeleton" style="aspect-ratio:4/5"></div>
+      <div class="skeleton" style="aspect-ratio:4/5"></div><div class="skeleton" style="aspect-ratio:4/5"></div>
     </div>
-  </div>
+    <div class="mais-wrap" id="maisFotosWrap" hidden>
+      <button class="btn btn-outline" type="button" onclick="mostrarMaisFotos()"><i data-icon="plus"></i>Carregar mais fotos</button>
+    </div>
+  </section>
 
+  <section class="tab-panel" id="painelVideos" role="tabpanel" aria-labelledby="tabVideos" hidden>
+    <div class="videos-grid" id="gridVideos"></div>
+  </section>
 </div>
-
-<!-- LIGHTBOX DE FOTO -->
-<div class="lightbox-ov" id="lightboxOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharLightbox)">
-  <div class="lightbox-img-wrap">
-    <button class="lightbox-x" onclick="fecharLightbox()">✕</button>
-    <button class="lightbox-nav lightbox-prev" onclick="navegarFoto(-1)">‹</button>
-    <img id="lightboxImg" src="" alt=""/>
-    <button class="lightbox-nav lightbox-next" onclick="navegarFoto(1)">›</button>
-    <p class="lightbox-cap" id="lightboxCap"></p>
-  </div>
-</div>
+</main>
 
 <!-- MODAL DE VÍDEO -->
-<div class="video-ov" id="videoOv" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharVideo)">
+<div class="video-ov" id="videoOv" role="dialog" aria-modal="true" aria-label="Player de vídeo" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharVideo)">
+  <button class="btn btn-icon video-modal-x" type="button" aria-label="Fechar vídeo" onclick="fecharVideo()"><i data-icon="x"></i></button>
   <div class="video-modal">
-    <button class="video-modal-x" onclick="fecharVideo()">✕</button>
-    <div class="video-frame-wrap" id="videoFrameWrap"></div>
-    <p class="video-modal-cap" id="videoCap"></p>
+    <div class="video-frame" id="videoFrame"></div>
+    <div class="video-modal-info">
+      <div>
+        <div class="video-modal-titulo" id="videoTitulo"></div>
+        <div class="video-modal-desc" id="videoDesc"></div>
+      </div>
+      <a class="btn btn-outline btn-sm" id="videoLinkYt" href="#" target="_blank" rel="noopener"><i data-icon="youtube"></i>Abrir no YouTube</a>
+    </div>
   </div>
 </div>
 
-<footer>
-  <div class="footer-logo"><img src="/imgs/marca/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/imgs/marca/nexusicon-sm.png" alt="Nexus" width="30" height="44"/>
+      <p>Rock autoral de São Paulo. Onde tudo se encontra.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+        <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+        <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+        <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+        <a href="https://wa.me/5511942477432" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp da Nexus"><i data-icon="message"></i></a>
+        <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="Rodapé">
+      <div class="footer-titulo">Site</div>
+      <a href="/sobre">Sobre</a>
+      <a href="/agenda">Agenda</a>
+      <a href="/galeria">Galeria</a>
+      <a href="/merch">Merch</a>
+      <a href="/contratantes">Contratantes</a>
+      <a href="/rifa" data-rifa hidden>Rifa</a>
+    </nav>
+    <form class="footer-avisos" id="formAvisos" novalidate>
+      <div class="footer-titulo">Avisos de shows</div>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <div class="linha">
+        <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
+        <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
+        <button class="btn btn-primary btn-sm" type="submit"><i data-icon="send"></i>Quero</button>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off"/></div>
+    </form>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Nexus Band</span>
+    <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
+  </div>
 </footer>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-let fotos = [];
-let videos = [];
-let indiceFotoAtual = 0;
+// Usado enquanto a tabela "galeria" ainda não foi criada no Supabase,
+// para a página nunca ficar vazia.
+const GALERIA_PADRAO = [
+  { tipo:'foto', titulo:'Ao vivo', url:'/imgs/shows/show-03.jpeg', thumbnail_url:'/imgs/shows/thumb/show-03.webp' },
+  { tipo:'foto', titulo:'Ao vivo', url:'/imgs/shows/show-04.jpeg', thumbnail_url:'/imgs/shows/thumb/show-04.webp' },
+  { tipo:'foto', titulo:'Ao vivo', url:'/imgs/shows/show-01.jpeg', thumbnail_url:'/imgs/shows/thumb/show-01.webp' },
+  { tipo:'foto', titulo:'Ao vivo', url:'/imgs/shows/show-02.jpeg', thumbnail_url:'/imgs/shows/thumb/show-02.webp' },
+  { tipo:'foto', titulo:'Ao vivo', url:'/imgs/shows/show-05.jpeg', thumbnail_url:'/imgs/shows/thumb/show-05.webp' },
+  { tipo:'video', titulo:'Solo de bateria', descricao:'Senac Nações Unidas · 26.03.2026', url:'https://www.youtube.com/shorts/JECQqubB5Dc' },
+  { tipo:'video', titulo:'Bodies', descricao:'Senac Nações Unidas · 26.03.2026', url:'https://www.youtube.com/shorts/_ElioiT5R8Q' },
+  { tipo:'video', titulo:'Debil Metal', descricao:'Senac Nações Unidas · 30.10.2025', url:'https://www.youtube.com/shorts/93pcz_6b-JM' },
+  { tipo:'video', titulo:'Toxicity', descricao:'Senac Nações Unidas · 26.03.2026', url:'https://www.youtube.com/shorts/o3ycjRGmkhc' }
+];
+const POR_PAGINA = 24;
+
+let fotos = [], videos = [], fotosVisiveis = POR_PAGINA;
+
+function idYoutube(url){
+  const m = String(url || '').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+const ehShort = url => /\/shorts\//.test(url || '');
 
 async function carregarGaleria(){
+  let itens = null;
   try{
     const res = await fetch('/api/galeria');
-    const d = await res.json();
-    const itens = d.itens || [];
-    fotos = itens.filter(i => i.tipo === 'foto');
-    videos = itens.filter(i => i.tipo === 'video');
-  }catch(e){
-    fotos = []; videos = [];
-  }
+    if(res.ok){
+      const d = await res.json();
+      if(!d.aviso) itens = d.itens || [];
+    }
+  }catch(e){}
+  if(itens === null) itens = GALERIA_PADRAO;
+  fotos = itens.filter(i => i.tipo === 'foto' && i.url);
+  videos = itens.filter(i => i.tipo === 'video' && idYoutube(i.url));
+  document.getElementById('countFotos').textContent = fotos.length || '';
+  document.getElementById('countVideos').textContent = videos.length || '';
   renderFotos();
   renderVideos();
 }
 
-function mudarAba(aba){
-  document.getElementById('tabBtnVideos').classList.toggle('on', aba==='videos');
-  document.getElementById('tabBtnFotos').classList.toggle('on', aba==='fotos');
-  document.getElementById('painelVideos').classList.toggle('on', aba==='videos');
-  document.getElementById('painelFotos').classList.toggle('on', aba==='fotos');
+function mudarAba(aba, semHash){
+  const ehFotos = aba === 'fotos';
+  [['tabFotos', ehFotos], ['tabVideos', !ehFotos]].forEach(([id, on]) => {
+    const b = document.getElementById(id);
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.getElementById('painelFotos').hidden = !ehFotos;
+  document.getElementById('painelVideos').hidden = ehFotos;
+  if(!semHash) history.replaceState(null, '', '#' + aba);
+}
+
+function estadoVazio(icone, titulo, texto){
+  return `<div class="state">${nexusIcon(icone)}<span class="state-title">${titulo}</span><span>${texto}</span></div>`;
 }
 
 function renderFotos(){
   const grid = document.getElementById('gridFotos');
   if(!fotos.length){
-    grid.innerHTML = '<div class="estado-vazio"><span class="ic">📷</span>Nenhuma foto por aqui ainda.<br/>Volte em breve!</div>';
+    grid.innerHTML = estadoVazio('camera', 'Nenhuma foto ainda', 'Volte em breve para ver os registros dos shows.');
+    document.getElementById('maisFotosWrap').hidden = true;
     return;
   }
-  grid.innerHTML = fotos.map((f,i)=>`
-    <div class="foto-card" onclick="abrirLightbox(${i})">
-      <img src="${f.url}" alt="${(f.titulo||'').replace(/"/g,'&quot;')}" loading="lazy"/>
-      ${f.titulo?`<div class="foto-card-overlay"><span class="foto-card-titulo">${f.titulo}</span></div>`:''}
-    </div>
-  `).join('');
+  grid.innerHTML = fotos.slice(0, fotosVisiveis).map((f, i) => `
+    <button class="foto-card" type="button" onclick="abrirFoto(${i})" aria-label="Ampliar foto${f.titulo ? ': ' + nexusEsc(f.titulo) : ''}">
+      <img src="${nexusEsc(f.thumbnail_url || f.url)}" alt="${nexusEsc(f.titulo || 'Foto da Nexus')}" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.classList.add('loaded')"/>
+      <span class="foto-overlay">
+        <span class="foto-titulo">${nexusEsc(f.titulo || '')}</span>
+        ${nexusIcon('zoom-in')}
+      </span>
+    </button>`).join('');
+  document.getElementById('maisFotosWrap').hidden = fotos.length <= fotosVisiveis;
+}
+
+function mostrarMaisFotos(){
+  fotosVisiveis += POR_PAGINA;
+  renderFotos();
+}
+
+function abrirFoto(i){
+  nexusLightbox(fotos.map(f => ({
+    src: f.url,
+    cap: [f.titulo, f.descricao].filter(Boolean).join(' · ')
+  })), i);
 }
 
 function renderVideos(){
   const grid = document.getElementById('gridVideos');
   if(!videos.length){
-    grid.innerHTML = '<div class="estado-vazio"><span class="ic">🎬</span>Nenhum vídeo por aqui ainda.<br/>Volte em breve!</div>';
+    grid.innerHTML = estadoVazio('video', 'Nenhum vídeo ainda', 'Volte em breve para ver os vídeos dos shows.');
     return;
   }
-  grid.innerHTML = videos.map((v,i)=>{
-    const thumb = v.thumbnail_url || thumbAutomatica(v.url);
+  grid.innerHTML = videos.map((v, i) => {
+    const id = idYoutube(v.url);
+    const thumb = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    const vertical = ehShort(v.url);
     return `
-    <div class="video-card" onclick="abrirVideo(${i})">
-      <div class="video-thumb">
-        ${thumb?`<img src="${thumb}" alt="" loading="lazy"/>`:''}
-        <div class="video-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-      </div>
-      ${v.titulo?`<div class="video-body"><div class="video-titulo">${v.titulo}</div></div>`:''}
-    </div>`;
+    <button class="card card-hover video-card" type="button" onclick="abrirVideo(${i})" aria-label="Assistir: ${nexusEsc(v.titulo || 'vídeo')}">
+      <span class="video-thumb">
+        <img class="vt-bg" src="${thumb}" alt="" onerror="this.style.visibility='hidden'" loading="lazy" decoding="async"/>
+        <img class="vt-fg${vertical ? ' vertical' : ''}" src="${thumb}" alt="" onerror="this.style.visibility='hidden'" loading="lazy" decoding="async"/>
+        <span class="video-play">${nexusIcon('play')}</span>
+        ${vertical ? `<span class="tag tag-muted video-formato" style="background:rgba(0,0,0,0.6);color:#fff;">Shorts</span>` : ''}
+      </span>
+      <span class="video-body">
+        <span class="video-titulo" style="display:block;">${nexusEsc(v.titulo || 'Vídeo')}</span>
+        ${v.descricao ? `<span class="video-desc" style="display:block;">${nexusEsc(v.descricao)}</span>` : ''}
+      </span>
+    </button>`;
   }).join('');
-}
-
-// ── Detecção de plataforma / geração de thumbnail e embed ──────────────────
-function idYoutube(url){
-  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{6,})/);
-  return m ? m[1] : null;
-}
-function idVimeo(url){
-  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  return m ? m[1] : null;
-}
-function ehArquivoVideo(url){
-  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
-}
-function thumbAutomatica(url){
-  const yt = idYoutube(url);
-  if(yt) return `https://img.youtube.com/vi/${yt}/hqdefault.jpg`;
-  return '';
-}
-
-function abrirLightbox(i){
-  indiceFotoAtual = i;
-  mostrarFotoAtual();
-  document.getElementById('lightboxOv').classList.add('open');
-}
-function mostrarFotoAtual(){
-  const f = fotos[indiceFotoAtual];
-  if(!f) return;
-  document.getElementById('lightboxImg').src = f.url;
-  document.getElementById('lightboxCap').textContent = f.titulo || '';
-}
-function navegarFoto(dir){
-  indiceFotoAtual = (indiceFotoAtual + dir + fotos.length) % fotos.length;
-  mostrarFotoAtual();
-}
-function fecharLightbox(){
-  document.getElementById('lightboxOv').classList.remove('open');
 }
 
 function abrirVideo(i){
   const v = videos[i];
-  if(!v) return;
-  const wrap = document.getElementById('videoFrameWrap');
-  const yt = idYoutube(v.url);
-  const vm = idVimeo(v.url);
-  if(yt){
-    wrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${yt}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-  } else if(vm){
-    wrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${vm}?autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-  } else if(ehArquivoVideo(v.url)){
-    wrap.innerHTML = `<video src="${v.url}" controls autoplay playsinline></video>`;
-  } else {
-    // Instagram, TikTok ou outro link — abre em nova aba em vez de tentar embutir
-    wrap.innerHTML = `<div class="video-fallback">
-      <div class="ic">🔗</div>
-      <p>Esse vídeo está hospedado fora do site. Toque no botão abaixo para assistir.</p>
-      <a class="btn-primary" style="padding:11px 24px;font-size:0.85rem;" href="${v.url}" target="_blank" rel="noopener">Assistir vídeo →</a>
-    </div>`;
-  }
-  document.getElementById('videoCap').textContent = v.titulo || '';
+  const id = v && idYoutube(v.url);
+  if(!id) return;
+  const frame = document.getElementById('videoFrame');
+  frame.classList.toggle('vertical', ehShort(v.url));
+  // youtube-nocookie: não grava cookies de rastreio até o visitante dar play
+  frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1" title="${nexusEsc(v.titulo || 'Vídeo da Nexus')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  document.getElementById('videoTitulo').textContent = v.titulo || '';
+  document.getElementById('videoDesc').textContent = v.descricao || '';
+  document.getElementById('videoLinkYt').href = v.url;
   document.getElementById('videoOv').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  nexusTrack('video_play', { titulo: v.titulo || id });
 }
+
 function fecharVideo(){
   document.getElementById('videoOv').classList.remove('open');
-  document.getElementById('videoFrameWrap').innerHTML = ''; // pausa o vídeo ao fechar
+  document.getElementById('videoFrame').innerHTML = ''; // para o vídeo ao fechar
+  document.body.style.overflow = '';
 }
 
-document.addEventListener('keydown', (ev)=>{
-  if(document.getElementById('lightboxOv').classList.contains('open')){
-    if(ev.key==='Escape') fecharLightbox();
-    if(ev.key==='ArrowLeft') navegarFoto(-1);
-    if(ev.key==='ArrowRight') navegarFoto(1);
-  }
-  if(ev.key==='Escape' && document.getElementById('videoOv').classList.contains('open')) fecharVideo();
+document.addEventListener('keydown', ev => {
+  if(ev.key === 'Escape' && document.getElementById('videoOv').classList.contains('open')) fecharVideo();
 });
 
-const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
-if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
-
+// Aba inicial pelo link (/galeria#videos abre direto nos vídeos)
+if(location.hash === '#videos') mudarAba('videos', true);
 carregarGaleria();
-</script>
-<script>
-(async()=>{
-  try{
-    const res=await fetch("/api/config");
-    if(res.ok){
-      const d=await res.json();
-      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
-        const el=document.getElementById("navRifa");
-        if(el){el.style.display="";}
-      }
-    }
-  }catch(e){}
-})();
 </script>
 <script src="/venom.js" defer></script>
 </body>

@@ -2,133 +2,141 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon.png"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pagamento Confirmado — Nexus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pagamento confirmado — Nexus</title>
+  <meta name="description" content="Pagamento confirmado."/>
+  <meta name="theme-color" content="#080808"/>
+  <meta property="og:title" content="Pagamento confirmado — Nexus"/>
+  <meta property="og:description" content="Pagamento confirmado."/>
+  <meta property="og:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://nexusband.com.br/sucesso"/>
+  <meta property="og:locale" content="pt_BR"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
+  <link rel="canonical" href="https://nexusband.com.br/sucesso"/>
+  <link rel="icon" type="image/png" href="/imgs/marca/nexusicon-sm.png"/>
+  <link rel="apple-touch-icon" href="/imgs/marca/nexusicon-sm.png"/>
+
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  
+  <link rel="stylesheet" href="/css/nexus.css"/>
+
   <script defer src="/_vercel/insights/script.js"></script>
-  
-  <style>
-    :root{--red:#e8220a;--red-dim:#a01a07;--red-glow:rgba(232,34,10,0.2);--red-mid:rgba(232,34,10,0.08);--bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;--border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);--text:#ede9e3;--text2:#7a7672;--text3:#8c8883;--glass:rgba(8,8,8,0.9);--radius:14px;--radius-sm:8px;--radius-xs:5px;--tr:0.28s cubic-bezier(0.4,0,0.2,1);}
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;min-height:100vh;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 40px;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-    .nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
-    @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(232,34,10,0.4);}50%{box-shadow:0 0 0 6px rgba(232,34,10,0);}100%{box-shadow:0 0 0 0 rgba(232,34,10,0);}}
-    .nav-logo img{height:32px;width:auto;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:24px;}
-    .nav-link{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color var(--tr);}
-    .nav-link:hover{color:var(--red);}
-    .nav-link.active{color:var(--text);}
-    .nav-rifa{color:var(--red)!important;border:1px solid rgba(232,34,10,0.3);padding:5px 12px;border-radius:999px;}
-    .nav-rifa:hover{background:rgba(232,34,10,0.1)!important;}
-    .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border-s);border-radius:var(--radius-sm);cursor:pointer;padding:8px;}
-    .nav-hamburger span{display:block;width:16px;height:1.5px;background:var(--text2);transition:all var(--tr);transform-origin:center;}
-    .nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-    .nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-    footer{border-top:1px solid var(--border);padding:32px 40px;color:var(--text3);font-family:'DM Mono',monospace;font-size:0.64rem;letter-spacing:0.1em;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
-    .footer-logo{display:flex;align-items:center;gap:8px;}
-    .footer-logo img{height:22px;opacity:0.3;}
-    .footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-    .footer-link{color:var(--text3);text-decoration:none;transition:color var(--tr);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
-    .footer-link:hover{color:var(--text2);}
-    .footer-admin{color:var(--text3);text-decoration:none;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--border);padding:5px 12px;border-radius:999px;transition:all var(--tr);}
-    .footer-admin:hover{color:var(--text2);border-color:var(--border-s);}
-    @media(max-width:768px){
-      nav{padding:10px 20px;}
-      .nav-links{display:none;position:fixed;top:57px;left:0;right:0;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:0;z-index:99;}
-      .nav-links.open{display:flex;}
-      .nav-link{padding:13px 0;width:100%;border-bottom:1px solid var(--border);font-size:0.75rem;}
-      .nav-rifa{border:none;padding:13px 0;border-radius:0;background:none!important;}
-      .nav-hamburger{display:flex;}
-      footer{padding:24px 20px;grid-template-columns:1fr;gap:14px;}
-      .footer-links{gap:14px;}
-    }
-    @media(max-width:480px){.footer-links{gap:10px;}}
-
-    .page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 120px;position:relative;overflow:hidden;}
-    .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
-    .grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 100%);pointer-events:none;}
-    .box{border-radius:var(--radius);padding:52px 44px;text-align:center;max-width:480px;width:100%;position:relative;z-index:1;animation:fu 0.6s ease forwards;}
-    @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .box::before{content:'';position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;}
-    .icon-wrap{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.9rem;margin:0 auto 22px;}
-    .status-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:10px;}
-    h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.04em;color:var(--text);margin-bottom:12px;line-height:1;}
-    p{font-size:0.9rem;color:var(--text2);line-height:1.75;margin-bottom:32px;}
-    .btn{display:inline-block;background:var(--red);color:#fff;padding:13px 30px;border-radius:var(--radius-sm);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.12em;text-decoration:none;transition:all var(--tr);}
-    .btn:hover{background:#ff2a10;transform:translateY(-2px);box-shadow:0 8px 24px var(--red-glow);}
-    .spinner{width:68px;height:68px;border-radius:50%;border:2px solid rgba(245,197,66,0.15);border-top-color:rgba(245,197,66,0.8);animation:spin 1s linear infinite;margin:0 auto 22px;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:480px){.box{padding:36px 24px;}}
-  </style>
   <script src="/nexus-core.js"></script>
+  <meta name="robots" content="noindex"/>
+  <style>
+    .status-page{min-height:calc(100vh - 90px);display:flex;align-items:center;justify-content:center;padding:110px 24px 80px;position:relative;overflow:hidden;}
+    .status-page .hero-orb{width:600px;height:600px;top:-220px;left:-120px;}
+    .status-box{max-width:500px;width:100%;padding:48px 40px;text-align:center;position:relative;z-index:1;animation:rise 0.6s ease forwards;}
+    .status-box.ok{border-color:var(--ok-line);}
+    .status-box.warn{border-color:var(--warn-line);}
+    .status-box.err{border-color:var(--red-line);}
+    .status-box .modal-icon{width:72px;height:72px;font-size:2rem;margin-bottom:22px;}
+    .status-label{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
+    .status-box.ok .status-label{color:var(--ok);}
+    .status-box.warn .status-label{color:var(--warn);}
+    .status-box.err .status-label{color:var(--red);}
+    .status-box h1{font-family:var(--f-display);font-weight:400;font-size:3rem;letter-spacing:0.04em;color:var(--text);margin-bottom:12px;line-height:1;}
+    .status-box p{font-size:0.92rem;color:var(--text2);line-height:1.75;margin-bottom:30px;}
+    .status-acoes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+    .status-aguarde{display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.08em;color:var(--text3);margin:-14px 0 26px;}
+    .modal-icon.warn .ic{animation:spin 2.4s linear infinite;}
+    @media(max-width:480px){.status-box{padding:36px 22px;}.status-box h1{font-size:2.4rem;}}
+  </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-pulse"></div>
-    <img src="/imgs/marca/nexusicon.png" alt="Nexus"/>
+<a class="sr-only" href="#conteudo">Pular para o conteúdo</a>
+<nav class="site-nav" aria-label="Principal">
+  <a href="/" class="nav-logo" aria-label="Nexus, página inicial">
+    <span class="nav-pulse" aria-hidden="true"></span>
+    <img src="/imgs/marca/nexusicon-sm.png" alt="" width="22" height="32"/>
   </a>
   <div class="nav-links" id="navLinks">
     <a href="/sobre" class="nav-link">Sobre</a>
     <a href="/agenda" class="nav-link">Agenda</a>
+    <a href="/galeria" class="nav-link">Galeria</a>
     <a href="/merch" class="nav-link">Merch</a>
     <a href="/contratantes" class="nav-link">Contratantes</a>
-    <a href="/rifa" class="nav-link nav-rifa" id="navRifa" style="display:none">Rifa 🎟</a>
+    <a href="/rifa" class="nav-link nav-rifa" data-rifa hidden><i data-icon="ticket"></i>Rifa</a>
   </div>
-  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+  <button class="nav-hamburger" id="navToggle" type="button" aria-label="Abrir menu" aria-controls="navLinks" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="page">
-  <div class="grid"></div>
-  <div class="orb" style="width:600px;height:600px;background:#1a6040;opacity:0.08;top:-200px;left:-100px;"></div>
-  <div class="orb" style="width:400px;height:400px;background:var(--red);opacity:0.05;bottom:-100px;right:-100px;"></div>
-  <div class="box" style="background:var(--bg2);border:1px solid rgba(29,160,80,0.3);">
-    <div class="box" style="all:unset;content:'';position:absolute;inset:0;border-radius:var(--radius);background:radial-gradient(ellipse at top,rgba(29,160,80,0.06) 0%,transparent 70%);pointer-events:none;"></div>
-    <div class="icon-wrap" style="background:rgba(29,160,80,0.12);border:1px solid rgba(29,160,80,0.3);">🎸</div>
-    <div class="status-label" style="color:#1d9e50;">Pagamento confirmado</div>
-    <h1>TUDO CERTO!</h1>
-    <p>Seu(s) bilhete(s) foi(ram) registrado(s) com sucesso.<br/>Boa sorte no sorteio — você está apoiando a música!</p>
-    <a href="/rifa" class="btn">Voltar ao site</a>
+<main id="conteudo" class="status-page grid-bg">
+  <div class="hero-orb" style="background:var(--ok);"></div>
+  <div class="card status-box ok">
+    <div class="modal-icon ok" id="statusIcon"><i data-icon="check-circle"></i></div>
+    <div class="status-label" id="statusLabel">Pagamento confirmado</div>
+    <h1 id="statusTitulo">TUDO CERTO!</h1>
+    <p id="statusTexto"></p>
+    <div class="status-acoes">
+      <a href="/" class="btn btn-outline" id="btnSecundario">Página inicial</a>
+      <a href="/rifa" class="btn btn-primary" id="btnPrincipal"></a>
+    </div>
   </div>
-</div>
+</main>
 
-<footer>
-  <div class="footer-logo"><img src="/imgs/marca/nexusicon.png" alt="Nexus"/><span>© 2026 Nexus Band</span></div>
-  <span style="text-align:right;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--text3);">Desenvolvido por Murilo Neves Teixeira</span>
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/imgs/marca/nexusicon-sm.png" alt="Nexus" width="30" height="44"/>
+      <p>Rock autoral de São Paulo. Onde tudo se encontra.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/nexus.bandbr" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram da Nexus"><i data-icon="instagram"></i></a>
+        <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok da Nexus"><i data-icon="tiktok"></i></a>
+        <a href="#" data-link="youtube" data-link-opcional hidden target="_blank" rel="noopener" aria-label="YouTube da Nexus"><i data-icon="youtube"></i></a>
+        <a href="#" data-link="spotify" data-link-opcional hidden target="_blank" rel="noopener" aria-label="Nexus no Spotify"><i data-icon="spotify"></i></a>
+        <a href="https://wa.me/5511942477432" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp da Nexus"><i data-icon="message"></i></a>
+        <a href="mailto:bandanexus01@gmail.com" data-link="email" aria-label="E-mail da Nexus"><i data-icon="mail"></i></a>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="Rodapé">
+      <div class="footer-titulo">Site</div>
+      <a href="/sobre">Sobre</a>
+      <a href="/agenda">Agenda</a>
+      <a href="/galeria">Galeria</a>
+      <a href="/merch">Merch</a>
+      <a href="/contratantes">Contratantes</a>
+      <a href="/rifa" data-rifa hidden>Rifa</a>
+    </nav>
+    <form class="footer-avisos" id="formAvisos" novalidate>
+      <div class="footer-titulo">Avisos de shows</div>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <div class="linha">
+        <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
+        <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
+        <button class="btn btn-primary btn-sm" type="submit"><i data-icon="send"></i>Quero</button>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="site" tabindex="-1" autocomplete="off"/></div>
+    </form>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Nexus Band</span>
+    <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
+  </div>
 </footer>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-  const _t=document.getElementById('navToggle'),_l=document.getElementById('navLinks');
-  if(_t&&_l){_t.addEventListener('click',()=>{_l.classList.toggle('open');_t.classList.toggle('open');});_l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{_l.classList.remove('open');_t.classList.remove('open');}));}
-</script>
-<script>
-(async()=>{
-  try{
-    const res=await fetch("/api/config");
-    if(res.ok){
-      const d=await res.json();
-      if(d.rifa_nav_visivel==="true"||d.rifa_nav_visivel===true){
-        const el=document.getElementById("navRifa");
-        if(el){el.style.display="";}
-      }
-    }
-  }catch(e){}
-})();
-</script>
-<script>
+// A página é usada tanto pela rifa quanto pela loja (?origem=rifa|merch)
+const params = new URLSearchParams(location.search);
+const origem = params.get('origem') === 'merch' ? 'merch' : 'rifa';
+const TEXTOS = {
+  rifa:  { texto:'Seus bilhetes foram registrados com sucesso.<br/>Boa sorte no sorteio — obrigado por apoiar a nossa música!', botao:'Ver a rifa', link:'/rifa' },
+  merch: { texto:'Recebemos seu pedido e o pagamento foi aprovado.<br/>Você vai receber as informações de envio por e-mail.', botao:'Voltar à loja', link:'/merch' }
+};
+const t = TEXTOS[origem];
+document.getElementById('statusTexto').innerHTML = t.texto;
+const btn = document.getElementById('btnPrincipal');
+btn.innerHTML = t.botao;
+btn.href = t.link;
+
 </script>
 <script src="/venom.js" defer></script>
 </body>

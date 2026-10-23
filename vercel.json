@@ -2,8 +2,41 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/shows/:id", "destination": "/api/shows?id=:id" },
-    { "source": "/api/produtos/:id", "destination": "/api/produtos?id=:id" },
-    { "source": "/api/membros/:id", "destination": "/api/membros?id=:id" }
+    {
+      "source": "/api/config",
+      "destination": "/api/site?r=config"
+    },
+    {
+      "source": "/api/bilhetes",
+      "destination": "/api/site?r=bilhetes"
+    },
+    {
+      "source": "/api/pedido-status",
+      "destination": "/api/site?r=pedido-status"
+    },
+    {
+      "source": "/api/orcamento",
+      "destination": "/api/site?r=orcamento"
+    },
+    {
+      "source": "/api/avisos",
+      "destination": "/api/site?r=avisos"
+    },
+    {
+      "source": "/api/shows/:id",
+      "destination": "/api/shows?id=:id"
+    },
+    {
+      "source": "/api/produtos/:id",
+      "destination": "/api/produtos?id=:id"
+    },
+    {
+      "source": "/api/membros/:id",
+      "destination": "/api/membros?id=:id"
+    },
+    {
+      "source": "/api/galeria/:id",
+      "destination": "/api/galeria?id=:id"
+    }
   ]
 }

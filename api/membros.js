@@ -1,13 +1,8 @@
 // api/membros.js — CRUD de membros para a página Sobre
 import { createClient } from '@supabase/supabase-js';
+import { autenticar } from './_lib/auth.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
-function autenticar(req) {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Bearer ')) return false;
-  return auth.replace('Bearer ', '') === process.env.ADMIN_PASSWORD;
-}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,6 +24,9 @@ export default async function handler(req, res) {
     }
 
     const membros = (data || []).map(m => ({ ...m, ativo: m.ativo !== false }));
+    // Cache curto na CDN da Vercel: a maioria das visitas não chega ao banco.
+    // O painel admin busca com ?_=timestamp para sempre ver o dado atualizado.
+    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
     return res.status(200).json({ membros });
   }
 
