@@ -14,7 +14,10 @@ import { autenticar } from './_lib/auth.js';
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 const BUCKET = 'galeria-fotos';
-const CAMPOS_PUBLICOS = 'id, tipo, titulo, descricao, url, thumbnail_url, ordem';
+// select('*') de propósito: algumas instalações já tinham uma tabela "galeria"
+// antiga (com "criado_em" no lugar de "created_at"), e pedir uma coluna que não
+// existe faz a consulta inteira falhar. A tabela é pequena, então não pesa.
+const CAMPOS = '*';
 const AVISO_TABELA = 'Tabela galeria não encontrada. Execute o bloco "GALERIA" do supabase_schema.sql no Supabase.';
 
 // Aceita youtube.com/watch?v=, youtu.be/, /shorts/, /embed/, /live/ e music.youtube.com.
@@ -61,9 +64,9 @@ export default async function handler(req, res) {
       res.setHeader('Cache-Control', 'private, no-store');
       const { data, error } = await supabase
         .from('galeria')
-        .select(CAMPOS_PUBLICOS + ', ativo, created_at')
+        .select(CAMPOS)
         .order('ordem', { ascending: true })
-        .order('created_at', { ascending: false });
+        .order('id', { ascending: true });
       if (error) {
         console.error('GET galeria (admin) error:', error.message);
         return res.status(200).json({ itens: [], aviso: AVISO_TABELA });
@@ -74,10 +77,10 @@ export default async function handler(req, res) {
     // Público: só itens ativos, com filtro opcional por tipo e limite (usado na /sobre)
     let query = supabase
       .from('galeria')
-      .select(CAMPOS_PUBLICOS)
+      .select(CAMPOS)
       .eq('ativo', true)
       .order('ordem', { ascending: true })
-      .order('created_at', { ascending: false });
+      .order('id', { ascending: true });
     if (['foto', 'video'].includes(req.query.tipo)) query = query.eq('tipo', req.query.tipo);
     const limite = parseInt(req.query.limite, 10);
     if (limite > 0) query = query.limit(Math.min(limite, 100));
@@ -148,7 +151,7 @@ export default async function handler(req, res) {
         ordem,
         ativo: body.ativo !== false
       })
-      .select(CAMPOS_PUBLICOS + ', ativo, created_at')
+      .select(CAMPOS)
       .single();
 
     if (error) {
