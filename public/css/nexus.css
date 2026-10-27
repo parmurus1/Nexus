@@ -5,6 +5,7 @@
 
 :root{
   --red:#e8220a;
+  --red-rgb:232,34,10;
   --red-hover:#ff2a10;
   --red-dim:#a01a07;
   --red-glow:rgba(232,34,10,0.2);
@@ -65,8 +66,8 @@ a{color:inherit;}
   html{scroll-behavior:auto;}
   @keyframes rise{from{opacity:0}to{opacity:1}}
   @keyframes fadeUp{from{opacity:0}to{opacity:1}}
-  .nav-pulse,.mouse-wheel,.carr-icon,.skeleton,.hero-photo,.home-slide.on{animation:none!important;}
-  .hero-photo,.home-slide{transform:none!important;}
+  .nav-pulse,.mouse-wheel,.carr-icon,.skeleton,.home-slide.zoom,.hero-fx i{animation:none!important;}
+  .home-slide{transform:none!important;}
   .card-hover:hover,.btn-primary:hover,.foto-card:hover,.cta-card:hover,.nav-card:hover{transform:none!important;}
 }
 
@@ -136,20 +137,38 @@ i[data-icon]{display:inline-block;width:1em;height:1em;}
 .page-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text2);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
 .page-eyebrow::before,.page-eyebrow::after{content:'';width:18px;height:2px;background:var(--red);}
 
-/* Foto de fundo no topo das páginas: <header class="page-hero has-photo"
-   style="--hero-sm:url(...);--hero-lg:url(...)"><div class="hero-photo"></div> */
-.hero-photo{position:absolute;inset:0;background-image:var(--hero-sm);background-size:cover;background-position:center 38%;filter:grayscale(0.3) contrast(1.08) brightness(0.9);transform:scale(1.06);animation:heroZoom 16s ease-out forwards;}
-@media(min-width:769px){.hero-photo{background-image:var(--hero-lg);}}
-.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,8,0.7) 0%,rgba(8,8,8,0.55) 40%,rgba(8,8,8,0.85) 85%,var(--bg) 100%),radial-gradient(ellipse at 50% 45%,transparent 0%,rgba(0,0,0,0.55) 100%);}
-@keyframes heroZoom{to{transform:scale(1);}}
-.page-hero.has-photo{min-height:56vh;}
-.page-hero.has-photo + .container{padding-top:32px;}
-.page-hero.has-photo .page-eyebrow,.page-hero.has-photo .page-sub{color:rgba(255,255,255,0.82);}
-.page-hero.has-photo .page-title{text-shadow:0 4px 40px rgba(0,0,0,0.6);}
-/* grão de filme por cima da foto (no lugar da grade) */
-.page-hero.has-photo::after{background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");background-size:200px 200px;opacity:0.14;mix-blend-mode:overlay;-webkit-mask-image:none;mask-image:none;z-index:1;}
+/* Topo das páginas: em vez de foto, uma animação de palco em vermelho e preto
+   (fumaça vermelha subindo e dois feixes de luz balançando). Só CSS, sem imagens.
+   <header class="page-hero has-fx"><div class="hero-fx" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div> */
+.hero-fx{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse 70% 60% at 50% 110%,rgba(var(--red-rgb),0.22) 0%,transparent 70%),var(--bg);}
+.hero-fx i{position:absolute;display:block;pointer-events:none;will-change:transform;}
+/* fumaça: manchas grandes e suaves que derivam devagar */
+.hero-fx i:nth-child(-n+3){width:70vmax;height:70vmax;border-radius:50%;background:radial-gradient(circle,rgba(var(--red-rgb),0.42) 0%,rgba(var(--red-rgb),0.14) 35%,transparent 65%);}
+.hero-fx i:nth-child(1){left:-25vmax;bottom:-45vmax;animation:fxFumaca1 18s ease-in-out infinite alternate;}
+.hero-fx i:nth-child(2){right:-30vmax;bottom:-50vmax;animation:fxFumaca2 22s ease-in-out infinite alternate;}
+.hero-fx i:nth-child(3){left:20%;top:-55vmax;opacity:0.55;animation:fxFumaca3 26s ease-in-out infinite alternate;}
+@keyframes fxFumaca1{from{transform:translate(0,0) scale(1);}to{transform:translate(18vw,-12vh) scale(1.25);}}
+@keyframes fxFumaca2{from{transform:translate(0,0) scale(1.15);}to{transform:translate(-16vw,-8vh) scale(0.95);}}
+@keyframes fxFumaca3{from{transform:translate(-10vw,0) scale(0.9);}to{transform:translate(12vw,6vh) scale(1.1);}}
+/* feixes de luz saindo do alto, como refletores de palco */
+.hero-fx i:nth-child(n+4){top:-10%;width:34vmax;height:130%;transform-origin:50% 0;
+  background:linear-gradient(180deg,rgba(var(--red-rgb),0.5) 0%,rgba(var(--red-rgb),0.16) 45%,transparent 85%);
+  clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 50%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0%,#000 50%,transparent 100%);}
+.hero-fx i:nth-child(4){left:calc(18% - 17vmax);animation:fxLuz1 9s ease-in-out infinite alternate;}
+.hero-fx i:nth-child(5){right:calc(18% - 17vmax);animation:fxLuz2 11s ease-in-out infinite alternate;}
+@keyframes fxLuz1{from{transform:rotate(-24deg);opacity:0.55;}50%{opacity:1;}to{transform:rotate(14deg);opacity:0.7;}}
+@keyframes fxLuz2{from{transform:rotate(22deg);opacity:0.7;}50%{opacity:0.45;}to{transform:rotate(-16deg);opacity:1;}}
+/* escurece as bordas e funde a base com o fundo da página */
+.hero-fx::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,8,0.55) 0%,transparent 35%,transparent 70%,var(--bg) 100%),radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(0,0,0,0.6) 100%);}
+.page-hero.has-fx{min-height:56vh;}
+.page-hero.has-fx + .container{padding-top:32px;}
+.page-hero.has-fx .page-eyebrow,.page-hero.has-fx .page-sub{color:rgba(255,255,255,0.82);}
+.page-hero.has-fx .page-title{text-shadow:0 4px 40px rgba(0,0,0,0.6);}
+/* grão de filme por cima da animação (no lugar da grade) */
+.page-hero.has-fx::after{background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");background-size:200px 200px;opacity:0.14;mix-blend-mode:overlay;-webkit-mask-image:none;mask-image:none;z-index:1;}
 /* borda "rasgada" na base, ligando a foto ao resto da página */
-.torn::before,.page-hero.has-photo::before{content:'';position:absolute;left:0;right:0;bottom:-1px;height:26px;background:var(--bg);z-index:2;pointer-events:none;
+.torn::before,.page-hero.has-fx::before{content:'';position:absolute;left:0;right:0;bottom:-1px;height:26px;background:var(--bg);z-index:2;pointer-events:none;
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 26' preserveAspectRatio='none'%3E%3Cpath d='M0 26V13l12 4 10-9 12 6 12-9 12 7 12-3 10 7 14-9 12 6 12-9 12 7 14-3 12 7 12-9 12 6 12-3 12 8 12-10 12 6 12-3v15z'/%3E%3C/svg%3E") bottom/240px 26px repeat-x;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 26' preserveAspectRatio='none'%3E%3Cpath d='M0 26V13l12 4 10-9 12 6 12-9 12 7 12-3 10 7 14-9 12 6 12-9 12 7 14-3 12 7 12-9 12 6 12-3 12 8 12-10 12 6 12-3v15z'/%3E%3C/svg%3E") bottom/240px 26px repeat-x;}
 .page-title{font-family:var(--f-display);font-weight:400;font-size:clamp(4rem,12vw,9rem);line-height:0.88;color:var(--text);position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.2s forwards;}

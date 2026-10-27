@@ -10,6 +10,7 @@ import { createClient } from '@supabase/supabase-js';
 import { liberarExpirados } from './_lib/rifa.js';
 import { ipDaRequisicao } from './_lib/auth.js';
 import { enviarEmail, emailNovoOrcamento } from './_lib/email.js';
+import { avisarWhatsapp, whatsappNovoOrcamento } from './_lib/whatsapp.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -95,8 +96,12 @@ async function rotaOrcamento(req, res) {
     return res.status(500).json({ erro: 'Não foi possível enviar agora. Fale com a gente pelo WhatsApp ou e-mail.' });
   }
 
+  // Avisa a banda por e-mail e WhatsApp ao mesmo tempo (cada um só envia se estiver configurado)
   const destino = process.env.EMAIL_BANDA;
-  if (destino) await enviarEmail({ para: destino, ...emailNovoOrcamento(o), responderPara: o.email || undefined });
+  await Promise.all([
+    destino ? enviarEmail({ para: destino, ...emailNovoOrcamento(o), responderPara: o.email || undefined }) : null,
+    avisarWhatsapp(whatsappNovoOrcamento(o, process.env.SITE_URL || 'https://nexusband.com.br'))
+  ]);
 
   return res.status(201).json({ ok: true, id: data.id });
 }

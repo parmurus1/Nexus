@@ -105,9 +105,7 @@
     .thumb-cel{width:40px;height:40px;border-radius:8px;object-fit:cover;display:flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--text2);font-size:1.15rem;overflow:hidden;}
     .thumb-cel.round{border-radius:50%;}
     .thumb-cel img{width:100%;height:100%;object-fit:cover;}
-    .drag-handle{cursor:grab;color:var(--text3);width:36px;text-align:center;font-size:1.05rem;}
-    .drag-handle:hover{color:var(--red);}
-    tr.dragging,.gal-card.dragging{opacity:0.35;}
+    .gal-card.dragging{opacity:0.35;}
     .aviso-setup{display:flex;gap:12px;align-items:flex-start;background:var(--red-mid);border:1px solid var(--red-line);border-radius:var(--radius-sm);padding:16px 18px;font-family:var(--f-mono);font-size:0.78rem;color:var(--text);line-height:1.8;text-align:left;}
     .aviso-setup .ic{color:var(--red);font-size:1.1rem;margin-top:3px;}
 
@@ -435,11 +433,11 @@
           </div>
           <button class="btn btn-primary btn-sm" type="button" onclick="abrirFormShow()"><i data-icon="plus"></i>Adicionar show</button>
         </div>
-        <p class="adm-hint"><i data-icon="grip"></i>Arraste pela alça para mudar a ordem. Shows com data passada vão para o histórico automaticamente.</p>
+        <p class="adm-hint"><i data-icon="info"></i>A agenda se organiza sozinha pela data do show. Shows com data passada vão para o histórico automaticamente.</p>
         <div class="tabela-wrap">
           <table>
-            <thead><tr><th></th><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody id="tabelaShows"><tr><td colspan="6" class="vazio">Carregando...</td></tr></tbody>
+            <thead><tr><th>Data</th><th>Nome</th><th>Local</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="tabelaShows"><tr><td colspan="5" class="vazio">Carregando...</td></tr></tbody>
           </table>
         </div>
       </section>
@@ -1399,25 +1397,30 @@ async function carregarShows(){
   try{
     const res = await fetch(semCache('/api/shows'));
     if(!res.ok){
-      tbody.innerHTML = `<tr><td colspan="6">${avisoSetup('Não foi possível carregar os shows. Confira se a tabela <strong>shows</strong> existe no Supabase (veja o <strong>supabase_schema.sql</strong>).')}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5">${avisoSetup('Não foi possível carregar os shows. Confira se a tabela <strong>shows</strong> existe no Supabase (veja o <strong>supabase_schema.sql</strong>).')}</td></tr>`;
       return;
     }
-    showsData = (await res.json()).shows || [];
+    // Próximos primeiro (do mais perto ao mais longe), depois os passados (mais recentes primeiro)
+    const hoje = new Date().toISOString().slice(0, 10);
+    const quando = s => `${s.data || '9999-12-31'} ${s.hora || ''}`;
+    const todos = (await res.json()).shows || [];
+    const futuros = todos.filter(s => (s.data || '9999') >= hoje).sort((a, b) => quando(a).localeCompare(quando(b)));
+    const passados = todos.filter(s => (s.data || '9999') < hoje).sort((a, b) => quando(b).localeCompare(quando(a)));
+    showsData = [...futuros, ...passados];
   }catch{ showsData = []; }
   renderTabelaShows();
 }
 
 function renderTabelaShows(){
   const tbody = document.getElementById('tabelaShows');
-  if(!showsData.length){ tbody.innerHTML = linhaVazia('Nenhum show cadastrado'); return; }
+  if(!showsData.length){ tbody.innerHTML = linhaVazia('Nenhum show cadastrado', 5); return; }
   const TAG = { breve: ['tag-ok', 'Em breve'], confirmado: ['tag-ok', 'Confirmado'], realizado: ['tag-muted', 'Realizado'], cancelado: ['tag-accent', 'Cancelado'] };
   tbody.innerHTML = showsData.map(s => {
     const d = s.data ? new Date(s.data + 'T12:00:00') : null;
     const dataFmt = d ? d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() : '—';
     const [cls, label] = TAG[s.status] || ['tag-muted', s.status || '—'];
     const id = esc(s.id);
-    return `<tr draggable="true" data-id="${id}" class="row-drag">
-      <td class="drag-handle" title="Arraste para reordenar">${nexusIcon('grip')}</td>
+    return `<tr>
       <td class="mono">${dataFmt}</td>
       <td><strong>${esc(s.nome)}</strong></td>
       <td>${esc(s.local || '—')}</td>
@@ -1429,10 +1432,9 @@ function renderTabelaShows(){
       </div></td>
     </tr>`;
   }).join('');
-  ativarDrag(tbody, 'tr.row-drag', 'y', persistirOrdemShows);
 }
 
-// Arrastar para reordenar (tabelas usam o eixo Y; a grade da galeria usa o X)
+// Arrastar para reordenar (listas usam o eixo Y; a grade da galeria usa o X)
 function ativarDrag(container, seletor, eixo, aoSoltar){
   let arrastando = null, ordemInicial = '';
   const ordemAtual = () => Array.from(container.querySelectorAll(seletor)).map(x => x.dataset.id);
@@ -1453,13 +1455,6 @@ function ativarDrag(container, seletor, eixo, aoSoltar){
       container.insertBefore(arrastando, depois ? el.nextSibling : el);
     });
   });
-}
-
-async function persistirOrdemShows(ids){
-  showsData = ids.map(id => showsData.find(s => s.id === id)).filter(Boolean);
-  const r = await api('/api/shows', { method: 'PUT', body: { reordenar: ids } });
-  if(r.ok) toast('Ordem da agenda atualizada', 'ok');
-  else { toast('Erro ao salvar a nova ordem', 'err'); carregarShows(); }
 }
 
 function abrirFormShow(id){
