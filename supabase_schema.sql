@@ -430,3 +430,13 @@ CREATE INDEX IF NOT EXISTS fas_ip_idx ON fas (ip, criado_em);
 ALTER TABLE fas ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Service role gerencia fas" ON fas;
 CREATE POLICY "Service role gerencia fas" ON fas FOR ALL USING (auth.role() = 'service_role');
+
+-- =====================================================
+-- ATUALIZAÇÃO 4 — shows vindos do app da banda
+-- Execute este bloco no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Id do show no app da banda: o app pode reenviar o mesmo show para atualizar
+-- (data, local, cancelamento) sem criar duplicado na agenda.
+ALTER TABLE shows ADD COLUMN IF NOT EXISTS externo_id TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS shows_externo_id_idx ON shows (externo_id);

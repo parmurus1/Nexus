@@ -82,10 +82,36 @@
     .pdf-lb-bar span{font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
     .pdf-lb iframe{flex:1;width:100%;border:0;background:#525659;}
 
-    .mapa-visual{display:block;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;position:relative;cursor:zoom-in;padding:0;}
-    .mapa-visual img{display:block;width:100%;height:auto;transition:opacity var(--tr);}
-    .mapa-visual:hover img{opacity:0.9;}
-    .mapa-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(8,8,8,0.85);border:1px solid var(--border-s);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;padding:6px 14px;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--text2);white-space:nowrap;pointer-events:none;display:flex;align-items:center;gap:6px;}
+    /* MAPA DE PALCO (mesmo layout da página "Stage plot" do rider em PDF) */
+    .palco{position:relative;background:var(--bg);border:1px solid var(--border-s);border-radius:var(--radius-sm);padding:clamp(14px,3vw,28px) clamp(6px,2vw,24px);
+      display:grid;grid-template-columns:clamp(22px,4vw,44px) repeat(3,1fr) clamp(22px,4vw,44px);grid-template-rows:auto auto auto auto auto;row-gap:clamp(14px,3vw,30px);align-items:center;justify-items:center;}
+    .palco-borda{grid-column:1/-1;font-family:var(--f-mono);font-size:clamp(0.56rem,1.4vw,0.7rem);letter-spacing:0.28em;text-transform:uppercase;color:var(--text3);text-align:center;}
+    .palco-borda.plateia{grid-row:5;border-top:1px dashed var(--border-s);padding-top:clamp(10px,2vw,16px);width:100%;}
+    .pos{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-width:0;}
+    .pos-rotulo{font-family:var(--f-mono);font-size:clamp(0.52rem,1.3vw,0.66rem);letter-spacing:0.2em;text-transform:uppercase;color:var(--text2);}
+    .pos-nome{font-family:var(--f-display);font-size:clamp(0.9rem,2.2vw,1.2rem);letter-spacing:0.06em;color:var(--text);line-height:1;margin-top:4px;}
+    .pos-funcao{font-family:var(--f-mono);font-size:clamp(0.5rem,1.2vw,0.62rem);letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);line-height:1.4;}
+    .inst{position:relative;width:clamp(40px,8vw,62px);height:clamp(40px,8vw,62px);border-radius:10px;background:var(--bg3);border:1px solid var(--red-line);display:flex;align-items:center;justify-content:center;font-size:clamp(1.15rem,2.6vw,1.7rem);color:var(--text);}
+    .inst-mic{position:absolute;right:-30%;bottom:-26%;width:56%;height:56%;border-radius:8px;background:var(--bg2);border:1px solid var(--red-line);display:flex;align-items:center;justify-content:center;font-size:0.62em;color:var(--text2);}
+    .inst.com-mic{margin-bottom:clamp(8px,1.8vw,14px);}
+    .bateria{grid-column:3;grid-row:2;border:1px solid var(--border-s);border-radius:var(--radius-sm);padding:clamp(12px,2.4vw,22px) clamp(14px,3.4vw,40px);background:rgba(255,255,255,0.015);}
+    .teclado{grid-column:4;grid-row:2;align-self:end;}
+    .joao{grid-column:2;grid-row:3;}
+    .davi{grid-column:3;grid-row:3;margin-top:clamp(10px,3vw,30px);}
+    .pedro{grid-column:4;grid-row:3;}
+    .tomada{grid-row:3;display:flex;flex-direction:column;align-items:center;gap:8px;}
+    .tomada .inst{width:clamp(22px,4vw,34px);height:clamp(22px,4vw,34px);border-radius:7px;border-color:var(--border-s);font-size:clamp(0.75rem,1.6vw,1rem);color:var(--text2);}
+    .tomada span{writing-mode:vertical-rl;font-family:var(--f-mono);font-size:clamp(0.48rem,1.1vw,0.6rem);letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);}
+    .tomada.esq{grid-column:1;}
+    .tomada.dir{grid-column:5;}
+    .retorno{grid-row:4;}
+    .retorno .inst{width:clamp(30px,5.4vw,42px);height:clamp(30px,5.4vw,42px);border-color:var(--border-s);font-size:clamp(0.85rem,1.9vw,1.15rem);color:var(--text2);}
+    .retorno.r1{grid-column:2;}.retorno.r1 .inst{transform:rotate(-45deg);}
+    .retorno.r2{grid-column:3;}
+    .retorno.r3{grid-column:4;}.retorno.r3 .inst{transform:rotate(45deg);}
+    .palco-legenda{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+    .palco-legenda span{display:inline-flex;align-items:center;gap:6px;}
+    .palco-nota{margin-top:16px;padding:14px 18px;border-left:3px solid var(--red);background:var(--bg3);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:0.86rem;color:var(--text2);line-height:1.7;}
 
     /* RIDER */
     .rider-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
@@ -239,13 +265,53 @@
     <div class="card painel">
       <div class="painel-header">
         <span class="painel-titulo"><i data-icon="grid"></i>Disposição do palco</span>
-        <a href="/imgs/contratantes/mapa-palco.jpeg" download="mapa-palco-nexus.jpeg" class="btn btn-outline btn-sm"><i data-icon="download"></i>Baixar imagem</a>
+        <a href="/imgs/contratantes/mapa-palco.png" download="mapa-palco-nexus.png" class="btn btn-outline btn-sm"><i data-icon="download"></i>Baixar imagem</a>
       </div>
       <div class="painel-body">
-        <button class="mapa-visual" type="button" onclick="nexusLightbox([{src:'/imgs/contratantes/mapa-palco.jpeg',cap:'Mapa de palco — Nexus Band'}])">
-          <img src="/imgs/contratantes/mapa-palco.jpeg" alt="Disposição do palco da Nexus Band" loading="lazy" decoding="async"/>
-          <span class="mapa-hint"><i data-icon="zoom-in"></i>Clique para ampliar</span>
-        </button>
+        <div class="palco" id="mapaPalco" role="img" aria-label="Mapa de palco: bateria (Victor) ao fundo no centro, teclado (Atila) ao fundo à direita; na frente, João (guitarra e backing vocal) à esquerda, Davi (vocal e guitarra) no centro e Pedro (baixo e backing vocal) à direita; tomadas 110V nas laterais e três retornos na frente.">
+          <div class="palco-borda">Fundo do palco / Upstage</div>
+
+          <div class="pos bateria">
+            <span class="pos-rotulo">Bateria</span>
+            <span class="inst"><i data-icon="drum"></i></span>
+            <span class="pos-funcao">Victor</span>
+          </div>
+          <div class="pos teclado">
+            <span class="pos-rotulo">Teclado</span>
+            <span class="inst com-mic"><i data-icon="piano"></i><span class="inst-mic"><i data-icon="mic"></i></span></span>
+            <span class="pos-funcao">Atila</span>
+          </div>
+
+          <div class="tomada esq"><span class="inst"><i data-icon="plug"></i></span><span>Tomadas 110V</span></div>
+          <div class="pos joao">
+            <span class="inst com-mic"><i data-icon="guitar"></i><span class="inst-mic"><i data-icon="mic"></i></span></span>
+            <span class="pos-nome">João</span>
+            <span class="pos-funcao">Guitarra &amp; backing vocal</span>
+          </div>
+          <div class="pos davi">
+            <span class="inst"><i data-icon="mic"></i></span>
+            <span class="pos-nome">Davi</span>
+            <span class="pos-funcao">Vocal &amp; guitarra</span>
+          </div>
+          <div class="pos pedro">
+            <span class="inst com-mic"><i data-icon="guitar"></i><span class="inst-mic"><i data-icon="mic"></i></span></span>
+            <span class="pos-nome">Pedro</span>
+            <span class="pos-funcao">Baixo &amp; backing vocal</span>
+          </div>
+          <div class="tomada dir"><span class="inst"><i data-icon="plug"></i></span><span>Tomadas 110V</span></div>
+
+          <div class="pos retorno r1"><span class="inst"><i data-icon="speaker"></i></span><span class="pos-funcao">Retorno</span></div>
+          <div class="pos retorno r2"><span class="inst"><i data-icon="speaker"></i></span><span class="pos-funcao">Retorno</span></div>
+          <div class="pos retorno r3"><span class="inst"><i data-icon="speaker"></i></span><span class="pos-funcao">Retorno</span></div>
+
+          <div class="palco-borda plateia">Plateia / Audience</div>
+        </div>
+        <div class="palco-legenda">
+          <span><i data-icon="mic"></i>Microfone</span>
+          <span><i data-icon="speaker"></i>Retorno</span>
+          <span><i data-icon="plug"></i>Tomadas 110V</span>
+        </div>
+        <p class="palco-nota">Bateria centralizada, posicionada atrás do vocalista Davi. Teclado posicionado atrás do baixista Pedro. Monitores laterais orientados a 45° em direção aos músicos, não para fora do palco. Kit de bateria completo levado pela banda. Layout de referência, sujeito a pequenos ajustes conforme as dimensões do palco local.</p>
       </div>
     </div>
   </section>

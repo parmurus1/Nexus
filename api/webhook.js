@@ -6,6 +6,7 @@
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 import { gerarEtiquetaESalvar, baixarEstoque } from './_lib/pedidos.js';
+import { etiquetaAutomatica } from './_lib/melhorenvio.js';
 import { LIMPAR_COMPRADOR } from './_lib/rifa.js';
 import { enviarEmail, emailRifaConfirmada, emailPedidoConfirmado, emailAvisoBandaPedido } from './_lib/email.js';
 
@@ -43,7 +44,9 @@ async function processarMerch(pagamento) {
       await enviarEmail({ para: process.env.EMAIL_BANDA, ...emailAvisoBandaPedido(pedido), responderPara: pedido.email_comprador });
     }
 
-    // Etiqueta automática no Melhor Envio. Nunca pode impedir a confirmação acima.
+    // Etiqueta automática no Melhor Envio (só com ETIQUETA_AUTOMATICA=true; o padrão é
+    // gerar pelo admin quando o produto estiver pronto). Nunca impede a confirmação acima.
+    if (!etiquetaAutomatica()) return;
     try {
       const resultado = await gerarEtiquetaESalvar(supabase, pedido);
       if (resultado.ok) console.log(`[etiqueta] gerada para o pedido ${pedidoId}: ${resultado.rastreio || 'sem rastreio ainda'}`);

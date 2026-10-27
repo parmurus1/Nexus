@@ -3,6 +3,10 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/api/integracao/shows",
+      "destination": "/api/shows?integracao=1"
+    },
+    {
       "source": "/api/config",
       "destination": "/api/site?r=config"
     },

@@ -118,6 +118,8 @@
     .frete-op-info{display:flex;flex-direction:column;gap:2px;}
     .frete-op-nome{font-family:var(--f-cond);font-size:0.9rem;color:var(--text);font-weight:600;}
     .frete-op-prazo{font-family:var(--f-mono);font-size:0.72rem;color:var(--text3);letter-spacing:0.06em;}
+    .frete-nota{display:flex;gap:8px;align-items:flex-start;margin:2px 0 4px;font-size:0.8rem;line-height:1.5;color:var(--text3);}
+    .frete-nota .ic{flex-shrink:0;margin-top:3px;}
     .frete-op-preco{font-family:var(--f-display);font-size:1.15rem;color:var(--red);}
     .cep-status{font-family:var(--f-mono);font-size:0.72rem;color:var(--text3);margin:-6px 0 10px;min-height:0.6rem;}
     .cep-status.err{color:var(--red);}
@@ -629,7 +631,7 @@ async function calcularFrete(){
   statusCep('');
   await buscarEnderecoPorCep(cep);
   try{
-    const itens = cart.map(i => ({ id: i.key, qty: i.qty, preco: i.preco, peso_kg: i.peso_kg, altura_cm: i.altura_cm, largura_cm: i.largura_cm, comprimento_cm: i.comprimento_cm }));
+    const itens = cart.map(i => ({ id: i.id, tam: i.tam, qty: i.qty }));
     const r = await fetch('/api/frete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cep, itens }) });
     const d = await r.json();
     if(!r.ok){ toast(d.erro || 'Erro ao calcular frete.', 'err'); }
@@ -657,10 +659,11 @@ function renderFreteOpcoes(){
     <button type="button" class="frete-op ${String(freteEscolhido.id) === String(o.id) ? 'on' : ''}" data-id="${nexusEsc(o.id)}">
       <span class="frete-op-info">
         <span class="frete-op-nome">${nexusEsc(o.transportadora)} — ${nexusEsc(o.servico)}</span>
-        <span class="frete-op-prazo">${o.prazo_dias ? `Prazo estimado: ${o.prazo_dias} dia(s) úteis` : 'Prazo a confirmar'}</span>
+        <span class="frete-op-prazo">${o.prazo_dias ? `Prazo estimado: ${o.prazo_dias} dia(s) úteis a partir do envio do produto` : 'Prazo a confirmar'}</span>
       </span>
       <span class="frete-op-preco">${nexusMoeda(o.preco)}</span>
-    </button>`).join('');
+    </button>`).join('')
+    + `<p class="frete-nota">${nexusIcon('info')}Os produtos têm um tempo de produção. O prazo da transportadora começa a contar quando o pedido é enviado.</p>`;
   box.querySelectorAll('.frete-op').forEach(b => b.addEventListener('click', () => {
     freteEscolhido = freteOpcoesAtuais.find(o => String(o.id) === b.dataset.id) || freteEscolhido;
     renderFreteOpcoes();
