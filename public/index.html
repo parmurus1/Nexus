@@ -88,8 +88,10 @@
 
     /* REDES SOCIAIS */
     .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:60px;}
-    @media(max-width:700px){.social-grid{grid-template-columns:1fr;}}
-    .social-strip{padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;text-decoration:none;}
+    @media(max-width:900px){.social-grid{grid-template-columns:1fr;}}
+    .social-strip{padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;text-decoration:none;}
+    .social-info{min-width:0;}
+    @media(max-width:480px){.social-strip{padding:20px;gap:12px;}.social-strip .sl-txt{display:none;}}
     .social-info{display:flex;align-items:center;gap:16px;}
     .social-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;color:#fff;}
     .insta-icon{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
@@ -111,9 +113,11 @@
     .musica.sem-player{grid-template-columns:1fr;}
 
     /* ATALHOS */
-    .nav-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:60px;}
-    @media(max-width:900px){.nav-cards{grid-template-columns:repeat(3,1fr);}}
-    @media(max-width:560px){.nav-cards{grid-template-columns:repeat(2,1fr);}}
+    /* flex com quebra: quando sobra card na última linha, ele fica centralizado */
+    .nav-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:60px;}
+    .nav-cards > *{flex:0 0 calc((100% - 40px) / 5);min-width:0;}
+    @media(max-width:900px){.nav-cards > *{flex-basis:calc((100% - 20px) / 3);}}
+    @media(max-width:560px){.nav-cards > *{flex-basis:calc((100% - 10px) / 2);}}
     .nav-card{padding:26px 22px;text-decoration:none;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
     .nav-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
     .nav-card-icon{width:42px;height:42px;border-radius:10px;border:1px solid var(--border-s);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text2);transition:all var(--tr);position:relative;}
@@ -219,7 +223,7 @@
           <span class="social-desc" style="display:block;">Siga para acompanhar tudo</span>
         </span>
       </span>
-      <span class="link-arrow">Instagram <i data-icon="arrow-up-right"></i></span>
+      <span class="link-arrow"><span class="sl-txt">Instagram</span> <i data-icon="arrow-up-right"></i></span>
     </a>
     <a href="https://tiktok.com/@nexus.bandbr" data-link="tiktok" target="_blank" rel="noopener" class="card card-hover social-strip">
       <span class="social-info">
@@ -229,7 +233,7 @@
           <span class="social-desc" style="display:block;">Vídeos e bastidores</span>
         </span>
       </span>
-      <span class="link-arrow">TikTok <i data-icon="arrow-up-right"></i></span>
+      <span class="link-arrow"><span class="sl-txt">TikTok</span> <i data-icon="arrow-up-right"></i></span>
     </a>
   </div>
 
