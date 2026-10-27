@@ -104,13 +104,17 @@ Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.s
 2. A migração de `shows.ordem` e a de ícones dos produtos
 3. **ATUALIZAÇÃO 2** — estoque, orçamentos, limite de tentativas de login e o membro Pedro
 4. **ATUALIZAÇÃO 3** — cartaz dos shows e lista de fãs (avisos de shows)
-5. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
+5. **ATUALIZAÇÃO 4** — shows vindos do app da banda (`shows.externo_id`)
+6. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
 
 ## Loja: estoque e envio
 
 - **Preço**: o servidor sempre busca preço, nome e medidas no banco; o navegador só informa produto, tamanho e quantidade.
 - **Estoque (opcional)**: no admin, em Produtos, preencha a quantidade de cada tamanho. Vazio = sem controle. Tamanhos zerados aparecem como esgotados e o estoque baixa sozinho quando o pagamento é aprovado.
-- **Etiquetas**: geradas automaticamente no Melhor Envio quando o pagamento é aprovado. Se falhar (ex.: sem saldo na carteira), recarregue e use o botão **Gerar etiqueta** em Pedidos.
+- **Frete**: calculado no Melhor Envio com peso e medidas cadastrados em cada produto. O pedido inteiro vai numa caixa só (os Correios aceitam um volume por envio), e o mesmo pacote é usado no cálculo e na etiqueta. O prazo mostrado ao cliente conta a partir do envio do produto.
+- **Etiquetas**: como os produtos têm tempo de produção, a etiqueta é gerada no admin, em Pedidos → **Gerar etiqueta**, quando o produto estiver pronto (ela tem prazo para ser postada). O valor sai da carteira do Melhor Envio. Se faltar saldo, recarregue e clique de novo: o site continua de onde parou, sem pagar duas vezes. Para gerar sozinha no pagamento, use `ETIQUETA_AUTOMATICA=true`.
+- **Rastreio**: vai por e-mail ao cliente assim que existir. Se a etiqueta saiu sem rastreio, use **Buscar rastreio** em Pedidos.
+- **Configuração**: `MELHOR_ENVIO_TOKEN`, `MELHOR_ENVIO_SANDBOX`, `CEP_ORIGEM` e os `REMETENTE_*` (veja o `.env.example`).
 - **E-mails**: com o Resend configurado, o cliente recebe a confirmação do pedido e o código de rastreio, e a banda recebe um aviso de cada pedido pago.
 
 ## Rifa: reservas
@@ -121,7 +125,40 @@ Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém 
 
 - **Cartaz do show**: no admin, em Agenda de shows, envie o flyer de cada show. Ele aparece ao lado do show na página Agenda (clicar amplia).
 - **Fãs**: o rodapé de todas as páginas tem um campo "Avisos de shows" (e-mail ou WhatsApp). A lista fica no admin em **Fãs**, com exportação em CSV para importar numa ferramenta de e-mail ou lista de transmissão do WhatsApp.
-- **Fotos no topo das páginas**: ficam em `public/imgs/hero/` (versões `-sm` para celular e `-lg` para computador, em WebP). Para trocar a foto de uma página, substitua o arquivo mantendo o nome ou altere o `--hero-sm`/`--hero-lg` no `<header class="page-hero has-photo">` da página. A página inicial alterna três fotos (`.home-slide` em `index.html`).
+- **Ordem da agenda**: automática, pela data e hora de cada show.
+- **Topo das páginas**: as páginas internas usam uma animação de palco em CSS (`.hero-fx`). A página inicial passa por todas as fotos da galeria (se houver menos de 2, usa as de `public/imgs/hero/`), e a página Sobre tem um mosaico que vai trocando as fotos da galeria.
+
+## Integração com o app da banda
+
+Quando um show é fechado no app da banda, o app pode publicá-lo direto na agenda do site:
+
+1. Rode o bloco **ATUALIZAÇÃO 4** do `supabase_schema.sql`.
+2. Crie na Vercel a variável `INTEGRACAO_TOKEN` com uma senha longa (mínimo 16 caracteres) e coloque a mesma no app.
+3. O app faz um `POST https://nexusband.com.br/api/integracao/shows` com o cabeçalho `X-Nexus-Token: <INTEGRACAO_TOKEN>` e o corpo em JSON:
+
+```json
+{
+  "id_externo": "id-do-show-no-app",
+  "nome": "Heavy Night",
+  "data": "2026-11-21",
+  "hora": "19:00",
+  "local": "Casa Lab SP - Rua Loefgren, 930 - Vila Mariana - São Paulo, SP",
+  "link": "https://link-dos-ingressos",
+  "gratuito": false
+}
+```
+
+- Mandar de novo com o mesmo `id_externo` **atualiza** o show (não duplica).
+- `"cancelado": true` mostra o show como cancelado; `"excluir": true` tira da agenda.
+- `data` aceita `AAAA-MM-DD` ou `DD/MM/AAAA`; `link`, `hora`, `cartaz` e `gratuito` são opcionais.
+
+Teste rápido pelo terminal:
+
+```bash
+curl -X POST https://nexusband.com.br/api/integracao/shows \
+  -H "Content-Type: application/json" -H "X-Nexus-Token: SEU_TOKEN" \
+  -d '{"id_externo":"teste-1","nome":"Show teste","data":"2026-12-20","local":"São Paulo"}'
+```
 
 ## Conteúdo do site e orçamentos
 

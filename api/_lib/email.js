@@ -88,12 +88,12 @@ export function emailPedidoConfirmado(pedido) {
   const itens = (pedido.itens || []).map(i =>
     `<tr><td style="padding:6px 0;color:#ffffff;">${esc(i.nome)}${i.tam && i.tam !== 'único' ? ` (${esc(i.tam)})` : ''} × ${esc(i.qty)}</td>
      <td style="padding:6px 0;text-align:right;">${moeda(Number(i.preco) * Number(i.qty))}</td></tr>`).join('');
-  const prazo = pedido.frete_prazo_dias ? ` — prazo estimado de ${esc(pedido.frete_prazo_dias)} dia(s) úteis após a postagem` : '';
+  const prazo = pedido.frete_prazo_dias ? ` — prazo de entrega estimado de ${esc(pedido.frete_prazo_dias)} dia(s) úteis a partir do envio do produto` : '';
   return {
     assunto: 'Pedido confirmado — Loja Nexus',
     html: layout('Pedido confirmado', `
       <p>Olá, ${esc(pedido.nome_comprador)}!</p>
-      <p>O pagamento do seu pedido foi aprovado. Já estamos separando tudo para o envio.</p>
+      <p>O pagamento do seu pedido foi aprovado. Agora ele entra em produção e, assim que estiver pronto, a gente envia.</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#cfcac4;border-top:1px solid #2a2a2a;border-bottom:1px solid #2a2a2a;margin:8px 0 14px;">
         ${itens}
         <tr><td style="padding:6px 0;">Frete (${esc(pedido.frete_transportadora || '')} ${esc(pedido.frete_servico || '')})</td><td style="padding:6px 0;text-align:right;">${moeda(pedido.frete_valor)}</td></tr>
@@ -118,7 +118,7 @@ export function emailAvisoBandaPedido(pedido) {
 
 export function emailEtiquetaGerada(pedido, rastreio) {
   return {
-    assunto: 'Seu pedido da Loja Nexus foi postado',
+    assunto: 'Seu pedido da Loja Nexus está a caminho',
     html: layout('Pedido a caminho', `
       <p>Olá, ${esc(pedido.nome_comprador)}!</p>
       <p>A etiqueta de envio do seu pedido foi gerada${rastreio ? ' e o código de rastreio é:' : '.'}</p>

@@ -1,7 +1,7 @@
 // api/criar-pagamento-merch.js — checkout da loja (merch) via Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
-import { calcularFreteMelhorEnvio } from './frete.js';
+import { calcularFrete } from './_lib/melhorenvio.js';
 import { montarItensSeguros } from './_lib/pedidos.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
@@ -39,9 +39,7 @@ export default async function handler(req, res) {
   // chamando a API do Melhor Envio de novo e usa a opção escolhida pelo id. ──
   let frete = { servico: null, transportadora: null, preco: 0, prazo_dias: null };
   try {
-    const cepOrigem = process.env.CEP_ORIGEM;
-    if (!cepOrigem) throw new Error('CEP_ORIGEM não configurado no servidor');
-    const opcoes = await calcularFreteMelhorEnvio({ cepOrigem, cepDestino: cep, itens });
+    const opcoes = await calcularFrete({ cepDestino: cep, itens });
     const escolhida = opcoes.find(o => String(o.id) === String(frete_servico_id));
     if (!escolhida) {
       return res.status(400).json({ erro: 'Opção de frete inválida ou expirada. Recalcule o frete e tente novamente.' });

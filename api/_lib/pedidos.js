@@ -1,5 +1,5 @@
 // api/_lib/pedidos.js — regras compartilhadas dos pedidos da loja (merch).
-import { gerarEtiquetaParaPedido } from '../frete.js';
+import { gerarEtiquetaParaPedido, buscarRastreio } from './melhorenvio.js';
 import { enviarEmail, emailEtiquetaGerada } from './email.js';
 
 export const MAX_QTD_POR_ITEM = 20;
@@ -77,7 +77,7 @@ export async function baixarEstoque(supabase, itens) {
 }
 
 // Gera a etiqueta no Melhor Envio e grava o resultado no pedido. Usado pelo
-// webhook (automático) e pelo botão "Gerar etiqueta" do admin (manual).
+// botão "Gerar etiqueta" do admin e, com ETIQUETA_AUTOMATICA=true, pelo webhook.
 export async function gerarEtiquetaESalvar(supabase, pedido) {
   const resultado = await gerarEtiquetaParaPedido(pedido);
   if (resultado.ok) {
@@ -89,10 +89,28 @@ export async function gerarEtiquetaESalvar(supabase, pedido) {
       me_etiqueta_gerada_em: new Date().toISOString(),
       me_erro: null
     }).eq('id', pedido.id);
-    const email = emailEtiquetaGerada(pedido, resultado.rastreio);
-    await enviarEmail({ para: pedido.email_comprador, ...email });
+    // O cliente recebe o rastreio por e-mail assim que ele existir
+    if (resultado.rastreio) await enviarEmail({ para: pedido.email_comprador, ...emailEtiquetaGerada(pedido, resultado.rastreio) });
   } else {
-    await supabase.from('pedidos_merch').update({ me_status: resultado.status, me_erro: resultado.erro }).eq('id', pedido.id);
+    await supabase.from('pedidos_merch').update({
+      me_status: resultado.status,
+      me_erro: resultado.erro,
+      // guarda a etiqueta já criada para a próxima tentativa continuar dela
+      ...(resultado.etiqueta_id ? { me_etiqueta_id: String(resultado.etiqueta_id) } : {})
+    }).eq('id', pedido.id);
   }
   return resultado;
+}
+
+// Busca de novo o rastreio de uma etiqueta já gerada (às vezes ele só aparece
+// depois). Na primeira vez que encontra, avisa o cliente por e-mail.
+export async function atualizarRastreio(supabase, pedido) {
+  if (!pedido.me_etiqueta_id) return { erro: 'Este pedido ainda não tem etiqueta.' };
+  const rastreio = await buscarRastreio(pedido.me_etiqueta_id).catch(e => { console.error('[rastreio]', e.message); return null; });
+  if (!rastreio) return { erro: 'O rastreio ainda não está disponível. Tente de novo mais tarde.' };
+  if (rastreio !== pedido.me_rastreio) {
+    await supabase.from('pedidos_merch').update({ me_rastreio: rastreio }).eq('id', pedido.id);
+    if (!pedido.me_rastreio) await enviarEmail({ para: pedido.email_comprador, ...emailEtiquetaGerada(pedido, rastreio) });
+  }
+  return { rastreio };
 }

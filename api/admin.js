@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 import { autenticar, verificarCredenciais, criarSessao, multiusuario, usuariosAdmin, ipDaRequisicao, MAX_TENTATIVAS, JANELA_TENTATIVAS_MIN } from './_lib/auth.js';
 import { liberarExpirados } from './_lib/rifa.js';
-import { gerarEtiquetaESalvar } from './_lib/pedidos.js';
+import { gerarEtiquetaESalvar, atualizarRastreio } from './_lib/pedidos.js';
 import { emailConfigurado } from './_lib/email.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
@@ -198,6 +198,17 @@ export default async function handler(req, res) {
     const resultado = await gerarEtiquetaESalvar(supabase, pedido);
     if (!resultado.ok) return res.status(400).json({ erro: resultado.erro || 'Não foi possível gerar a etiqueta' });
     return res.status(200).json({ ok: true, rastreio: resultado.rastreio, link_etiqueta: resultado.link_etiqueta });
+  }
+
+  // Busca de novo o código de rastreio de uma etiqueta já gerada
+  if (acao === 'atualizar-rastreio') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+    const { id } = req.body || {};
+    const { data: pedido } = await supabase.from('pedidos_merch').select('*').eq('id', id).maybeSingle();
+    if (!pedido) return res.status(404).json({ erro: 'Pedido não encontrado' });
+    const r = await atualizarRastreio(supabase, pedido);
+    if (r.erro) return res.status(400).json({ erro: r.erro });
+    return res.status(200).json({ ok: true, rastreio: r.rastreio });
   }
 
   // Orçamentos enviados pela página Contratantes

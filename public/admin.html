@@ -1055,21 +1055,30 @@ function celulaEnvio(p){
   const frete = p.frete_servico ? `<span style="font-size:0.74rem;color:var(--text3);">${esc(p.frete_transportadora || '')} ${esc(p.frete_servico)}</span>` : '';
   if(p.me_status === 'gerada'){
     return `<div class="envio-cel"><span class="tag tag-ok">${nexusIcon('truck')}Etiqueta gerada</span>${frete}
-      ${p.me_rastreio ? `<a class="mono" href="https://www.melhorrastreio.com.br/rastreio/${encodeURIComponent(p.me_rastreio)}" target="_blank" rel="noopener">${esc(p.me_rastreio)}</a>` : ''}
+      ${p.me_rastreio ? `<a class="mono" href="https://www.melhorrastreio.com.br/rastreio/${encodeURIComponent(p.me_rastreio)}" target="_blank" rel="noopener">${esc(p.me_rastreio)}</a>`
+        : `<button class="btn btn-outline btn-sm" type="button" onclick="atualizarRastreio('${esc(p.id)}', this)">${nexusIcon('refresh')}Buscar rastreio</button>`}
       ${p.me_link_etiqueta ? `<a class="btn btn-outline btn-sm" href="${esc(p.me_link_etiqueta)}" target="_blank" rel="noopener">${nexusIcon('download')}Etiqueta</a>` : ''}</div>`;
   }
-  const rotulo = p.me_status === 'falha_saldo' ? 'Sem saldo no Melhor Envio' : (p.me_status === 'falha' ? 'Falha na etiqueta' : 'Etiqueta pendente');
+  const rotulo = p.me_status === 'falha_saldo' ? 'Sem saldo no Melhor Envio' : (p.me_status === 'falha' ? 'Falha na etiqueta' : 'Em produção');
   return `<div class="envio-cel"><span class="tag tag-warn">${esc(rotulo)}</span>${frete}
     ${p.me_erro ? `<span class="envio-erro">${esc(p.me_erro)}</span>` : ''}
     <button class="btn btn-outline btn-sm" type="button" onclick="gerarEtiqueta('${esc(p.id)}', this)">${nexusIcon('refresh')}Gerar etiqueta</button></div>`;
 }
 
 async function gerarEtiqueta(id, btn){
-  if(!confirm('Gerar a etiqueta agora? O valor do frete será debitado da carteira do Melhor Envio.')) return;
+  if(!confirm('Gerar a etiqueta agora? Faça isso quando o produto estiver pronto para postar: o valor do frete é debitado da carteira do Melhor Envio e a etiqueta tem prazo para postagem.')) return;
   const pronto = carregandoBtn(btn, 'Gerando...');
   const r = await api('/api/admin?acao=gerar-etiqueta', { method: 'POST', body: { id } });
   pronto();
   if(r.ok) toast('Etiqueta gerada', 'ok'); else toast(r.data.erro || 'Erro ao gerar etiqueta', 'err');
+  carregarPedidosMerch();
+}
+
+async function atualizarRastreio(id, btn){
+  const pronto = carregandoBtn(btn, 'Buscando...');
+  const r = await api('/api/admin?acao=atualizar-rastreio', { method: 'POST', body: { id } });
+  pronto();
+  if(r.ok) toast('Rastreio atualizado e enviado ao cliente', 'ok'); else toast(r.data.erro || 'Erro ao buscar o rastreio', 'err');
   carregarPedidosMerch();
 }
 

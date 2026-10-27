@@ -40,20 +40,29 @@
     .membro-nome{display:block;font-family:var(--f-display);font-size:1.15rem;letter-spacing:0.04em;color:var(--text);margin-bottom:2px;}
     .membro-role{display:block;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
 
-    /* FOTOS (prévia da galeria) */
-    .fotos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-    .foto-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;aspect-ratio:4/3;position:relative;cursor:zoom-in;padding:0;transition:border-color var(--tr),transform var(--tr);}
+    /* FOTOS (prévia da galeria): mosaico compacto em que as fotos vão se revezando,
+       com uma barra de tempo (estilo YouTube) mostrando quando vem a próxima troca */
+    .fotos-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(96px,13vw,150px);gap:8px;}
+    .foto-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;position:relative;cursor:zoom-in;padding:0;transition:border-color var(--tr),transform var(--tr);}
     .foto-card:hover{border-color:var(--border-s);transform:translateY(-2px);}
-    .foto-card:first-child{grid-column:1/3;grid-row:1;aspect-ratio:auto;min-height:260px;}
-    .foto-card:nth-child(2){grid-column:3;grid-row:1;aspect-ratio:auto;}
-    .foto-card img{width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.88;transition:opacity var(--tr);}
-    .foto-card:hover img{opacity:1;}
+    .foto-card:first-child{grid-column:span 2;grid-row:span 2;}
+    .foto-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;transition:opacity 0.9s ease;}
+    .foto-card img.on{opacity:0.9;}
+    .foto-card:hover img.on{opacity:1;}
     @media(max-width:600px){
-      .fotos-wrap{margin:0 -24px;}
-      .fotos-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 24px 6px;scrollbar-width:none;}
-      .fotos-grid::-webkit-scrollbar{display:none;}
-      .foto-card,.foto-card:first-child,.foto-card:nth-child(2){flex:0 0 78vw;max-width:320px;aspect-ratio:4/3;min-height:0;scroll-snap-align:start;transform:none!important;}
+      .fotos-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:110px;}
+      .foto-card:nth-child(n+4){display:none;}
     }
+    .fotos-barra{position:relative;height:3px;margin-top:12px;background:var(--border-s);border-radius:2px;}
+    .fotos-barra[hidden]{display:none;}
+    .fotos-barra-fill{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--red);border-radius:2px;transform-origin:left center;transform:scaleX(0);}
+    .fotos-barra-fill.rodando{animation:fotosTempo var(--tempo,5s) linear forwards;}
+    .fotos-barra-ponto{position:absolute;top:50%;left:0;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--red);transform:scale(0);transition:transform 0.15s;}
+    .fotos-barra-ponto.rodando{animation:fotosPonto var(--tempo,5s) linear forwards;}
+    .fotos-wrap:hover .fotos-barra-ponto{transform:scale(1);}
+    .fotos-wrap:hover .rodando{animation-play-state:paused;}
+    @keyframes fotosTempo{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+    @keyframes fotosPonto{from{left:0;}to{left:100%;}}
 
     /* VÍDEOS (embed leve: o player do YouTube só carrega ao clicar) */
     .videos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
@@ -139,7 +148,10 @@
       <h2 class="sec-title">FOTOS</h2>
       <a href="/galeria#fotos" class="link-arrow">Ver todas as fotos <i data-icon="arrow-right"></i></a>
     </div>
-    <div class="fotos-wrap"><div class="fotos-grid" id="fotosGrid"></div></div>
+    <div class="fotos-wrap">
+      <div class="fotos-grid" id="fotosGrid"></div>
+      <div class="fotos-barra" id="fotosBarra" hidden aria-hidden="true"><span class="fotos-barra-fill"></span><span class="fotos-barra-ponto"></span></div>
+    </div>
   </section>
 
   <section class="section" id="secVideos">
@@ -287,10 +299,74 @@ const VIDEOS_PADRAO = [
 
 async function buscarGaleria(tipo, limite, padrao){
   try{
-    const r = await fetch(`/api/galeria?tipo=${tipo}&limite=${limite}`);
+    const r = await fetch(`/api/galeria?tipo=${tipo}${limite ? `&limite=${limite}` : ''}`);
     if(r.ok){ const d = await r.json(); if(!d.aviso) return d.itens || []; }
   }catch(e){}
   return padrao;
+}
+
+function embaralhar(lista){
+  const a = [...lista];
+  for(let k = a.length - 1; k > 0; k--){ const x = Math.floor(Math.random() * (k + 1)); [a[k], a[x]] = [a[x], a[k]]; }
+  return a;
+}
+
+// Mosaico de 5 fotos que vai trocando uma foto por vez, passando por toda a galeria.
+// A barra embaixo marca o tempo até a próxima troca e pausa com o mouse em cima.
+const FOTOS_TROCA_MS = 4500;
+function montarMosaico(grid, fotos){
+  const VISIVEIS = 5;
+  const src = (f, grande) => grande ? f.url : (f.thumbnail_url || f.url);
+  const itensLightbox = fotos.map(f => ({ src: f.url, cap: f.titulo || '' }));
+  const atual = fotos.slice(0, VISIVEIS).map((_, i) => i); // índice da foto em cada quadro
+  grid.innerHTML = atual.map(i => `
+    <button class="foto-card" type="button" aria-label="Ampliar foto">
+      <img class="on" src="${nexusEsc(src(fotos[i], i === 0))}" alt="${nexusEsc(fotos[i].titulo || 'Nexus ao vivo')}" loading="lazy" decoding="async"/>
+    </button>`).join('');
+  const quadros = [...grid.querySelectorAll('.foto-card')];
+  quadros.forEach((q, k) => q.addEventListener('click', () => nexusLightbox(itensLightbox, atual[k])));
+  if(fotos.length <= VISIVEIS) return;
+
+  const barra = document.getElementById('fotosBarra');
+  const partes = [...barra.children];
+  barra.style.setProperty('--tempo', FOTOS_TROCA_MS + 'ms');
+  barra.hidden = false;
+  const ORDEM = [3, 1, 4, 0, 2]; // troca espalhada pelo mosaico, não em sequência
+  let proxFoto = VISIVEIS, passo = 0, visivel = false;
+
+  function rodarBarra(){
+    partes.forEach(el => { el.classList.remove('rodando'); void el.offsetWidth; el.classList.add('rodando'); });
+  }
+  async function trocar(){
+    // só os quadros que aparecem na tela (no celular são 3)
+    const ativos = ORDEM.filter(k => quadros[k] && quadros[k].offsetParent !== null);
+    const k = ativos[passo++ % ativos.length];
+    const f = fotos[proxFoto];
+    const nova = new Image();
+    nova.alt = f.titulo || 'Nexus ao vivo';
+    nova.decoding = 'async';
+    nova.src = src(f, k === 0);
+    try{ await nova.decode(); }catch{}
+    const antiga = quadros[k].querySelector('img.on');
+    quadros[k].appendChild(nova);
+    requestAnimationFrame(() => {
+      nova.classList.add('on');
+      if(antiga){ antiga.classList.remove('on'); setTimeout(() => antiga.remove(), 1000); }
+    });
+    atual[k] = proxFoto;
+    proxFoto = (proxFoto + 1) % fotos.length;
+    if(visivel && !document.hidden) rodarBarra();
+    else partes.forEach(el => el.classList.remove('rodando'));
+  }
+  partes[0].addEventListener('animationend', trocar);
+  // Só roda com o mosaico na tela e a aba aberta
+  function ajustar(){
+    const rodar = visivel && !document.hidden;
+    partes.forEach(el => el.style.animationPlayState = rodar ? '' : 'paused');
+    if(rodar && !partes[0].classList.contains('rodando')) rodarBarra();
+  }
+  new IntersectionObserver(([e]) => { visivel = e.isIntersecting; ajustar(); }, { threshold: 0.3 }).observe(grid);
+  document.addEventListener('visibilitychange', ajustar);
 }
 
 function idYoutube(url){
@@ -299,17 +375,12 @@ function idYoutube(url){
 }
 
 (async () => {
-  const fotos = await buscarGaleria('foto', 5, FOTOS_PADRAO);
+  const fotos = embaralhar(await buscarGaleria('foto', 0, FOTOS_PADRAO));
   const grid = document.getElementById('fotosGrid');
   if(!fotos.length){
     grid.innerHTML = `<div class="state">${nexusIcon('camera')}<span>Fotos em breve.</span></div>`;
   } else {
-    grid.innerHTML = fotos.map((f, i) => `
-      <button class="foto-card" type="button" aria-label="Ampliar foto" data-i="${i}">
-        <img src="${nexusEsc(i < 2 ? f.url : (f.thumbnail_url || f.url))}" alt="${nexusEsc(f.titulo || 'Nexus ao vivo')}" loading="lazy" decoding="async"/>
-      </button>`).join('');
-    const itens = fotos.map(f => ({ src: f.url, cap: f.titulo || '' }));
-    grid.querySelectorAll('.foto-card').forEach(b => b.addEventListener('click', () => nexusLightbox(itens, +b.dataset.i)));
+    montarMosaico(grid, fotos);
   }
 
   const videos = (await buscarGaleria('video', 4, VIDEOS_PADRAO)).filter(v => idYoutube(v.url));
