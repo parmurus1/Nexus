@@ -23,14 +23,14 @@
          --on-red garante texto preto em tudo que tem fundo "vermelho"
          (que no modo venom vira quase-branco). */
       'body.venom-mode{' +
-        '--red:#f2f2f2;--red-hover:#ffffff;--red-dim:#c9c9c9;--red-glow:rgba(255,255,255,0.22);--red-mid:rgba(255,255,255,0.08);' +
+        '--red:#f2f2f2;--red-rgb:255,255,255;--red-hover:#ffffff;--red-dim:#c9c9c9;--red-glow:rgba(255,255,255,0.22);--red-mid:rgba(255,255,255,0.08);' +
         '--red-soft:rgba(255,255,255,0.1);--red-line:rgba(255,255,255,0.3);--on-red:#000;' +
         '--bg:#000000;--bg2:#0a0a0a;--bg3:#131313;--bg4:#1c1c1c;' +
         '--border:rgba(255,255,255,0.10);--border-s:rgba(255,255,255,0.2);' +
         '--text:#f5f5f5;--text2:#b4b4b4;--text3:#8a8a8a;--glass:rgba(0,0,0,0.94);' +
       '}' +
       'body.venom-mode img{filter:grayscale(1) contrast(1.05);}' +
-      'body.venom-mode .hero-photo,body.venom-mode .home-slide{filter:grayscale(1) contrast(1.1) brightness(0.85);}' +
+      'body.venom-mode .home-slide{filter:grayscale(1) contrast(1.1) brightness(0.85);}' +
       '.venom-overlay{position:fixed;inset:0;z-index:40;overflow:hidden;pointer-events:none;}' +
       '.venom-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.6) 100%);animation:venomPulse 6s ease-in-out infinite;}' +
       '@keyframes venomPulse{0%,100%{opacity:0.55;}50%{opacity:0.9;}}' +

@@ -35,11 +35,13 @@
     .home-slides{position:absolute;inset:0;overflow:hidden;}
     .home-slide{position:absolute;inset:0;background-image:var(--sm);background-size:cover;background-position:center 40%;opacity:0;transform:scale(1.1);transition:opacity 1.8s ease;filter:grayscale(0.35) contrast(1.08) brightness(0.85);}
     @media(min-width:769px){.home-slide{background-image:var(--lg);}}
-    .home-slide.on{opacity:1;animation:kenburns 9s ease-out forwards;}
+    .home-slide.on{opacity:1;}
+    /* o zoom fica numa classe separada para a foto que sai não "pular" enquanto esmaece */
+    .home-slide.zoom{animation:kenburns 9s ease-out forwards;}
     @keyframes kenburns{from{transform:scale(1.1);}to{transform:scale(1);}}
     .home-slides::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,rgba(8,8,8,0.5) 0%,rgba(8,8,8,0.82) 70%),linear-gradient(180deg,rgba(8,8,8,0.6) 0%,transparent 30%,transparent 65%,var(--bg) 100%);}
     .home-slides::before{content:'';position:absolute;inset:0;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");background-size:200px;opacity:0.14;mix-blend-mode:overlay;}
-    @media(prefers-reduced-motion:reduce){.home-slide.on{animation:none;transform:none;}}
+    @media(prefers-reduced-motion:reduce){.home-slide.zoom{animation:none;transform:none;}}
     .hero-eyebrow{font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.82);margin-bottom:28px;display:inline-flex;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
     .hero-eyebrow::before,.hero-eyebrow::after{content:'';width:18px;height:2px;background:var(--red);}
     .hero-logo{position:relative;z-index:1;opacity:0;animation:rise 0.8s 0.2s forwards;margin-bottom:28px;}
@@ -48,9 +50,9 @@
 
     .cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.55s forwards;margin-bottom:52px;}
     .cta-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:108px;height:108px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:all var(--tr);}
-    .cta-card:hover{border-color:var(--red);box-shadow:0 0 22px var(--red-glow);transform:translateY(-3px);}
-    .cta-icon{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,var(--red-soft) 0%,transparent 70%);display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:var(--text2);transition:color var(--tr);}
-    .cta-card:hover .cta-icon{color:var(--red);}
+    .cta-card:hover{border-color:var(--border-s);background:var(--bg3);transform:translateY(-3px);}
+    .cta-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:var(--text2);transition:color var(--tr);}
+    .cta-card:hover .cta-icon{color:var(--text);}
     .cta-label{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text2);transition:color var(--tr);}
     .cta-card:hover .cta-label{color:var(--text);}
     .cta-card.is-rifa{border-color:var(--red-line);}
@@ -69,7 +71,6 @@
 
     /* PRÓXIMO SHOW */
     .next-show{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;padding:28px 32px;margin-bottom:60px;text-decoration:none;position:relative;overflow:hidden;}
-    .next-show::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,var(--red-mid) 0%,transparent 60%);pointer-events:none;}
     .next-date{text-align:center;border-right:1px solid var(--border-s);padding-right:28px;position:relative;}
     .next-dia{font-family:var(--f-display);font-size:3.4rem;line-height:0.9;color:var(--text);}
     .next-mes{font-family:var(--f-display);font-size:1.05rem;letter-spacing:0.15em;color:var(--text2);}
@@ -111,11 +112,9 @@
     @media(max-width:900px){.nav-cards{grid-template-columns:repeat(3,1fr);}}
     @media(max-width:560px){.nav-cards{grid-template-columns:repeat(2,1fr);}}
     .nav-card{padding:26px 22px;text-decoration:none;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
-    .nav-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 100%,var(--red-mid) 0%,transparent 60%);opacity:0;transition:opacity var(--tr);}
     .nav-card:hover{border-color:var(--border-s);transform:translateY(-3px);}
-    .nav-card:hover::before{opacity:1;}
     .nav-card-icon{width:42px;height:42px;border-radius:10px;border:1px solid var(--border-s);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--text2);transition:all var(--tr);position:relative;}
-    .nav-card:hover .nav-card-icon{color:var(--red);border-color:var(--red-line);}
+    .nav-card:hover .nav-card-icon{color:var(--text);border-color:var(--text3);}
     .nav-card-label{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);position:relative;}
     .nav-card-title{font-family:var(--f-display);font-size:1.45rem;letter-spacing:0.04em;color:var(--text);position:relative;}
     .nav-card-arrow{margin-top:auto;color:var(--text3);transition:color var(--tr),transform var(--tr);position:relative;}
@@ -123,7 +122,6 @@
 
     /* RIFA */
     .rifa-banner{border-color:var(--red-line);padding:40px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;position:relative;overflow:hidden;}
-    .rifa-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,var(--red-mid) 0%,transparent 60%);pointer-events:none;}
     .rifa-banner>*{position:relative;}
     .rifa-title{font-family:var(--f-display);font-size:clamp(2rem,4vw,3rem);letter-spacing:0.04em;color:var(--text);margin:12px 0 8px;}
     .rifa-desc{font-size:0.92rem;color:var(--text2);line-height:1.75;max-width:480px;}
@@ -154,9 +152,8 @@
 <main id="conteudo">
 <header class="hero torn">
   <div class="home-slides" aria-hidden="true">
-    <div class="home-slide on" style="--sm:url(/imgs/hero/show-03-sm.webp);--lg:url(/imgs/hero/show-03-lg.webp)"></div>
-    <div class="home-slide" data-sm="/imgs/hero/show-01-sm.webp" data-lg="/imgs/hero/show-01-lg.webp"></div>
-    <div class="home-slide" data-sm="/imgs/hero/show-05-sm.webp" data-lg="/imgs/hero/show-05-lg.webp"></div>
+    <div class="home-slide on zoom" style="--sm:url(/imgs/hero/show-03-sm.webp);--lg:url(/imgs/hero/show-03-lg.webp)"></div>
+    <div class="home-slide"></div>
   </div>
 
   <p class="hero-eyebrow">São Paulo · Brasil</p>
@@ -342,18 +339,43 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-// Fotos do topo: as próximas só carregam depois da página pronta, e trocam a cada 6s
-window.addEventListener('load', () => {
-  const slides = [...document.querySelectorAll('.home-slide')];
-  slides.forEach(sl => { if(sl.dataset.sm){ sl.style.setProperty('--sm', `url(${sl.dataset.sm})`); sl.style.setProperty('--lg', `url(${sl.dataset.lg})`); } });
+// Fotos do topo: passam por todas as fotos da galeria (em ordem aleatória a cada visita).
+// São só duas camadas que se revezam; cada foto só é baixada logo antes de aparecer.
+window.addEventListener('load', async () => {
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let i = 0;
-  setInterval(() => {
-    if(document.hidden) return;
-    slides[i].classList.remove('on');
-    i = (i + 1) % slides.length;
-    slides[i].classList.add('on');
-  }, 6000);
+  const camadas = [...document.querySelectorAll('.home-slide')];
+  const PADRAO = ['show-01', 'show-05', 'show-02', 'show-04', 'show-03']
+    .map(n => ({ sm: `/imgs/hero/${n}-sm.webp`, lg: `/imgs/hero/${n}-lg.webp` }));
+  let fotos = [];
+  try{
+    const r = await fetch('/api/galeria?tipo=foto');
+    if(r.ok){
+      const { itens = [] } = await r.json();
+      fotos = itens.filter(g => g.url).map(g => ({ sm: g.url, lg: g.url }));
+      for(let k = fotos.length - 1; k > 0; k--){ const x = Math.floor(Math.random() * (k + 1)); [fotos[k], fotos[x]] = [fotos[x], fotos[k]]; }
+    }
+  }catch{}
+  if(fotos.length < 2) fotos = PADRAO;
+
+  const grande = window.matchMedia('(min-width: 769px)').matches;
+  const carregar = f => new Promise(ok => { const img = new Image(); img.onload = img.onerror = () => ok(img.naturalWidth > 0); img.src = grande ? f.lg : f.sm; });
+  let atual = 0, i = 0;
+  async function proxima(){
+    if(document.hidden) return setTimeout(proxima, 1500);
+    const f = fotos[i]; i = (i + 1) % fotos.length;
+    if(await carregar(f)){
+      const prox = camadas[1 - atual];
+      prox.style.setProperty('--sm', `url("${f.sm}")`);
+      prox.style.setProperty('--lg', `url("${f.lg}")`);
+      // reinicia o zoom lento da camada que vai aparecer
+      prox.classList.remove('zoom'); void prox.offsetWidth;
+      camadas[atual].classList.remove('on');
+      prox.classList.add('on', 'zoom');
+      atual = 1 - atual;
+    }
+    setTimeout(proxima, 6000);
+  }
+  setTimeout(proxima, 6000);
 });
 
 // Destaque do próximo show (primeiro show futuro e não cancelado da agenda)
