@@ -26,7 +26,6 @@
   <script defer src="/_vercel/insights/script.js"></script>
   <script src="/nexus-core.js"></script>
   <link rel="preload" as="image" href="/imgs/marca/nexustitle.webp" type="image/webp"/>
-  <link rel="preload" as="image" href="/imgs/hero/show-03-sm.webp" media="(max-width: 768px)"/>
   <link rel="preload" as="image" href="/imgs/hero/show-03-lg.webp" media="(min-width: 769px)"/>
   <style>
     /* HERO */
@@ -42,6 +41,10 @@
     .home-slides::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,rgba(8,8,8,0.5) 0%,rgba(8,8,8,0.82) 70%),linear-gradient(180deg,rgba(8,8,8,0.6) 0%,transparent 30%,transparent 65%,var(--bg) 100%);}
     .home-slides::before{content:'';position:absolute;inset:0;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");background-size:200px;opacity:0.14;mix-blend-mode:overlay;}
     @media(prefers-reduced-motion:reduce){.home-slide.zoom{animation:none;transform:none;}}
+    /* No celular a home usa o fundo vermelho da primeira versão (sem fotos) */
+    .home-orbs{display:none;position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+    .home-orbs::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);}
+    @media(max-width:768px){.home-slides{display:none;}.home-orbs{display:block;}}
     .hero-eyebrow{font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.82);margin-bottom:28px;display:inline-flex;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.1s forwards;}
     .hero-eyebrow::before,.hero-eyebrow::after{content:'';width:18px;height:2px;background:var(--red);}
     .hero-logo{position:relative;z-index:1;opacity:0;animation:rise 0.8s 0.2s forwards;margin-bottom:28px;}
@@ -151,6 +154,7 @@
 
 <main id="conteudo">
 <header class="hero torn">
+  <div class="home-orbs" aria-hidden="true"><div class="hero-orb orb1 drift"></div><div class="hero-orb orb2 drift"></div></div>
   <div class="home-slides" aria-hidden="true">
     <div class="home-slide on zoom" style="--sm:url(/imgs/hero/show-03-sm.webp);--lg:url(/imgs/hero/show-03-lg.webp)"></div>
     <div class="home-slide"></div>
@@ -339,10 +343,11 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-// Fotos do topo: passam por todas as fotos da galeria (em ordem aleatória a cada visita).
+// Fotos do topo (computador): passam por todas as fotos da galeria (em ordem aleatória a cada visita).
 // São só duas camadas que se revezam; cada foto só é baixada logo antes de aparecer.
 window.addEventListener('load', async () => {
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // no celular não tem fotos no topo (fundo vermelho)
+  if(window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 768px)').matches) return;
   const camadas = [...document.querySelectorAll('.home-slide')];
   const PADRAO = ['show-01', 'show-05', 'show-02', 'show-04', 'show-03']
     .map(n => ({ sm: `/imgs/hero/${n}-sm.webp`, lg: `/imgs/hero/${n}-lg.webp` }));
