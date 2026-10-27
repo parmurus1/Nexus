@@ -66,8 +66,8 @@ a{color:inherit;}
   html{scroll-behavior:auto;}
   @keyframes rise{from{opacity:0}to{opacity:1}}
   @keyframes fadeUp{from{opacity:0}to{opacity:1}}
-  .nav-pulse,.mouse-wheel,.carr-icon,.skeleton,.home-slide.zoom,.hero-fx i{animation:none!important;}
-  .home-slide{transform:none!important;}
+  .nav-pulse,.mouse-wheel,.carr-icon,.skeleton,.home-slide.zoom,.hero-fx i,.hero-photo{animation:none!important;}
+  .home-slide,.hero-photo{transform:none!important;}
   .card-hover:hover,.btn-primary:hover,.foto-card:hover,.cta-card:hover,.nav-card:hover{transform:none!important;}
 }
 
@@ -161,6 +161,15 @@ i[data-icon]{display:inline-block;width:1em;height:1em;}
 @keyframes fxLuz2{from{transform:rotate(22deg);opacity:0.7;}50%{opacity:0.45;}to{transform:rotate(-16deg);opacity:1;}}
 /* escurece as bordas e funde a base com o fundo da página */
 .hero-fx::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,8,0.55) 0%,transparent 35%,transparent 70%,var(--bg) 100%),radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(0,0,0,0.6) 100%);}
+/* No celular o topo continua com a foto da banda (como antes); a animação fica só no computador.
+   <header ... style="--hero-sm:url(...)"><div class="hero-photo"></div> */
+.hero-photo{display:none;}
+@media(max-width:768px){
+  .hero-fx{display:none;}
+  .hero-photo{display:block;position:absolute;inset:0;background-image:var(--hero-sm);background-size:cover;background-position:center 38%;filter:grayscale(0.3) contrast(1.08) brightness(0.9);transform:scale(1.06);animation:heroZoom 16s ease-out forwards;}
+  .hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,8,0.7) 0%,rgba(8,8,8,0.55) 40%,rgba(8,8,8,0.85) 85%,var(--bg) 100%),radial-gradient(ellipse at 50% 45%,transparent 0%,rgba(0,0,0,0.55) 100%);}
+}
+@keyframes heroZoom{to{transform:scale(1);}}
 .page-hero.has-fx{min-height:56vh;}
 .page-hero.has-fx + .container{padding-top:32px;}
 .page-hero.has-fx .page-eyebrow,.page-hero.has-fx .page-sub{color:rgba(255,255,255,0.82);}

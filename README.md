@@ -126,7 +126,7 @@ Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém 
 - **Cartaz do show**: no admin, em Agenda de shows, envie o flyer de cada show. Ele aparece ao lado do show na página Agenda (clicar amplia).
 - **Fãs**: o rodapé de todas as páginas tem um campo "Avisos de shows" (e-mail ou WhatsApp). A lista fica no admin em **Fãs**, com exportação em CSV para importar numa ferramenta de e-mail ou lista de transmissão do WhatsApp.
 - **Ordem da agenda**: automática, pela data e hora de cada show.
-- **Topo das páginas**: as páginas internas usam uma animação de palco em CSS (`.hero-fx`). A página inicial passa por todas as fotos da galeria (se houver menos de 2, usa as de `public/imgs/hero/`), e a página Sobre tem um mosaico que vai trocando as fotos da galeria.
+- **Topo das páginas**: no computador, as páginas internas usam uma animação de palco em CSS (`.hero-fx`); no celular, mostram a foto de `public/imgs/hero/*-sm.webp` definida no `--hero-sm` do `<header>` de cada página. A página inicial passa por todas as fotos da galeria (se houver menos de 2, usa as de `public/imgs/hero/`), e a página Sobre tem um mosaico que vai trocando as fotos da galeria.
 
 ## Integração com o app da banda
 
