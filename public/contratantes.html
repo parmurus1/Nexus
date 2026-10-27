@@ -22,6 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/nexus.css"/>
+  <link rel="preload" as="image" href="/imgs/hero/show-01-sm.webp" media="(max-width: 768px)"/>
 
   <script defer src="/_vercel/insights/script.js"></script>
   <script src="/nexus-core.js"></script>
@@ -146,8 +147,9 @@
 </nav>
 
 <main id="conteudo">
-<header class="page-hero has-fx">
+<header class="page-hero has-fx" style="--hero-sm:url(/imgs/hero/show-01-sm.webp)">
   <div class="hero-fx" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="hero-photo" aria-hidden="true"></div>
   <p class="page-eyebrow">Informações técnicas</p>
   <h1 class="page-title">CONTRATANTES</h1>
   <p class="page-sub">Tudo que você precisa para contratar a Nexus</p>
