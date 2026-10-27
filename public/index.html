@@ -61,9 +61,12 @@
     .cta-card.is-rifa{border-color:var(--red-line);}
     .cta-card.is-rifa .cta-icon,.cta-card.is-rifa .cta-label{color:var(--red);}
     @media(max-width:600px){
-      .cta-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px;}
-      .cta-card{width:auto;height:auto;aspect-ratio:1/1;}
+      /* 3 por linha; com a rifa escondida sobram 2 na última linha e eles ficam centralizados */
+      .cta-group{gap:10px;width:100%;max-width:340px;}
+      .cta-card{flex:0 0 calc((100% - 20px) / 3);width:auto;height:auto;aspect-ratio:1/1;min-width:0;padding:0 4px;}
+      .cta-label{font-size:0.66rem;letter-spacing:0.1em;}
     }
+    @media(max-width:380px){.cta-label{letter-spacing:0.04em;}}
 
     .scroll-mouse{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;opacity:0;animation:rise 0.7s 0.85s forwards;cursor:pointer;background:none;border:none;}
     .scroll-mouse:hover .mouse-body{border-color:var(--red);box-shadow:0 0 18px var(--red-glow);}
