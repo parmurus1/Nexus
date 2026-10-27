@@ -313,50 +313,51 @@ function embaralhar(lista){
   return a;
 }
 
-// Mosaico de 5 fotos que vai trocando uma foto por vez, passando por toda a galeria.
-// A barra embaixo marca o tempo até a próxima troca e pausa com o mouse em cima.
-const FOTOS_TROCA_MS = 4500;
+// Mosaico de 5 fotos (3 no celular) que passa por toda a galeria: quando a barra
+// de tempo chega ao fim, todas as fotos trocam juntas. Pausa com o mouse em cima.
+const FOTOS_TROCA_MS = 6000;
 function montarMosaico(grid, fotos){
-  const VISIVEIS = 5;
   const src = (f, grande) => grande ? f.url : (f.thumbnail_url || f.url);
   const itensLightbox = fotos.map(f => ({ src: f.url, cap: f.titulo || '' }));
-  const atual = fotos.slice(0, VISIVEIS).map((_, i) => i); // índice da foto em cada quadro
+  const atual = fotos.slice(0, 5).map((_, i) => i); // índice da foto em cada quadro
   grid.innerHTML = atual.map(i => `
     <button class="foto-card" type="button" aria-label="Ampliar foto">
       <img class="on" src="${nexusEsc(src(fotos[i], i === 0))}" alt="${nexusEsc(fotos[i].titulo || 'Nexus ao vivo')}" loading="lazy" decoding="async"/>
     </button>`).join('');
   const quadros = [...grid.querySelectorAll('.foto-card')];
   quadros.forEach((q, k) => q.addEventListener('click', () => nexusLightbox(itensLightbox, atual[k])));
-  if(fotos.length <= VISIVEIS) return;
+  // só os quadros que aparecem na tela
+  const ativos = () => quadros.filter(q => q.offsetParent !== null);
+  if(fotos.length <= ativos().length) return;
 
   const barra = document.getElementById('fotosBarra');
   const partes = [...barra.children];
   barra.style.setProperty('--tempo', FOTOS_TROCA_MS + 'ms');
   barra.hidden = false;
-  const ORDEM = [3, 1, 4, 0, 2]; // troca espalhada pelo mosaico, não em sequência
-  let proxFoto = VISIVEIS, passo = 0, visivel = false;
+  let proxFoto = ativos().length, visivel = false;
 
   function rodarBarra(){
     partes.forEach(el => { el.classList.remove('rodando'); void el.offsetWidth; el.classList.add('rodando'); });
   }
   async function trocar(){
-    // só os quadros que aparecem na tela (no celular são 3)
-    const ativos = ORDEM.filter(k => quadros[k] && quadros[k].offsetParent !== null);
-    const k = ativos[passo++ % ativos.length];
-    const f = fotos[proxFoto];
-    const nova = new Image();
-    nova.alt = f.titulo || 'Nexus ao vivo';
-    nova.decoding = 'async';
-    nova.src = src(f, k === 0);
-    try{ await nova.decode(); }catch{}
-    const antiga = quadros[k].querySelector('img.on');
-    quadros[k].appendChild(nova);
-    requestAnimationFrame(() => {
-      nova.classList.add('on');
-      if(antiga){ antiga.classList.remove('on'); setTimeout(() => antiga.remove(), 1000); }
+    // baixa as próximas fotos antes, para todas aparecerem ao mesmo tempo
+    const novas = ativos().map(q => {
+      const k = quadros.indexOf(q), i = proxFoto;
+      proxFoto = (proxFoto + 1) % fotos.length;
+      const img = new Image();
+      img.alt = fotos[i].titulo || 'Nexus ao vivo';
+      img.decoding = 'async';
+      img.src = src(fotos[i], k === 0);
+      return { k, i, img };
     });
-    atual[k] = proxFoto;
-    proxFoto = (proxFoto + 1) % fotos.length;
+    await Promise.all(novas.map(n => n.img.decode().catch(() => {})));
+    novas.forEach(({ k, img }) => quadros[k].appendChild(img));
+    requestAnimationFrame(() => novas.forEach(({ k, i, img }) => {
+      const antiga = quadros[k].querySelector('img.on');
+      img.classList.add('on');
+      if(antiga){ antiga.classList.remove('on'); setTimeout(() => antiga.remove(), 1000); }
+      atual[k] = i;
+    }));
     if(visivel && !document.hidden) rodarBarra();
     else partes.forEach(el => el.classList.remove('rodando'));
   }
