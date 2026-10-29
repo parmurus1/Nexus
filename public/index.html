@@ -114,6 +114,10 @@
     .musica-desc{font-size:0.9rem;color:var(--text2);line-height:1.7;}
     .musica-links{display:flex;gap:8px;flex-wrap:wrap;}
     .musica.sem-player{grid-template-columns:1fr;}
+    .musica-carregar{width:100%;height:100%;min-height:152px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:28px;background:none;border:0;color:var(--text);cursor:pointer;font:inherit;text-align:center;}
+    .musica-carregar .prod-icon,.musica-carregar svg{width:44px;height:44px;}
+    .musica-carregar strong{font-family:var(--f-display);font-weight:400;font-size:1.4rem;letter-spacing:0.04em;}
+    .musica-carregar small{font-size:0.78rem;color:var(--text3);line-height:1.6;max-width:320px;}
 
     /* ATALHOS */
     /* flex com quebra: quando sobra card na última linha, ele fica centralizado */
@@ -426,8 +430,13 @@ nexusGetConfig().then(cfg => {
   const m = String(cfg.musica_spotify || '').match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(artist|album|track|playlist)\/([A-Za-z0-9]+)/);
   if(!m && !links.spotify && !links.youtube) return;
   if(m){
+    // O player do Spotify só carrega no clique: até lá o Spotify não grava cookies no visitante
     const player = document.getElementById('musicaPlayer');
-    player.innerHTML = `<iframe src="https://open.spotify.com/embed/${m[1]}/${m[2]}?theme=0" title="Nexus no Spotify" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
+    player.innerHTML = `<button type="button" class="musica-carregar">${nexusIcon('spotify')}<strong>Ouvir no player</strong><small>Ao clicar, o player do Spotify é carregado e o Spotify pode gravar cookies próprios. <a href="/privacidade#cookies">Saiba mais</a></small></button>`;
+    player.querySelector('button').addEventListener('click', e => {
+      if(e.target.closest('a')) return;
+      player.innerHTML = `<iframe src="https://open.spotify.com/embed/${m[1]}/${m[2]}?theme=0" title="Nexus no Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
+    });
     player.hidden = false;
   } else {
     document.getElementById('musica').classList.add('sem-player');
