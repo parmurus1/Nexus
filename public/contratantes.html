@@ -437,17 +437,36 @@
   document.addEventListener('keydown', e => { if(e.key === 'Escape') pdfFechar(); });
 
   // ── Orçamento ──
+  // Mesmas regras de api/_lib/validacao.js
+  const emailValido = e => e.length <= 160 && /^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(e) && !/\.\.|^\.|\.@/.test(e);
+  const digitosTel = t => t.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
+  const telefoneValido = t => {
+    const d = digitosTel(t);
+    if(!/^[1-9][1-9]/.test(d)) return false;
+    if(d.length === 11 && d[2] === '9') return !/^(\d)\1+$/.test(d.slice(3));
+    return d.length === 10 && /[2-5]/.test(d[2]);
+  };
+  // Máscara (11) 91234-5678 enquanto digita
+  document.getElementById('oTel').addEventListener('input', e => {
+    const d = digitosTel(e.target.value).slice(0, 11);
+    e.target.value = d.length <= 2 ? (d ? '(' + d : '')
+      : d.length <= 6 ? `(${d.slice(0, 2)}) ${d.slice(2)}`
+      : `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`;
+  });
+  ['oEmail', 'oTel'].forEach(id => document.getElementById(id).addEventListener('input', e => e.target.classList.remove('invalid')));
   document.getElementById('orcForm').addEventListener('submit', async e => {
     e.preventDefault();
     const v = id => document.getElementById(id).value.trim();
     const dados = { nome: v('oNome'), email: v('oEmail'), telefone: v('oTel'), data_evento: v('oData'), cidade: v('oCidade'), tipo_evento: v('oTipo'), mensagem: v('oMsg'), site: v('oSite') };
     ['oNome', 'oEmail', 'oTel'].forEach(id => document.getElementById(id).classList.remove('invalid'));
     if(!dados.nome){ document.getElementById('oNome').classList.add('invalid'); document.getElementById('oNome').focus(); toast('Informe seu nome.', 'err'); return; }
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email);
-    const telOk = dados.telefone.replace(/\D/g, '').length >= 10;
-    if(!emailOk && !telOk){
+    const invalido = (id, msg) => { const el = document.getElementById(id); el.classList.add('invalid'); el.focus(); toast(msg, 'err'); };
+    const emailOk = emailValido(dados.email);
+    if(dados.email && !emailOk){ invalido('oEmail', 'Confira o e-mail: ele parece incompleto ou com erro de digitação.'); return; }
+    if(dados.telefone && !telefoneValido(dados.telefone)){ invalido('oTel', 'Confira o WhatsApp: use DDD + número, ex.: (11) 91234-5678.'); return; }
+    if(!dados.email && !dados.telefone){
       document.getElementById('oEmail').classList.add('invalid'); document.getElementById('oTel').classList.add('invalid');
-      toast('Informe um e-mail ou WhatsApp válido para retornarmos.', 'err'); return;
+      toast('Informe um e-mail ou WhatsApp para retornarmos.', 'err'); return;
     }
     const btn = document.getElementById('btnOrc');
     btn.disabled = true; btn.textContent = 'Enviando...';

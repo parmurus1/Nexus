@@ -213,6 +213,21 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, rastreio: r.rastreio });
   }
 
+  // Manda um e-mail de teste para EMAIL_BANDA e devolve o erro do Resend, se houver,
+  // para a banda conferir a configuração sem precisar abrir os logs da Vercel.
+  if (acao === 'email-teste') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+    const faltando = ['RESEND_API_KEY', 'EMAIL_REMETENTE', 'EMAIL_BANDA'].filter(v => !process.env[v]);
+    if (faltando.length) return res.status(400).json({ erro: `Falta configurar na Vercel: ${faltando.join(', ')}` });
+    const r = await enviarEmail({
+      para: process.env.EMAIL_BANDA,
+      assunto: 'Teste de e-mail do site Nexus',
+      html: '<p>Se você recebeu este e-mail, os avisos de orçamento e de compras estão funcionando.</p>'
+    });
+    if (!r.ok) return res.status(502).json({ erro: `O Resend recusou o envio (${r.erro}). ${r.detalhe || ''}`.trim() });
+    return res.status(200).json({ ok: true, para: process.env.EMAIL_BANDA });
+  }
+
   // Orçamentos enviados pela página Contratantes
   if (acao === 'orcamentos') {
     const { data, error } = await supabase
