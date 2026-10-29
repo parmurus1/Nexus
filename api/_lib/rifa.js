@@ -80,20 +80,22 @@ export function resultadoPublico(config = {}) {
 
 export const TOTAL_MAX_BILHETES = 10000;
 
-// Cria os números que faltam até "total" e apaga os que passam dele — mas só se
-// ninguém tiver reservado ou pago esses números.
+// Cria os números que faltam até "total" e apaga os que passam dele (ou que
+// ficaram abaixo de 1, como um "000" criado à mão) — mas só se ninguém tiver
+// reservado ou pago esses números.
 export async function ajustarTotalBilhetes(supabase, total) {
   if (!Number.isInteger(total) || total < 1 || total > TOTAL_MAX_BILHETES) {
     return { ok: false, erro: `A quantidade precisa ser de 1 a ${TOTAL_MAX_BILHETES}.` };
   }
-  const { data: acima, error: erroAcima } = await supabase.from('bilhetes').select('numero, status').gt('numero', total);
+  const foraDaFaixa = `numero.gt.${total},numero.lt.1`;
+  const { data: acima, error: erroAcima } = await supabase.from('bilhetes').select('numero, status').or(foraDaFaixa);
   if (erroAcima) return { ok: false, erro: 'Erro ao ler os bilhetes' };
   const ocupados = (acima || []).filter(b => b.status !== 'disponivel').map(b => b.numero);
   if (ocupados.length) {
     return { ok: false, erro: `Não dá para reduzir para ${total}: os números ${ocupados.slice(0, 10).map(n => String(n).padStart(3, '0')).join(', ')}${ocupados.length > 10 ? '…' : ''} já foram reservados ou vendidos.` };
   }
   if ((acima || []).length) {
-    const { error } = await supabase.from('bilhetes').delete().gt('numero', total).eq('status', 'disponivel');
+    const { error } = await supabase.from('bilhetes').delete().or(foraDaFaixa).eq('status', 'disponivel');
     if (error) return { ok: false, erro: 'Erro ao remover bilhetes' };
   }
   const novos = Array.from({ length: total }, (_, i) => ({ numero: i + 1 }));
