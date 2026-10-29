@@ -47,8 +47,7 @@ ADMIN_PASSWORD        = uma_senha_forte_aqui
 ```
 
 Opcionais (veja o `.env.example`): `ADMIN_USERS` (uma senha por pessoa), `ADMIN_SESSION_SECRET`,
-`RESEND_API_KEY` + `EMAIL_REMETENTE` + `EMAIL_BANDA` (e-mails automáticos), `WHATSAPP_AVISOS`
-(aviso de orçamento no WhatsApp via CallMeBot) e as variáveis do Melhor Envio.
+`RESEND_API_KEY` + `EMAIL_REMETENTE` + `EMAIL_BANDA` (e-mails automáticos) e as variáveis do Melhor Envio.
 
 5. Clique em **Deploy**
 
