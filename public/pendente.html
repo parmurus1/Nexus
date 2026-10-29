@@ -107,7 +107,7 @@
     </nav>
     <form class="footer-avisos" id="formAvisos" novalidate>
       <div class="footer-titulo">Avisos de shows</div>
-      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos. Você pode sair quando quiser (<a href="/privacidade">privacidade</a>).</p>
       <div class="linha">
         <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
         <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
@@ -117,7 +117,7 @@
     </form>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Nexus Band</span>
+    <span>&copy; 2026 Nexus Band · <a href="/privacidade">Privacidade</a></span>
     <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
 </footer>
@@ -155,6 +155,29 @@ if(origem === 'merch' && pedido){
       }
     }catch(e){}
     // Para depois de ~30 min para não ficar consultando para sempre
+    if(tentativas < 360) setTimeout(verificar, 5000);
+    else document.getElementById('statusAguarde').hidden = true;
+  };
+  verificar();
+}
+
+// Rifa: o Mercado Pago volta com payment_id (e/ou preference_id) na URL
+const pagamentoRifa = params.get('payment_id') || params.get('collection_id');
+const preferenciaRifa = params.get('preference_id');
+if(origem === 'rifa' && (pagamentoRifa || preferenciaRifa)){
+  document.getElementById('statusAguarde').hidden = false;
+  const consulta = /^\d+$/.test(pagamentoRifa || '') ? 'pagamento=' + pagamentoRifa : 'preferencia=' + encodeURIComponent(preferenciaRifa);
+  let tentativas = 0;
+  const verificar = async () => {
+    tentativas++;
+    try{
+      const r = await fetch('/api/rifa-status?' + consulta);
+      if(r.ok){
+        const d = await r.json();
+        if(d.status === 'pago'){ location.replace('/sucesso?origem=rifa&' + consulta.replace('pagamento=', 'payment_id=').replace('preferencia=', 'preference_id=')); return; }
+        if(d.status === 'expirado' || d.status === 'recusado'){ location.replace('/falha?origem=rifa'); return; }
+      }
+    }catch(e){}
     if(tentativas < 360) setTimeout(verificar, 5000);
     else document.getElementById('statusAguarde').hidden = true;
   };

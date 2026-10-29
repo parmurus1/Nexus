@@ -7,8 +7,8 @@ import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 import { gerarEtiquetaESalvar, baixarEstoque } from './_lib/pedidos.js';
 import { etiquetaAutomatica } from './_lib/melhorenvio.js';
-import { LIMPAR_COMPRADOR } from './_lib/rifa.js';
-import { enviarEmail, emailRifaConfirmada, emailPedidoConfirmado, emailAvisoBandaPedido } from './_lib/email.js';
+import { processarPagamentoRifa } from './_lib/rifa.js';
+import { enviarEmail, emailPedidoConfirmado, emailAvisoBandaPedido } from './_lib/email.js';
 
 const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
@@ -63,66 +63,6 @@ async function processarMerch(pagamento) {
   }
 }
 
-async function processarRifa(pagamento) {
-  const meta = pagamento.metadata || {};
-  const numeros = Array.isArray(meta.numeros) ? meta.numeros.map(Number) : null;
-  if (!numeros || !numeros.length) {
-    console.error('Metadata de números não encontrada no pagamento', pagamento.id);
-    return;
-  }
-  const email = String(meta.email || '').toLowerCase();
-
-  if (pagamento.status === 'approved') {
-    // Confirma só bilhetes que estão reservados para ESTE comprador — ou que
-    // voltaram a ficar livres (pagamento chegou em cima do prazo). Nunca
-    // sobrescreve um bilhete já pago ou reservado por outra pessoa.
-    const filtroEmail = `"${email.replace(/"/g, '')}"`;
-    const { data: confirmados, error } = await supabase
-      .from('bilhetes')
-      .update({
-        status: 'pago',
-        payment_id: String(pagamento.id),
-        pago_em: new Date().toISOString(),
-        nome_comprador: meta.nome || null,
-        email_comprador: email || null,
-        instagram_comprador: meta.instagram || null,
-        telefone_comprador: meta.telefone || null
-      })
-      .in('numero', numeros)
-      .or(`status.eq.disponivel,and(status.eq.reservado,email_comprador.ilike.${filtroEmail})`)
-      .select('numero');
-    if (error) throw new Error('Erro ao confirmar bilhetes: ' + error.message);
-
-    const pegos = (confirmados || []).map(b => b.numero);
-    if (!pegos.length) {
-      // Aviso repetido (já estavam pagos) ou conflito — confere qual dos dois
-      const { data: jaPagos } = await supabase.from('bilhetes').select('numero').in('numero', numeros).eq('payment_id', String(pagamento.id));
-      if ((jaPagos || []).length) { console.log(`[webhook] aviso repetido do pagamento ${pagamento.id} — ignorado`); return; }
-    }
-    if (pegos.length < numeros.length) {
-      const faltando = numeros.filter(n => !pegos.includes(n));
-      // Situação rara (pagamento depois da expiração e número revendido). Precisa
-      // de atenção manual: devolver o valor ou combinar outros números.
-      console.error(`[CONFLITO] Pagamento ${pagamento.id} (${email}) aprovado, mas os bilhetes ${faltando.join(', ')} já eram de outra pessoa. Resolver manualmente.`);
-    }
-    if (pegos.length) {
-      console.log(`[ok] Pagamento confirmado: bilhetes ${pegos.join(', ')}`);
-      await enviarEmail({ para: email, ...emailRifaConfirmada({ nome: meta.nome, numeros: pegos, valor: pagamento.transaction_amount }) });
-    }
-    return;
-  }
-
-  // Expirou ou foi recusado: libera os bilhetes deste comprador que ainda estão reservados
-  if (pagamento.status === 'cancelled' || pagamento.status === 'rejected') {
-    await supabase
-      .from('bilhetes')
-      .update({ status: 'disponivel', payment_id: null, ...LIMPAR_COMPRADOR })
-      .in('numero', numeros)
-      .eq('status', 'reservado')
-      .ilike('email_comprador', email); // ilike: reservas antigas guardavam o e-mail sem padronizar maiúsculas
-  }
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -134,7 +74,7 @@ export default async function handler(req, res) {
     // Busca o pagamento direto no Mercado Pago (o corpo do aviso não é confiável)
     const pagamento = await new Payment(mp).get({ id: data.id });
     if (pagamento.metadata?.tipo === 'merch') await processarMerch(pagamento);
-    else await processarRifa(pagamento);
+    else await processarPagamentoRifa(supabase, pagamento);
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('Erro no webhook:', err);

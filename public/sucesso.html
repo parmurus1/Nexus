@@ -106,7 +106,7 @@
     </nav>
     <form class="footer-avisos" id="formAvisos" novalidate>
       <div class="footer-titulo">Avisos de shows</div>
-      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos. Você pode sair quando quiser (<a href="/privacidade">privacidade</a>).</p>
       <div class="linha">
         <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
         <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
@@ -116,7 +116,7 @@
     </form>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Nexus Band</span>
+    <span>&copy; 2026 Nexus Band · <a href="/privacidade">Privacidade</a></span>
     <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
 </footer>
@@ -137,6 +137,38 @@ const btn = document.getElementById('btnPrincipal');
 btn.innerHTML = t.botao;
 btn.href = t.link;
 
+// Rifa: confere no servidor se o pagamento foi mesmo confirmado e mostra os números
+const pagamentoRifa = params.get('payment_id') || params.get('collection_id');
+const preferenciaRifa = params.get('preference_id');
+if(origem === 'rifa' && (pagamentoRifa || preferenciaRifa)){
+  const consulta = /^\d+$/.test(pagamentoRifa || '') ? 'pagamento=' + pagamentoRifa : 'preferencia=' + encodeURIComponent(preferenciaRifa);
+  const texto = document.getElementById('statusTexto');
+  const label = document.getElementById('statusLabel');
+  label.textContent = 'Confirmando pagamento...';
+  let tentativas = 0;
+  const verificar = async () => {
+    tentativas++;
+    try{
+      const r = await fetch('/api/rifa-status?' + consulta);
+      const d = r.ok ? await r.json() : {};
+      if(d.status === 'pago' && d.numeros?.length){
+        label.textContent = 'Pagamento confirmado';
+        const nums = d.numeros.map(n => String(n).padStart(3, '0')).join(', ');
+        texto.innerHTML = `Seus números estão garantidos: <strong>${nums}</strong>.<br/>Você vai receber a confirmação por e-mail. Boa sorte no sorteio!`;
+        return;
+      }
+      if(d.status === 'conflito'){
+        label.textContent = 'Pagamento recebido';
+        texto.innerHTML = 'Seu pagamento chegou depois que a reserva expirou e esses números já tinham sido vendidos.<br/>A banda vai entrar em contato para combinar outros números ou devolver o valor.';
+        return;
+      }
+    }catch(e){}
+    // O aviso do Mercado Pago pode levar alguns segundos
+    if(tentativas < 24) setTimeout(verificar, 5000);
+    else label.textContent = 'Pagamento recebido';
+  };
+  verificar();
+}
 </script>
 <script src="/venom.js" defer></script>
 </body>

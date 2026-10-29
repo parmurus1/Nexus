@@ -263,12 +263,12 @@
       <div class="fg"><label for="cNumero">Número <span class="req">*</span></label><input type="text" id="cNumero" placeholder="123"/></div>
     </div>
     <div class="form-row">
-      <div class="fg"><label for="cBairro">Bairro</label><input type="text" id="cBairro" placeholder="Bairro"/></div>
+      <div class="fg"><label for="cBairro">Bairro <span class="req">*</span></label><input type="text" id="cBairro" placeholder="Bairro"/></div>
       <div class="fg"><label for="cComplemento">Complemento <span class="opt">opcional</span></label><input type="text" id="cComplemento" placeholder="Apto, bloco..." autocomplete="address-line2"/></div>
     </div>
     <div class="form-row r-2-1">
-      <div class="fg"><label for="cCidade">Cidade</label><input type="text" id="cCidade" placeholder="Preenchida pelo CEP" readonly/></div>
-      <div class="fg"><label for="cUf">UF</label><input type="text" id="cUf" placeholder="UF" maxlength="2" readonly style="text-transform:uppercase;"/></div>
+      <div class="fg"><label for="cCidade">Cidade <span class="req">*</span></label><input type="text" id="cCidade" placeholder="Preenchida pelo CEP" readonly/></div>
+      <div class="fg"><label for="cUf">UF <span class="req">*</span></label><input type="text" id="cUf" placeholder="UF" maxlength="2" readonly style="text-transform:uppercase;"/></div>
     </div>
 
     <div id="freteOpcoes" hidden></div>
@@ -277,6 +277,7 @@
       <span class="total-lbl">Total com frete</span>
       <span class="total-val" id="checkoutTotalFrete">R$ 0,00</span>
     </div>
+    <p class="field-hint" style="margin-bottom:14px;">Seus dados são usados só para o pagamento e a entrega (<a href="/privacidade" target="_blank" rel="noopener">privacidade</a>). Você pode desistir da compra em até 7 dias após receber o produto (art. 49 do Código de Defesa do Consumidor): é só falar com a gente.</p>
     <button class="btn btn-primary btn-block btn-lg" id="btnCfm" type="button" onclick="confirmarPagamento()" disabled>Calcule o frete para continuar</button>
   </div>
 </div>
@@ -333,7 +334,7 @@
     </nav>
     <form class="footer-avisos" id="formAvisos" novalidate>
       <div class="footer-titulo">Avisos de shows</div>
-      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos. Você pode sair quando quiser (<a href="/privacidade">privacidade</a>).</p>
       <div class="linha">
         <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
         <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
@@ -343,7 +344,7 @@
     </form>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Nexus Band</span>
+    <span>&copy; 2026 Nexus Band · <a href="/privacidade">Privacidade</a></span>
     <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
 </footer>
@@ -619,6 +620,8 @@ async function buscarEnderecoPorCep(cep){
     statusCep('');
     return true;
   }catch{
+    // Sem o ViaCEP, cidade e UF precisam ser digitadas (a etiqueta exige os dois)
+    ['cCidade', 'cUf'].forEach(id => document.getElementById(id).readOnly = false);
     statusCep('Não foi possível consultar o CEP agora, preencha o endereço manualmente.');
     return false;
   }
@@ -685,7 +688,7 @@ async function confirmarPagamento(){
   const cep = v('cCep').replace(/\D/g, ''), rua = v('cRua'), numero = v('cNumero');
   const bairro = v('cBairro'), complemento = v('cComplemento'), cidade = v('cCidade'), uf = v('cUf');
 
-  const campos = ['cNome', 'cEmail', 'cCpf', 'cTel', 'cCep', 'cRua', 'cNumero'];
+  const campos = ['cNome', 'cEmail', 'cCpf', 'cTel', 'cCep', 'cRua', 'cNumero', 'cBairro', 'cCidade', 'cUf'];
   campos.forEach(id => document.getElementById(id).classList.remove('invalid'));
   const invalidos = [];
   if(!nome) invalidos.push('cNome');
@@ -695,6 +698,9 @@ async function confirmarPagamento(){
   if(cep.length !== 8) invalidos.push('cCep');
   if(!rua) invalidos.push('cRua');
   if(!numero) invalidos.push('cNumero');
+  if(!bairro) invalidos.push('cBairro');
+  if(!cidade) invalidos.push('cCidade');
+  if(!/^[A-Za-z]{2}$/.test(uf)) invalidos.push('cUf');
   if(!freteEscolhido){ toast('Calcule e escolha uma opção de frete antes de continuar.', 'err'); return; }
   if(invalidos.length){
     invalidos.forEach(id => document.getElementById(id).classList.add('invalid'));

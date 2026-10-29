@@ -247,7 +247,7 @@
         <button class="adm-side-link" data-page="visao-geral" type="button"><i data-icon="chart"></i>Visão geral</button>
         <button class="adm-side-link" data-page="rifa-config" type="button"><i data-icon="sliders"></i>Configurações</button>
         <button class="adm-side-link" data-page="rifa-sorteio" type="button"><i data-icon="dice"></i>Sorteio</button>
-        <button class="adm-side-link" data-page="rifa-bilhetes" type="button"><i data-icon="ticket"></i>Bilhetes</button>
+        <button class="adm-side-link" data-page="rifa-bilhetes" type="button"><i data-icon="ticket"></i>Bilhetes <span class="side-badge" id="badgeConflitos" hidden title="Pagamentos em conflito"></span></button>
       </div>
       <div class="adm-side-group">
         <div class="adm-side-label">Loja</div>
@@ -321,12 +321,20 @@
             <p class="field-hint">Aparece no topo da página da rifa.</p>
           </div>
           <div class="card config-card full">
-            <div class="config-label"><span class="lbl"><i data-icon="ticket"></i>Quantidade de bilhetes</span><span class="tag tag-warn"><i data-icon="alert"></i>Requer SQL</span></div>
+            <div class="config-label"><span class="lbl"><i data-icon="ticket"></i>Quantidade de bilhetes</span></div>
             <div class="config-row">
               <input type="number" class="input" id="cfgTotal" placeholder="100" min="1" max="10000"/>
-              <button class="btn btn-primary btn-sm" type="button" onclick="salvarConfig('total_bilhetes', 'cfgTotal', this)">Salvar</button>
+              <button class="btn btn-primary btn-sm" type="button" onclick="salvarTotalBilhetes(this)">Salvar</button>
             </div>
-            <p class="field-hint">Atualiza o contador do site. Para criar os bilhetes no banco, execute no SQL Editor do Supabase:<br/><code>INSERT INTO bilhetes (numero) SELECT generate_series(101, [NOVO_TOTAL]) ON CONFLICT DO NOTHING;</code></p>
+            <p class="field-hint">Cria os números novos na hora. Para diminuir, os números removidos não podem ter sido reservados nem vendidos.</p>
+          </div>
+          <div class="card config-card full">
+            <div class="config-label"><span class="lbl"><i data-icon="ticket"></i>Vendas abertas</span></div>
+            <div class="toggle-row">
+              <p class="config-desc">Desligue para encerrar as vendas. O sorteio desliga sozinho, e as vendas também fecham quando passa a data do sorteio.</p>
+              <button class="toggle" id="toggle-rifa_ativa" type="button" role="switch" aria-checked="false" aria-label="Vendas abertas" onclick="alternarConfig('rifa_ativa', this, 'Vendas da rifa')"></button>
+            </div>
+            <p class="field-hint">Com as vendas fechadas, a página da rifa mostra o resultado do último sorteio. Ao abrir de novo, o resultado some.</p>
           </div>
           <div class="card config-card full">
             <div class="config-label"><span class="lbl"><i data-icon="zap"></i>Modo demonstração</span></div>
@@ -364,7 +372,7 @@
           </div>
         </div>
         <div class="card sorteio-box">
-          <p class="config-desc" style="margin-bottom:20px;">O sorteio é feito entre todos os bilhetes com pagamento confirmado. O resultado fica registrado e essa ação não pode ser desfeita.</p>
+          <p class="config-desc" style="margin-bottom:20px;">O sorteio é feito entre todos os bilhetes com pagamento confirmado. Ao sortear, as vendas são encerradas, o número e o @ do vencedor aparecem na página da rifa e o vencedor recebe um e-mail. Essa ação não pode ser desfeita.</p>
           <button class="btn btn-primary" type="button" onclick="realizarSorteio(this)"><i data-icon="dice"></i>Realizar sorteio</button>
           <div class="sorteio-resultado" id="sorteioResultado" hidden>
             <div class="stat-lbl">Número sorteado</div>
@@ -383,6 +391,7 @@
             <div class="adm-page-sub">Vendidos e reservados</div>
           </div>
         </div>
+        <div id="conflitosRifa"></div>
         <div class="tabela-wrap">
           <table>
             <thead><tr><th>Número</th><th>Status</th><th>Nome</th><th>E-mail</th><th>Instagram</th><th>Pago em</th></tr></thead>
@@ -958,11 +967,13 @@ async function carregarDados(resumo){
   ['modo_demo', 'rifa_nav_visivel', 'venom_mode'].forEach(chave => {
     document.getElementById('toggle-' + chave).setAttribute('aria-checked', String(nexusFlag(cfg[chave])));
   });
+  document.getElementById('toggle-rifa_ativa').setAttribute('aria-checked', String(cfg.rifa_ativa !== 'false'));
   if(cfg.valor_bilhete) document.getElementById('cfgValor').value = cfg.valor_bilhete;
   if(cfg.data_sorteio) document.getElementById('cfgData').value = cfg.data_sorteio;
   if(cfg.total_bilhetes) document.getElementById('cfgTotal').value = cfg.total_bilhetes;
 
   if(data.ultimo_sorteio) mostrarSorteio(data.ultimo_sorteio);
+  mostrarConflitos(data.conflitos || []);
   preencherConteudo(cfg);
   document.getElementById('avisosConfig').innerHTML = data.email_configurado === false
     ? `<div class="card alerta-cfg">${nexusIcon('alert')}<span>E-mails automáticos desligados: configure <code>RESEND_API_KEY</code>, <code>EMAIL_REMETENTE</code> e <code>EMAIL_BANDA</code> na Vercel para enviar confirmações de compra e avisos de orçamento (veja o README).</span></div>`
@@ -1002,6 +1013,36 @@ async function alternarConfig(chave, el, nome, recarregar){
   if(recarregar){ try{ sessionStorage.removeItem('nexus_venom_mode'); }catch(e){} }
 }
 
+async function salvarTotalBilhetes(btn){
+  const total = Number(document.getElementById('cfgTotal').value);
+  if(!Number.isInteger(total) || total < 1){ toast('Informe uma quantidade válida', 'err'); return; }
+  const pronto = carregandoBtn(btn, '...');
+  const r = await api('/api/admin?acao=total-bilhetes', { method: 'POST', body: { total } });
+  pronto();
+  toast(r.ok ? `Rifa com ${total} bilhetes` : (r.data.erro || 'Erro ao salvar'), r.ok ? 'ok' : 'err');
+  if(r.ok) carregarDados();
+}
+
+// Pagamentos aprovados depois que a reserva venceu e o número foi revendido
+function mostrarConflitos(lista){
+  const el = document.getElementById('conflitosRifa');
+  const badge = document.getElementById('badgeConflitos');
+  badge.hidden = !lista.length; badge.textContent = lista.length;
+  const fmt = arr => (arr || []).map(n => String(n).padStart(3, '0')).join(', ');
+  el.innerHTML = lista.map(c => `<div class="card alerta-cfg">${nexusIcon('alert')}<span>
+    <strong>${esc(c.nome || 'Comprador')}</strong> (${esc(c.email || '—')}${c.instagram ? ' · ' + esc(c.instagram) : ''}) pagou ${nexusMoeda(c.valor)} em ${fmtData(c.criado_em)},
+    mas os números <strong>${fmt(c.numeros_faltando)}</strong> já eram de outra pessoa. Combine outros números ou devolva o valor no Mercado Pago (pagamento nº ${esc(c.payment_id)}).
+    <button class="btn btn-outline btn-sm" type="button" style="margin-left:8px;" onclick="resolverConflito(${Number(c.id)}, this)">Marcar como resolvido</button></span></div>`).join('');
+}
+
+async function resolverConflito(id, btn){
+  const pronto = carregandoBtn(btn, '...');
+  const r = await api('/api/admin?acao=rifa-conflito-resolver', { method: 'POST', body: { id } });
+  pronto();
+  if(!r.ok){ toast(r.data.erro || 'Erro', 'err'); return; }
+  carregarDados();
+}
+
 async function liberarExpirados(btn){
   const pronto = carregandoBtn(btn, 'Liberando...');
   const r = await api('/api/admin?acao=liberar-expirados');
@@ -1025,7 +1066,8 @@ async function realizarSorteio(btn){
   pronto();
   if(!r.ok){ toast(r.data.erro || 'Erro no sorteio', 'err'); return; }
   mostrarSorteio(r.data);
-  toast('Sorteio realizado', 'ok');
+  document.getElementById('toggle-rifa_ativa').setAttribute('aria-checked', 'false');
+  toast(r.data.email_enviado ? 'Sorteio realizado e vencedor avisado por e-mail' : 'Sorteio realizado (e-mail ao vencedor não enviado)', 'ok');
 }
 
 // ══════════════ PEDIDOS DA LOJA ══════════════
@@ -1223,12 +1265,8 @@ const RIDER_PADRAO = [
   { icone: 'users', titulo: 'Estrutura e Hospitality', itens: ['Água de acesso rápido', 'Soundcheck de pelo menos 1h', 'Contrato e cachê combinados previamente'] }
 ];
 const PREMIOS_PADRAO = [
-  { icone: 'guitar', nome: 'PALHETAS EXCLUSIVAS', qtd: '2 unidades', desc: 'Palhetas oficiais da Nexus Band, personalizadas com o logo da banda. Perfeitas para colecionadores e músicos.' },
-  { icone: 'drum', nome: 'BAQUETAS ASSINADAS', qtd: '2 unidades', desc: 'Baquetas autografadas pelo baterista da Nexus. Um item raro para quem curte a banda de perto.' },
-  { icone: 'shirt', nome: 'CAMISETA OFICIAL', qtd: '1 unidade', desc: 'Camiseta estampada com o logo da banda. Edição limitada, disponível apenas para apoiadores da campanha.' },
-  { icone: 'key', nome: 'CHAVEIRO NEXUS', qtd: '1 unidade', desc: 'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, carregue a banda com você.' },
-  { icone: 'pin', nome: 'PIN COLECIONÁVEL', qtd: '1 unidade', desc: 'Pin esmaltado com o logo da Nexus. Ideal para jaquetas, mochilas e coleções.' },
-  { icone: 'sticker', nome: 'PACK DE ADESIVOS', qtd: '1 unidade', desc: 'Set de adesivos vinil com artes exclusivas da banda. Impermeáveis e de alta durabilidade.' }
+  { icone: 'ticket', nome: 'PAR DE INGRESSOS', qtd: '1 par', desc: 'Dois ingressos para o próximo show da Nexus. Chame alguém e venha curtir com a gente.' },
+  { icone: 'shirt', nome: 'CAMISETA OFICIAL', qtd: '1 unidade', desc: 'Camiseta oficial com o logo da banda, no tamanho que você escolher.' }
 ];
 const ICONES_CONTEUDO = { sliders: 'Mesa / som', drum: 'Bateria', mic: 'Microfone', guitar: 'Guitarra', music: 'Música', headphones: 'Fones', users: 'Equipe', zap: 'Energia', clock: 'Horário', shirt: 'Camiseta', key: 'Chaveiro', pin: 'Pin', sticker: 'Adesivo', ticket: 'Ingresso', gift: 'Presente', package: 'Outro' };
 const BIO_PADRAO = 'A Nexus é uma banda formada em São Paulo, com uma sonoridade que mistura rock com elementos de outros gêneros. O grupo é composto por Davi (guitarra e voz), João (guitarra), Atila (teclados), Victor (bateria) e Pedro (baixo).\n\nDesde 2025, a banda vem construindo uma identidade visual e sonora marcante, com shows energéticos e músicas autorais que conectam o público de forma intensa.\n\nCom diversos shows realizados e um álbum sendo produzido, a Nexus está pronta para levar sua música para novos palcos.';

@@ -79,8 +79,30 @@ export function emailRifaConfirmada({ nome, numeros, valor }) {
       <p>Recebemos o seu pagamento e os seus números já estão garantidos no sorteio:</p>
       <p style="font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:1px;">${esc(nums)}</p>
       <p>Valor pago: <strong style="color:#ffffff;">${moeda(valor)}</strong></p>
-      <p>O resultado será divulgado no nosso Instagram. Obrigado por apoiar a nossa música!</p>
+      <p>O resultado sai na página da rifa e no nosso Instagram. Obrigado por apoiar a nossa música!</p>
       <p><a href="${SITE()}/rifa" style="display:inline-block;background:#e8220a;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold;">Ver a rifa</a></p>`)
+  };
+}
+
+export function emailRifaVencedor({ nome, numero }) {
+  return {
+    assunto: 'Você ganhou a Rifa Nexus!',
+    html: layout('Você ganhou!', `
+      <p>Olá, ${esc(nome)}!</p>
+      <p>O sorteio da Rifa Nexus foi realizado e o número sorteado foi o seu:</p>
+      <p style="font-size:30px;font-weight:bold;color:#ffffff;letter-spacing:2px;">${esc(String(numero).padStart(3, '0'))}</p>
+      <p>Vamos falar com você pelo Instagram para combinar a entrega do prêmio. Se preferir, é só responder este e-mail.</p>
+      <p>Obrigado por apoiar a nossa música!</p>`)
+  };
+}
+
+export function emailConflitoBanda({ nome, email, numeros, valor, paymentId }) {
+  const nums = numeros.map(n => String(n).padStart(3, '0')).join(', ');
+  return {
+    assunto: `Rifa: pagamento em conflito (${nums})`,
+    html: layout('Pagamento da rifa em conflito', `
+      <p>${esc(nome || 'Um comprador')} (${esc(email || 'sem e-mail')}) pagou ${moeda(valor)}, mas o pagamento chegou depois que a reserva venceu e os números <strong style="color:#ffffff;">${esc(nums)}</strong> já eram de outra pessoa.</p>
+      <p>Combine outros números com a pessoa ou devolva o valor pelo Mercado Pago (pagamento nº ${esc(paymentId)}). Depois marque como resolvido no painel, em Rifa → Bilhetes.</p>`)
   };
 }
 

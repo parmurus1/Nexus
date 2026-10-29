@@ -4,10 +4,11 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rifa — Nexus</title>
-  <meta name="description" content="Apoie a Nexus e concorra a prêmios exclusivos: palhetas, baquetas assinadas, camiseta oficial e mais."/>
+  <meta name="description" content="Apoie a Nexus e concorra a um par de ingressos para o nosso show e a uma camiseta oficial da banda."/>
   <meta name="theme-color" content="#080808"/>
+  <meta name="robots" content="noindex, nofollow"/>
   <meta property="og:title" content="Rifa — Nexus"/>
-  <meta property="og:description" content="Apoie a Nexus e concorra a prêmios exclusivos: palhetas, baquetas assinadas, camiseta oficial e mais."/>
+  <meta property="og:description" content="Apoie a Nexus e concorra a um par de ingressos para o nosso show e a uma camiseta oficial da banda."/>
   <meta property="og:image" content="https://nexusband.com.br/imgs/marca/og-image.png"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://nexusband.com.br/rifa"/>
@@ -108,6 +109,19 @@
     .ig-prefix.invalid{border-color:var(--red)!important;}
     .ig-at{padding:11px 0 11px 14px;font-family:var(--f-mono);font-size:0.92rem;color:var(--text2);}
     .fg .ig-prefix input{background:transparent;border:none;padding-left:6px;}
+    .aceite{display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:var(--text2);line-height:1.6;cursor:pointer;margin:4px 0 18px;text-align:left;}
+    .aceite input{accent-color:var(--red);width:16px;height:16px;margin-top:3px;flex-shrink:0;cursor:pointer;}
+    .aceite a{color:var(--red);}
+    .aceite.invalid{color:var(--red);}
+
+    /* VENDAS ENCERRADAS / RESULTADO */
+    .rifa-fim{padding:28px 26px;margin-bottom:26px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
+    .rifa-fim.ganhador{border-color:var(--red-line);background:linear-gradient(135deg,var(--red-mid),var(--bg2) 60%);}
+    .rf-num{font-family:var(--f-display);font-size:4.2rem;line-height:0.9;letter-spacing:0.04em;color:var(--red);}
+    .rf-txt{flex:1;min-width:220px;}
+    .rf-ey{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+    .rf-ti{font-family:var(--f-display);font-size:1.9rem;letter-spacing:0.04em;color:var(--text);line-height:1;margin-bottom:6px;}
+    .rf-sub{font-size:0.88rem;color:var(--text2);line-height:1.7;}
   </style>
 </head>
 <body>
@@ -178,6 +192,7 @@
   <section class="section" style="padding-bottom:60px;">
     <p class="sec-eyebrow">Escolha os seus números</p>
     <h2 class="sec-title">BILHETES</h2>
+    <div id="rifaFim" hidden></div>
     <div class="legenda">
       <div class="leg-item"><div class="leg-dot ld-l"></div>Disponível</div>
       <div class="leg-item"><div class="leg-dot ld-s"></div>Selecionado</div>
@@ -226,6 +241,7 @@
       <label for="iTel">Telefone <span class="opt">opcional</span></label>
       <input type="tel" id="iTel" placeholder="(00) 00000-0000" autocomplete="tel"/>
     </div>
+    <label class="aceite" id="aceiteWrap"><input type="checkbox" id="iAceite"/><span>Tenho 18 anos ou mais e concordo com a <a href="/privacidade" target="_blank" rel="noopener">política de privacidade</a>. Se eu ganhar, meu primeiro nome e meu Instagram aparecem no resultado.</span></label>
     <button class="btn btn-primary btn-block btn-lg" id="btnCfm" type="button" onclick="finalizar()">Ir para o pagamento <i data-icon="arrow-right"></i></button>
   </div>
 </div>
@@ -283,7 +299,7 @@
     </nav>
     <form class="footer-avisos" id="formAvisos" novalidate>
       <div class="footer-titulo">Avisos de shows</div>
-      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos. Você pode sair quando quiser (<a href="/privacidade">privacidade</a>).</p>
       <div class="linha">
         <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
         <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
@@ -293,7 +309,7 @@
     </form>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Nexus Band</span>
+    <span>&copy; 2026 Nexus Band · <a href="/privacidade">Privacidade</a></span>
     <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
 </footer>
@@ -303,12 +319,8 @@
 <script>
 // PRÊMIOS
 const PREMIOS = [
-  { icone:'guitar',  nome:'PALHETAS EXCLUSIVAS', qtd:'2 unidades', desc:'Palhetas oficiais da Nexus Band, personalizadas com o logo da banda. Perfeitas para colecionadores e músicos.' },
-  { icone:'drum',    nome:'BAQUETAS ASSINADAS',  qtd:'2 unidades', desc:'Baquetas autografadas pelo baterista da Nexus. Um item raro para quem curte a banda de perto.' },
-  { icone:'shirt',   nome:'CAMISETA OFICIAL',    qtd:'1 unidade',  desc:'Camiseta estampada com o logo da banda. Edição limitada, disponível apenas para apoiadores da campanha.' },
-  { icone:'key',     nome:'CHAVEIRO NEXUS',      qtd:'1 unidade',  desc:'Chaveiro metálico com o símbolo da Nexus. Acabamento premium, carregue a banda com você.' },
-  { icone:'pin',     nome:'PIN COLECIONÁVEL',    qtd:'1 unidade',  desc:'Pin esmaltado com o logo da Nexus. Ideal para jaquetas, mochilas e coleções.' },
-  { icone:'sticker', nome:'PACK DE ADESIVOS',    qtd:'1 unidade',  desc:'Set de adesivos vinil com artes exclusivas da banda. Impermeáveis e de alta durabilidade.' }
+  { icone:'ticket', nome:'PAR DE INGRESSOS', qtd:'1 par', desc:'Dois ingressos para o próximo show da Nexus. Chame alguém e venha curtir com a gente.' },
+  { icone:'shirt',  nome:'CAMISETA OFICIAL', qtd:'1 unidade', desc:'Camiseta oficial com o logo da banda, no tamanho que você escolher.' }
 ];
 const track = document.getElementById('track');
 const dotsEl = document.getElementById('dots');
@@ -374,7 +386,7 @@ nexusGetConfig().then(cfg => {
 });
 
 // BILHETES
-let bData = [], sel = new Set(), vUnit = 10;
+let bData = [], sel = new Set(), vUnit = 10, vendasAbertas = true;
 const fmtNum = n => String(n).padStart(3, '0');
 
 async function load(){
@@ -391,6 +403,9 @@ async function load(){
       document.getElementById('sData').textContent = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' }).replace('.', '').toUpperCase();
     }
     atualizarProgresso(j.config?.data_sorteio);
+    vendasAbertas = j.vendas_abertas !== false;
+    mostrarFim(j.resultado);
+    if(!vendasAbertas) sel.clear();
     // Remove da seleção números que outra pessoa reservou nesse meio-tempo
     sel.forEach(n => { const b = bData.find(x => x.numero === n); if(!b || b.status !== 'disponivel') sel.delete(n); });
     render(); updateBar();
@@ -424,13 +439,32 @@ function textoContagem(){
 }
 setInterval(() => { if(dataSorteio && !document.hidden) document.getElementById('rpContagem').innerHTML = textoContagem(); }, 30000);
 
+// Vendas encerradas: mostra o resultado do sorteio (ou quando ele acontece)
+function mostrarFim(resultado){
+  const el = document.getElementById('rifaFim');
+  el.hidden = vendasAbertas;
+  if(vendasAbertas) return;
+  if(resultado){
+    const quem = [resultado.nome, resultado.instagram].filter(Boolean).map(nexusEsc).join(' · ');
+    el.className = 'card rifa-fim ganhador';
+    el.innerHTML = `<div class="rf-num">${fmtNum(resultado.numero)}</div>
+      <div class="rf-txt"><div class="rf-ey">Sorteio realizado</div><div class="rf-ti">${quem || 'Temos um vencedor!'}</div>
+      <p class="rf-sub">Parabéns! Obrigado a todo mundo que apoiou a nossa música.</p></div>`;
+  }else{
+    const data = dataSorteio ? new Date(dataSorteio + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'long' }) : '';
+    el.className = 'card rifa-fim';
+    el.innerHTML = `<div class="rf-txt"><div class="rf-ey">Vendas encerradas</div><div class="rf-ti">Obrigado pelo apoio!</div>
+      <p class="rf-sub">${data ? `O sorteio acontece em ${data}. ` : ''}O resultado aparece aqui e no nosso Instagram.</p></div>`;
+  }
+}
+
 function render(){
   const w = document.getElementById('bilWrap');
   w.className = 'bil-grid';
   w.innerHTML = bData.map(b => {
     const cls = b.status === 'pago' ? 'pg' : b.status === 'reservado' ? 'rv' : (sel.has(b.numero) ? 'sl' : '');
     const label = b.status === 'pago' ? 'vendido' : b.status === 'reservado' ? 'reservado' : (sel.has(b.numero) ? 'selecionado' : 'disponível');
-    return `<button type="button" class="bilhete ${cls}" data-n="${b.numero}" aria-label="Bilhete ${fmtNum(b.numero)}, ${label}" aria-pressed="${sel.has(b.numero)}" ${b.status !== 'disponivel' ? 'disabled' : ''}>${fmtNum(b.numero)}</button>`;
+    return `<button type="button" class="bilhete ${cls}" data-n="${b.numero}" aria-label="Bilhete ${fmtNum(b.numero)}, ${label}" aria-pressed="${sel.has(b.numero)}" ${b.status !== 'disponivel' || !vendasAbertas ? 'disabled' : ''}>${fmtNum(b.numero)}</button>`;
   }).join('');
 }
 document.getElementById('bilWrap').addEventListener('click', e => {
@@ -467,18 +501,20 @@ async function finalizar(){
   const ig = document.getElementById('iInstagram').value.trim().replace(/^@/, '');
   const tel = document.getElementById('iTel').value.trim();
 
-  ['iNome', 'iEmail', 'igWrap'].forEach(id => document.getElementById(id).classList.remove('invalid'));
+  const aceite = document.getElementById('iAceite').checked;
+  ['iNome', 'iEmail', 'igWrap', 'aceiteWrap'].forEach(id => document.getElementById(id).classList.remove('invalid'));
   let erro = false;
   if(!nome){ document.getElementById('iNome').classList.add('invalid'); erro = true; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ document.getElementById('iEmail').classList.add('invalid'); erro = true; }
-  if(!ig){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
+  if(!/^[A-Za-z0-9._]{1,30}$/.test(ig)){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
   if(erro){ toast('Preencha todos os campos obrigatórios.', 'err'); return; }
+  if(!aceite){ document.getElementById('aceiteWrap').classList.add('invalid'); toast('Confirme que tem 18 anos ou mais e aceite a política de privacidade.', 'err'); return; }
 
   const btn = document.getElementById('btnCfm');
   const restaurar = () => { btn.disabled = false; btn.innerHTML = `Ir para o pagamento ${nexusIcon('arrow-right')}`; };
   btn.disabled = true; btn.textContent = 'Processando...';
   try{
-    const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: '@' + ig, telefone: tel }) });
+    const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: '@' + ig, telefone: tel, aceite: true }) });
     const d = await r.json();
     restaurar();
     if(!r.ok){
@@ -487,6 +523,7 @@ async function finalizar(){
         d.numeros.forEach(n => sel.delete(Number(n)));
         fecharModal(); updateBar();
       }
+      if(d.encerrada){ sel.clear(); fecharModal(); updateBar(); }
       toast(d.erro || 'Erro ao criar pagamento.', 'err'); load(); return;
     }
     nexusTrack('rifa_checkout', { bilhetes: sel.size });
