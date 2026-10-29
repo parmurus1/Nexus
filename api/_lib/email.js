@@ -59,7 +59,9 @@ export async function enviarEmail({ para, assunto, html, responderPara }) {
     if (!resp.ok) {
       const texto = await resp.text().catch(() => '');
       console.error(`[email] Resend respondeu ${resp.status}: ${texto.slice(0, 300)}`);
-      return { ok: false, erro: `HTTP ${resp.status}` };
+      let detalhe = '';
+      try { detalhe = JSON.parse(texto).message || ''; } catch { detalhe = texto.slice(0, 200); }
+      return { ok: false, erro: `HTTP ${resp.status}`, detalhe };
     }
     return { ok: true };
   } catch (e) {

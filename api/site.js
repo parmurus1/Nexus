@@ -12,6 +12,7 @@ import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { liberarExpirados, situacaoVendas, resultadoPublico, processarPagamentoRifa } from './_lib/rifa.js';
 import { ipDaRequisicao } from './_lib/auth.js';
 import { enviarEmail, emailNovoOrcamento } from './_lib/email.js';
+import { emailValido, telefoneNormalizado, telefoneFormatado } from './_lib/validacao.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -122,10 +123,14 @@ async function rotaOrcamento(req, res) {
     mensagem: limpar(b.mensagem, 2000)
   };
   if (!o.nome) return res.status(400).json({ erro: 'Informe seu nome.' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(o.email) && o.telefone.replace(/\D/g, '').length < 10) {
-    return res.status(400).json({ erro: 'Informe um e-mail ou telefone válido para retornarmos.' });
+  // Campo preenchido precisa ser válido; pelo menos um dos dois é obrigatório.
+  if (o.email && !emailValido(o.email)) return res.status(400).json({ erro: 'Confira o e-mail: ele parece incompleto ou com erro de digitação.' });
+  if (o.telefone) {
+    const tel = telefoneNormalizado(o.telefone);
+    if (!tel) return res.status(400).json({ erro: 'Confira o WhatsApp: use DDD + número, ex.: (11) 91234-5678.' });
+    o.telefone = telefoneFormatado(tel);
   }
-  if (o.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(o.email)) o.email = '';
+  if (!o.email && !o.telefone) return res.status(400).json({ erro: 'Informe um e-mail ou WhatsApp para retornarmos.' });
 
   // Limite simples contra spam: 3 pedidos por IP por hora
   const ip = ipDaRequisicao(req);
