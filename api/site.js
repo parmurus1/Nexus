@@ -12,7 +12,6 @@ import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { liberarExpirados, situacaoVendas, resultadoPublico, processarPagamentoRifa } from './_lib/rifa.js';
 import { ipDaRequisicao } from './_lib/auth.js';
 import { enviarEmail, emailNovoOrcamento } from './_lib/email.js';
-import { avisarWhatsapp, whatsappNovoOrcamento } from './_lib/whatsapp.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -140,12 +139,9 @@ async function rotaOrcamento(req, res) {
     return res.status(500).json({ erro: 'Não foi possível enviar agora. Fale com a gente pelo WhatsApp ou e-mail.' });
   }
 
-  // Avisa a banda por e-mail e WhatsApp ao mesmo tempo (cada um só envia se estiver configurado)
+  // Avisa a banda por e-mail (só envia se estiver configurado); o pedido também fica no admin
   const destino = process.env.EMAIL_BANDA;
-  await Promise.all([
-    destino ? enviarEmail({ para: destino, ...emailNovoOrcamento(o), responderPara: o.email || undefined }) : null,
-    avisarWhatsapp(whatsappNovoOrcamento(o, process.env.SITE_URL || 'https://nexusband.com.br'))
-  ]);
+  if (destino) await enviarEmail({ para: destino, ...emailNovoOrcamento(o), responderPara: o.email || undefined });
 
   return res.status(201).json({ ok: true, id: data.id });
 }
