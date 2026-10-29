@@ -108,6 +108,10 @@
     .ig-prefix.invalid{border-color:var(--red)!important;}
     .ig-at{padding:11px 0 11px 14px;font-family:var(--f-mono);font-size:0.92rem;color:var(--text2);}
     .fg .ig-prefix input{background:transparent;border:none;padding-left:6px;}
+    .aceite{display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:var(--text2);line-height:1.6;cursor:pointer;margin:4px 0 18px;text-align:left;}
+    .aceite input{accent-color:var(--red);width:16px;height:16px;margin-top:3px;flex-shrink:0;cursor:pointer;}
+    .aceite a{color:var(--red);}
+    .aceite.invalid{color:var(--red);}
 
     /* VENDAS ENCERRADAS / RESULTADO */
     .rifa-fim{padding:28px 26px;margin-bottom:26px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
@@ -236,6 +240,7 @@
       <label for="iTel">Telefone <span class="opt">opcional</span></label>
       <input type="tel" id="iTel" placeholder="(00) 00000-0000" autocomplete="tel"/>
     </div>
+    <label class="aceite" id="aceiteWrap"><input type="checkbox" id="iAceite"/><span>Tenho 18 anos ou mais e concordo com a <a href="/privacidade" target="_blank" rel="noopener">política de privacidade</a>. Se eu ganhar, meu primeiro nome e meu Instagram aparecem no resultado.</span></label>
     <button class="btn btn-primary btn-block btn-lg" id="btnCfm" type="button" onclick="finalizar()">Ir para o pagamento <i data-icon="arrow-right"></i></button>
   </div>
 </div>
@@ -293,7 +298,7 @@
     </nav>
     <form class="footer-avisos" id="formAvisos" novalidate>
       <div class="footer-titulo">Avisos de shows</div>
-      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos.</p>
+      <p>Deixe seu e-mail ou WhatsApp e seja o primeiro a saber dos próximos shows e lançamentos. Você pode sair quando quiser (<a href="/privacidade">privacidade</a>).</p>
       <div class="linha">
         <label class="sr-only" for="avisoContato">E-mail ou WhatsApp</label>
         <input class="input" type="text" id="avisoContato" name="contato" placeholder="E-mail ou WhatsApp" autocomplete="email" maxlength="160"/>
@@ -303,7 +308,7 @@
     </form>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Nexus Band</span>
+    <span>&copy; 2026 Nexus Band · <a href="/privacidade">Privacidade</a></span>
     <span class="footer-credit">Desenvolvido por Murilo Neves Teixeira</span>
   </div>
 </footer>
@@ -499,18 +504,20 @@ async function finalizar(){
   const ig = document.getElementById('iInstagram').value.trim().replace(/^@/, '');
   const tel = document.getElementById('iTel').value.trim();
 
-  ['iNome', 'iEmail', 'igWrap'].forEach(id => document.getElementById(id).classList.remove('invalid'));
+  const aceite = document.getElementById('iAceite').checked;
+  ['iNome', 'iEmail', 'igWrap', 'aceiteWrap'].forEach(id => document.getElementById(id).classList.remove('invalid'));
   let erro = false;
   if(!nome){ document.getElementById('iNome').classList.add('invalid'); erro = true; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ document.getElementById('iEmail').classList.add('invalid'); erro = true; }
   if(!ig){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
   if(erro){ toast('Preencha todos os campos obrigatórios.', 'err'); return; }
+  if(!aceite){ document.getElementById('aceiteWrap').classList.add('invalid'); toast('Confirme que tem 18 anos ou mais e aceite a política de privacidade.', 'err'); return; }
 
   const btn = document.getElementById('btnCfm');
   const restaurar = () => { btn.disabled = false; btn.innerHTML = `Ir para o pagamento ${nexusIcon('arrow-right')}`; };
   btn.disabled = true; btn.textContent = 'Processando...';
   try{
-    const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: '@' + ig, telefone: tel }) });
+    const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: '@' + ig, telefone: tel, aceite: true }) });
     const d = await r.json();
     restaurar();
     if(!r.ok){

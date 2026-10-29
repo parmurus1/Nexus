@@ -1,6 +1,7 @@
 // api/criar-pagamento.js — reserva bilhetes da rifa e gera o pagamento (Pix) no Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
+import { ipDaRequisicao } from './_lib/auth.js';
 import { liberarExpirados, normalizarNumeros, lerConfigRifa, situacaoVendas, LIMPAR_COMPRADOR, PAGAMENTO_EXPIRA_MINUTOS, MAX_BILHETES_POR_COMPRA } from './_lib/rifa.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
@@ -27,6 +28,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ erro: 'Nome e e-mail válidos são obrigatórios' });
   if (!instagram || instagram === '@')
     return res.status(400).json({ erro: 'Instagram é obrigatório para notificação do prêmio' });
+  if (body.aceite !== true)
+    return res.status(400).json({ erro: 'Confirme que tem 18 anos ou mais e aceite a política de privacidade.' });
 
   const config = await lerConfigRifa(supabase);
   if (!situacaoVendas(config).abertas)
@@ -34,6 +37,15 @@ export default async function handler(req, res) {
 
   // Reservas vencidas voltam a ficar disponíveis antes de checar
   await liberarExpirados(supabase);
+
+  // Evita que uma pessoa (ou um robô) segure a rifa inteira com reservas que
+  // nunca paga: no máximo MAX_BILHETES_POR_COMPRA números reservados por IP.
+  const ip = ipDaRequisicao(req);
+  const { count: reservadosIp, error: erroIp } = await supabase.from('bilhetes')
+    .select('numero', { count: 'exact', head: true }).eq('status', 'reservado').eq('ip_reserva', ip);
+  if (!erroIp && (reservadosIp || 0) + numeros.length > MAX_BILHETES_POR_COMPRA) {
+    return res.status(429).json({ erro: 'Você já tem números reservados aguardando pagamento. Conclua o pagamento ou aguarde 30 minutos.' });
+  }
 
   // Valor do bilhete sempre vem do banco
   const valorUnitario = parseFloat(config.valor_bilhete || '10.00');
@@ -54,7 +66,8 @@ export default async function handler(req, res) {
       email_comprador: email,
       instagram_comprador: instagram,
       telefone_comprador: telefone || null,
-      reservado_em: reservadoEm
+      reservado_em: reservadoEm,
+      ...(erroIp ? {} : { ip_reserva: ip })
     })
     .in('numero', numeros)
     .eq('status', 'disponivel')

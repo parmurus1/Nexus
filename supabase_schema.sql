@@ -49,9 +49,8 @@ ALTER TABLE bilhetes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE config ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sorteio ENABLE ROW LEVEL SECURITY;
 
--- Políticas públicas de leitura
-CREATE POLICY "Leitura pública de bilhetes" ON bilhetes FOR SELECT USING (true);
-CREATE POLICY "Leitura pública de config" ON config FOR SELECT USING (true);
+-- Sem leitura pública: bilhetes (dados dos compradores) e config (chave Pix)
+-- são lidos só pelo servidor, com a service_role.
 
 -- Políticas de escrita apenas via service_role (backend)
 CREATE POLICY "Escrita via service_role em bilhetes" ON bilhetes FOR ALL USING (auth.role() = 'service_role');
@@ -466,7 +465,17 @@ ALTER TABLE rifa_conflitos ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Service role gerencia conflitos" ON rifa_conflitos;
 CREATE POLICY "Service role gerencia conflitos" ON rifa_conflitos FOR ALL USING (auth.role() = 'service_role');
 
--- Consulta de status do pagamento pela página de sucesso / Pix
+-- Privacidade (LGPD): o site lê bilhetes e config só pelo servidor (service_role).
+-- A leitura pública direta pelo Supabase expunha nome, e-mail e telefone de quem
+-- comprou para qualquer pessoa com a chave anon do projeto.
+DROP POLICY IF EXISTS "Leitura pública de bilhetes" ON bilhetes;
+DROP POLICY IF EXISTS "Leitura pública de config" ON config;
+
+-- IP de quem reservou: limita quantos números uma mesma pessoa segura sem pagar
+ALTER TABLE bilhetes ADD COLUMN IF NOT EXISTS ip_reserva TEXT;
+CREATE INDEX IF NOT EXISTS bilhetes_ip_reserva_idx ON bilhetes (ip_reserva) WHERE status = 'reservado';
+
+-- Consulta de status do pagamento pela página de sucesso
 CREATE INDEX IF NOT EXISTS bilhetes_payment_id_idx ON bilhetes (payment_id);
 CREATE INDEX IF NOT EXISTS bilhetes_preference_id_idx ON bilhetes (preference_id);
 
