@@ -6,6 +6,18 @@ import { montarItensSeguros } from './_lib/pedidos.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
+// Valida os dígitos verificadores do CPF (igual ao da página da loja)
+function cpfValido(cpf) {
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+  for (const t of [9, 10]) {
+    let soma = 0;
+    for (let i = 0; i < t; i++) soma += Number(cpf[i]) * (t + 1 - i);
+    const d = (soma * 10) % 11 % 10;
+    if (d !== Number(cpf[t])) return false;
+  }
+  return true;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -13,21 +25,27 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
 
-  const {
-    itens: itensCliente, nome, email, cpf, telefone,
-    cep, uf, cidade, endereco, numero, complemento, bairro,
-    frete_servico_id // id da opção de frete escolhida pelo usuário (veio de /api/frete)
-  } = req.body || {};
+  const b = req.body || {};
+  const itensCliente = b.itens;
+  const freteServicoId = b.frete_servico_id; // id da opção de frete escolhida pelo usuário (veio de /api/frete)
 
-  if (!nome || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email)))
+  const limpar = (v, max) => String(v || '').trim().slice(0, max);
+  const nome = limpar(b.nome, 120);
+  const email = limpar(b.email, 160).toLowerCase();
+  if (!nome || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ erro: 'Nome e e-mail válidos são obrigatórios' });
-  const cpfLimpo = String(cpf || '').replace(/\D/g, '');
-  if (cpfLimpo.length !== 11)
+  const cpfLimpo = String(b.cpf || '').replace(/\D/g, '');
+  if (!cpfValido(cpfLimpo))
     return res.status(400).json({ erro: 'CPF inválido — é exigido pela transportadora para gerar a etiqueta de envio.' });
-  const telLimpo = String(telefone || '').replace(/\D/g, '');
-  if (telLimpo.length < 10)
+  // Só DDD + número (tira o 55 do Brasil, se vier)
+  const telefone = String(b.telefone || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '').slice(0, 11);
+  if (telefone.length < 10)
     return res.status(400).json({ erro: 'Telefone é obrigatório.' });
-  if (!cep || !endereco || !numero)
+  // A etiqueta do Melhor Envio precisa do endereço completo (bairro, cidade e UF inclusos)
+  const cep = String(b.cep || '').replace(/\D/g, '');
+  const endereco = limpar(b.endereco, 160), numero = limpar(b.numero, 20), complemento = limpar(b.complemento, 80);
+  const bairro = limpar(b.bairro, 80), cidade = limpar(b.cidade, 80), uf = limpar(b.uf, 2).toUpperCase();
+  if (cep.length !== 8 || !endereco || !numero || !bairro || !cidade || !/^[A-Z]{2}$/.test(uf))
     return res.status(400).json({ erro: 'Endereço de entrega incompleto' });
 
   // ── Itens: NUNCA confiar em preço/nome vindos do navegador. O carrinho só
@@ -40,7 +58,7 @@ export default async function handler(req, res) {
   let frete = { servico: null, transportadora: null, preco: 0, prazo_dias: null };
   try {
     const opcoes = await calcularFrete({ cepDestino: cep, itens });
-    const escolhida = opcoes.find(o => String(o.id) === String(frete_servico_id));
+    const escolhida = opcoes.find(o => String(o.id) === String(freteServicoId));
     if (!escolhida) {
       return res.status(400).json({ erro: 'Opção de frete inválida ou expirada. Recalcule o frete e tente novamente.' });
     }
@@ -68,9 +86,9 @@ export default async function handler(req, res) {
       nome_comprador: nome,
       email_comprador: email,
       cpf_comprador: cpfLimpo,
-      telefone_comprador: telefone || null,
-      cep, uf: uf || null, cidade: cidade || null,
-      endereco, numero, complemento: complemento || null, bairro: bairro || null,
+      telefone_comprador: telefone,
+      cep, uf, cidade,
+      endereco, numero, complemento: complemento || null, bairro,
       frete_servico: frete.servico,
       frete_transportadora: frete.transportadora,
       frete_prazo_dias: frete.prazo_dias,
@@ -116,14 +134,20 @@ export default async function handler(req, res) {
             unit_price: frete.preco
           }
         ],
-        payer: { name: nome, email, address: { zip_code: cep } },
+        // CPF e telefone do comprador ajudam a aprovação no antifraude do Mercado Pago
+        payer: {
+          name: nome, email,
+          identification: { type: 'CPF', number: cpfLimpo },
+          phone: { area_code: telefone.slice(0, 2), number: telefone.slice(2) },
+          address: { zip_code: cep }
+        },
         shipments: {
           receiver_address: {
             zip_code: cep,
             street_name: endereco,
             street_number: numero,
-            city_name: cidade || '',
-            state_name: uf || ''
+            city_name: cidade,
+            state_name: uf
           }
         },
         payment_methods: {

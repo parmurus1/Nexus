@@ -506,7 +506,7 @@ async function finalizar(){
   let erro = false;
   if(!nome){ document.getElementById('iNome').classList.add('invalid'); erro = true; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ document.getElementById('iEmail').classList.add('invalid'); erro = true; }
-  if(!ig){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
+  if(!/^[A-Za-z0-9._]{1,30}$/.test(ig)){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
   if(erro){ toast('Preencha todos os campos obrigatórios.', 'err'); return; }
   if(!aceite){ document.getElementById('aceiteWrap').classList.add('invalid'); toast('Confirme que tem 18 anos ou mais e aceite a política de privacidade.', 'err'); return; }
 

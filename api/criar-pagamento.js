@@ -26,8 +26,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ erro: `Escolha de 1 a ${MAX_BILHETES_POR_COMPRA} números válidos` });
   if (!nome || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ erro: 'Nome e e-mail válidos são obrigatórios' });
-  if (!instagram || instagram === '@')
-    return res.status(400).json({ erro: 'Instagram é obrigatório para notificação do prêmio' });
+  // Instagram é por onde a banda avisa o ganhador: só aceita um @ válido
+  if (!/^@?[A-Za-z0-9._]{1,30}$/.test(instagram))
+    return res.status(400).json({ erro: 'Informe um Instagram válido (só letras, números, ponto e _), para avisarmos se você ganhar.' });
   if (body.aceite !== true)
     return res.status(400).json({ erro: 'Confirme que tem 18 anos ou mais e aceite a política de privacidade.' });
 
