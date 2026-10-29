@@ -2,9 +2,9 @@
 import crypto from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 import { autenticar, verificarCredenciais, criarSessao, multiusuario, usuariosAdmin, ipDaRequisicao, MAX_TENTATIVAS, JANELA_TENTATIVAS_MIN } from './_lib/auth.js';
-import { liberarExpirados } from './_lib/rifa.js';
+import { liberarExpirados, ajustarTotalBilhetes } from './_lib/rifa.js';
 import { gerarEtiquetaESalvar, atualizarRastreio } from './_lib/pedidos.js';
-import { emailConfigurado } from './_lib/email.js';
+import { emailConfigurado, enviarEmail, emailRifaVencedor } from './_lib/email.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -39,7 +39,7 @@ function arquivoDoStorage(url) {
 }
 
 // Chaves que o painel pode gravar na tabela config (evita gravar lixo arbitrário)
-const CONFIG_PERMITIDA = /^(valor_bilhete|data_sorteio|total_bilhetes|modo_demo|rifa_nav_visivel|venom_mode|chave_pix|link_[a-z]+|contato_[a-z]+|conteudo_[a-z_]+|musica_[a-z_]+)$/;
+const CONFIG_PERMITIDA = /^(valor_bilhete|data_sorteio|rifa_ativa|modo_demo|rifa_nav_visivel|venom_mode|chave_pix|link_[a-z]+|contato_[a-z]+|conteudo_[a-z_]+|musica_[a-z_]+)$/;
 
 async function tentativasRecentes(ip) {
   const desde = new Date(Date.now() - JANELA_TENTATIVAS_MIN * 60 * 1000).toISOString();
@@ -157,6 +157,8 @@ export default async function handler(req, res) {
       .select('numero, status, nome_comprador, email_comprador, instagram_comprador, telefone_comprador, pago_em');
     const { data: config } = await supabase.from('config').select('chave, valor');
     const { data: sorteio } = await supabase.from('sorteio').select('*').order('realizado_em', { ascending: false }).limit(1);
+    // Pagamentos aprovados depois que a reserva venceu e o número foi revendido
+    const { data: conflitos } = await supabase.from('rifa_conflitos').select('*').eq('resolvido', false).order('criado_em', { ascending: false });
 
     const configObj = {};
     config?.forEach(c => { configObj[c.chave] = c.valor; });
@@ -169,7 +171,7 @@ export default async function handler(req, res) {
     };
 
     return res.status(200).json({
-      bilhetes, config: configObj, stats, ultimo_sorteio: sorteio?.[0] || null,
+      bilhetes, config: configObj, stats, ultimo_sorteio: sorteio?.[0] || null, conflitos: conflitos || [],
       usuario: sessao.usuario, email_configurado: emailConfigurado()
     });
   }
@@ -258,13 +260,28 @@ export default async function handler(req, res) {
     return res.status(200).json({ liberados });
   }
 
+  // Cria ou remove números da rifa (só remove os que ninguém reservou nem pagou)
+  if (acao === 'total-bilhetes') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+    const r = await ajustarTotalBilhetes(supabase, Number(req.body?.total));
+    if (!r.ok) return res.status(400).json({ erro: r.erro });
+    return res.status(200).json(r);
+  }
+
+  if (acao === 'rifa-conflito-resolver') {
+    if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+    const { error } = await supabase.from('rifa_conflitos').update({ resolvido: true }).eq('id', (req.body || {}).id);
+    if (error) return res.status(500).json({ erro: 'Erro ao marcar como resolvido' });
+    return res.status(200).json({ ok: true });
+  }
+
   // Sortear
   if (acao === 'sortear') {
     if (req.method !== 'POST') return res.status(405).end();
 
     const { data: pagos } = await supabase
       .from('bilhetes')
-      .select('numero, nome_comprador, instagram_comprador')
+      .select('numero, nome_comprador, email_comprador, instagram_comprador')
       .eq('status', 'pago');
 
     if (!pagos || pagos.length === 0)
@@ -279,7 +296,23 @@ export default async function handler(req, res) {
       instagram_vencedor: vencedor.instagram_comprador || null
     });
 
+    // Encerra as vendas e publica o resultado na página da rifa
+    // (só o primeiro nome e o Instagram do vencedor)
+    const resultado = {
+      numero: vencedor.numero,
+      nome: String(vencedor.nome_comprador || '').trim().split(/\s+/)[0] || null,
+      instagram: vencedor.instagram_comprador || null,
+      data: new Date().toISOString()
+    };
+    await supabase.from('config').upsert([
+      { chave: 'rifa_ativa', valor: 'false' },
+      { chave: 'rifa_resultado', valor: JSON.stringify(resultado) }
+    ], { onConflict: 'chave' });
+
+    const aviso = await enviarEmail({ para: vencedor.email_comprador, ...emailRifaVencedor({ nome: vencedor.nome_comprador, numero: vencedor.numero }) });
+
     return res.status(200).json({
+      email_enviado: !!aviso.ok,
       numero_sorteado: vencedor.numero,
       nome_vencedor: vencedor.nome_comprador,
       instagram_vencedor: vencedor.instagram_comprador || null

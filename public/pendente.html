@@ -160,6 +160,29 @@ if(origem === 'merch' && pedido){
   };
   verificar();
 }
+
+// Rifa: o Mercado Pago volta com payment_id (e/ou preference_id) na URL
+const pagamentoRifa = params.get('payment_id') || params.get('collection_id');
+const preferenciaRifa = params.get('preference_id');
+if(origem === 'rifa' && (pagamentoRifa || preferenciaRifa)){
+  document.getElementById('statusAguarde').hidden = false;
+  const consulta = /^\d+$/.test(pagamentoRifa || '') ? 'pagamento=' + pagamentoRifa : 'preferencia=' + encodeURIComponent(preferenciaRifa);
+  let tentativas = 0;
+  const verificar = async () => {
+    tentativas++;
+    try{
+      const r = await fetch('/api/rifa-status?' + consulta);
+      if(r.ok){
+        const d = await r.json();
+        if(d.status === 'pago'){ location.replace('/sucesso?origem=rifa&' + consulta.replace('pagamento=', 'payment_id=').replace('preferencia=', 'preference_id=')); return; }
+        if(d.status === 'expirado' || d.status === 'recusado'){ location.replace('/falha?origem=rifa'); return; }
+      }
+    }catch(e){}
+    if(tentativas < 360) setTimeout(verificar, 5000);
+    else document.getElementById('statusAguarde').hidden = true;
+  };
+  verificar();
+}
 </script>
 <script src="/venom.js" defer></script>
 </body>

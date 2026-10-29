@@ -440,3 +440,35 @@ CREATE POLICY "Service role gerencia fas" ON fas FOR ALL USING (auth.role() = 's
 -- (data, local, cancelamento) sem criar duplicado na agenda.
 ALTER TABLE shows ADD COLUMN IF NOT EXISTS externo_id TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS shows_externo_id_idx ON shows (externo_id);
+
+-- =====================================================
+-- ATUALIZAÇÃO 5 — rifa: pagamentos em conflito e fim das vendas
+-- Execute este bloco no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Pagamentos aprovados depois que a reserva venceu e o número já era de outra
+-- pessoa. Aparecem no admin (Rifa → Bilhetes) para a banda devolver o valor
+-- ou combinar outros números.
+CREATE TABLE IF NOT EXISTS rifa_conflitos (
+  id SERIAL PRIMARY KEY,
+  payment_id TEXT NOT NULL UNIQUE,
+  nome TEXT,
+  email TEXT,
+  instagram TEXT,
+  telefone TEXT,
+  numeros_pedidos INTEGER[],
+  numeros_faltando INTEGER[],
+  valor NUMERIC(10,2),
+  resolvido BOOLEAN NOT NULL DEFAULT false,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE rifa_conflitos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia conflitos" ON rifa_conflitos;
+CREATE POLICY "Service role gerencia conflitos" ON rifa_conflitos FOR ALL USING (auth.role() = 'service_role');
+
+-- Consulta de status do pagamento pela página de sucesso / Pix
+CREATE INDEX IF NOT EXISTS bilhetes_payment_id_idx ON bilhetes (payment_id);
+CREATE INDEX IF NOT EXISTS bilhetes_preference_id_idx ON bilhetes (preference_id);
+
+-- "Vendas abertas" (o sorteio desliga sozinho)
+INSERT INTO config (chave, valor) VALUES ('rifa_ativa', 'true') ON CONFLICT (chave) DO NOTHING;

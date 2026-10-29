@@ -1,7 +1,7 @@
 // api/criar-pagamento.js — reserva bilhetes da rifa e gera o pagamento (Pix) no Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
-import { liberarExpirados, normalizarNumeros, LIMPAR_COMPRADOR, PAGAMENTO_EXPIRA_MINUTOS, MAX_BILHETES_POR_COMPRA } from './_lib/rifa.js';
+import { liberarExpirados, normalizarNumeros, lerConfigRifa, situacaoVendas, LIMPAR_COMPRADOR, PAGAMENTO_EXPIRA_MINUTOS, MAX_BILHETES_POR_COMPRA } from './_lib/rifa.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -28,12 +28,15 @@ export default async function handler(req, res) {
   if (!instagram || instagram === '@')
     return res.status(400).json({ erro: 'Instagram é obrigatório para notificação do prêmio' });
 
+  const config = await lerConfigRifa(supabase);
+  if (!situacaoVendas(config).abertas)
+    return res.status(403).json({ erro: 'As vendas da rifa estão encerradas.', encerrada: true });
+
   // Reservas vencidas voltam a ficar disponíveis antes de checar
   await liberarExpirados(supabase);
 
   // Valor do bilhete sempre vem do banco
-  const { data: configValor } = await supabase.from('config').select('valor').eq('chave', 'valor_bilhete').maybeSingle();
-  const valorUnitario = parseFloat(configValor?.valor || '10.00');
+  const valorUnitario = parseFloat(config.valor_bilhete || '10.00');
   const valorTotal = Math.round(valorUnitario * numeros.length * 100) / 100;
   if (!(valorTotal >= 1)) {
     return res.status(400).json({ erro: 'Valor mínimo para pagamento via Pix é R$ 1,00. Configure o valor do bilhete no painel admin.' });
@@ -75,10 +78,9 @@ export default async function handler(req, res) {
   }
 
   // MODO DEMO: sem token do MP configurado OU forçado pelo painel admin
-  const { data: configDemo } = await supabase.from('config').select('valor').eq('chave', 'modo_demo').maybeSingle();
   const modoDemo = !process.env.MP_ACCESS_TOKEN
     || process.env.MP_ACCESS_TOKEN === 'SEU_TOKEN_AQUI'
-    || configDemo?.valor === 'true';
+    || config.modo_demo === 'true';
 
   if (modoDemo) {
     const numerosStr = numeros.map(n => String(n).padStart(3, '0')).join(', ');

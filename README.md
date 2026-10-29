@@ -64,14 +64,7 @@ Opcionais (veja o `.env.example`): `ADMIN_USERS` (uma senha por pessoa), `ADMIN_
 ## Customização
 
 ### Ajustar quantidade de bilhetes
-No arquivo `supabase_schema.sql`, mude o valor `100` na linha:
-```sql
-SELECT generate_series(1, 100);
-```
-E também o valor em:
-```sql
-('total_bilhetes', '100'),
-```
+No painel admin, em Rifa → Configurações → **Quantidade de bilhetes**. Os números novos são criados na hora; para diminuir, os números removidos não podem ter sido reservados nem vendidos.
 
 ### Ajustar valor do bilhete
 No Supabase, vá em **Table Editor > config** e edite a linha `valor_bilhete`.
@@ -105,7 +98,8 @@ Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.s
 3. **ATUALIZAÇÃO 2** — estoque, orçamentos, limite de tentativas de login e o membro Pedro
 4. **ATUALIZAÇÃO 3** — cartaz dos shows e lista de fãs (avisos de shows)
 5. **ATUALIZAÇÃO 4** — shows vindos do app da banda (`shows.externo_id`)
-6. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
+6. **ATUALIZAÇÃO 5** — rifa: pagamentos em conflito e fim das vendas
+7. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
 
 ## Loja: estoque e envio
 
@@ -120,6 +114,11 @@ Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.s
 ## Rifa: reservas
 
 Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém paga por um número que já foi liberado. Reservas vencidas são liberadas automaticamente. Se duas pessoas tentarem o mesmo número ao mesmo tempo, só uma consegue e a outra é avisada para escolher outro.
+
+- **Confirmação**: o webhook do Mercado Pago marca os bilhetes como pagos. As páginas de sucesso e de pagamento pendente também consultam `/api/rifa-status` e confirmam por lá se o webhook atrasar, mostrando os números ao comprador.
+- **Fim das vendas**: as vendas fecham quando o admin desliga **Vendas abertas**, quando o sorteio é feito ou quando passa a data do sorteio (horário de São Paulo).
+- **Sorteio**: encerra as vendas, publica o número, o primeiro nome e o Instagram do vencedor na página da rifa e manda um e-mail ao vencedor. Para uma nova campanha, ligue **Vendas abertas** de novo.
+- **Pagamento em conflito**: se um pagamento for aprovado depois que a reserva venceu e o número já foi vendido para outra pessoa, ele aparece em Rifa → Bilhetes (e a banda recebe um e-mail) para combinar outros números ou devolver o valor.
 
 ## Agenda, fãs e fotos do site
 

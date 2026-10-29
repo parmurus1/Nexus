@@ -4,10 +4,12 @@
 //   GET  /api/config          -> configurações e conteúdo editável do site
 //   GET  /api/bilhetes        -> números da rifa e status
 //   GET  /api/pedido-status   -> status (não sensível) de um pedido da loja
+//   GET  /api/rifa-status     -> status de um pagamento da rifa (tela de espera/sucesso)
 //   POST /api/orcamento       -> formulário de orçamento da página Contratantes
 //   POST /api/avisos          -> cadastro de fãs no rodapé ("avisos de shows")
 import { createClient } from '@supabase/supabase-js';
-import { liberarExpirados } from './_lib/rifa.js';
+import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { liberarExpirados, situacaoVendas, resultadoPublico, processarPagamentoRifa } from './_lib/rifa.js';
 import { ipDaRequisicao } from './_lib/auth.js';
 import { enviarEmail, emailNovoOrcamento } from './_lib/email.js';
 import { avisarWhatsapp, whatsappNovoOrcamento } from './_lib/whatsapp.js';
@@ -38,7 +40,49 @@ async function rotaBilhetes(req, res) {
   if (error) return res.status(500).json({ erro: 'Erro ao buscar bilhetes' });
   const config = await lerConfig();
   res.setHeader('Cache-Control', 'no-store');
-  return res.status(200).json({ bilhetes: data, config: { valor_bilhete: config?.valor_bilhete, data_sorteio: config?.data_sorteio } });
+  const vendas = situacaoVendas(config || {});
+  return res.status(200).json({
+    bilhetes: data,
+    config: { valor_bilhete: config?.valor_bilhete, data_sorteio: config?.data_sorteio },
+    vendas_abertas: vendas.abertas,
+    resultado: vendas.abertas ? null : resultadoPublico(config || {})
+  });
+}
+
+// Status de um pagamento da rifa. Aceita o id do pagamento (Pix na página ou
+// retorno do Mercado Pago) ou o id da preferência (retorno sem pagamento).
+// Se o webhook ainda não chegou, consulta o Mercado Pago e confirma por aqui
+// mesmo — a confirmação é idempotente. Devolve só status e números, nunca dados pessoais.
+async function rotaRifaStatus(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  const pagamento = String(req.query.pagamento || '');
+  const preferencia = String(req.query.preferencia || '');
+
+  if (/^\d{1,20}$/.test(pagamento)) {
+    const { data: pagos } = await supabase.from('bilhetes').select('numero').eq('payment_id', pagamento).eq('status', 'pago');
+    if (pagos?.length) return res.status(200).json({ status: 'pago', numeros: pagos.map(b => b.numero).sort((a, b) => a - b) });
+    if (!process.env.MP_ACCESS_TOKEN) return res.status(200).json({ status: 'pendente' });
+    let p;
+    try {
+      p = await new Payment(new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })).get({ id: pagamento });
+    } catch {
+      return res.status(404).json({ erro: 'Pagamento não encontrado' });
+    }
+    if (p.metadata?.tipo === 'merch') return res.status(404).json({ erro: 'Pagamento não encontrado' });
+    const r = await processarPagamentoRifa(supabase, p);
+    if (r.status === 'invalido') return res.status(404).json({ erro: 'Pagamento não encontrado' });
+    return res.status(200).json({ status: r.status, numeros: r.numeros || [] });
+  }
+
+  if (/^[\w-]{6,80}$/.test(preferencia)) {
+    const { data } = await supabase.from('bilhetes').select('numero, status').eq('preference_id', preferencia);
+    const pagos = (data || []).filter(b => b.status === 'pago').map(b => b.numero).sort((a, b) => a - b);
+    if (pagos.length) return res.status(200).json({ status: 'pago', numeros: pagos });
+    if ((data || []).some(b => b.status === 'reservado')) return res.status(200).json({ status: 'pendente' });
+    return res.status(200).json({ status: 'expirado' });
+  }
+
+  return res.status(400).json({ erro: 'Informe o pagamento' });
 }
 
 async function rotaConfig(req, res) {
@@ -151,6 +195,7 @@ export default async function handler(req, res) {
     if (rota === 'config') return await rotaConfig(req, res);
     if (rota === 'bilhetes') return await rotaBilhetes(req, res);
     if (rota === 'pedido-status') return await rotaPedidoStatus(req, res);
+    if (rota === 'rifa-status') return await rotaRifaStatus(req, res);
     return res.status(404).json({ erro: 'Rota não encontrada' });
   } catch (e) {
     console.error(`Erro em /api/site (${rota}):`, e);
