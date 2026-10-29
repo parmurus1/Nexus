@@ -481,3 +481,50 @@ CREATE INDEX IF NOT EXISTS bilhetes_preference_id_idx ON bilhetes (preference_id
 
 -- "Vendas abertas" (o sorteio desliga sozinho)
 INSERT INTO config (chave, valor) VALUES ('rifa_ativa', 'true') ON CONFLICT (chave) DO NOTHING;
+
+-- CPF do comprador da loja (exigido na etiqueta). O código já gravava esta
+-- coluna, mas ela não estava no schema.
+ALTER TABLE pedidos_merch ADD COLUMN IF NOT EXISTS cpf_comprador TEXT;
+
+-- Guarda de dados (LGPD): limpeza automática uma vez por dia.
+-- Os prazos estão também na página /privacidade — mude os dois juntos.
+CREATE OR REPLACE FUNCTION limpar_dados_antigos() RETURNS void LANGUAGE plpgsql AS $$
+DECLARE
+  data_sorteio DATE;
+BEGIN
+  SELECT CASE WHEN valor ~ '^\d{4}-\d{2}-\d{2}$' THEN valor::date END INTO data_sorteio
+  FROM config WHERE chave = 'data_sorteio';
+
+  -- Rifa: 6 meses depois do sorteio, os bilhetes ficam sem dados de quem comprou
+  IF data_sorteio IS NOT NULL AND CURRENT_DATE > data_sorteio + INTERVAL '6 months' THEN
+    UPDATE bilhetes SET nome_comprador = NULL, email_comprador = NULL, instagram_comprador = NULL,
+                        telefone_comprador = NULL, ip_reserva = NULL
+    WHERE status = 'pago' AND pago_em < NOW() - INTERVAL '6 months'
+      AND (nome_comprador IS NOT NULL OR email_comprador IS NOT NULL);
+  END IF;
+  UPDATE sorteio SET nome_vencedor = NULL, instagram_vencedor = NULL
+  WHERE realizado_em < NOW() - INTERVAL '6 months' AND (nome_vencedor IS NOT NULL OR instagram_vencedor IS NOT NULL);
+  DELETE FROM rifa_conflitos WHERE resolvido AND criado_em < NOW() - INTERVAL '6 months';
+
+  -- IP de quem reservou: até 30 dias
+  UPDATE bilhetes SET ip_reserva = NULL
+  WHERE ip_reserva IS NOT NULL AND (reservado_em IS NULL OR reservado_em < NOW() - INTERVAL '30 days');
+
+  -- Loja: pedidos nunca pagos somem em 6 meses; nos pagos, endereço e telefone
+  -- saem em 6 meses e nome, e-mail e CPF em 5 anos (prazo do CDC, art. 27)
+  DELETE FROM pedidos_merch WHERE status <> 'pago' AND criado_em < NOW() - INTERVAL '6 months';
+  UPDATE pedidos_merch SET endereco = NULL, numero = NULL, complemento = NULL, bairro = NULL,
+                           cep = NULL, telefone_comprador = NULL
+  WHERE criado_em < NOW() - INTERVAL '6 months' AND (endereco IS NOT NULL OR telefone_comprador IS NOT NULL);
+  UPDATE pedidos_merch SET nome_comprador = '(apagado)', email_comprador = '(apagado)', cpf_comprador = NULL
+  WHERE criado_em < NOW() - INTERVAL '5 years' AND email_comprador <> '(apagado)';
+
+  -- Orçamentos: 2 anos
+  DELETE FROM orcamentos WHERE criado_em < NOW() - INTERVAL '2 years';
+END;
+$$;
+
+-- Agenda a limpeza todo dia às 5h (UTC). Precisa da extensão pg_cron
+-- (Database > Extensions); sem ela, só esta linha dá erro e o resto já foi aplicado.
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+SELECT cron.schedule('limpar-dados-antigos', '0 5 * * *', $$SELECT limpar_dados_antigos()$$);
