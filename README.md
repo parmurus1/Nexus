@@ -98,7 +98,8 @@ Rode no **SQL Editor** do Supabase, nesta ordem, os blocos do `supabase_schema.s
 4. **ATUALIZAÇÃO 3** — cartaz dos shows e lista de fãs (avisos de shows)
 5. **ATUALIZAÇÃO 4** — shows vindos do app da banda (`shows.externo_id`)
 6. **ATUALIZAÇÃO 5** — rifa: pagamentos em conflito e fim das vendas
-7. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
+7. **ATUALIZAÇÃO 6** — rifa: códigos do "Meus números"
+8. **OPCIONAL — pg_cron**: libera bilhetes vencidos a cada 10 minutos mesmo sem visitas (o site já faz isso sozinho quando alguém abre a rifa)
 
 ## Loja: estoque e envio
 
@@ -117,6 +118,7 @@ Uma reserva dura 30 minutos e o link de pagamento expira em 25, então ninguém 
 - **Confirmação**: o webhook do Mercado Pago marca os bilhetes como pagos. As páginas de sucesso e de pagamento pendente também consultam `/api/rifa-status` e confirmam por lá se o webhook atrasar, mostrando os números ao comprador.
 - **Fim das vendas**: as vendas fecham quando o admin desliga **Vendas abertas**, quando o sorteio é feito ou quando passa a data do sorteio (horário de São Paulo).
 - **Sorteio**: encerra as vendas, publica o número, o primeiro nome e o Instagram do vencedor na página da rifa e manda um e-mail ao vencedor. Para uma nova campanha, ligue **Vendas abertas** de novo.
+- **Meus números**: na página da rifa, o comprador digita o e-mail, recebe um código de 6 números e vê os números pagos. O código vale 10 minutos e aceita 5 tentativas, com limite de pedidos por e-mail e por IP. Precisa do Resend configurado e da **ATUALIZAÇÃO 6** do `supabase_schema.sql`.
 - **Pagamento em conflito**: se um pagamento for aprovado depois que a reserva venceu e o número já foi vendido para outra pessoa, ele aparece em Rifa → Bilhetes (e a banda recebe um e-mail) para combinar outros números ou devolver o valor.
 
 ## Agenda, fãs e fotos do site
