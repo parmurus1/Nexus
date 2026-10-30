@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   const { count: reservadosIp, error: erroIp } = await supabase.from('bilhetes')
     .select('numero', { count: 'exact', head: true }).eq('status', 'reservado').eq('ip_reserva', ip);
   if (!erroIp && (reservadosIp || 0) + numeros.length > MAX_BILHETES_POR_COMPRA) {
-    return res.status(429).json({ erro: 'Você já tem números reservados aguardando pagamento. Conclua o pagamento ou aguarde 30 minutos.' });
+    return res.status(429).json({ erro: 'Você já tem números reservados aguardando pagamento. Conclua o pagamento ou aguarde 10 minutos.' });
   }
 
   // Valor do bilhete sempre vem do banco
@@ -129,7 +129,7 @@ export default async function handler(req, res) {
           pending: `${SITE}/pendente?origem=rifa`
         },
         auto_return: 'approved',
-        // O pagamento expira ANTES da reserva (25 x 30 min): ninguém paga por
+        // O pagamento expira ANTES da reserva (8 x 10 min): ninguém paga por
         // um número que já voltou a ficar disponível para outra pessoa.
         expires: true,
         expiration_date_from: reservadoEm,

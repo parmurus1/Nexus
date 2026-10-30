@@ -128,7 +128,7 @@
 const params = new URLSearchParams(location.search);
 const origem = params.get('origem') === 'merch' ? 'merch' : 'rifa';
 const TEXTOS = {
-  rifa:  { texto:'Nenhuma cobrança foi feita. Os números que você reservou voltam a ficar disponíveis em até 30 minutos — você pode tentar de novo quando quiser.', botao:'Tentar novamente', link:'/rifa' },
+  rifa:  { texto:'Nenhuma cobrança foi feita. Os números que você reservou voltam a ficar disponíveis em até 10 minutos — você pode tentar de novo quando quiser.', botao:'Tentar novamente', link:'/rifa' },
   merch: { texto:'Nenhuma cobrança foi feita. Você pode voltar à loja e tentar novamente quando quiser.', botao:'Voltar à loja', link:'/merch' }
 };
 const t = TEXTOS[origem];
