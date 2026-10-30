@@ -677,7 +677,7 @@ async function mnEnviar(){
   try{
     const { ok, d } = await mnPost({ acao: 'enviar', email });
     if(!ok){ toast(d.erro || 'Não foi possível enviar o código.', 'err'); return; }
-    document.getElementById('mnTexto2').textContent = `Se houver números comprados com ${email}, o código chega nesse e-mail em instantes (confira também o spam). Ele vale por 10 minutos.`;
+    document.getElementById('mnTexto2').textContent = `Enviamos um código para ${email}. Ele chega em instantes (confira também o spam) e vale por 10 minutos.`;
     mnPasso(2);
     setTimeout(() => document.getElementById('mnCodigo').focus(), 50);
   }catch{ toast('Erro de conexão.', 'err'); }
@@ -699,7 +699,7 @@ async function mnVerificar(){
     const lista = d.bilhetes || [];
     document.getElementById('mnTexto3').textContent = lista.length
       ? `Você tem ${lista.length} número(s) confirmado(s) no sorteio. Boa sorte!`
-      : 'Não encontramos números pagos com este e-mail. Se você acabou de pagar, aguarde alguns minutos.';
+      : 'Você ainda não comprou nenhum número com este e-mail. Se acabou de pagar, aguarde alguns minutos e consulte de novo.';
     document.getElementById('mnLista').innerHTML = lista.map(b => `<span>${fmtNum(b.numero)}</span>`).join('');
     mnPasso(3);
   }catch{ toast('Erro de conexão.', 'err'); }
