@@ -528,3 +528,29 @@ $$;
 -- (Database > Extensions); sem ela, só esta linha dá erro e o resto já foi aplicado.
 CREATE EXTENSION IF NOT EXISTS pg_cron;
 SELECT cron.schedule('limpar-dados-antigos', '0 5 * * *', $$SELECT limpar_dados_antigos()$$);
+
+-- =====================================================
+-- ATUALIZAÇÃO 6 — rifa: "Meus números" com código por e-mail
+-- Execute este bloco no SQL Editor do Supabase (pode rodar de novo).
+-- =====================================================
+
+-- Códigos de verificação de 6 dígitos (guardados só como hash). Valem 10 minutos,
+-- aceitam 5 tentativas e são apagados depois de 1 dia.
+CREATE TABLE IF NOT EXISTS rifa_codigos (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL,
+  codigo_hash TEXT NOT NULL,
+  expira_em TIMESTAMPTZ NOT NULL,
+  tentativas INTEGER NOT NULL DEFAULT 0,
+  usado BOOLEAN NOT NULL DEFAULT false,
+  ip TEXT,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS rifa_codigos_email_idx ON rifa_codigos (email, criado_em);
+CREATE INDEX IF NOT EXISTS rifa_codigos_ip_idx ON rifa_codigos (ip, criado_em);
+CREATE INDEX IF NOT EXISTS bilhetes_email_idx ON bilhetes (email_comprador);
+ALTER TABLE rifa_codigos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Service role gerencia codigos" ON rifa_codigos;
+CREATE POLICY "Service role gerencia codigos" ON rifa_codigos FOR ALL USING (auth.role() = 'service_role');
+
+SELECT cron.schedule('limpar-codigos-rifa', '15 * * * *', $$DELETE FROM rifa_codigos WHERE criado_em < NOW() - INTERVAL '1 day'$$);

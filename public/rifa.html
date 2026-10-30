@@ -73,6 +73,12 @@
 
     /* BILHETES */
     .legenda{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px;}
+    .bil-topo{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;}
+    .bil-topo .sec-title{margin-bottom:0;}
+    .mn-codigo{font-family:var(--f-mono);font-size:1.6rem;letter-spacing:0.5em;text-align:center;}
+    .mn-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin:18px 0 6px;}
+    .mn-lista span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-weight:500;border-radius:var(--radius-xs);background:var(--red);color:var(--on-red);}
+    .mn-link{background:none;border:none;padding:0;color:var(--text2);font-size:0.82rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:12px;}
     .leg-item{display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text2);font-family:var(--f-mono);}
     .leg-dot{width:12px;height:12px;border-radius:3px;}
     .ld-l{background:var(--bg3);border:1px solid var(--border-s);}
@@ -191,7 +197,10 @@
 
   <section class="section" style="padding-bottom:60px;">
     <p class="sec-eyebrow">Escolha os seus números</p>
-    <h2 class="sec-title">BILHETES</h2>
+    <div class="bil-topo">
+      <h2 class="sec-title">BILHETES</h2>
+      <button class="btn btn-outline btn-sm" type="button" onclick="abrirMeusNumeros()"><i data-icon="ticket"></i>Meus números</button>
+    </div>
     <div id="rifaFim" hidden></div>
     <div class="legenda">
       <div class="leg-item"><div class="leg-dot ld-l"></div>Disponível</div>
@@ -243,6 +252,37 @@
     </div>
     <label class="aceite" id="aceiteWrap"><input type="checkbox" id="iAceite"/><span>Tenho 18 anos ou mais e concordo com a <a href="/privacidade" target="_blank" rel="noopener">política de privacidade</a>. Se eu ganhar, meu primeiro nome e meu Instagram aparecem no resultado.</span></label>
     <button class="btn btn-primary btn-block btn-lg" id="btnCfm" type="button" onclick="finalizar()">Ir para o pagamento <i data-icon="arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- MODAL MEUS NÚMEROS -->
+<div class="modal-ov" id="mnOv" role="dialog" aria-modal="true" aria-label="Meus números" onmousedown="nexusOverlayDown(event)" onclick="nexusOverlayClick(event,fecharMeusNumeros)">
+  <div class="modal">
+    <button class="btn btn-icon sm modal-x" type="button" aria-label="Fechar" onclick="fecharMeusNumeros()"><i data-icon="x"></i></button>
+    <div class="modal-ey">Rifa Nexus</div>
+    <div class="modal-ti">Meus números</div>
+    <div id="mnPasso1">
+      <p class="modal-sb">Digite o e-mail usado na compra. Vamos mandar um código de 6 números para confirmar que é você.</p>
+      <div class="fg">
+        <label for="mnEmail">E-mail</label>
+        <input type="email" id="mnEmail" placeholder="seu@email.com" autocomplete="email"/>
+      </div>
+      <button class="btn btn-primary btn-block" id="mnBtnEnviar" type="button" onclick="mnEnviar()">Enviar código</button>
+    </div>
+    <div id="mnPasso2" hidden>
+      <p class="modal-sb" id="mnTexto2"></p>
+      <div class="fg">
+        <label for="mnCodigo">Código</label>
+        <input type="text" id="mnCodigo" class="mn-codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"/>
+      </div>
+      <button class="btn btn-primary btn-block" id="mnBtnVerificar" type="button" onclick="mnVerificar()">Ver meus números</button>
+      <button class="mn-link" type="button" onclick="mnVoltar()">Usar outro e-mail ou pedir novo código</button>
+    </div>
+    <div id="mnPasso3" hidden>
+      <p class="modal-sb" id="mnTexto3"></p>
+      <div class="mn-lista" id="mnLista"></div>
+      <button class="btn btn-outline btn-block" type="button" onclick="fecharMeusNumeros()">Fechar</button>
+    </div>
   </div>
 </div>
 
@@ -551,7 +591,64 @@ function fecharPagamento(){
   sel.clear(); updateBar(); load();
 }
 
-document.addEventListener('keydown', e => { if(e.key === 'Escape'){ fecharModal(); fecharDemo(); } });
+// MEUS NÚMEROS: e-mail → código no e-mail → lista de números pagos
+function mnPasso(n){ [1, 2, 3].forEach(i => document.getElementById('mnPasso' + i).hidden = i !== n); }
+function abrirMeusNumeros(){
+  mnPasso(1);
+  document.getElementById('mnOv').classList.add('open');
+  setTimeout(() => document.getElementById('mnEmail').focus(), 50);
+}
+function fecharMeusNumeros(){
+  document.getElementById('mnOv').classList.remove('open');
+  if(location.hash === '#meus-numeros') history.replaceState(null, '', location.pathname);
+}
+function mnVoltar(){ document.getElementById('mnCodigo').value = ''; mnPasso(1); }
+async function mnPost(body){
+  const r = await fetch('/api/meus-numeros', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return { ok: r.ok, d: await r.json().catch(() => ({})) };
+}
+async function mnEnviar(){
+  const email = document.getElementById('mnEmail').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ document.getElementById('mnEmail').classList.add('invalid'); toast('Digite um e-mail válido.', 'err'); return; }
+  document.getElementById('mnEmail').classList.remove('invalid');
+  const btn = document.getElementById('mnBtnEnviar');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try{
+    const { ok, d } = await mnPost({ acao: 'enviar', email });
+    if(!ok){ toast(d.erro || 'Não foi possível enviar o código.', 'err'); return; }
+    document.getElementById('mnTexto2').textContent = `Se houver números comprados com ${email}, o código chega nesse e-mail em instantes (confira também o spam). Ele vale por 10 minutos.`;
+    mnPasso(2);
+    setTimeout(() => document.getElementById('mnCodigo').focus(), 50);
+  }catch{ toast('Erro de conexão.', 'err'); }
+  finally{ btn.disabled = false; btn.textContent = 'Enviar código'; }
+}
+async function mnVerificar(){
+  const email = document.getElementById('mnEmail').value.trim();
+  const codigo = document.getElementById('mnCodigo').value.replace(/\D/g, '');
+  if(codigo.length !== 6){ toast('O código tem 6 números.', 'err'); return; }
+  const btn = document.getElementById('mnBtnVerificar');
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  try{
+    const { ok, d } = await mnPost({ acao: 'verificar', email, codigo });
+    if(!ok){
+      toast(d.erro || 'Código incorreto.', 'err');
+      if(d.expirado) mnVoltar();
+      return;
+    }
+    const lista = d.bilhetes || [];
+    document.getElementById('mnTexto3').textContent = lista.length
+      ? `Você tem ${lista.length} número(s) confirmado(s) no sorteio. Boa sorte!`
+      : 'Não encontramos números pagos com este e-mail. Se você acabou de pagar, aguarde alguns minutos.';
+    document.getElementById('mnLista').innerHTML = lista.map(b => `<span>${fmtNum(b.numero)}</span>`).join('');
+    mnPasso(3);
+  }catch{ toast('Erro de conexão.', 'err'); }
+  finally{ btn.disabled = false; btn.textContent = 'Ver meus números'; }
+}
+document.getElementById('mnEmail').addEventListener('keydown', e => { if(e.key === 'Enter') mnEnviar(); });
+document.getElementById('mnCodigo').addEventListener('keydown', e => { if(e.key === 'Enter') mnVerificar(); });
+if(location.hash === '#meus-numeros') abrirMeusNumeros();
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ fecharModal(); fecharDemo(); fecharMeusNumeros(); } });
 
 load();
 // Atualiza a disponibilidade só com a aba visível (evita requisições à toa)

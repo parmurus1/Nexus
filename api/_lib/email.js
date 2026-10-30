@@ -82,7 +82,18 @@ export function emailRifaConfirmada({ nome, numeros, valor }) {
       <p style="font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:1px;">${esc(nums)}</p>
       <p>Valor pago: <strong style="color:#ffffff;">${moeda(valor)}</strong></p>
       <p>O resultado sai na página da rifa e no nosso Instagram. Obrigado por apoiar a nossa música!</p>
-      <p><a href="${SITE()}/rifa" style="display:inline-block;background:#e8220a;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold;">Ver a rifa</a></p>`)
+      <p><a href="${SITE()}/rifa" style="display:inline-block;background:#e8220a;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold;">Ver a rifa</a></p>
+      <p style="font-size:13px;">Para consultar seus números depois, use <a href="${SITE()}/rifa#meus-numeros" style="color:#e8220a;">Meus números</a> na página da rifa.</p>`)
+  };
+}
+
+export function emailCodigoRifa({ codigo }) {
+  return {
+    assunto: `${codigo} é o seu código da Rifa Nexus`,
+    html: layout('Seu código de verificação', `
+      <p>Use este código na página da rifa para ver os seus números:</p>
+      <p style="font-size:32px;font-weight:bold;color:#ffffff;letter-spacing:8px;">${esc(codigo)}</p>
+      <p>Ele vale por 10 minutos. Se não foi você que pediu, é só ignorar este e-mail.</p>`)
   };
 }
 

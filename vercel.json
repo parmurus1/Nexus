@@ -19,6 +19,10 @@
       "destination": "/api/site?r=pedido-status"
     },
     {
+      "source": "/api/meus-numeros",
+      "destination": "/api/site?r=meus-numeros"
+    },
+    {
       "source": "/api/rifa-status",
       "destination": "/api/site?r=rifa-status"
     },
