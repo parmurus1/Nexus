@@ -5,13 +5,15 @@
 //   GET  /api/bilhetes        -> números da rifa e status
 //   GET  /api/pedido-status   -> status (não sensível) de um pedido da loja
 //   GET  /api/rifa-status     -> status de um pagamento da rifa (tela de espera/sucesso)
+//   POST /api/meus-numeros    -> "Meus números" da rifa: código por e-mail e consulta
 //   POST /api/orcamento       -> formulário de orçamento da página Contratantes
 //   POST /api/avisos          -> cadastro de fãs no rodapé ("avisos de shows")
+import crypto from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { liberarExpirados, situacaoVendas, resultadoPublico, processarPagamentoRifa } from './_lib/rifa.js';
 import { ipDaRequisicao } from './_lib/auth.js';
-import { enviarEmail, emailNovoOrcamento } from './_lib/email.js';
+import { enviarEmail, emailConfigurado, emailNovoOrcamento, emailCodigoRifa } from './_lib/email.js';
 import { emailValido, telefoneNormalizado, telefoneFormatado } from './_lib/validacao.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
@@ -182,6 +184,80 @@ async function rotaAvisos(req, res) {
   return res.status(201).json({ ok: true });
 }
 
+// "Meus números": a pessoa pede um código de 6 dígitos no e-mail e só vê os
+// números depois de digitá-lo. O código é guardado só como hash, vale 10 min e
+// aceita 5 tentativas. A resposta do envio é sempre a mesma, para não revelar
+// quais e-mails compraram.
+const CODIGO_MINUTOS = 10;
+const CODIGO_TENTATIVAS = 5;
+const hashCodigo = (email, codigo) => crypto.createHash('sha256').update(`${email}:${codigo}`).digest('hex');
+
+async function rotaMeusNumeros(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ erro: 'Método não permitido' });
+  res.setHeader('Cache-Control', 'no-store');
+  const b = req.body || {};
+  const email = String(b.email || '').trim().toLowerCase();
+  if (!emailValido(email)) return res.status(400).json({ erro: 'Digite um e-mail válido.' });
+
+  if (b.acao === 'enviar') {
+    if (!emailConfigurado()) return res.status(503).json({ erro: 'A consulta está indisponível no momento. Fale com a gente pelo Instagram.' });
+    const ip = ipDaRequisicao(req);
+    const quinzeMin = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const umaHora = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const [{ count: porEmail, error: erroTabela }, { count: porIp }] = await Promise.all([
+      supabase.from('rifa_codigos').select('id', { count: 'exact', head: true }).eq('email', email).gte('criado_em', quinzeMin),
+      supabase.from('rifa_codigos').select('id', { count: 'exact', head: true }).eq('ip', ip).gte('criado_em', umaHora)
+    ]);
+    if (erroTabela) {
+      console.error('Tabela rifa_codigos ausente (rode a ATUALIZAÇÃO 6):', erroTabela.message);
+      return res.status(503).json({ erro: 'A consulta está indisponível no momento. Fale com a gente pelo Instagram.' });
+    }
+    if ((porEmail || 0) >= 3 || (porIp || 0) >= 10) {
+      return res.status(429).json({ erro: 'Muitos pedidos de código seguidos. Espere alguns minutos e tente de novo.' });
+    }
+    // Só manda e-mail para quem tem bilhete pago, mas responde igual nos dois casos
+    const { count: pagos } = await supabase.from('bilhetes').select('numero', { count: 'exact', head: true })
+      .eq('email_comprador', email).eq('status', 'pago');
+    if (pagos) {
+      const codigo = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+      await supabase.from('rifa_codigos').update({ usado: true }).eq('email', email).eq('usado', false);
+      const { error } = await supabase.from('rifa_codigos').insert({
+        email, ip, codigo_hash: hashCodigo(email, codigo),
+        expira_em: new Date(Date.now() + CODIGO_MINUTOS * 60 * 1000).toISOString()
+      });
+      if (error) return res.status(500).json({ erro: 'Não foi possível gerar o código agora. Tente de novo.' });
+      await enviarEmail({ para: email, ...emailCodigoRifa({ codigo }) });
+    } else {
+      // Registra a tentativa para o limite por IP valer também para e-mails sem compra
+      await supabase.from('rifa_codigos').insert({ email, ip, codigo_hash: '-', expira_em: new Date().toISOString(), usado: true });
+    }
+    return res.status(200).json({ ok: true });
+  }
+
+  if (b.acao === 'verificar') {
+    const codigo = String(b.codigo || '').replace(/\D/g, '');
+    if (codigo.length !== 6) return res.status(400).json({ erro: 'O código tem 6 números.' });
+    const { data: atual } = await supabase.from('rifa_codigos').select('id, codigo_hash, tentativas, expira_em')
+      .eq('email', email).eq('usado', false).gt('expira_em', new Date().toISOString())
+      .order('criado_em', { ascending: false }).limit(1).maybeSingle();
+    if (!atual || atual.tentativas >= CODIGO_TENTATIVAS) {
+      return res.status(400).json({ erro: 'Código expirado. Peça um novo código.', expirado: true });
+    }
+    const certo = crypto.timingSafeEqual(Buffer.from(atual.codigo_hash), Buffer.from(hashCodigo(email, codigo)));
+    if (!certo) {
+      const restam = CODIGO_TENTATIVAS - atual.tentativas - 1;
+      await supabase.from('rifa_codigos').update({ tentativas: atual.tentativas + 1 }).eq('id', atual.id);
+      return res.status(400).json({ erro: restam > 0 ? `Código incorreto. Você ainda tem ${restam} tentativa(s).` : 'Código incorreto. Peça um novo código.', expirado: restam <= 0 });
+    }
+    await supabase.from('rifa_codigos').update({ usado: true }).eq('id', atual.id);
+    const { data: bilhetes } = await supabase.from('bilhetes').select('numero, pago_em')
+      .eq('email_comprador', email).eq('status', 'pago').order('numero', { ascending: true });
+    return res.status(200).json({ bilhetes: bilhetes || [] });
+  }
+
+  return res.status(400).json({ erro: 'Ação inválida' });
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -192,6 +268,7 @@ export default async function handler(req, res) {
   try {
     if (rota === 'orcamento') return await rotaOrcamento(req, res);
     if (rota === 'avisos') return await rotaAvisos(req, res);
+    if (rota === 'meus-numeros') return await rotaMeusNumeros(req, res);
     if (req.method !== 'GET') return res.status(405).json({ erro: 'Método não permitido' });
     if (rota === 'config') return await rotaConfig(req, res);
     if (rota === 'bilhetes') return await rotaBilhetes(req, res);
