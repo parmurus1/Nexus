@@ -75,6 +75,16 @@
     .legenda{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px;}
     .bil-topo{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;}
     .bil-topo .sec-title{margin-bottom:0;}
+    .aleatorio{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap;padding:18px 20px;margin:20px 0 24px;}
+    .al-txt{flex:1;min-width:200px;}
+    .al-ti{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0.04em;color:var(--text);line-height:1;margin-bottom:4px;}
+    .al-sub{font-size:0.82rem;color:var(--text2);}
+    .al-ctrl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .qty-ctrl{display:flex;align-items:center;border:1px solid var(--border-s);border-radius:var(--radius-sm);overflow:hidden;}
+    .qb{width:38px;height:38px;background:var(--bg3);border:none;color:var(--text2);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all var(--tr);}
+    .qb:hover{background:var(--bg4);color:var(--text);}
+    .qn{width:52px;height:38px;text-align:center;font-family:var(--f-mono);font-size:0.9rem;color:var(--text);background:transparent;border:none;-moz-appearance:textfield;}
+    .qn::-webkit-outer-spin-button,.qn::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
     .mn-codigo{font-family:var(--f-mono);font-size:1.6rem;letter-spacing:0.5em;text-align:center;}
     .mn-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin:18px 0 6px;}
     .mn-lista span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-weight:500;border-radius:var(--radius-xs);background:var(--red);color:var(--on-red);}
@@ -202,6 +212,20 @@
       <button class="btn btn-outline btn-sm" type="button" onclick="abrirMeusNumeros()"><i data-icon="ticket"></i>Meus números</button>
     </div>
     <div id="rifaFim" hidden></div>
+    <div class="card aleatorio" id="alBox" hidden>
+      <div class="al-txt">
+        <div class="al-ti">Números aleatórios</div>
+        <div class="al-sub">Escolha só a quantidade e o site sorteia números disponíveis para você.</div>
+      </div>
+      <div class="al-ctrl">
+        <div class="qty-ctrl">
+          <button class="qb" type="button" aria-label="Menos um" onclick="alMudar(-1)">−</button>
+          <input class="qn" id="alQtd" type="number" inputmode="numeric" min="1" value="1" aria-label="Quantidade de números" oninput="alAtualizar()"/>
+          <button class="qb" type="button" aria-label="Mais um" onclick="alMudar(1)">+</button>
+        </div>
+        <button class="btn btn-primary btn-sm" type="button" onclick="alComprar()"><i data-icon="dice"></i><span id="alBtnTxt">Sortear e comprar</span></button>
+      </div>
+    </div>
     <div class="legenda">
       <div class="leg-item"><div class="leg-dot ld-l"></div>Disponível</div>
       <div class="leg-item"><div class="leg-dot ld-s"></div>Selecionado</div>
@@ -448,7 +472,7 @@ async function load(){
     if(!vendasAbertas) sel.clear();
     // Remove da seleção números que outra pessoa reservou nesse meio-tempo
     sel.forEach(n => { const b = bData.find(x => x.numero === n); if(!b || b.status !== 'disponivel') sel.delete(n); });
-    render(); updateBar();
+    render(); updateBar(); alAtualizar();
   }catch{
     document.getElementById('bilWrap').innerHTML = `<div class="state">${nexusIcon('alert')}<span>Erro ao carregar os bilhetes. Recarregue a página.</span></div>`;
   }
@@ -496,6 +520,41 @@ function mostrarFim(resultado){
     el.innerHTML = `<div class="rf-txt"><div class="rf-ey">Vendas encerradas</div><div class="rf-ti">Obrigado pelo apoio!</div>
       <p class="rf-sub">${data ? `O sorteio acontece em ${data}. ` : ''}O resultado aparece aqui e no nosso Instagram.</p></div>`;
   }
+}
+
+// NÚMEROS ALEATÓRIOS: a pessoa escolhe a quantidade e o site sorteia entre os disponíveis
+const MAX_POR_COMPRA = 50;
+function alMax(){ return Math.min(MAX_POR_COMPRA, bData.filter(b => b.status === 'disponivel').length); }
+function alQtd(){
+  const max = alMax();
+  return Math.max(Math.min(parseInt(document.getElementById('alQtd').value, 10) || 1, max), max ? 1 : 0);
+}
+function alAtualizar(){
+  const box = document.getElementById('alBox');
+  box.hidden = !vendasAbertas || !alMax();
+  if(box.hidden) return;
+  document.getElementById('alQtd').max = alMax();
+  document.getElementById('alBtnTxt').textContent = `Sortear e comprar · ${nexusMoeda(alQtd() * vUnit)}`;
+}
+function alMudar(d){
+  const el = document.getElementById('alQtd');
+  el.value = Math.max(1, Math.min(alMax(), alQtd() + d));
+  alAtualizar();
+}
+function alComprar(){
+  const qtd = alQtd();
+  const livres = bData.filter(b => b.status === 'disponivel').map(b => b.numero);
+  if(!qtd || !livres.length){ toast('Não há números disponíveis.', 'err'); return; }
+  // Embaralha (Fisher-Yates com gerador criptográfico) e pega os primeiros
+  for(let i = livres.length - 1; i > 0; i--){
+    const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+    [livres[i], livres[j]] = [livres[j], livres[i]];
+  }
+  sel = new Set(livres.slice(0, qtd));
+  document.getElementById('alQtd').value = qtd;
+  render(); updateBar();
+  nexusTrack('rifa_aleatorio', { bilhetes: qtd });
+  abrirModal();
 }
 
 function render(){
