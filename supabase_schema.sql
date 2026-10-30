@@ -391,7 +391,7 @@ SELECT 'PEDRO', 'Baixo', '', '', true, 5
 WHERE NOT EXISTS (SELECT 1 FROM membros WHERE upper(nome) = 'PEDRO');
 
 -- =====================================================
--- OPCIONAL — liberação automática de bilhetes a cada 10 minutos (pg_cron)
+-- OPCIONAL — liberação automática de bilhetes a cada 2 minutos (pg_cron)
 -- O site já libera reservas vencidas sozinho sempre que alguém abre a rifa
 -- ou tenta comprar; isto só garante a limpeza mesmo sem visitas.
 -- Se der erro de permissão, ative "pg_cron" em Database > Extensions e rode de novo.
@@ -399,11 +399,11 @@ WHERE NOT EXISTS (SELECT 1 FROM membros WHERE upper(nome) = 'PEDRO');
 CREATE EXTENSION IF NOT EXISTS pg_cron;
 SELECT cron.schedule(
   'liberar-bilhetes-expirados',
-  '*/10 * * * *',
+  '*/2 * * * *',
   $$UPDATE bilhetes
     SET status = 'disponivel', nome_comprador = NULL, email_comprador = NULL, instagram_comprador = NULL,
         telefone_comprador = NULL, preference_id = NULL, reservado_em = NULL
-    WHERE status = 'reservado' AND reservado_em < NOW() - INTERVAL '30 minutes'$$
+    WHERE status = 'reservado' AND reservado_em < NOW() - INTERVAL '10 minutes'$$
 );
 -- Limpa tentativas de login antigas uma vez por dia
 SELECT cron.schedule('limpar-tentativas-admin', '0 4 * * *', $$DELETE FROM admin_tentativas WHERE criado_em < NOW() - INTERVAL '1 day'$$);

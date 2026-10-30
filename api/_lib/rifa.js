@@ -1,10 +1,10 @@
 // api/_lib/rifa.js — regras compartilhadas da rifa.
 import { enviarEmail, emailRifaConfirmada, emailConflitoBanda } from './email.js';
 
-// Reserva dura 30 min. O link de pagamento do Mercado Pago expira antes (25 min),
+// Reserva dura 10 min. O link de pagamento do Mercado Pago expira antes (8 min),
 // assim ninguém consegue pagar por um número que já voltou a ficar disponível.
-export const RESERVA_MINUTOS = 30;
-export const PAGAMENTO_EXPIRA_MINUTOS = 25;
+export const RESERVA_MINUTOS = 10;
+export const PAGAMENTO_EXPIRA_MINUTOS = 8;
 export const MAX_BILHETES_POR_COMPRA = 50;
 
 export const LIMPAR_COMPRADOR = {
@@ -16,7 +16,7 @@ export const LIMPAR_COMPRADOR = {
   reservado_em: null
 };
 
-// Devolve para "disponível" os bilhetes reservados há mais de 30 min sem pagamento.
+// Devolve para "disponível" os bilhetes reservados há mais de RESERVA_MINUTOS sem pagamento.
 // Chamado automaticamente antes de listar/reservar bilhetes, então não depende
 // mais de alguém clicar no botão do admin.
 export async function liberarExpirados(supabase) {
