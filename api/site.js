@@ -186,8 +186,8 @@ async function rotaAvisos(req, res) {
 
 // "Meus números": a pessoa pede um código de 6 dígitos no e-mail e só vê os
 // números depois de digitá-lo. O código é guardado só como hash, vale 10 min e
-// aceita 5 tentativas. A resposta do envio é sempre a mesma, para não revelar
-// quais e-mails compraram.
+// aceita 5 tentativas. Vai para qualquer e-mail (quem não comprou vê "nenhum
+// número"), então só quem tem acesso à caixa de entrada descobre se comprou.
 const CODIGO_MINUTOS = 10;
 const CODIGO_TENTATIVAS = 5;
 const hashCodigo = (email, codigo) => crypto.createHash('sha256').update(`${email}:${codigo}`).digest('hex');
@@ -215,22 +215,15 @@ async function rotaMeusNumeros(req, res) {
     if ((porEmail || 0) >= 3 || (porIp || 0) >= 10) {
       return res.status(429).json({ erro: 'Muitos pedidos de código seguidos. Espere alguns minutos e tente de novo.' });
     }
-    // Só manda e-mail para quem tem bilhete pago, mas responde igual nos dois casos
-    const { count: pagos } = await supabase.from('bilhetes').select('numero', { count: 'exact', head: true })
-      .eq('email_comprador', email).eq('status', 'pago');
-    if (pagos) {
-      const codigo = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
-      await supabase.from('rifa_codigos').update({ usado: true }).eq('email', email).eq('usado', false);
-      const { error } = await supabase.from('rifa_codigos').insert({
-        email, ip, codigo_hash: hashCodigo(email, codigo),
-        expira_em: new Date(Date.now() + CODIGO_MINUTOS * 60 * 1000).toISOString()
-      });
-      if (error) return res.status(500).json({ erro: 'Não foi possível gerar o código agora. Tente de novo.' });
-      await enviarEmail({ para: email, ...emailCodigoRifa({ codigo }) });
-    } else {
-      // Registra a tentativa para o limite por IP valer também para e-mails sem compra
-      await supabase.from('rifa_codigos').insert({ email, ip, codigo_hash: '-', expira_em: new Date().toISOString(), usado: true });
-    }
+    const codigo = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+    await supabase.from('rifa_codigos').update({ usado: true }).eq('email', email).eq('usado', false);
+    const { error } = await supabase.from('rifa_codigos').insert({
+      email, ip, codigo_hash: hashCodigo(email, codigo),
+      expira_em: new Date(Date.now() + CODIGO_MINUTOS * 60 * 1000).toISOString()
+    });
+    if (error) return res.status(500).json({ erro: 'Não foi possível gerar o código agora. Tente de novo.' });
+    const envio = await enviarEmail({ para: email, ...emailCodigoRifa({ codigo }) });
+    if (!envio.ok) return res.status(502).json({ erro: 'Não foi possível enviar o e-mail agora. Tente de novo em instantes.' });
     return res.status(200).json({ ok: true });
   }
 
