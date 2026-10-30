@@ -572,6 +572,15 @@
           <p class="field-hint">Um item por linha. Para voltar ao rider original, remova todas as categorias e salve.</p>
         </div>
 
+        <div class="card cont-card" id="contRifaTexto">
+          <div class="cont-head">
+            <span class="cont-titulo"><i data-icon="ticket"></i>Frase do topo da rifa</span>
+            <button class="btn btn-primary btn-sm" type="button" onclick="salvarConteudo('rifa_texto', this)">Salvar</button>
+          </div>
+          <div class="fg"><input type="text" id="cfRifaSubtitulo" maxlength="120" placeholder="Apoie nossa música e concorra a prêmios exclusivos"/></div>
+          <p class="field-hint">Aparece embaixo do logo, no topo da página da rifa. Vazio = usa a frase padrão.</p>
+        </div>
+
         <div class="card cont-card" id="contPremios">
           <div class="cont-head">
             <span class="cont-titulo"><i data-icon="gift"></i>Prêmios da rifa</span>
@@ -1319,6 +1328,7 @@ function preencherConteudo(cfg){
   set('cfYoutube', cfg.link_youtube); set('cfSpotify', cfg.link_spotify);
   set('cfEmail', cfg.contato_email); set('cfWhatsapp', cfg.contato_whatsapp);
   set('cfMusica', cfg.musica_spotify);
+  set('cfRifaSubtitulo', cfg.conteudo_rifa_subtitulo);
   set('cfBio', cfg.conteudo_bio || BIO_PADRAO);
   document.getElementById('edRider').innerHTML = lerJson(cfg.conteudo_rider, RIDER_PADRAO).map(blocoRider).join('');
   document.getElementById('edPremios').innerHTML = lerJson(cfg.conteudo_premios, PREMIOS_PADRAO).map(blocoPremio).join('');
@@ -1352,6 +1362,8 @@ async function salvarConteudo(secao, btn){
       .map(b => ({ icone: b.icone, titulo: b.titulo, itens: b.itens.split('\n').map(i => i.trim()).filter(Boolean) }))
       .filter(b => b.titulo || b.itens.length);
     itens = { conteudo_rider: blocos.length ? JSON.stringify(blocos) : '' };
+  } else if(secao === 'rifa_texto'){
+    itens = { conteudo_rifa_subtitulo: v('cfRifaSubtitulo').slice(0, 120) };
   } else if(secao === 'premios'){
     const premios = lerBlocos('edPremios', ['icone', 'nome', 'qtd', 'desc']).filter(p => p.nome);
     itens = { conteudo_premios: premios.length ? JSON.stringify(premios) : '' };

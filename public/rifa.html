@@ -172,7 +172,7 @@
       <img src="/imgs/marca/nexustitle.png" alt="Nexus" width="400" height="242"/>
     </picture>
   </h1>
-  <p class="page-sub">Apoie nossa música e concorra a prêmios exclusivos</p>
+  <p class="page-sub" id="rifaSubtitulo">Apoie nossa música e concorra a prêmios exclusivos</p>
   <div class="stats-row">
     <div class="stat"><div class="stat-lbl">Valor do bilhete</div><div class="stat-val r" id="sValor">R$ —</div></div>
     <div class="stat"><div class="stat-lbl">Disponíveis</div><div class="stat-val" id="sDisp">—</div></div>
@@ -445,6 +445,8 @@ track.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX
 
 montarCarrossel(PREMIOS);
 nexusGetConfig().then(cfg => {
+  // Frase do topo, editável no admin (Conteúdo do site)
+  if(cfg && cfg.conteudo_rifa_subtitulo) document.getElementById('rifaSubtitulo').textContent = cfg.conteudo_rifa_subtitulo;
   const premios = nexusConteudo(cfg, 'conteudo_premios', null);
   if(Array.isArray(premios) && premios.filter(p => p && p.nome).length) montarCarrossel(premios.filter(p => p && p.nome));
 });
