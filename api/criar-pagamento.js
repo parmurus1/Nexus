@@ -19,16 +19,17 @@ export default async function handler(req, res) {
   const numeros = normalizarNumeros(body.numeros);
   const nome = limpar(body.nome, 120);
   const email = limpar(body.email, 160).toLowerCase();
-  const instagram = limpar(body.instagram, 60);
+  const instagram = limpar(body.instagram, 60).replace(/^@+/, '');
   const telefone = limpar(body.telefone, 30);
 
   if (!numeros)
     return res.status(400).json({ erro: `Escolha de 1 a ${MAX_BILHETES_POR_COMPRA} números válidos` });
   if (!nome || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ erro: 'Nome e e-mail válidos são obrigatórios' });
-  // Instagram é por onde a banda avisa o ganhador: só aceita um @ válido
-  if (!/^@?[A-Za-z0-9._]{1,30}$/.test(instagram))
-    return res.status(400).json({ erro: 'Informe um Instagram válido (só letras, números, ponto e _), para avisarmos se você ganhar.' });
+  // Instagram é opcional; se vier preenchido, precisa ser um usuário válido
+  if (instagram && !/^[A-Za-z0-9._]{1,30}$/.test(instagram))
+    return res.status(400).json({ erro: 'Instagram inválido (só letras, números, ponto e _). Se preferir, deixe em branco.' });
+  const instagramFinal = instagram ? '@' + instagram : null;
   if (body.aceite !== true)
     return res.status(400).json({ erro: 'Confirme que tem 18 anos ou mais e aceite a política de privacidade.' });
 
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
       status: 'reservado',
       nome_comprador: nome,
       email_comprador: email,
-      instagram_comprador: instagram,
+      instagram_comprador: instagramFinal,
       telefone_comprador: telefone || null,
       reservado_em: reservadoEm,
       ...(erroIp ? {} : { ip_reserva: ip })
@@ -138,7 +139,7 @@ export default async function handler(req, res) {
         statement_descriptor: 'RIFA NEXUS',
         external_reference: `rifa-${Date.now()}-${numeros.join('-')}`,
         notification_url: process.env.SITE_URL ? `${process.env.SITE_URL}/api/webhook` : undefined,
-        metadata: { tipo: 'rifa', numeros, nome, email, instagram, telefone, valor_total: valorTotal }
+        metadata: { tipo: 'rifa', numeros, nome, email, instagram: instagramFinal, telefone, valor_total: valorTotal }
       }
     });
 
