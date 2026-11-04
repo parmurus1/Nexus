@@ -263,18 +263,18 @@
       <input type="email" id="iEmail" placeholder="seu@email.com" autocomplete="email"/>
     </div>
     <div class="fg">
-      <label for="iInstagram">Instagram <span class="req">*</span></label>
+      <label for="iInstagram">Instagram <span class="opt">opcional</span></label>
       <div class="ig-prefix" id="igWrap">
         <span class="ig-at">@</span>
         <input type="text" id="iInstagram" placeholder="seuusuario" autocapitalize="off"/>
       </div>
-      <p class="field-hint">Usado para te avisar caso você ganhe o prêmio.</p>
+      <p class="field-hint">Se informar, também te chamamos por lá caso você ganhe.</p>
     </div>
     <div class="fg">
       <label for="iTel">Telefone <span class="opt">opcional</span></label>
       <input type="tel" id="iTel" placeholder="(00) 00000-0000" autocomplete="tel"/>
     </div>
-    <label class="aceite" id="aceiteWrap"><input type="checkbox" id="iAceite"/><span>Tenho 18 anos ou mais e concordo com a <a href="/privacidade" target="_blank" rel="noopener">política de privacidade</a>. Se eu ganhar, meu primeiro nome e meu Instagram aparecem no resultado.</span></label>
+    <label class="aceite" id="aceiteWrap"><input type="checkbox" id="iAceite"/><span>Tenho 18 anos ou mais e concordo com a <a href="/privacidade" target="_blank" rel="noopener">política de privacidade</a>. Se eu ganhar, meu primeiro nome (e meu Instagram, se informado) aparecem no resultado.</span></label>
     <button class="btn btn-primary btn-block btn-lg" id="btnCfm" type="button" onclick="finalizar()">Ir para o pagamento <i data-icon="arrow-right"></i></button>
   </div>
 </div>
@@ -607,7 +607,7 @@ async function finalizar(){
   let erro = false;
   if(!nome){ document.getElementById('iNome').classList.add('invalid'); erro = true; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ document.getElementById('iEmail').classList.add('invalid'); erro = true; }
-  if(!/^[A-Za-z0-9._]{1,30}$/.test(ig)){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
+  if(ig && !/^[A-Za-z0-9._]{1,30}$/.test(ig)){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
   if(erro){ toast('Preencha todos os campos obrigatórios.', 'err'); return; }
   if(!aceite){ document.getElementById('aceiteWrap').classList.add('invalid'); toast('Confirme que tem 18 anos ou mais e aceite a política de privacidade.', 'err'); return; }
 
@@ -615,7 +615,7 @@ async function finalizar(){
   const restaurar = () => { btn.disabled = false; btn.innerHTML = `Ir para o pagamento ${nexusIcon('arrow-right')}`; };
   btn.disabled = true; btn.textContent = 'Processando...';
   try{
-    const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: '@' + ig, telefone: tel, aceite: true }) });
+    const r = await fetch('/api/criar-pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ numeros: [...sel], nome, email, instagram: ig ? '@' + ig : '', telefone: tel, aceite: true }) });
     const d = await r.json();
     restaurar();
     if(!r.ok){

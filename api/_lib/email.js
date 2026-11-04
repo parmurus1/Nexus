@@ -104,7 +104,7 @@ export function emailRifaVencedor({ nome, numero }) {
       <p>Olá, ${esc(nome)}!</p>
       <p>O sorteio da Rifa Nexus foi realizado e o número sorteado foi o seu:</p>
       <p style="font-size:30px;font-weight:bold;color:#ffffff;letter-spacing:2px;">${esc(String(numero).padStart(3, '0'))}</p>
-      <p>Vamos falar com você pelo Instagram para combinar a entrega do prêmio. Se preferir, é só responder este e-mail.</p>
+      <p>Vamos falar com você para combinar a entrega do prêmio. É só responder este e-mail.</p>
       <p>Obrigado por apoiar a nossa música!</p>`)
   };
 }
