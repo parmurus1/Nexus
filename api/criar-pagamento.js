@@ -27,6 +27,10 @@ export default async function handler(req, res) {
   if (!nome || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ erro: 'Nome e e-mail válidos são obrigatórios' });
   // Instagram é opcional; se vier preenchido, precisa ser um usuário válido
+  // Telefone é obrigatório: DDD + número (10 a 13 dígitos, aceita +55)
+  const digitosTel = telefone.replace(/\D/g, '');
+  if (digitosTel.length < 10 || digitosTel.length > 13)
+    return res.status(400).json({ erro: 'Informe um telefone válido com DDD.' });
   if (instagram && !/^[A-Za-z0-9._]{1,30}$/.test(instagram))
     return res.status(400).json({ erro: 'Instagram inválido (só letras, números, ponto e _). Se preferir, deixe em branco.' });
   const instagramFinal = instagram ? '@' + instagram : null;
@@ -67,7 +71,7 @@ export default async function handler(req, res) {
       nome_comprador: nome,
       email_comprador: email,
       instagram_comprador: instagramFinal,
-      telefone_comprador: telefone || null,
+      telefone_comprador: telefone,
       reservado_em: reservadoEm,
       ...(erroIp ? {} : { ip_reserva: ip })
     })

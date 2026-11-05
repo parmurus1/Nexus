@@ -271,7 +271,7 @@
       <p class="field-hint">Se informar, também te chamamos por lá caso você ganhe.</p>
     </div>
     <div class="fg">
-      <label for="iTel">Telefone <span class="opt">opcional</span></label>
+      <label for="iTel">Telefone <span class="req">*</span></label>
       <input type="tel" id="iTel" placeholder="(00) 00000-0000" autocomplete="tel"/>
     </div>
     <label class="aceite" id="aceiteWrap"><input type="checkbox" id="iAceite"/><span>Tenho 18 anos ou mais e concordo com a <a href="/privacidade" target="_blank" rel="noopener">política de privacidade</a>. Se eu ganhar, meu primeiro nome (e meu Instagram, se informado) aparecem no resultado.</span></label>
@@ -603,10 +603,12 @@ async function finalizar(){
   const tel = document.getElementById('iTel').value.trim();
 
   const aceite = document.getElementById('iAceite').checked;
-  ['iNome', 'iEmail', 'igWrap', 'aceiteWrap'].forEach(id => document.getElementById(id).classList.remove('invalid'));
+  ['iNome', 'iEmail', 'igWrap', 'iTel', 'aceiteWrap'].forEach(id => document.getElementById(id).classList.remove('invalid'));
   let erro = false;
   if(!nome){ document.getElementById('iNome').classList.add('invalid'); erro = true; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ document.getElementById('iEmail').classList.add('invalid'); erro = true; }
+  const telDig = tel.replace(/\D/g, '');
+  if(telDig.length < 10 || telDig.length > 13){ document.getElementById('iTel').classList.add('invalid'); erro = true; }
   if(ig && !/^[A-Za-z0-9._]{1,30}$/.test(ig)){ document.getElementById('igWrap').classList.add('invalid'); erro = true; }
   if(erro){ toast('Preencha todos os campos obrigatórios.', 'err'); return; }
   if(!aceite){ document.getElementById('aceiteWrap').classList.add('invalid'); toast('Confirme que tem 18 anos ou mais e aceite a política de privacidade.', 'err'); return; }
