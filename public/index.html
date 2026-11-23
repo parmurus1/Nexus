@@ -87,6 +87,48 @@
     .next-meta span{display:inline-flex;align-items:center;gap:6px;}
     .next-meta .ic{color:var(--text3);}
     .next-show .link-arrow{position:relative;}
+    /* ── CONTAGEM REGRESSIVA (semana do show) ── */
+    .next-show.is-contagem{grid-template-columns:auto 1fr auto;padding:0 0 0 32px;gap:28px;border-color:var(--red-line);box-shadow:0 0 50px rgba(var(--red-rgb),0.12);}
+    .next-show.is-contagem .next-info .link-arrow{margin-top:14px;display:inline-flex;}
+    .next-label.is-contagem{color:var(--red);display:inline-flex;align-items:center;gap:8px;}
+    .next-label.is-contagem::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    .next-count{position:relative;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px 40px;min-width:250px;
+      background:radial-gradient(120% 90% at 50% 40%,rgba(var(--red-rgb),0.30),rgba(var(--red-rgb),0.06) 70%),var(--bg3);border-left:1px solid var(--red-line);overflow:hidden;}
+    .next-count::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,0.025) 3px 4px);pointer-events:none;}
+    .count-pre,.count-pos{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--text2);position:relative;}
+    .count-pos{color:var(--text);}
+    .count-num{position:relative;font-family:var(--f-display);font-size:7.5rem;line-height:1;padding-top:0.06em;margin:-4px 0 -6px;letter-spacing:0.01em;
+      background:linear-gradient(180deg,#fff 15%,var(--red) 95%);-webkit-background-clip:text;background-clip:text;color:transparent;
+      filter:drop-shadow(0 0 22px rgba(var(--red-rgb),0.55));animation:count-pop 0.9s cubic-bezier(.2,1.4,.4,1) 0.35s both;}
+    .count-num.is-palavra{font-size:4.6rem;margin:4px 0 0;}
+    .next-show.reveal:not(.in) .count-num{animation-play-state:paused;}
+    @keyframes count-pop{from{opacity:0;transform:scale(1.6);filter:blur(8px) drop-shadow(0 0 0 transparent);}to{opacity:1;transform:none;}}
+    .count-pips{position:relative;display:flex;gap:5px;margin-top:14px;}
+    .count-pips i{width:22px;height:4px;border-radius:2px;background:var(--border-s);}
+    .count-pips i.on{background:var(--red);box-shadow:0 0 8px rgba(var(--red-rgb),0.8);}
+    .count-timer{position:relative;margin-top:12px;font-family:var(--f-mono);font-size:0.8rem;letter-spacing:0.12em;color:var(--text);background:rgba(0,0,0,0.35);border:1px solid var(--red-line);border-radius:999px;padding:5px 14px;font-variant-numeric:tabular-nums;}
+    .count-timer b{color:var(--red);font-weight:500;}
+    /* No dia: borda vermelha girando em volta do card e "HOJE!" pulsando */
+    .next-show.is-hoje{border-color:transparent;box-shadow:0 0 60px var(--red-glow);}
+    .next-show.is-hoje::before{content:'';position:absolute;inset:-150%;background:conic-gradient(from 0deg,transparent 0 60%,var(--red) 80%,#ff8a70 85%,transparent 90%);animation:spin 3.5s linear infinite;}
+    .next-show.is-hoje::after{content:'';position:absolute;inset:2px;border-radius:calc(var(--radius) - 2px);background:linear-gradient(90deg,var(--red-mid),transparent 60%),var(--bg2);}
+    .next-show.is-hoje > *{position:relative;z-index:1;}
+    .next-show.is-hoje .next-count{border-radius:0 calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0;margin:2px 2px 2px 0;}
+    .next-show.is-hoje .next-dia{color:var(--red);}
+    .next-show.is-hoje .count-num{animation:count-pop 0.9s cubic-bezier(.2,1.4,.4,1) both,count-beat 1.6s ease-in-out 1s infinite;}
+    .next-show.is-hoje .count-pips i{background:var(--red);box-shadow:0 0 8px rgba(var(--red-rgb),0.8);}
+    @keyframes count-beat{0%,100%{transform:scale(1);}12%{transform:scale(1.07);}24%{transform:scale(1);}36%{transform:scale(1.04);}}
+    @media(max-width:640px){
+      .next-show.is-contagem{grid-template-columns:auto 1fr;padding:22px 20px 0;gap:18px;}
+      .next-show.is-contagem .next-count{grid-column:1/-1;margin:0 -20px;border-left:0;border-top:1px solid var(--red-line);min-width:0;padding:22px 16px 20px;}
+      .next-show.is-hoje .next-count{margin:0 -18px 2px;border-radius:0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px);}
+      .count-num{font-size:6rem;}
+      .count-num.is-palavra{font-size:3.8rem;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .next-label.is-contagem::before,.count-num,.next-show.is-hoje .count-num,.next-show.is-hoje::before{animation:none!important;}
+      .next-show.is-hoje::before{background:var(--red);}
+    }
     @media(max-width:640px){.next-show{grid-template-columns:auto 1fr;padding:22px 20px;gap:18px;}.next-date{padding-right:18px;}.next-show .link-arrow{grid-column:1/-1;}}
 
     /* REDES SOCIAIS */
@@ -407,18 +449,60 @@ window.addEventListener('load', async () => {
     if (!proximo) return;
     const d = new Date(proximo.data + 'T12:00:00');
     const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    // Semana do show: painel de contagem regressiva ("Faltam N dias para o
+    // show", "O show é amanhã", "O show é hoje!"), com cronômetro ao vivo
+    // na véspera e no dia quando o horário está cadastrado.
+    const dias = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - hoje) / 86400000);
+    const contagem = dias <= 7;
+    const label = dias === 0 ? 'O show é hoje!' : dias === 1 ? 'O show é amanhã' : contagem ? `Faltam ${dias} dias para o show` : 'Próximo show';
     const el = document.getElementById('proximoShow');
+    el.classList.toggle('is-contagem', contagem);
+    el.classList.toggle('is-hoje', dias === 0);
+    el.setAttribute('aria-label', `${label}: ${proximo.nome}. Ver agenda`);
+
+    let painel = '';
+    if (contagem) {
+      const [pre, num, pos] = dias === 0 ? ['O show é', 'Hoje!', ''] : dias === 1 ? ['O show é', 'Amanhã', ''] : ['Faltam', String(dias), 'dias para o show'];
+      const acesas = 8 - Math.max(dias, 1);
+      painel = `
+      <div class="next-count" aria-hidden="true">
+        <div class="count-pre">${pre}</div>
+        <div class="count-num${dias <= 1 ? ' is-palavra' : ''}">${num}</div>
+        ${pos ? `<div class="count-pos">${pos}</div>` : ''}
+        <div class="count-pips">${Array.from({ length: 7 }, (_, i) => `<i${i < acesas ? ' class="on"' : ''}></i>`).join('')}</div>
+        <div class="count-timer" hidden></div>
+      </div>`;
+    }
+    const seta = `<span class="link-arrow">Ver agenda ${nexusIcon('arrow-right')}</span>`;
     el.innerHTML = `
       <div class="next-date"><div class="next-dia">${String(d.getDate()).padStart(2, '0')}</div><div class="next-mes">${MESES[d.getMonth()]}</div></div>
       <div class="next-info">
-        <div class="next-label">Próximo show</div>
+        <div class="next-label${contagem ? ' is-contagem' : ''}">${contagem ? 'Contagem regressiva' : label}</div>
         <div class="next-nome">${nexusEsc(proximo.nome)}</div>
         <div class="next-meta">
           <span>${nexusIcon('map-pin')}${nexusEsc(proximo.local || 'Local a confirmar')}</span>
           ${proximo.hora ? `<span>${nexusIcon('clock')}${nexusEsc(proximo.hora)}</span>` : ''}
         </div>
+        ${contagem ? seta : ''}
       </div>
-      <span class="link-arrow">Ver agenda ${nexusIcon('arrow-right')}</span>`;
+      ${contagem ? painel : seta}`;
+
+    // Cronômetro ao vivo até o início do show (véspera e dia)
+    const hm = String(proximo.hora || '').match(/^(\d{1,2}):(\d{2})/);
+    const timer = el.querySelector('.count-timer');
+    if (timer && hm && dias <= 1) {
+      const inicio = new Date(d.getFullYear(), d.getMonth(), d.getDate(), +hm[1], +hm[2]);
+      const p2 = n => String(n).padStart(2, '0');
+      const tick = () => {
+        const falta = inicio - Date.now();
+        if (falta <= 0) { timer.innerHTML = '<b>●</b> Acontecendo agora'; return clearInterval(iv); }
+        const t = Math.floor(falta / 1000);
+        timer.innerHTML = `Começa em <b>${p2(Math.floor(t / 3600))}:${p2(Math.floor(t / 60) % 60)}:${p2(t % 60)}</b>`;
+      };
+      const iv = setInterval(tick, 1000);
+      tick();
+      timer.hidden = false;
+    }
     el.hidden = false;
   } catch (e) {}
 })();

@@ -1483,11 +1483,15 @@ async function carregarShows(){
 function renderTabelaShows(){
   const tbody = document.getElementById('tabelaShows');
   if(!showsData.length){ tbody.innerHTML = linhaVazia('Nenhum show cadastrado', 5); return; }
+  const agora = new Date();
+  const hoje = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
   const TAG = { breve: ['tag-ok', 'Em breve'], confirmado: ['tag-ok', 'Confirmado'], realizado: ['tag-muted', 'Realizado'], cancelado: ['tag-accent', 'Cancelado'] };
   tbody.innerHTML = showsData.map(s => {
     const d = s.data ? new Date(s.data + 'T12:00:00') : null;
     const dataFmt = d ? d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() : '—';
-    const [cls, label] = TAG[s.status] || ['tag-muted', s.status || '—'];
+    // Data passada conta como realizado (o servidor também grava isso sozinho)
+    const status = s.status !== 'cancelado' && (s.data || '9999') < hoje ? 'realizado' : s.status;
+    const [cls, label] = TAG[status] || ['tag-muted', status || '—'];
     const id = esc(s.id);
     return `<tr>
       <td class="mono">${dataFmt}</td>
@@ -1496,7 +1500,7 @@ function renderTabelaShows(){
       <td><span class="tag ${cls}">${esc(label)}</span></td>
       <td><div class="acoes-cel">
         <button class="btn btn-outline btn-sm" type="button" onclick="abrirFormShow('${id}')">${nexusIcon('pencil')}Editar</button>
-        ${s.status !== 'realizado' ? `<button class="btn btn-outline btn-sm is-ok" type="button" onclick="marcarRealizado('${id}')">${nexusIcon('check')}Realizado</button>` : ''}
+        ${status !== 'realizado' ? `<button class="btn btn-outline btn-sm is-ok" type="button" onclick="marcarRealizado('${id}')">${nexusIcon('check')}Realizado</button>` : ''}
         <button class="btn btn-outline btn-sm is-danger" type="button" onclick="excluirShow('${id}')">${nexusIcon('trash')}Excluir</button>
       </div></td>
     </tr>`;
