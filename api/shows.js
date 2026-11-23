@@ -39,6 +39,23 @@ function normalizarHora(v, data) {
   return m ? `${m[1].padStart(2, '0')}:${m[2] || '00'}` : null;
 }
 
+// Data de hoje no fuso da banda (a Vercel roda em UTC)
+function hojeSaoPaulo() {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+}
+
+// Show cuja data já passou vira "realizado" sozinho, sem precisar marcar no
+// painel. Só mexe em "breve"/"confirmado": cancelado continua cancelado. O show
+// do dia segue "em breve" até a meia-noite.
+async function marcarRealizadosAutomaticamente() {
+  const { error } = await supabase
+    .from('shows')
+    .update({ status: 'realizado' })
+    .lt('data', hojeSaoPaulo())
+    .in('status', ['breve', 'confirmado']);
+  if (error) console.error('Falha ao marcar shows realizados:', error.message);
+}
+
 async function integracaoShows(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ erro: 'Use POST' });
   if (!tokenIntegracaoValido(req)) return res.status(401).json({ erro: 'Token de integração inválido' });
@@ -90,6 +107,7 @@ export default async function handler(req, res) {
   // GET — público: shows em ordem de data (e horário). Não existe ordem manual:
   // a agenda se organiza sozinha conforme as datas.
   if (req.method === 'GET') {
+    await marcarRealizadosAutomaticamente();
     const { data, error } = await supabase
       .from('shows')
       .select('*')
