@@ -87,6 +87,14 @@
     .next-meta span{display:inline-flex;align-items:center;gap:6px;}
     .next-meta .ic{color:var(--text3);}
     .next-show .link-arrow{position:relative;}
+    /* Contagem regressiva na semana do show e destaque no dia */
+    .next-label.is-contagem{color:var(--red);display:inline-flex;align-items:center;gap:8px;}
+    .next-label.is-contagem::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-ring 2.5s ease-in-out infinite;}
+    .next-show.is-semana{border-color:var(--red-line);}
+    .next-show.is-hoje{border-color:var(--red);background:linear-gradient(90deg,var(--red-soft),transparent 75%),var(--bg2);box-shadow:0 0 40px var(--red-glow);}
+    .next-show.is-hoje .next-dia{color:var(--red);}
+    .next-show.is-hoje .next-label{font-size:0.82rem;}
+    @media(prefers-reduced-motion:reduce){.next-label.is-contagem::before{animation:none;}}
     @media(max-width:640px){.next-show{grid-template-columns:auto 1fr;padding:22px 20px;gap:18px;}.next-date{padding-right:18px;}.next-show .link-arrow{grid-column:1/-1;}}
 
     /* REDES SOCIAIS */
@@ -407,11 +415,19 @@ window.addEventListener('load', async () => {
     if (!proximo) return;
     const d = new Date(proximo.data + 'T12:00:00');
     const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    // Na semana do show: "Faltam N dias para o show", "O show é amanhã", "O show é hoje"
+    const dias = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - hoje) / 86400000);
+    const label = dias === 0 ? 'O show é hoje!'
+      : dias === 1 ? 'O show é amanhã'
+      : dias <= 7 ? `Faltam ${dias} dias para o show`
+      : 'Próximo show';
     const el = document.getElementById('proximoShow');
+    el.classList.toggle('is-hoje', dias === 0);
+    el.classList.toggle('is-semana', dias > 0 && dias <= 7);
     el.innerHTML = `
       <div class="next-date"><div class="next-dia">${String(d.getDate()).padStart(2, '0')}</div><div class="next-mes">${MESES[d.getMonth()]}</div></div>
       <div class="next-info">
-        <div class="next-label">Próximo show</div>
+        <div class="next-label${dias <= 7 ? ' is-contagem' : ''}">${label}</div>
         <div class="next-nome">${nexusEsc(proximo.nome)}</div>
         <div class="next-meta">
           <span>${nexusIcon('map-pin')}${nexusEsc(proximo.local || 'Local a confirmar')}</span>
